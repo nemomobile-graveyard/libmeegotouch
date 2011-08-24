@@ -21,6 +21,7 @@
 #include "mwidgetcontroller.h"
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
+#include <QGraphicsAnchorLayout>
 #include <QFile>
 #include <mlayout.h>
 #include <mlinearlayoutpolicy.h>
@@ -264,6 +265,13 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
                 notes << ("\"" + text.left(50) + "\" (cont..)");
             else
                 notes << ("\"" + text + "\"");
+
+            if (widget->testAttribute(Qt::WA_SetLayoutDirection)) {
+                if (widget->layoutDirection() == Qt::LeftToRight)
+                    notes << "LTR";
+                else if (widget->layoutDirection() == Qt::RightToLeft)
+                    notes << "RTL";
+            }
         }
     }
     if (!notes.isEmpty())
@@ -281,8 +289,16 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
         s << normal();
         if (widget->isVisible())
             s << emphasize() << blue();
+        if (widget->testAttribute(Qt::WA_SetLayoutDirection)) {
+            if (widget->layoutDirection() == Qt::LeftToRight)
+                s << "LTR ";
+            else if (widget->layoutDirection() == Qt::RightToLeft)
+                s << "RTL ";
+        }
         if (dynamic_cast<QGraphicsGridLayout*>(layout)) {
             s << "QGraphicsGridLayout";
+        } else if (dynamic_cast<QGraphicsAnchorLayout*>(layout)) {
+            s << "QGraphicsAnchorLayout";
         } else if (linearLayout) {
             if (linearLayout->orientation() == Qt::Horizontal)
                 s << "QGraphicsLinearLayout (Hor)";
@@ -298,7 +314,11 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
                     s << "MLinearLayoutPolicy (Hor)";
                 else
                     s << "MLinearLayoutPolicy (Ver)";
+            } else {
+                s << "MLayout";
             }
+        } else {
+            s << "QGraphicsLayout";
         }
         s << ' ' << normal();
         if (!widget->isVisible())
