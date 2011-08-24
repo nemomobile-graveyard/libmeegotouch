@@ -31,6 +31,7 @@
 #include <MLinearLayoutPolicy>
 #include <MDebug>
 #include <MPannableViewport>
+#include <MApplication>
 
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
@@ -86,7 +87,11 @@ void ImagePage::createContent()
     propertiesComboBox = new MComboBox();
     propertiesComboBox->setObjectName("propertiesComboBox");
     propertiesComboBox->setStyleName(inv("CommonComboBox"));
-    propertiesComboBox->setIconID("icon-m-gallery-image-edit");
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        propertiesComboBox->setIconID("icon-m-toolbar-image-edit");
+    } else {
+        propertiesComboBox->setIconID("icon-m-toolbar-image-edit-white");
+    }
 
     // Image property slider
     slider = new MSlider();

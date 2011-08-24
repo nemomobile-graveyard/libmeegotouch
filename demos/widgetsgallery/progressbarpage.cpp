@@ -28,6 +28,7 @@
 #include <MProgressIndicator>
 #include <QPropertyAnimation>
 #include <MSceneManager>
+#include <MApplication>
 
 ProgressBarPage::ProgressBarPage() :
     TemplatePage(TemplatePage::SimpleWidgets),
@@ -74,7 +75,11 @@ void ProgressBarPage::createContent()
     button1 = new MButton();
     button1->setObjectName("button1");
     button1->setStyleName(inv("CommonSingleButton"));
-    button1->setIconID("icon-m-common-play");
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        button1->setIconID("icon-m-toolbar-mediacontrol-play");
+    } else {
+        button1->setIconID("icon-m-toolbar-mediacontrol-play-white");
+    }
     containerPolicy->addItem(button1);
     containerPolicy->setVerticalSpacing(10);
 

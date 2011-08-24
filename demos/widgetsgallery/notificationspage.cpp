@@ -169,13 +169,13 @@ void NotificationsPage::sendNotification()
 
         QStringList iconids;
 
-        iconids << "icon-l-activities" << "icon-l-backup" << "icon-l-browser" << "icon-l-calculator"
-                << "icon-l-calendar-reminder" << "icon-l-calendar" << "icon-l-camera" << "icon-l-clock"
-                << "icon-l-common-video-playback" << "icon-l-contacts" << "icon-l-content-manager"
+        iconids << "icon-l-browser" << "icon-l-calculator"
+                << "icon-l-calendar" << "icon-l-camera" << "icon-l-clock"
+                << "icon-l-contacts"
                 << "icon-l-conversation" << "icon-l-documents"
-                << "icon-l-drive" << "icon-l-email" << "icon-l-extras" << "icon-l-gallery"
-                << "icon-l-games" << "icon-l-maps" << "icon-l-me" << "icon-l-mms" << "icon-l-music"
-                << "icon-l-notes" << "icon-l-office-tools" << "icon-l-ovi-store" << "icon-l-ovi"
+                << "icon-l-drive" << "icon-l-email" << "icon-l-gallery"
+                << "icon-l-maps" << "icon-l-mms" << "icon-l-music"
+                << "icon-l-notes" << "icon-l-ovi-store"
                 << "icon-l-rss" << "icon-l-search" << "icon-l-settings";
 
         notification->setImage(iconids.at(qrand () % iconids.count()));

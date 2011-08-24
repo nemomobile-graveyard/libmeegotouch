@@ -704,7 +704,7 @@ void ToolBarPage::addTab(int tabNumber)
     case 1:
         {
             //% "Initiated"
-            MAction *action = new MAction(icons ? "icon-m-telephony-call-initiated" : "", qtTrId("xx_toolbar_page_tools_initiated"), this);
+            MAction *action = new MAction(icons ? "icon-m-telephony-callhistory-initiated" : "", qtTrId("xx_toolbar_page_tools_initiated"), this);
             action->setObjectName("callInitiatedAction");
             action->setLocation(MAction::ToolBarLocation);
             action->setCheckable(true);
@@ -717,7 +717,7 @@ void ToolBarPage::addTab(int tabNumber)
     case 2:
         {
             //% "Received"
-            MAction *action = new MAction(icons ? "icon-m-telephony-call-received" : "", qtTrId("xx_toolbar_page_tools_received"), this);
+            MAction *action = new MAction(icons ? "icon-m-telephony-callhistory-received" : "", qtTrId("xx_toolbar_page_tools_received"), this);
             action->setObjectName("callReceivedAction");
             action->setLocation(MAction::ToolBarLocation);
             action->setCheckable(true);
@@ -728,7 +728,7 @@ void ToolBarPage::addTab(int tabNumber)
     case 3:
         {
             //% "Missed"
-            MAction *action = new MAction(icons ? "icon-m-telephony-call-missed" : "", qtTrId("xx_toolbar_page_tools_missed"), this);
+            MAction *action = new MAction(icons ? "icon-m-telephony-callhistory-missed" : "", qtTrId("xx_toolbar_page_tools_missed"), this);
             action->setObjectName("callMissedAction");
             action->setCheckable(true);
             connect(action, SIGNAL(triggered()), this, SLOT(populateCallMissed()));
@@ -749,7 +749,7 @@ void ToolBarPage::addTab(int tabNumber)
     case 5:
         {
             //% "Call"
-            MAction *action = new MAction(icons ? "icon-m-telephony-cellular" : "", qtTrId("xx_toolbar_page_tools_call"), this);
+            MAction *action = new MAction(icons ? "icon-m-telephony-call" : "", qtTrId("xx_toolbar_page_tools_call"), this);
             action->setObjectName("telephonyCellularAction");
             action->setCheckable(true);
             action->setLocation(MAction::ToolBarLocation);
