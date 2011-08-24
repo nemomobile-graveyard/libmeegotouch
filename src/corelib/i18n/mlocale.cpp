@@ -3606,7 +3606,7 @@ QStringList MLocale::exemplarCharactersIndex() const
          || collationLocaleName.startsWith(QLatin1String("zh_CN"))
          || collationLocaleName.startsWith(QLatin1String("zh_SG")))
         ) {
-        charStr = QString::fromUtf8("Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z");
+        charStr = QString::fromUtf8("ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z");
         return charStr.split(QLatin1String(" "),QString::SkipEmptyParts);
     }
     return exemplarCharactersIndex;
