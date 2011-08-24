@@ -74,6 +74,7 @@ greaterThan(ICUVERSION, 4.4) {
                       data/ar_SY.txt \
                       data/ar_TN.txt \
                       data/ar_YE.txt \
+                      data/es.txt \
                       data/es_419.txt \
                       data/es_DO.txt \
                       data/es_GT.txt \
