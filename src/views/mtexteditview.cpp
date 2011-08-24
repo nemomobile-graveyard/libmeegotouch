@@ -581,6 +581,12 @@ void MTextEditViewPrivate::setPromptOpacity(qreal opacity)
     q->doUpdate();
 }
 
+void MTextEditViewPrivate::setPromptText(const QString &promptText)
+{
+    // Note: only using the first length variant now
+    promptTextDocument->setPlainText(promptText.left(promptText.indexOf(TextVariantSeparator)));
+}
+
 void MTextEditViewPrivate::showMagnifier()
 {
     Q_Q(MTextEditView);
@@ -1757,10 +1763,7 @@ void MTextEditView::updateData(const QList<const char *> &modifications)
             }
 
         } else if (member == MTextEditModel::Prompt) {
-            // Note: only using the first length variant now
-            QString promptText = model()->prompt();
-            promptText = promptText.left(promptText.indexOf(TextVariantSeparator));
-            d->promptTextDocument->setPlainText(promptText);
+            d->setPromptText(model()->prompt());
             d->setPromptOpacity(d->focused ? style()->focusedPromptOpacity() : style()->unfocusedPromptOpacity());
             d->isPromptVisible = (d->activeDocument()->isEmpty() == true
                                   && model()->prompt().isEmpty() == false);
@@ -1849,7 +1852,7 @@ void MTextEditView::setupModel()
         d->initMaskedDocument();
     }
 
-    d->promptDocument()->setPlainText(model()->prompt());
+    d->setPromptText(model()->prompt());
     d->setPromptOpacity(d->focused ? style()->focusedPromptOpacity() : style()->unfocusedPromptOpacity());
     d->isPromptVisible = (d->activeDocument()->isEmpty() == true
                           && model()->prompt().isEmpty() == false);

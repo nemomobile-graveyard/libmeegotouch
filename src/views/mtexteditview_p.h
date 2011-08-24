@@ -74,6 +74,8 @@ public:
     void showEditorToolbar();
     void hideEditorToolbar();
 
+    void setPromptText(const QString &prompt);
+
     qreal promptOpacity() const;
     void setPromptOpacity(qreal opacity);
 
