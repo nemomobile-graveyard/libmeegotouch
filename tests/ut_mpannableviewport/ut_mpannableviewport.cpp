@@ -139,6 +139,8 @@ void Ut_MPannableViewport::event()
 
     subject->event(event);
 
+    qApp->processEvents();
+
     QCOMPARE(subject->physics()->range().size(), physicsRange);
 }
 
@@ -149,6 +151,8 @@ void Ut_MPannableViewport::updatePosition()
     widget->setMinimumSize(QSizeF(10,10));
     widget->setMaximumSize(QSizeF(10,10));
     subject->setWidget(widget);
+
+    subject->layout()->activate();
 
     // Forcing the size of subject to some value
     subject->setMinimumSize(QSizeF(500, 300));
@@ -321,7 +325,7 @@ void Ut_MPannableViewport::testExtendedRange_data()
     QTest::addColumn<qreal>("expectedVerticalRange");
 
     QTest::newRow("Zero range") << (qreal)0.0 << false << (qreal)0.0 << (qreal)0.0;
-    QTest::newRow("sip extension ") << (qreal)2.0 << true << (qreal)1.0 << (qreal)2.0;
+    QTest::newRow("sip extension ") << (qreal)2.0 << true << (qreal)1.0 << (qreal)902.0;
     QTest::newRow("sip extension ignored because of disabled autorange") << (qreal)2.0 << false << (qreal)1.0 << (qreal)1.0;
 }
 
@@ -343,9 +347,10 @@ void Ut_MPannableViewport::testExtendedRange()
 
     QGraphicsWidget *widget = new QGraphicsWidget();
     widget->setPreferredSize(1000,1000);
-    subject->setWidget(widget);
 
+    subject->setWidget(widget);
     subject->adjustSize();
+    subject->layout()->activate();
 
     subject->setRange(QRectF(QPointF(), QSizeF(0, verticalRange)));
 
