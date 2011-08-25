@@ -286,10 +286,9 @@ void MListViewPrivate::appendTargetsToInsertAnimation(int start, int end, int fi
     animatingItems = visibleItems.values().toVector();
 
     for (int flatRow = start; flatRow <= end; ++flatRow) {
-        MWidget *cell = createCell(flatRow);
-        cell->setPos(qreal(0), qreal(locatePosOfItem(flatRow)));
+        MWidget *cell = createCell(flatRow, QPointF(qreal(0), qreal(locatePosOfItem(flatRow))));
         itemInsertionAnimation->appendInsertTarget(cell);
-        offset += QPointF(0, cellSize(flatRow).height() + hseparatorHeight);
+        offset += QPointF(0, itemHeight + hseparatorHeight);
         animatingItems.append(cell);
     }
 
@@ -358,7 +357,7 @@ void MListViewPrivate::deleteItem(MWidget *widget)
     recycler->recycle(widget);
 }
 
-MWidget *MListViewPrivate::createCell(int row)
+MWidget *MListViewPrivate::createCell(int row, const QPointF &atPos)
 {
     QModelIndex index(flatRowToIndex(row));
     MWidget *cell = controllerModel->cellCreator()->createCell(index, *recycler);
@@ -366,15 +365,10 @@ MWidget *MListViewPrivate::createCell(int row)
     cell->setParentItem(controller);
     cell->setVisible(true);
 
-    if(cell->maximumHeight() < itemHeight)
-    {
-        cell->setMaximumSize(cell->maximumWidth(), itemHeight);
-    } else if(cell->minimumHeight() > itemHeight)
-    {
-        cell->setMinimumSize(cell->minimumWidth(), itemHeight);
-    }
+    cell->setMaximumHeight(itemHeight);
+    cell->setMinimumHeight(itemHeight);
 
-    cell->resize(cellSize(row));
+    cell->setGeometry(QRectF(atPos, cellSize(row)));
 
     // TODO this is not optimal, I'm pretty sure, need to find better way to keep
     // selection. Refactor into its own function.
@@ -600,11 +594,12 @@ void MListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVisibleRo
 {
     for (int currentRow = firstVisibleRow; currentRow <= lastVisibleRow; currentRow++) {
         MWidget *cell = visibleItems.value(currentRow, NULL);
+        QPointF cellPos = QPointF(0, locatePosOfItem(currentRow));
         if (!cell) {
-            cell = createItem(currentRow);
+            cell = createItem(currentRow, cellPos);
             visibleItems[currentRow] = cell;
-        }
-        cell->setPos(QPointF(0, locatePosOfItem(currentRow)));
+        } else
+            cell->setPos(cellPos);
     }
 }
 
@@ -726,7 +721,6 @@ QModelIndex MListViewPrivate::locateLastVisibleIndexInRowAt(int pos)
 
 void MListViewPrivate::replaceItem(MWidget* item, MWidget* newItem)
 {
-    newItem->setPos(item->pos());
     visibleItems[visibleItems.key(item)] = newItem;
     deleteItem(item);
 }
@@ -930,9 +924,9 @@ int MPlainListViewPrivate::itemsCount() const
     return rowCount;
 }
 
-MWidget *MPlainListViewPrivate::createItem(int row)
+MWidget *MPlainListViewPrivate::createItem(int row, const QPointF &atPos)
 {
-    return createCell(row);
+    return createCell(row, atPos);
 }
 
 int MPlainListViewPrivate::indexToFlatRow(const QModelIndex &index) const
@@ -1089,11 +1083,9 @@ int MPlainMultiColumnListViewPrivate::totalHeight()
     return totalHeight;
 }
 
-MWidget *MPlainMultiColumnListViewPrivate::createItem(int row)
+MWidget *MPlainMultiColumnListViewPrivate::createItem(int row, const QPointF &atPos)
 {
-    MWidget *cell = createCell(row);
-
-    return cell;
+    return createCell(row, atPos);
 }
 
 QModelIndex MPlainMultiColumnListViewPrivate::locateLastVisibleIndexInRowAt(int pos)
@@ -1224,12 +1216,14 @@ void MPlainMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &fir
             for (int column = 0; column < controllerModel->columns(); ++column) {
                 int flatRow = currentRow + column;
                 cell = visibleItems.value(flatRow, NULL);
+                QPointF cellPos(column*(viewWidth / controllerModel->columns()), locatePosOfItem(flatRow));
                 if (!cell) {
-                    cell = createItem(flatRow);
+                    cell = createItem(flatRow, cellPos);
                     visibleItems[flatRow] = cell;
-                }
+                } else
+                    cell->setPos(cellPos);
                 widgetFlatRows[cell] = flatRow + 1;
-                cell->setPos(QPointF(column*(viewWidth / controllerModel->columns()), locatePosOfItem(flatRow)));
+
                 if (flatRow + 1 == itemsCount() || flatRowToColumn(flatRow + 1) == 0)
                     break;
             }
@@ -1269,9 +1263,9 @@ void MPlainMultiColumnListViewPrivate::appendTargetsToInsertAnimation(int start,
     animatingItems = visibleItems.values().toVector();
     int insertedCount = 0;
     for (int flatRow = start; flatRow <= end; ++flatRow) {
-        MWidget *cell = createCell(flatRow);
         int cellColumn = flatRowToColumn(flatRow);
-        cell->setPos(qreal(cellColumn * viewWidth / controllerModel->columns()), qreal(locatePosOfItem(flatRow)));
+        QPointF cellPos(qreal(cellColumn * viewWidth / controllerModel->columns()), qreal(locatePosOfItem(flatRow)));
+        MWidget *cell = createCell(flatRow, cellPos);
         itemInsertionAnimation->appendInsertTarget(cell);
         animatingItems.append(cell);
         ++insertedCount;
@@ -1563,10 +1557,10 @@ int MGroupHeaderListViewPrivate::indexToFlatRow(const QModelIndex &index) const
     return headersRows[index.row()];
 }
 
-MWidget *MGroupHeaderListViewPrivate::createItem(int row)
+MWidget *MGroupHeaderListViewPrivate::createItem(int row, const QPointF &atPos)
 {
     if (!headersRows.contains(row)) {
-        return createCell(row);
+        return createCell(row, atPos);
     } else {
         int headerIndex = dFindLowerIndex(headersRows, row);
         return createHeader(headerIndex);
@@ -1890,12 +1884,13 @@ void MMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &firstVis
             for (int column = 0; column < controllerModel->columns(); ++column) {
                 int flatRow = currentRow + column;
                 cell = visibleItems.value(flatRow, NULL);
+                QPointF cellPos(column*(viewWidth / controllerModel->columns()), locatePosOfItem(flatRow));
                 if (!cell) {
-                    cell = createItem(flatRow);
+                    cell = createItem(flatRow, cellPos);
                     visibleItems[flatRow] = cell;
-                }
+                } else
+                    cell->setPos(cellPos);
                 widgetFlatRows[cell] = flatRow + 1;
-                cell->setPos(QPointF(column*(viewWidth / controllerModel->columns()), locatePosOfItem(flatRow)));
                 if (flatRow + 1 == itemsCount() + rowCount || flatRowToColumn(flatRow + 1) == 0)
                     break;
             }
@@ -1974,10 +1969,10 @@ int MMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
     return headerRow + row + column + 1;
 }
 
-MWidget *MMultiColumnListViewPrivate::createItem(int row)
+MWidget *MMultiColumnListViewPrivate::createItem(int row, const QPointF &atPos)
 {
     if (!headersRows.contains(row)) {
-        MWidget *cell = createCell(row);
+        MWidget *cell = createCell(row, atPos);
         return cell;
     } else {
         int headerIndex = dFindLowerIndex(headersRows, row);
@@ -2045,9 +2040,9 @@ void MMultiColumnListViewPrivate::appendTargetsToInsertAnimation(int start, int 
 {
     animatingItems = visibleItems.values().toVector();
     for (int flatRow = start; flatRow <= end; ++flatRow) {
-        MWidget *cell = createCell(flatRow);
         int cellColumn = flatRowToColumn(flatRow);
-        cell->setPos(qreal(cellColumn * viewWidth / controllerModel->columns()), qreal(locatePosOfItem(flatRow)));
+        QPointF cellPos(qreal(cellColumn * viewWidth / controllerModel->columns()), qreal(locatePosOfItem(flatRow)));
+        MWidget *cell = createCell(flatRow, cellPos);
         itemInsertionAnimation->appendInsertTarget(cell);
         animatingItems.append(cell);
     }
