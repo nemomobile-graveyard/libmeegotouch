@@ -209,6 +209,8 @@ void Ut_MScene::drawForeground()
     QImage img1 = p->toImage();
 
     m_subject->addItem(new MButton("foobar"));
+    qApp->processEvents();
+
     p->fill(QColor(255, 255, 255, 0));
     m_subject->drawForeground(myPainter, QRect(0, 0, 300, 300));
     QImage img2 = p->toImage();
