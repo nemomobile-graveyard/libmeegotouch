@@ -113,7 +113,8 @@ void MLabelViewPrivate::autoSetTextDirection()
 
     // Set alignment
     Qt::LayoutDirection layoutDirection = MLocale::defaultLayoutDirection();
-    if (layoutDirection == Qt::LayoutDirectionAuto) {
+    if (layoutDirection == Qt::LayoutDirectionAuto
+        || model()->wordWrap()) {
         layoutDirection = textDirection; // layout according to the text content
     }
     Qt::Alignment alignment = model()->alignment();
