@@ -58,6 +58,10 @@ MObjectMenu::MObjectMenu(MWidget *target)
         if(v.isValid())
             model()->setIconId(v.toString());
 
+        v = target->property("objectMenuStyleName");
+        if(v.isValid())
+            setStyleName(v.toString());
+
         // install event filter to the target widget and object menu itself,
         // so we get notified when actions are added,removed or changed.
         installEventFilter(this);

@@ -222,6 +222,8 @@ void MObjectMenuView::actionAdded(MAction *action)
             // create button for this action
             MButton *button = new MButton(action->iconID(), action->text(), d->actionWidget);
 
+            button->setStyleName(style()->buttonStyleName());
+
             d->controller->connect(button, SIGNAL(clicked(bool)), SLOT(dismiss()));
             QObject::connect(button, SIGNAL(clicked(bool)), action, SIGNAL(triggered()));
 

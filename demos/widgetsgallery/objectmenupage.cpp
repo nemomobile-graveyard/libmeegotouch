@@ -29,6 +29,7 @@
 #include <QGraphicsLinearLayout>
 #include <QGraphicsGridLayout>
 #include <MBasicListItem>
+#include <MApplication>
 
 #include "utils.h"
 
@@ -98,6 +99,9 @@ void ObjectMenuPage::createContent()
         else if( i == 1 )
             item->setProperty("objectMenuIconId", QString("icon-m-messaging-smiley-sarcastic"));
 
+        if (MApplication::instance()->objectName() == "widgetsgalleryInverted")
+            item->setProperty("objectMenuStyleName", QString("Inverted"));
+
         if (imageContacts.size() > 0) {
             MImageWidget *icon = new MImageWidget;
             icon->setObjectName("icon");
@@ -146,6 +150,9 @@ void ObjectMenuPage::createContent()
         image->setProperty("contentURI", QString("a.album"));
 
         image->setProperty("objectMenuTitle", QString("Album%1").arg(i));
+
+        if (MApplication::instance()->objectName() == "widgetsgalleryInverted")
+            image->setProperty("objectMenuStyleName", QString("Inverted"));
 
         if (imageContacts.size() > 0) {
             image->setImage(QImage(contactsDir + QDir::separator() + imageContacts[(i+5) % imageContacts.size()]));
