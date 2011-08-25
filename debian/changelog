@@ -1,8 +1,10 @@
-libmeegotouch (0.23.11~1) unstable; urgency=low
+libmeegotouch (0.23.11-1) unstable; urgency=low
 
-  * [unreleased]
+  * New version
+  * Fixes: NB#278981 - MTextEdit prompt displays badly mult-length localized strings.
+  * Fixes: NB#278415 - In case of Right-To-Left alignment MTextEdit Prompt does not use block indentation
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 23 Aug 2011 10:59:52 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 25 Aug 2011 14:09:56 +0300
 
 libmeegotouch (0.23.10-1) unstable; urgency=low
 
