@@ -68,6 +68,7 @@ namespace
     const QString SettingsLcNumeric("/meegotouch/i18n/lc_numeric");
     const QString SettingsLcMonetary("/meegotouch/i18n/lc_monetary");
     const QString SettingsLcTelephone("/meegotouch/i18n/lc_telephone");
+    QMap<QString, QString> gconfLanguageMap;
 }
 
 /// Helper
@@ -1703,6 +1704,47 @@ MLocale::createSystemMLocale()
         // No need to set the category according to env here
         systemLocale = new MLocale(locale);
     } else {
+        // Empty country codes cause problems in some applications.
+        // Try to add the “right” country when reading the gconf
+        // keys.  But the gconf key /meegotouch/i18n/langauge is often
+        // only set to a language without country.  Try to add a the
+        // “right” country if it is missing.  For example “zh”
+        // means simplified Chinese in the Nokia translations,
+        // therefore it is OK to change this to “zh_CN”. “es_419”
+        // is used for Latin American Spanish translations, but some
+        // applications have problems with a country code like
+        // “419”, better replace it with “es_MX”.  “ar” is used
+        // for all variants of Arabic, change this to “ar_EG”,
+        // etc. ...
+        if(gconfLanguageMap.isEmpty()) {
+            gconfLanguageMap["ar"] = "ar_EG";
+            gconfLanguageMap["cs"] = "cs_CZ";
+            gconfLanguageMap["da"] = "da_DK";
+            gconfLanguageMap["de"] = "de_DE";
+            gconfLanguageMap["en"] = "en_GB";
+            gconfLanguageMap["es"] = "es_ES";
+            gconfLanguageMap["es_419"] = "es_MX";
+            gconfLanguageMap["fi"] = "fi_FI";
+            gconfLanguageMap["fr"] = "fr_FR";
+            gconfLanguageMap["hu"] = "hu_HU";
+            gconfLanguageMap["id"] = "id_ID";
+            gconfLanguageMap["it"] = "it_IT";
+            gconfLanguageMap["ms"] = "ms_MY";
+            gconfLanguageMap["nl"] = "nl_NL";
+            gconfLanguageMap["no"] = "no_NO";
+            gconfLanguageMap["pl"] = "pl_PL";
+            gconfLanguageMap["pt"] = "pt_PT";
+            gconfLanguageMap["ro"] = "ro_RO";
+            gconfLanguageMap["ru"] = "ru_RU";
+            gconfLanguageMap["sk"] = "sk_SK";
+            gconfLanguageMap["sv"] = "sv_SE";
+            gconfLanguageMap["th"] = "th_TH";
+            gconfLanguageMap["tr"] = "tr_TR";
+            gconfLanguageMap["uk"] = "uk_UA";
+            gconfLanguageMap["zh"] = "zh_CN";
+        }
+        if (gconfLanguageMap.contains(language))
+            language = gconfLanguageMap.value(language);
         systemLocale = new MLocale(language);
     }
 

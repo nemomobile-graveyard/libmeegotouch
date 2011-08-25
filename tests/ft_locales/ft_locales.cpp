@@ -279,7 +279,134 @@ void Ft_Locales::testCreateSystemLocale_data()
     // with bad data
     QTest::newRow("snd") << QString("") << QString("+2eio") << QString("en_US_POSIX");
     // Test values found via gconf and check that LANG is ignored:
-    QTest::newRow("fi") << QString("fi") << QString("en") << QString("fi");
+    QTest::newRow("ar")
+        << QString("ar")
+        << QString("en")
+        << QString("ar_EG");
+    QTest::newRow("cs")
+        << QString("cs")
+        << QString("en")
+        << QString("cs_CZ");
+    QTest::newRow("da")
+        << QString("da")
+        << QString("en")
+        << QString("da_DK");
+    QTest::newRow("de")
+        << QString("de")
+        << QString("en")
+        << QString("de_DE");
+    QTest::newRow("de_CH")
+        << QString("de_CH")
+        << QString("en")
+        << QString("de_CH");
+    QTest::newRow("en")
+        << QString("en")
+        << QString("ar")
+        << QString("en_GB");
+    QTest::newRow("en_US")
+        << QString("en_US")
+        << QString("ar")
+        << QString("en_US");
+    QTest::newRow("es")
+        << QString("es")
+        << QString("ar")
+        << QString("es_ES");
+    QTest::newRow("es_419")
+        << QString("es_419")
+        << QString("ar")
+        << QString("es_MX");
+    QTest::newRow("es_AR")
+        << QString("es_AR")
+        << QString("ar")
+        << QString("es_AR");
+    QTest::newRow("fi")
+        << QString("fi")
+        << QString("en")
+        << QString("fi_FI");
+    QTest::newRow("fr")
+        << QString("fr")
+        << QString("en")
+        << QString("fr_FR");
+    QTest::newRow("fr_CA")
+        << QString("fr_CA")
+        << QString("en")
+        << QString("fr_CA");
+    QTest::newRow("hu")
+        << QString("hu")
+        << QString("en")
+        << QString("hu_HU");
+    QTest::newRow("id")
+        << QString("id")
+        << QString("en")
+        << QString("id_ID");
+    QTest::newRow("it")
+        << QString("it")
+        << QString("en")
+        << QString("it_IT");
+    QTest::newRow("ms")
+        << QString("ms")
+        << QString("en")
+        << QString("ms_MY");
+    QTest::newRow("nl")
+        << QString("nl")
+        << QString("en")
+        << QString("nl_NL");
+    QTest::newRow("no")
+        << QString("no")
+        << QString("en")
+        << QString("no_NO");
+    QTest::newRow("pl")
+        << QString("pl")
+        << QString("en")
+        << QString("pl_PL");
+    QTest::newRow("pt")
+        << QString("pt")
+        << QString("en")
+        << QString("pt_PT");
+    QTest::newRow("pt_BR")
+        << QString("pt_BR")
+        << QString("en")
+        << QString("pt_BR");
+    QTest::newRow("ro")
+        << QString("ro")
+        << QString("en")
+        << QString("ro_RO");
+    QTest::newRow("ru")
+        << QString("ru")
+        << QString("en")
+        << QString("ru_RU");
+    QTest::newRow("sk")
+        << QString("sk")
+        << QString("en")
+        << QString("sk_SK");
+    QTest::newRow("sv")
+        << QString("sv")
+        << QString("en")
+        << QString("sv_SE");
+    QTest::newRow("th")
+        << QString("th")
+        << QString("en")
+        << QString("th_TH");
+    QTest::newRow("tr")
+        << QString("tr")
+        << QString("en")
+        << QString("tr_TR");
+    QTest::newRow("uk")
+        << QString("uk")
+        << QString("en")
+        << QString("uk_UA");
+    QTest::newRow("zh")
+        << QString("zh")
+        << QString("en")
+        << QString("zh_CN");
+    QTest::newRow("zh_HK")
+        << QString("zh_HK")
+        << QString("en")
+        << QString("zh_HK");
+    QTest::newRow("zh_TW")
+        << QString("zh_TW")
+        << QString("en")
+        << QString("zh_TW");
 }
 
 bool confIsDown()
