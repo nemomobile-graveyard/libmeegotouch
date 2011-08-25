@@ -90,7 +90,7 @@ public:
     void updateAnimations();
     void updateItemHeight();
 
-    MWidget *createCell(int row, const QPointF &atPos);
+    MWidget *createCell(int row);
     void deleteItem(MWidget *widget);
 
     void setSeparator(MWidget *separator);
@@ -156,7 +156,7 @@ public:
     virtual void createVisibleItems(const QModelIndex &firstVisibleRow,
                                     const QModelIndex &lastVisibleRow) = 0;
 
-    virtual MWidget *createItem(int row, const QPointF &atPos) = 0;
+    virtual MWidget *createItem(int row) = 0;
     virtual void replaceItem(MWidget* item, MWidget* newItem);
     virtual int totalHeight() = 0;
     virtual int hseparatorsCount() const = 0;
@@ -257,7 +257,7 @@ public:
     virtual QModelIndex flatRowToIndex(int row) const;
     virtual void createVisibleItems(const QModelIndex &firstVisibleRow,
                                     const QModelIndex &lastVisibleRow);
-    virtual MWidget *createItem(int row, const QPointF &atPos);
+    virtual MWidget *createItem(int row);
 };
 
 class MPlainMultiColumnListViewPrivate : public MPlainListViewPrivate
@@ -282,7 +282,7 @@ public:
     virtual int locatePosOfItem(int row);
     virtual int hseparatorsCount() const;
     virtual int totalHeight();
-    virtual MWidget *createItem(int row, const QPointF &atPos);
+    virtual MWidget *createItem(int row);
     virtual QModelIndex locateLastVisibleIndexInRowAt(int pos);
     virtual void replaceItem(MWidget* item, MWidget* newItem);
     virtual int locateVisibleRowAt(int y, int x = 0);
@@ -348,7 +348,7 @@ public:
     void createVisibleItems(int firstVisibleRow, int lastVisibleRow);
     virtual void createVisibleItems(const QModelIndex &firstVisibleRow,
                                     const QModelIndex &lastVisibleRow);
-    virtual MWidget *createItem(int row, const QPointF &atPos);
+    virtual MWidget *createItem(int row);
     virtual bool isGroupHeader(const QModelIndex &index);
     virtual void layoutChanged();
 
@@ -406,7 +406,7 @@ public:
     virtual int locatePosOfItem(int row);
     virtual void createVisibleItems(const QModelIndex &firstVisibleRow,
                                     const QModelIndex &lastVisibleRow);
-    virtual MWidget *createItem(int row, const QPointF &atPos);
+    virtual MWidget *createItem(int row);
 
     virtual void replaceItem(MWidget* item, MWidget* newItem);
     virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);

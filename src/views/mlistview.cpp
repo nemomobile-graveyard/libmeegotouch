@@ -277,7 +277,7 @@ void MListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &botto
                     if( (controller->optimizationFlags() & MList::DontCallCreateCellDuringUpdate) == MList::DontCallCreateCellDuringUpdate) {
                         cellCreator->updateCell(cellIndex, cell);
                     } else {
-                        MWidget* newCell = d_ptr->createCell(i, cell->pos());
+                        MWidget* newCell = d_ptr->createCell(i);
                         d_ptr->replaceItem(cell, newCell);
                     }
                 }
