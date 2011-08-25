@@ -1,3 +1,10 @@
+libmeegotouch (0.23.12-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#272172 - meegotouch based applications should have Qt instant invalidate propagation for layouts enabled by default.
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 25 Aug 2011 15:47:08 +0300
+
 libmeegotouch (0.23.11-1) unstable; urgency=low
 
   * New version
