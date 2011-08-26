@@ -562,7 +562,11 @@ public:
      */
     void setTitleBarIconId(const QString &iconId);
 
+    //! Restore MSceneWindow::appear(QGraphicsScene *) overload visibility.
+    using MSceneWindow::appear;
+
 public Q_SLOTS:
+
     /*!
      * \brief Shows the dialog on the currently active window or seperately on its own.
      *
