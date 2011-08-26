@@ -2513,6 +2513,25 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "14:31:00"
         << "14 นาฬิกา 31 นาที 00 วินาที GMT+03:00"
         << "14 นาฬิกา 31 นาที 00 วินาที GMT+03:00";
+    QTest::newRow("21.7.2008_vi_VN_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI") // lc_messages
+        << QString("vi_VN@calendar=gregorian;mix-time-and-language=no") // lc_time
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::DefaultCalendar
+        << 2008
+        << 7
+        << 21
+        << "21/07/2008"
+        << "21-07-2008"
+        << "21 tháng 7 năm 2008"
+        << "Thứ hai, ngày 21 tháng bảy năm 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 GMT+03:00"
+        << "14:31:00 GMT+03:00";
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
@@ -2601,6 +2620,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
                         expectedResult = dateResults[dateType] + "،‏ " + timeResults[timeType];
                     else
                         expectedResult = dateResults[dateType] + "، ساعت " + timeResults[timeType];
+            }
+            else if(locale.categoryName(MLocale::MLcTime).startsWith("vi")) {
+                expectedResult = timeResults[timeType] + " " + dateResults[dateType];
             }
             else
                 expectedResult = dateResults[dateType] + ' ' + timeResults[timeType];

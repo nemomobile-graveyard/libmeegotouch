@@ -5,6 +5,21 @@ vi{
                  "AM",
                  "PM",
              }
+             DateTimePatterns{
+                 "HH:mm:ss zzzz",
+                 "HH:mm:ss z",
+                 "HH:mm:ss",
+                 "HH:mm",
+                 "EEEE, 'ngày' dd MMMM 'năm' y",
+                 "dd 'tháng' M 'năm' y",
+                 "dd-MM-yyyy",
+                 "dd/MM/yyyy",
+                 "{0} {1}",
+                 "{0} {1}",
+                 "{0} {1}",
+                 "{0} {1}",
+                 "{0} {1}",
+             }
         }
     }
 }
