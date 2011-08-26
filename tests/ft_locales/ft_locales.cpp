@@ -4374,6 +4374,18 @@ void Ft_Locales::checkAvailableLocales()
         supportedLocaleNames << "zh_CN@collation=pinyin";
         supportedLocaleNames << "zh_CN@collation=stroke";
     }
+    QStringList numberSystemTestLocales;
+    foreach(QString supportedLocaleName, supportedLocaleNames) {
+        if(supportedLocaleName.startsWith("ar")) {
+            numberSystemTestLocales << supportedLocaleName + QLatin1String("@numbers=arab");
+            numberSystemTestLocales << supportedLocaleName + QLatin1String("@numbers=latn");
+        }
+        else if (supportedLocaleName.startsWith("fa")) {
+            numberSystemTestLocales << supportedLocaleName + QLatin1String("@numbers=arabext");
+            numberSystemTestLocales << supportedLocaleName + QLatin1String("@numbers=latn");
+        }
+    }
+    supportedLocaleNames.append(numberSystemTestLocales);
     // sort the list for easier comparison in the output
     // (i.e. es_419 should be near es, not at the end of the list):
     qSort(supportedLocaleNames.begin(), supportedLocaleNames.end());

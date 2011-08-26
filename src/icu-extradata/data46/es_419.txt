@@ -2,8 +2,8 @@ es_419{
     NumberElements{
         latn{
             symbols{
-                decimal { "." }
-                group { " " }
+                decimal { "," }
+                group { "." }
             }
         }
     }

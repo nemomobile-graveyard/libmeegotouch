@@ -4,11 +4,15 @@ fa{
         arabext{
             symbols{
                 decimal { "٫" }
-                exponential { "×۱۰^" }
+                exponential { "E" }
                 group { "٬" }
-                list { "؛" }
-                perMille { "‰" }
-                percentSign { "%" }
+                infinity { "∞" }
+                list { ";" }
+                minusSign { "-" }
+                nan { "NaN" }
+                perMille { "؉" }
+                percentSign { "٪" }
+                plusSign { "+" }
             }
         }
         latn{
@@ -18,6 +22,18 @@ fa{
                 percentFormat { "#,##0%;-#,##0%" }
                 scientificFormat { "#E0" }
              }
+            symbols{
+                decimal { "." }
+                exponential { "E" }
+                group { "," }
+                infinity { "∞" }
+                list { ";" }
+                minusSign { "-" }
+                nan { "NaN" }
+                perMille { "‰" }
+                percentSign { "%" }
+                plusSign { "+" }
+            }
         }
     }
     calendar{
