@@ -907,8 +907,8 @@ void MSceneManagerPrivate::setSceneWindowGeometry(MSceneWindow *window)
 
     // restart running navigationbar's and sheet's appearance animation to update animation endValues
     MAbstractWidgetAnimation* animation = window->d_func()->appearanceAnimation;
-    if ((window->windowType() == MSceneWindow::NavigationBar || window->windowType() == MSceneWindow::Sheet) &&
-        animation && animation->state() == QAbstractAnimation::Running)
+    if ((window->windowType() == MSceneWindow::NavigationBar ||window->windowType() == MSceneWindow::Sheet ||
+         window->windowType() == MSceneWindow::ApplicationMenu) && animation && animation->state() == QAbstractAnimation::Running)
     {
         animation->stop();
         animation->restoreTargetWidgetState();
