@@ -25,6 +25,7 @@
 #include <MTheme>
 #include <MGConfItem>
 #include "mthemedaemon.h"
+#include <mimagedirectory.h>
 
 namespace {
     const char *UncommonIconId = "meegotouch-speechbubble-incoming-background";
@@ -51,6 +52,8 @@ void Ut_MCommonPixmaps::initTestCase()
                                                        QList<MThemeDaemonClient*>(),
                                                        pixmapsToDelete);
     QVERIFY(themeActivated);
+
+    m_themeDaemon->themeImageDirs.append(new MThemeImagesDirectory(qApp->applicationDirPath()));
 
     qRegisterMetaType< M::MThemeDaemonProtocol::MostUsedPixmaps >("M::MThemeDaemonProtocol::MostUsedPixmaps");
 
