@@ -297,5 +297,20 @@ void Ut_MContainer::setProgressIndicatorWithHeaderInvisible()
     QCOMPARE(m_subject->isProgressIndicatorVisible(), true);
 }
 
+void Ut_MContainer::testAddingToLayout()
+{
+    //Test for crash reported in NB#279528
+    QGraphicsWidget *widget = new QGraphicsWidget;
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical, widget);
+    m_subject->setTitle("Header Label");
+    m_subject->setText("Additional Label");
+    //Next line shouldn't crash
+    layout->addItem(m_subject);
+
+    //Cleanup
+    layout->removeItem(m_subject);
+    m_subject->setParentItem(NULL);
+    delete widget;
+}
 
 QTEST_APPLESS_MAIN(Ut_MContainer)
