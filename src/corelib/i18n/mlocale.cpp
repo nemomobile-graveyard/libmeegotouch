@@ -2223,7 +2223,7 @@ qlonglong MLocale::toLongLong(const QString &s, bool *ok) const
 #ifdef HAVE_ICU
     Q_D(const MLocale);
     QString parseInput = s;
-    d->removeDirectionalFormattingCodes(&parseInput);
+    d->fixParseInputForRTL(&parseInput);
     icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(parseInput);
     icu::Formattable formattable;
     icu::ParsePosition parsePosition;
@@ -2287,7 +2287,7 @@ short MLocale::toShort(const QString &s, bool *ok) const
 #ifdef HAVE_ICU
     Q_D(const MLocale);
     QString parseInput = s;
-    d->removeDirectionalFormattingCodes(&parseInput);
+    d->fixParseInputForRTL(&parseInput);
     icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(parseInput);
     icu::Formattable formattable;
     icu::ParsePosition parsePosition;
@@ -2358,7 +2358,7 @@ int MLocale::toInt(const QString &s, bool *ok) const
 #ifdef HAVE_ICU
     Q_D(const MLocale);
     QString parseInput = s;
-    d->removeDirectionalFormattingCodes(&parseInput);
+    d->fixParseInputForRTL(&parseInput);
     icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(parseInput);
     icu::Formattable formattable;
     icu::ParsePosition parsePosition;
@@ -2464,7 +2464,7 @@ double MLocale::toDouble(const QString &s, bool *ok) const
         = MIcuConversions::unicodeStringToQString(
             decimalFormatSymbols->getSymbol(DecimalFormatSymbols::kExponentialSymbol));
     QString parseInput = s;
-    d->removeDirectionalFormattingCodes(&parseInput);
+    d->fixParseInputForRTL(&parseInput);
     // accept “e” or “E” always as exponential symbols, even if the
     // locale uses something completely different:
     parseInput.replace(QChar('e'), exponentialSymbol, Qt::CaseInsensitive);
@@ -2539,7 +2539,7 @@ float MLocale::toFloat(const QString &s, bool *ok) const
         = MIcuConversions::unicodeStringToQString(
             decimalFormatSymbols->getSymbol(DecimalFormatSymbols::kExponentialSymbol));
     QString parseInput = s;
-    d->removeDirectionalFormattingCodes(&parseInput);
+    d->fixParseInputForRTL(&parseInput);
     // accept “e” or “E” always as exponential symbols, even if the
     // locale uses something completely different:
     parseInput.replace(QChar('e'), exponentialSymbol, Qt::CaseInsensitive);
@@ -2601,10 +2601,103 @@ void MLocalePrivate::removeDirectionalFormattingCodes(QString *str) const
 }
 #endif
 
+
+#ifdef HAVE_ICU
+void MLocalePrivate::swapPostAndPrefixOfFormattedNumber(QString *formattedNumber) const
+{
+    QString newPostfix;
+    QString newPrefix;
+    while(!formattedNumber->isEmpty()
+          && formattedNumber->at(0).direction() != QChar::DirEN
+          && formattedNumber->at(0).direction() != QChar::DirAN) {
+        if(formattedNumber->at(0).isLetter() || formattedNumber->at(0).isPunct()) {
+            int i = 0;
+            while (i < newPostfix.size() && (newPostfix.at(i).isLetter() || newPostfix.at(i).isPunct()))
+                ++i;
+            newPostfix.insert(i, formattedNumber->at(0));
+        }
+        else
+            newPostfix.prepend(formattedNumber->at(0));
+        formattedNumber->remove(0,1);
+    }
+    while(!formattedNumber->isEmpty()
+          && formattedNumber->right(1).at(0).direction() != QChar::DirEN
+          && formattedNumber->right(1).at(0).direction() != QChar::DirAN) {
+        if(formattedNumber->right(1).at(0).isLetter() || formattedNumber->right(1).at(0).isPunct()) {
+            int i = newPrefix.size();
+            while (i > 0 && (newPrefix.at(i-1).isLetter() || newPrefix.at(i-1).isPunct()))
+                --i;
+            newPrefix.insert(i, formattedNumber->right(1).at(0));
+        }
+        else
+            newPrefix.append(formattedNumber->right(1).at(0));
+        formattedNumber->remove(formattedNumber->size()-1,1);
+    }
+    formattedNumber->prepend(newPrefix);
+    formattedNumber->append(newPostfix);
+}
+#endif
+
 #ifdef HAVE_ICU
 void MLocalePrivate::fixFormattedNumberForRTL(QString *formattedNumber) const
 {
     Q_Q(const MLocale);
+    QString categoryNameNumeric = categoryName(MLocale::MLcNumeric);
+    if(categoryNameNumeric.startsWith(QLatin1String("ar"))
+       || categoryNameNumeric.startsWith(QLatin1String("fa"))) {
+        // remove formatting codes already found in the format, there
+        // should not be any but better make sure
+        // (actually some of the Arabic currency symbols have RLM markers in the icu
+        // data ...).
+        removeDirectionalFormattingCodes(formattedNumber);
+        if(formattedNumber->contains(QRegExp("[٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹]"))) {
+            swapPostAndPrefixOfFormattedNumber(formattedNumber);
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+            // icu >= 4.6 can use different symbols for different
+            // digit systems. No need to do any manual replacing.
+#else
+            formattedNumber->replace(QString::fromUtf8("%"), QString::fromUtf8("٪"));
+            formattedNumber->replace(QString::fromUtf8("‰"), QString::fromUtf8("؉"));
+            formattedNumber->replace(QString::fromUtf8(","), QString::fromUtf8("٬"));
+            // Some currency names like http://en.wikipedia.org/wiki/United_Arab_Emirates_dirham
+            // sign: "د.إ.‏", code: AED, contain periods, therefore take care to replace
+            // the period with an ARABIC DECIMAL SEPARATOR only if the period is between
+            // digits:
+            formattedNumber->replace(
+                QRegExp(QString::fromUtf8("([٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹])\\.([٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹])")),
+                        QString::fromUtf8("\\1٫\\2"));
+            if(categoryNameNumeric.startsWith(QLatin1String("ar")))
+                formattedNumber->replace(QString::fromUtf8("NaN"), QString::fromUtf8("ليس رقم"));
+#endif
+        }
+    }
+    if(formattedNumber->at(0).direction() == QChar::DirAL) {
+        // there is an Arabic currency symbol at the beginning, add markup
+        // like this: <RLE>currency symbol with trailing spaces<PDF><LRE>rest of number<PDF>
+        int i = 0;
+        while (i < formattedNumber->size()
+               && (formattedNumber->at(i).isLetter()
+                   || formattedNumber->at(i).isPunct()
+                   || formattedNumber->at(i).isSpace()))
+            ++i;
+        formattedNumber->insert(i, QChar(0x202A)); // LEFT-TO-RIGHT EMBEDDING
+        formattedNumber->insert(i, QChar(0x202C)); // POP DIRECTIONAL FORMATTING
+        formattedNumber->prepend(QChar(0x202B));   // RIGHT-TO-LEFT EMBEDDING
+        formattedNumber->append(QChar(0x202C));    // POP DIRECTIONAL FORMATTING
+    } else if(MLocale::directionForText(*formattedNumber) == Qt::RightToLeft) {
+        // there is an Arabic currency symbol at the end, add markup like this:
+        // <LRE>rest of number<PDF><RLE>leading spaces and currency symbol<PDF>
+        int i = formattedNumber->size();
+        while (i > 0
+               && (formattedNumber->at(i-1).isLetter()
+                   || formattedNumber->at(i-1).isPunct()
+                   || formattedNumber->at(i-1).isSpace()))
+            --i;
+        formattedNumber->insert(i, QChar(0x202B)); // RIGHT-TO-LEFT EMBEDDING
+        formattedNumber->insert(i, QChar(0x202C)); // POP DIRECTIONAL FORMATTING
+        formattedNumber->prepend(QChar(0x202A));   // LEFT-TO-RIGHT EMBEDDING
+        formattedNumber->append(QChar(0x202C));    // POP DIRECTIONAL FORMATTING
+    }
     // see http://comments.gmane.org/gmane.comp.internationalization.bidi/2
     // and consider the bugs:
     // https://projects.maemo.org/bugzilla/show_bug.cgi?id=232757
@@ -2617,12 +2710,28 @@ void MLocalePrivate::fixFormattedNumberForRTL(QString *formattedNumber) const
     // as they should appear in display order already!):
     if(q->localeScripts()[0] != "Arab" && q->localeScripts()[0] != "Hebr")
         return;
-    // remove formatting codes already found in the format, there
-    // should not be any but better make sure:
-    removeDirectionalFormattingCodes(formattedNumber);
     formattedNumber->prepend(QChar(0x202A)); // LEFT-TO-RIGHT EMBEDDING
     formattedNumber->append(QChar(0x202C)); // POP DIRECTIONAL FORMATTING
     return;
+}
+#endif
+
+#ifdef HAVE_ICU
+void MLocalePrivate::fixParseInputForRTL(QString *formattedNumber) const
+{
+    removeDirectionalFormattingCodes(formattedNumber);
+    if(formattedNumber->contains(QRegExp("[٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹]"))) {
+        swapPostAndPrefixOfFormattedNumber(formattedNumber);
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+        // icu >= 4.6 can use different symbols for different
+        // digit systems. No need to do any manual replacing.
+#else
+        formattedNumber->replace(QString::fromUtf8("٪"), QString::fromUtf8("%"));
+        formattedNumber->replace(QString::fromUtf8("؉"), QString::fromUtf8("‰"));
+        formattedNumber->replace(QString::fromUtf8("٫"), QString::fromUtf8("."));
+        formattedNumber->replace(QString::fromUtf8("٬"), QString::fromUtf8(","));
+#endif
+    }
 }
 #endif
 
@@ -3519,6 +3628,16 @@ QString MLocale::decimalPoint() const
     QString numberingSystem = d->numberingSystem(categoryNameNumeric);
     QString resourceBundleLocaleName = categoryNameNumeric;
     QString decimal = QLatin1String(".");
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+    // icu >= 4.6 can use different symbols for different
+    // numbering systems. No need to do any manual hack for
+    // to return different symbols for different numering systems.
+#else
+    // for icu < 4.6, return the ARABIC DECIMAL SEPARATOR
+    // when the numbering system is "arab" or "arabext":
+    if(numberingSystem == "arab" || numberingSystem == "arabext")
+        return QString::fromUtf8("٫");
+#endif
     do {
         // Trying several resource bundles is a workaround for
         // http://site.icu-project.org/design/resbund/issues

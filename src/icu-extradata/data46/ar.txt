@@ -3,12 +3,15 @@ ar{
         arab{
             symbols{
                 decimal { "٫" }
-                exponential { "اس" }
+                exponential { "E" }
                 group { "٬" }
-                list { "؛" }
-                nan { "ليس رقم" }
-                perMille { "‰" }
-                percentSign { "%" }
+                infinity { "∞" }
+                list { ";" }
+                minusSign { "-" }
+                nan { "NaN" }
+                perMille { "؉" }
+                percentSign { "٪" }
+                plusSign { "+" }
             }
         }
         latn{
@@ -17,7 +20,19 @@ ar{
                 decimalFormat { "#,##0.###;-#,##0.###" }
                 percentFormat { "#,##0%;-#,##0%" }
                 scientificFormat { "#E0" }
-             }
+            }
+            symbols{
+                decimal { "." }
+                exponential { "E" }
+                group { "," }
+                infinity { "∞" }
+                list { ";" }
+                minusSign { "-" }
+                nan { "NaN" }
+                perMille { "‰" }
+                percentSign { "%" }
+                plusSign { "+" }
+            }
         }
     }
 }

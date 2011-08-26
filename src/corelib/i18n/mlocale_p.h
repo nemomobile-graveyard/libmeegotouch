@@ -198,7 +198,9 @@ public:
 
 #ifdef HAVE_ICU
     void removeDirectionalFormattingCodes(QString *str) const;
+    void swapPostAndPrefixOfFormattedNumber(QString *formattedNumber) const;
     void fixFormattedNumberForRTL(QString *formattedNumber) const;
+    void fixParseInputForRTL(QString *formattedNumber) const;
     // number format caching for better performance.
     icu::NumberFormat *_numberFormat;
     icu::NumberFormat *_numberFormatLcTime;
