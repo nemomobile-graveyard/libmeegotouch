@@ -314,7 +314,7 @@ void Ft_Locales::testCreateSystemLocale_data()
     QTest::newRow("es_419")
         << QString("es_419")
         << QString("ar")
-        << QString("es_MX");
+        << QString("es_419"); // important to find the translations!
     QTest::newRow("es_AR")
         << QString("es_AR")
         << QString("ar")
