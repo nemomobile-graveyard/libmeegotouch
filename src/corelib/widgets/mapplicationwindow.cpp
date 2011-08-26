@@ -549,7 +549,6 @@ void MApplicationWindowPrivate::openMenu()
     if (navigationBar->isArrowIconVisible() &&
         (navigationBar->sceneWindowState() != MSceneWindow::Disappearing)) {
         menu->appear(q);
-        navigationBar->setEscapeButtonEnabled(false);
     }
 }
 
@@ -581,8 +580,6 @@ void MApplicationWindowPrivate::_q_menuDisappeared()
                         q, SLOT(closeMenu()));
     QObject::connect(navigationBar, SIGNAL(viewmenuTriggered()),
                      q, SLOT(openMenu()));
-
-    navigationBar->setEscapeButtonEnabled(true);
 
     if (!componentsOnAutoHide.isEmpty() && !autoHideComponentsTimer.isActive())
         autoHideComponentsTimer.start();
