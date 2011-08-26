@@ -381,8 +381,10 @@ void MContainerView::setupModel()
         QObject::connect(d->header, SIGNAL(released()), this, SLOT(headerReleased()));
 
         d->title->setText(model()->title());
-        if (!model()->text().isEmpty())
+        if (!model()->text().isEmpty()) {
+            d->setupTextLabel();
             d->text->setText(model()->text());
+        }
 
         // create icon if it is set to be shown by the model
         if (!model()->icon().isEmpty())

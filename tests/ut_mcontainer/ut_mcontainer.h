@@ -69,6 +69,7 @@ private slots:
     void setProgressIndicatorWithHeaderVisible();
     void setProgressIndicatorWithHeaderInvisible();
 
+    void testAddingToLayout();
 private:
     MContainer *m_subject;
 };
