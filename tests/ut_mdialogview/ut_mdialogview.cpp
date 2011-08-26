@@ -72,6 +72,9 @@ void Ut_MDialogView::closeButtonVisibility()
     dialogStyle->setHasCloseButton(true);
     subject->applyStyle();
 
+    qApp->processEvents();
+    qApp->processEvents();
+
     QCOMPARE(dialogCloseButton->isVisible(), true);
 
     dialogStyle->setHasCloseButton(false);
