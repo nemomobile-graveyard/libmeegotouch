@@ -212,7 +212,7 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
 
         if (rail) {
             int railPixmapSizeX = rail->pixmap()->width();
-            int railPositionX = (qApp->layoutDirection() == Qt::RightToLeft ? 0 : currentSize.width() - railPixmapSizeX);
+            int railPositionX = (d->controller->layoutDirection() == Qt::RightToLeft ? 0 : currentSize.width() - railPixmapSizeX);
 
             rail->draw((qreal)railPositionX,
                         0.0,
@@ -221,7 +221,7 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
                         painter);
         }
 
-        int indicatorPositionX = (qApp->layoutDirection() == Qt::RightToLeft ? 0 : currentSize.width() - indicatorPixmapSizeX);
+        int indicatorPositionX = (d->controller->layoutDirection() == Qt::RightToLeft ? 0 : currentSize.width() - indicatorPixmapSizeX);
 
         indicator->draw(indicatorPositionX,
                         indicatorPositionY,
