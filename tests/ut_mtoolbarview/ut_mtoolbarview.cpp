@@ -388,6 +388,7 @@ void Ut_MToolBarView::testInsertingActions()
     QPointer<MAction> action3 = new MAction("action", m_toolbar);
     action3->setLocation(MAction::ToolBarLocation);
     m_toolbar->insertAction(action1, action3);
+    qApp->processEvents();
     QPointer<MButton> button3 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action3));
 
     qApp->processEvents();
@@ -415,12 +416,14 @@ void Ut_MToolBarView::testInsertingActions()
     QVERIFY(button4->geometry().left() < button2->geometry().left());
     QVERIFY(button2->geometry().left() < button3->geometry().left());
     QCOMPARE(button1 && button1->isVisible(), false);
+    qApp->processEvents();
     QCOMPARE(button4->isVisible(), true);
 
     //Add an action at the end, so we now have 4 visible buttons and 1 hidden button
     QPointer<MAction> action5 = new MAction("action", m_toolbar);
     action5->setLocation(MAction::ToolBarLocation);
     m_toolbar->addAction(action5);
+    qApp->processEvents();
     QPointer<MButton> button5 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action5));
 
     qApp->processEvents();
@@ -919,12 +922,16 @@ void Ut_MToolBarView::testCapacityLimitedTo3AndHidingAndShowingFirstButton()
     createDummyActions(2);
     QPointer<MAction> action4 = createAction();
 
+    qApp->processEvents();
+
     action1->setVisible(false);
 
     qApp->processEvents();
 
     QPointer<MButton> button1 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action1));
     QPointer<MButton> button4 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action4));
+
+    qApp->processEvents();
 
     QCOMPARE(m_toolbar->actions().count(), 4);
     QVERIFY(isVisible(button1) == false);
