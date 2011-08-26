@@ -245,6 +245,8 @@ void Ut_MLinearLayoutPolicy::testStretch()
     else
         m_mockLayout->activate();
 
+    qApp->processEvents();
+
     QCOMPARE(m_mockItem100->geometry(), QRectF(0, 0, 100, 100));
     QCOMPARE(m_mockItem200->geometry(), QRectF(400, 0, 200, 200));
 
