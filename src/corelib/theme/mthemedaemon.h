@@ -71,6 +71,10 @@ private:
     QStringList themeLibraries;
     QList<MThemeImagesDirectory *> themeImageDirs;
     Type type;
+
+#ifdef UNIT_TEST
+    friend class Ut_MCommonPixmaps;
+#endif
 };
 //! \internal_end
 #endif
