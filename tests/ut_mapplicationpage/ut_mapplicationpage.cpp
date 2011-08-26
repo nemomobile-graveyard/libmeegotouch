@@ -334,6 +334,8 @@ void Ut_MApplicationPage::testUpdatingWindowTitleWithChangingPageTitle()
 void Ut_MApplicationPage::testIfPositionIndicatorGeometryFollowsExposedRect()
 {
     m_subject->appear(appWin);
+    qApp->processEvents();
+    qApp->processEvents();
     QCOMPARE(m_subject->pannableViewport()->positionIndicator()->geometry(), m_subject->exposedContentRect());
 }
 
