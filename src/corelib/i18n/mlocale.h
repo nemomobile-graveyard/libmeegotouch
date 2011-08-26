@@ -866,6 +866,11 @@ public:
      *
      * Example:
      * If the locale name is “fi_FI” this will return “FI”.
+     * If the locale name is “es_419” this will return “419”.
+     * “419” is the generic code for Latin American Spanisch.
+     * This “es_419” is used in the translations to have one
+     * common translation for all Latin American locales instead
+     * of individual ones like for all locales like “es_MX”.
      *
      * \sa name()
      * \sa language()

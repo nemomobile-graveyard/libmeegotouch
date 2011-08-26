@@ -1725,11 +1725,8 @@ MLocale::createSystemMLocale()
         // only set to a language without country.  Try to add a the
         // “right” country if it is missing.  For example “zh”
         // means simplified Chinese in the Nokia translations,
-        // therefore it is OK to change this to “zh_CN”. “es_419”
-        // is used for Latin American Spanish translations, but some
-        // applications have problems with a country code like
-        // “419”, better replace it with “es_MX”.  “ar” is used
-        // for all variants of Arabic, change this to “ar_EG”,
+        // therefore it is OK to change this to “zh_CN”. “ar” is
+        // used for all variants of Arabic, change this to “ar_EG”,
         // etc. ...
         if(gconfLanguageMap.isEmpty()) {
             gconfLanguageMap["ar"] = "ar_EG";
@@ -1738,7 +1735,13 @@ MLocale::createSystemMLocale()
             gconfLanguageMap["de"] = "de_DE";
             gconfLanguageMap["en"] = "en_GB";
             gconfLanguageMap["es"] = "es_ES";
-            gconfLanguageMap["es_419"] = "es_MX";
+            // “es_419” is used for Latin American Spanish
+            // translations, but some applications have problems with
+            // a country code like “419”, we cannot easily replace
+            // it with “es_MX” though because this breaks loading of
+            // the Latin American Spanisch translations.
+            //
+            // gconfLanguageMap["es_419"] = "es_MX";
             gconfLanguageMap["fi"] = "fi_FI";
             gconfLanguageMap["fr"] = "fr_FR";
             gconfLanguageMap["hu"] = "hu_HU";
