@@ -1223,6 +1223,7 @@ void Ut_MLabel::testDiacritics()
     const QRect textRect = contentRect(captureImage(label));
 
     label->setText(textWithDiacritics);
+    qApp->processEvents();
     const QRect textWithDiacriticsRect = contentRect(captureImage(label));
 
     QVERIFY(textWithDiacriticsRect.height() >= textRect.height() + 6);
