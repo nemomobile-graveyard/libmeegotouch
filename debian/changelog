@@ -1,3 +1,12 @@
+libmeegotouch (0.23.13-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#277393 - Arabic texts are not displayed Right to Left in MLabel
+  * Fixes: NB#276653 - MLocale returns empty country code
+  * Fixes: NB#277180 - Wrong direction returned by MLocale::directionForText() function
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 26 Aug 2011 13:55:46 +0300
+
 libmeegotouch (0.23.12-1) unstable; urgency=low
 
   * New version
