@@ -1,3 +1,12 @@
+libmeegotouch (0.23.13-2) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#279594 - Not able to save note in notes application.
+  * Fixes: NB#279618 - Default thumbnails seen at Messages view for all messages
+  * Fixes: NB#279595 - AP News crash tabbing sharing icon
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Sat, 27 Aug 2011 20:35:52 +0300
+
 libmeegotouch (0.23.13-1) unstable; urgency=low
 
   * New version
