@@ -1354,7 +1354,10 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         tbf.setLayoutDirection(Qt::LayoutDirectionAuto);
         QTextCursor promptCursor(d->promptDocument());
         promptCursor.setPosition(0);
-        promptCursor.setBlockFormat(tbf);
+        QTextBlockFormat promptFormat = promptCursor.blockFormat();
+        promptFormat.setIndent(tbf.indent());
+        promptFormat.setTextIndent(tbf.textIndent());
+        promptCursor.setBlockFormat(promptFormat);
 
         qreal opacity = painter->opacity();
         painter->setOpacity(d->currentPromptOpacity);
