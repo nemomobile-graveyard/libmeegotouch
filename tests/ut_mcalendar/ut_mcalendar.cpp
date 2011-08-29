@@ -5508,6 +5508,34 @@ void Ut_MCalendar::testWeekdayType_data()
        << 6
        <<  0 <<  0 <<  0 <<  1 <<        3 <<  0 <<  0
        << -1 << -1 << -1 <<  0 << 86400000 << -1 << -1;
+   QTest::newRow("ar_AE")
+       << "ar_AE"
+       << "ar_AE"
+       << MLocale::GregorianCalendar
+       << 6
+       <<  0 <<  0 <<  0 <<   0 << 1 <<        3 <<  0
+       << -1 << -1 << -1 <<  -1 << 0 << 86400000 << -1;
+   QTest::newRow("ar_AE")
+       << "ar_AE"
+       << "ar_AE"
+       << MLocale::IslamicCalendar
+       << 6
+       <<  0 <<  0 <<  0 <<   0 << 1 <<        3 <<  0
+       << -1 << -1 << -1 <<  -1 << 0 << 86400000 << -1;
+   QTest::newRow("ar_SY")
+       << "ar_SY"
+       << "ar_SY"
+       << MLocale::GregorianCalendar
+       << 6
+       <<  0 <<  0 <<  0 <<   0 << 1 <<        3 <<  0
+       << -1 << -1 << -1 <<  -1 << 0 << 86400000 << -1;
+   QTest::newRow("ar_SY")
+       << "ar_SY"
+       << "ar_SY"
+       << MLocale::IslamicCalendar
+       << 6
+       <<  0 <<  0 <<  0 <<   0 << 1 <<        3 <<  0
+       << -1 << -1 << -1 <<  -1 << 0 << 86400000 << -1;
    QTest::newRow("he_IL")
        << "he_IL"
        << "he_IL"
