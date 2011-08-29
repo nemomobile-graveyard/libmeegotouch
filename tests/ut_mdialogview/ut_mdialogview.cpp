@@ -21,6 +21,7 @@
 
 #include <mdialogstyle.h>
 #include <mlayout.h>
+#include <mbuttonmodel.h>
 #include <mlinearlayoutpolicy.h>
 #include <QGraphicsLinearLayout>
 #include "mdialogview_p.h"
@@ -188,6 +189,29 @@ void Ut_MDialogView::buttonsFromModel()
     QVERIFY(subject->d_func()->buttonBoxLayoutPolicy->count()==2);
     model->removeButton(model->button(M::CancelButton));
     QVERIFY(subject->d_func()->buttonBoxLayoutPolicy->count()==1);
+    model->removeButton(model->button(M::OkButton));
+    QVERIFY(subject->d_func()->buttonBoxLayoutPolicy->count()==0);
+}
+
+void Ut_MDialogView::buttonsCustomStyles()
+{
+    // Check that it sets a default button style name
+    MButtonModel *button = new MButtonModel;
+    model->addButton(button);
+    // First button should be highlighted
+    QCOMPARE(button->styleName(), QString("CommonQueryActionButton"));
+
+    button = new MButtonModel;
+    model->addButton(button);
+    // The remaining buttons should not be highlighted
+    QCOMPARE(button->styleName(), QString("CommonQueryButton"));
+
+    // Check that it doesn't override a previously set style name in the button
+    const QString buttonStyleName("Custom");
+    button = new MButtonModel;
+    button->setStyleName(buttonStyleName);
+    model->addButton(button);
+    QCOMPARE(button->styleName(), buttonStyleName);
 }
 
 QGraphicsWidget *Ut_MDialogView::fetchWidget(QGraphicsWidget &widget,

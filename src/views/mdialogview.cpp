@@ -494,7 +494,6 @@ void MDialogViewPrivate::addButton(MButtonModel *buttonModel)
     M::ButtonRole currentButtonRole;
     MButton *newButton = new MButton(0, buttonModel);
     newButton->setObjectName(buttonModel->objectName());
-    newButton->setStyleName("CommonQueryButton");
     MButton *currButton = 0;
     bool buttonAdded = false;
     int i = 0;

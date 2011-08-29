@@ -212,6 +212,13 @@ void MDialogModel::addButton(MButtonModel *button)
 {
     MDialogButtonsList &list = _buttons();
 
+    if (button && button->styleName().isEmpty()) {
+        if (list.isEmpty())
+            button->setStyleName("CommonQueryActionButton");
+        else
+            button->setStyleName("CommonQueryButton");
+    }
+
     if (list.indexOf(button) == -1) {
         list.append(button);
         button->increaseReferenceCount();
