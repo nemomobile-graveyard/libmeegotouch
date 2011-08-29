@@ -69,6 +69,7 @@ greaterThan(ICUVERSION, 4.4) {
                       data46/ur_IN.txt
     } else {
         LOCALESTXT += data/ar.txt \
+                      data/ar_AE.txt \
                       data/ar_QA.txt \
                       data/ar_SA.txt \
                       data/ar_SY.txt \

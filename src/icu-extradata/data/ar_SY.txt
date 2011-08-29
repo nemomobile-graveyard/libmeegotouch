@@ -5,4 +5,9 @@ ar_SY{
         "#,##0%;-#,##0%",
         "#E0",
     }
+    calendar{
+        gregorian{
+            DateTimeElements:intvector { 7, 4 }
+        }
+    }
 }
