@@ -354,8 +354,12 @@ MNavigationBarView::~MNavigationBarView()
 QRectF MNavigationBarView::boundingRect() const
 {
     QRectF br = MWidgetView::boundingRect();
-    if( style()->dropShadowImage() ) {
-        br.setHeight(br.height() + style()->dropShadowImage()->pixmap()->size().height());
+    if (style()->dropShadowImage()) {
+        int shadowHeight = style()->dropShadowImage()->pixmap()->size().height();
+        if (style()->verticalAlign() & Qt::AlignBottom)
+            br.setTop(-shadowHeight);
+        else if (style()->verticalAlign() & Qt::AlignTop)
+            br.setHeight(br.height() + shadowHeight);
     }
     return br;
 }
@@ -481,9 +485,13 @@ void MNavigationBarView::drawBackground(QPainter *painter, const QStyleOptionGra
 {
     const MNavigationBarStyle *s = static_cast<const MNavigationBarStyle*>(style().operator ->());
 
-    //draw shadow under the actual navigationbar
-    if (s->dropShadowImage() ) {
-        s->dropShadowImage()->draw(0.0, size().height(), boundingRect().width(),  (qreal)s->dropShadowImage()->pixmap()->size().height(), painter);
+    //draw shadow on top or under the actual navigationbar
+    if (s->dropShadowImage()) {
+        qreal shadowHeight = s->dropShadowImage()->pixmap()->size().height();
+        if (s->verticalAlign() & Qt::AlignBottom)
+            s->dropShadowImage()->draw(0.0, -shadowHeight, boundingRect().width(), shadowHeight, painter);
+        else if (s->verticalAlign() & Qt::AlignTop)
+            s->dropShadowImage()->draw(0.0, size().height(), boundingRect().width(), shadowHeight, painter);
     }
 
     MWidgetView::drawBackground(painter, option);
