@@ -48,9 +48,11 @@ QGraphicsLayout *DrillDownListItem::createLayout()
     layout->addItem(imageWidget(), 0, 1, Qt::AlignCenter);
 
     if (MApplication::instance()->objectName() == "widgetsgallery") {
+        setStyleName("CommonBasicListItem");
         titleLabelWidget()->setStyleName("CommonSingleTitle");
         imageWidget()->setImage("icon-m-common-drilldown-arrow");
     } else {
+        setStyleName("CommonBasicListItemInverted");
         titleLabelWidget()->setStyleName("CommonSingleTitleInverted");
         imageWidget()->setImage("icon-m-common-drilldown-arrow-inverse");
     }

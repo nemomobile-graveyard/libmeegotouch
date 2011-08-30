@@ -529,7 +529,7 @@ private:
 MainPage::MainPage(const QString &title)
     : TimedemoPage(),
       list(0),
-      actionThemes(0),
+      comboThemes(0),
       actionToggleInverted(0),
       actionToggleFPS(0),
       actionLanguage(0),
@@ -559,6 +559,83 @@ QString MainPage::timedemoTitle()
     return "MainPage";
 }
 
+QSettings *themeFile(const QString &theme)
+{
+    // Determine whether this is a m theme:
+    // step 1: we need to have index.theme file
+    QDir themeDir(THEMEDIR);
+    const QString themeIndexFileName = themeDir.absolutePath() + QDir::separator() + theme + QDir::separator() + "index.theme";
+    if (!QFile::exists(themeIndexFileName))
+        return NULL;
+
+    // step 2: it needs to be a valid ini file
+    QSettings *themeIndexFile = new QSettings(themeIndexFileName, QSettings::IniFormat);
+    if (themeIndexFile->status() != QSettings::NoError) {
+        delete themeIndexFile;
+        return NULL;
+    }
+
+    // step 3: we need to have X-MeeGoTouch-Metatheme group in index.theme
+
+    // remove the X-DUI-Metatheme statement again when duitheme is phased out.
+    if ((!themeIndexFile->childGroups().contains(QString("X-MeeGoTouch-Metatheme")))
+        &&(!themeIndexFile->childGroups().contains(QString("X-DUI-Metatheme"))))
+    {
+        delete themeIndexFile;
+        return NULL;
+    }
+    return themeIndexFile;
+}
+
+struct ThemeInfo {
+    QString theme;
+    QString themeName;
+    QString themeIcon;
+};
+QList<ThemeInfo> findAvailableThemes()
+{
+    QList<ThemeInfo> themes;
+
+    // find all directories under the theme directory
+    QDir themeDir(THEMEDIR);
+    const QFileInfoList directories = themeDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+    foreach(const QFileInfo & dir, directories) {
+        ThemeInfo info;
+
+        const QSettings *themeIndexFile = themeFile(dir.baseName());
+        if (!themeIndexFile)
+            continue;
+
+        // check if this theme is visible
+        if (!themeIndexFile->value("X-MeeGoTouch-Metatheme/X-Visible", true).toBool()) {
+            delete themeIndexFile;
+            continue;
+        }
+
+        info.theme = dir.baseName();
+        info.themeName = themeIndexFile->value("Desktop Entry/Name", "").toString();
+        info.themeIcon = themeIndexFile->value("X-MeeGoTouch-Metatheme/X-Icon", "").toString();
+
+        // remove this again, when duitheme is phased out
+        if ( info.themeIcon.isEmpty() )
+        {
+            info.themeIcon = themeIndexFile->value("X-DUI-Metatheme/X-Icon", "").
+                toString();
+        }
+        // end remove
+
+        // ok it's a valid theme. Add it to list of themes
+        themes.append(info);
+        delete themeIndexFile;
+    }
+
+    return themes;
+}
+
+#ifndef HAVE_GCONF
+extern void M_changeTheme(const QString &theme);
+#endif
+
 void MainPage::createContent()
 {
     MApplicationPage::createContent();
@@ -578,11 +655,21 @@ void MainPage::createContent()
 
     populateLayout();
 
-    actionThemes = new MAction(this);
-    actionThemes->setObjectName("actionThemes");
-    actionThemes->setLocation(MAction::ApplicationMenuLocation);
-    this->addAction(actionThemes);
-    connect(actionThemes, SIGNAL(triggered()), SLOT(showThemeSelectionDialog()));
+    QStringList themeStrings;
+    int currentThemeIndex;
+
+    QList<ThemeInfo> themes = findAvailableThemes();
+    const int themesCount = themes.count();
+    for (int i = 0; i < themesCount; ++i) {
+        themeStrings << themes[i].themeName;
+
+        if (MTheme::currentTheme() == themes[i].theme)
+            currentThemeIndex = i;
+    }
+
+    comboThemes = createComboBoxAction(NULL, themeStrings);
+    comboThemes->setCurrentIndex(currentThemeIndex);
+    connect(comboThemes, SIGNAL(currentIndexChanged(int)), SLOT(changeTheme(int)));
 
     QStringList items;
     items << //% "Automatic"
@@ -629,7 +716,7 @@ void MainPage::retranslateUi()
         return;
 
     //% "Themes"
-    actionThemes->setText(qtTrId("xx_mainpage_themes"));
+    comboThemes->setTitle(qtTrId("xx_mainpage_themes"));
     //% "Orientation"
     comboOrientation->setTitle(qtTrId("xx_mainpage_orientation"));
     //% "Toggle Inverted Styles"
@@ -738,123 +825,6 @@ void MainPage::showPageByTimedemoTitle(const QString& name)
     }
 }
 
-QSettings *themeFile(const QString &theme)
-{
-    // Determine whether this is a m theme:
-    // step 1: we need to have index.theme file
-    QDir themeDir(THEMEDIR);
-    const QString themeIndexFileName = themeDir.absolutePath() + QDir::separator() + theme + QDir::separator() + "index.theme";
-    if (!QFile::exists(themeIndexFileName))
-        return NULL;
-
-    // step 2: it needs to be a valid ini file
-    QSettings *themeIndexFile = new QSettings(themeIndexFileName, QSettings::IniFormat);
-    if (themeIndexFile->status() != QSettings::NoError) {
-        delete themeIndexFile;
-        return NULL;
-    }
-
-    // step 3: we need to have X-MeeGoTouch-Metatheme group in index.theme
-
-    // remove the X-DUI-Metatheme statement again when duitheme is phased out.
-    if ((!themeIndexFile->childGroups().contains(QString("X-MeeGoTouch-Metatheme")))
-        &&(!themeIndexFile->childGroups().contains(QString("X-DUI-Metatheme"))))
-    {
-        delete themeIndexFile;
-        return NULL;
-    }
-    return themeIndexFile;
-}
-
-struct ThemeInfo {
-    QString theme;
-    QString themeName;
-    QString themeIcon;
-};
-QList<ThemeInfo> findAvailableThemes()
-{
-    QList<ThemeInfo> themes;
-
-    // find all directories under the theme directory
-    QDir themeDir(THEMEDIR);
-    const QFileInfoList directories = themeDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
-    foreach(const QFileInfo & dir, directories) {
-        ThemeInfo info;
-
-        const QSettings *themeIndexFile = themeFile(dir.baseName());
-        if (!themeIndexFile)
-            continue;
-
-        // check if this theme is visible
-        if (!themeIndexFile->value("X-MeeGoTouch-Metatheme/X-Visible", true).toBool()) {
-            delete themeIndexFile;
-            continue;
-        }
-
-        info.theme = dir.baseName();
-        info.themeName = themeIndexFile->value("Desktop Entry/Name", "").toString();
-        info.themeIcon = themeIndexFile->value("X-MeeGoTouch-Metatheme/X-Icon", "").toString();
-
-        // remove this again, when duitheme is phased out
-        if ( info.themeIcon.isEmpty() )
-        {
-            info.themeIcon = themeIndexFile->value("X-DUI-Metatheme/X-Icon", "").
-                toString();
-        }
-        // end remove
-
-        // ok it's a valid theme. Add it to list of themes
-        themes.append(info);
-        delete themeIndexFile;
-    }
-
-    return themes;
-}
-
-#ifndef HAVE_GCONF
-extern void M_changeTheme(const QString &theme);
-#endif
-
-void MainPage::showThemeSelectionDialog()
-{
-    QList<ThemeInfo> themes = findAvailableThemes();
-
-    QPointer<MDialog> dialog = new MDialog("Select theme", M::OkButton | M::CancelButton);
-    dialog->setObjectName("selectThemeDialog");
-
-    QGraphicsGridLayout *layout = new QGraphicsGridLayout();
-    dialog->centralWidget()->setLayout(layout);
-
-    MButtonGroup *group = new MButtonGroup(dialog->centralWidget());
-    group->setObjectName("buttonGroup");
-
-    const int themesCount = themes.count();
-    for (int i = 0; i < themesCount; ++i) {
-        MButton *button = new MButton(themes[i].themeIcon, themes[i].themeName);
-        button->setObjectName("theme-selection-button");
-        button->setCheckable(true);
-        if (MTheme::currentTheme() == themes[i].theme)
-            button->setChecked(true);
-
-        layout->addItem(button, i/4, i%4);
-        group->addButton(button, i);
-    }
-
-    if (dialog->exec() == MDialog::Accepted) {
-        int index = group->checkedId();
-        if (index >= 0) {
-#ifdef HAVE_GCONF
-            MGConfItem themeName("/meegotouch/theme/name");
-            themeName.set(themes[index].theme);
-#else
-            M_changeTheme(themes[index].theme);
-#endif
-        }
-    }
-
-    delete dialog;
-}
-
 MComboBox* MainPage::createComboBoxAction(const QString &title, const QStringList &itemsList)
 {
     MWidgetAction *widgetAction = new MWidgetAction(centralWidget());
@@ -870,6 +840,20 @@ MComboBox* MainPage::createComboBoxAction(const QString &title, const QStringLis
     addAction(widgetAction);
 
     return comboBox;
+}
+
+void MainPage::changeTheme(int index)
+{
+    QList<ThemeInfo> themes = findAvailableThemes();
+
+    if (index >= 0) {
+#ifdef HAVE_GCONF
+        MGConfItem themeName("/meegotouch/theme/name");
+        themeName.set(themes[index].theme);
+#else
+        M_changeTheme(themes[index].theme);
+#endif
+    }
 }
 
 void MainPage::changeOrientation(int index)

@@ -76,11 +76,11 @@ public:
     void setMainLoopHelper(EmptyMainLoopHelper *helper);
 
 public slots:
-    void showThemeSelectionDialog();
     void toggleInverted();
     void toggleFps();
     void showInitialPage();
     void showLanguageSettingsPage();
+    void changeTheme(int index);
     void changeOrientation(int index);
 
     void categoryItemClicked(const QModelIndex &index);
@@ -95,7 +95,7 @@ private:
 
 private:
     MList *list;
-    MAction *actionThemes;
+    MComboBox *comboThemes;
     MAction *actionToggleInverted;
     MAction *actionToggleFPS;
     MAction *actionLanguage;
