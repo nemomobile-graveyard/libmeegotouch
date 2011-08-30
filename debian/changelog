@@ -1,8 +1,32 @@
-libmeegotouch (0.24.0~1) unstable; urgency=low
+libmeegotouch (0.24.0-1) unstable; urgency=low
 
-  * [unreleased]
+  * New version
+  * Fixes: NB#275484 - it is not possible to tell the value set by a declarative setting slider
+  * Fixes: NB#279528 - Adding MContainer to layout causes a crash
+  * Fixes: NB#277142 - WidgetsGallery: vast amount of missing pixmaps.
+  * Fixes: NB#256798 - [TASK] [PR1.2] Date in the Events view is too long on the screen in Vietnamese regional formatting
+  * Fixes: NB#279091 - NavigationBar's back button is displaced when app is rotated with ApplicationMenu open
+  * Fixes: NB#275735 - "Sort by" layout issue occurs in many menus (e.g. Contacts, Documents or Mail)
+  * Fixes: NB#255024 - Contacts, Calender page month View of date items, Weekdays name has wrong order in Arabic language
+  * Fixes: NB#277487 - Application Menu displayed at incorrect position when menu invoked when rotating device from landscape to portrait
+  * Fixes: NB#274332 - [REG] Item pressed down highlight graphics are messed up in certain settings
+  * Fixes: NB#277393 - Arabic texts are not displayed Right to Left in MLabel
+  * Fixes: NB#276653 - MLocale returns empty country code
+  * Fixes: NB#272172 - meegotouch based applications should have Qt instant invalidate propagation for layouts enabled by default.
+  * Fixes: NB#277180 - Wrong direction returned by MLocale::directionForText() function
+  * Fixes: NB#278981 - MTextEdit prompt displays badly mult-length localized strings.
+  * Fixes: NB#278415 - In case of Right-To-Left alignment MTextEdit Prompt does not use block indentation
+  * Fixes: NB#265111 -Text entry gets relocated when focus changes while panning
+  * Fixes: NB#277533 - [REG] Fenix crashes with "Signal connection failed!" upon tapping back button while rotating between portrait & landscape
+  * Fixes: NB#278171 - Some songs with Finnish title shown wrong in music player
+  * Fixes: NB#276436 - WidgetsGallery: rotation of Progress Bar page results in shift and improper scrolling
+  * Fixes: NB#277773 - [TASK] Country/ City list: Group header or divider gets messy when setting country and attempting to reselect country again in regional format or time zone country list.
+  * Fixes: NB#274753 - MRichTextEditDialogsManager must be limited to 64 pixel size due to limitations in the Qt's emboldening system
+  * Fixes: NB#247311 – [TASK] folder /src/corelib/help – no code coverage
+  * Fixes: NB#243758 - (AcceptId-919470) [TASK] [FEA] Chinese sorting in Contact List
+  * Fixes: NB#264398 - Transition from alarm tone view to alarm options view is shaky and not smooth
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 17 Aug 2011 11:16:56 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 30 Aug 2011 18:07:34 +0300
 
 libmeegotouch (0.23.9-1) unstable; urgency=low
 
