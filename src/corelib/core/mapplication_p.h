@@ -25,6 +25,7 @@
 #include <MLocale>
 #ifdef Q_WS_X11
 #include <X11/Xlib.h>
+#include <mdynamicpropertywatcher.h>
 #endif
 
 #include <mwindow.h>
@@ -50,6 +51,23 @@ public:
     int xDamageErrorBase;
 
 #ifdef Q_WS_X11
+    /**
+     * Emits one of the signals minimizing(), minimized() or
+     * minimizingCanceled() dependent from \a progress:
+     * 0 ..... Minimizing has been canceled
+     * 1 ..... Minimizing has been started
+     * 100 ... Minimizing has been finished
+     *
+     * If the window is already closed no signal will be emitted.
+     *
+     * The method assures that the signal minimizingCanceled()
+     * is emitted in case if the window \a window is closed
+     * after sending a minimizing() signal but before a progress
+     * of 0 or 100 has been received.
+     */
+    void emitMinimizeSignals(MWindow *window, int progress);
+    void _q_windowClosedDuringMinimizing(QObject *window);
+
     static int handleXError(Display *display, XErrorEvent *event);
 #endif
 
@@ -75,6 +93,7 @@ private:
     void handleXPropertyEvent(XPropertyEvent *xevent);
     Atom visibleAtom;
     Atom minimizeAnimationAtom;
+    MMultiObjectsPropertyWatcher* windowClosedWatcher;
 #endif
     friend class MApplicationServicePrivate;
     friend class MWindow;

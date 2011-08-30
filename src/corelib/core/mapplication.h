@@ -313,6 +313,10 @@ private:
     Q_DECLARE_PRIVATE(MApplication)
     Q_DISABLE_COPY(MApplication)
 
+#ifdef Q_WS_X11
+    Q_PRIVATE_SLOT(d_func(), void _q_windowClosedDuringMinimizing(QObject *window))
+#endif
+
 #ifdef UNIT_TEST
     friend class Ut_MApplication;
 #endif

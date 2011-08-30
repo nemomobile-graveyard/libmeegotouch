@@ -24,6 +24,14 @@
 #include <MApplication>
 #include <MApplicationWindow>
 #include <MApplicationService>
+#include <MComponentData>
+
+#ifdef Q_WS_X11
+#include <QX11Info>
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <X11/Xutil.h>
+#endif //Q_WS_X11
 
 #include <mtheme.h>
 #include <mwindow_stub.h>
@@ -42,6 +50,8 @@ void MWindowPrivate::setX11PrestartProperty(bool)
 void MWindowPrivate::resolveOrientationRules()
 {
 }
+
+const char* MWindowPrivate::LogicallyClosedPropertyName = "_m_logicallyClosed";
 
 class MyApplication: public MApplication
 {
@@ -119,20 +129,20 @@ MApplication *Ut_MApplication::buildApp(int count, const QString &params, const 
     while (it.hasNext() && x < MAX_PARAMS)  {
         argv[x++] = strdup(it.next().toLocal8Bit().constData());
     }
-
+    Q_ASSERT(count == x);
 
     // try to call the constructor with the correct signature
     if (service) {
         if (appId.isEmpty()) {
-            retVal = new MApplication(count, argv, service);
+            retVal = new MApplication(x, argv, service);
         } else {
-            retVal = new MApplication(count, argv, appId, service);
+            retVal = new MApplication(x, argv, appId, service);
         }
     } else {
         if (appId.isEmpty()) {
-            retVal = new MApplication(count, argv);
+            retVal = new MApplication(x, argv);
         } else {
-            retVal = new MApplication(count, argv, appId);
+            retVal = new MApplication(x, argv, appId);
         }
     }
 
@@ -153,12 +163,13 @@ MApplication *Ut_MApplication::buildPrestartApp(int count, const QString &params
     while (it.hasNext() && x < MAX_PARAMS)  {
         argv[x++] = strdup(it.next().toLocal8Bit().constData());
     }
+    Q_ASSERT(count == x);
 
     // try to call the constructor with the correct signature
     if (service) {
-        retVal = new MyApplication(count, argv, service);
+        retVal = new MyApplication(x, argv, service);
     } else {
-        retVal = new MyApplication(count, argv);
+        retVal = new MyApplication(x, argv);
     }
 
     return retVal;
@@ -333,6 +344,7 @@ void Ut_MApplication::mApplicationTranslationPath()
 
     delete app;
 }
+
 /*
 void Ut_MApplication::mApplicationNoFeedback()
 {
@@ -671,6 +683,105 @@ void Ut_MApplication::testPrestartedProperty()
     delete app;
 }
 
+#ifdef Q_WS_X11
+void Ut_MApplication::testMinimizing_data()
+{
+    QTest::addColumn<int>("progress");
+    QTest::addColumn<int>("minimizingCount");
+    QTest::addColumn<int>("minimizedCount");
+    QTest::addColumn<int>("minimizingCanceledCount");
+    QTest::newRow("finish minimizing") << 100 << 1 << 1 << 0;
+    QTest::newRow("cancel minimizing") <<   0 << 1 << 0 << 1;
+    QTest::newRow("minimizing twice")  <<   1 << 2 << 0 << 0;
+}
+
+void Ut_MApplication::testMinimizing()
+{
+    QFETCH(int, progress);
+    QFETCH(int, minimizingCount);
+    QFETCH(int, minimizedCount);
+    QFETCH(int, minimizingCanceledCount);
+        
+    app = buildApp(1, "appName");
+    
+    QSignalSpy minimizingSpy(app, SIGNAL(minimizing()));
+    QSignalSpy minimizingCanceledSpy(app, SIGNAL(minimizingCanceled()));
+    QSignalSpy minimizedSpy(app, SIGNAL(minimized()));
+    
+    MWindow *win = new MWindow();
+    MComponentData::registerWindow(win);
+    win->setProperty(MWindowPrivate::LogicallyClosedPropertyName, false);
+
+    const Atom minimizeMsgAtom = XInternAtom(QX11Info::display(),
+                                             "_MEEGOTOUCH_MINIMIZE_ANIMATION",
+                                             false);
+    XEvent event;
+    memset(&event, 0, sizeof(event));
+    event.xclient.type = ClientMessage;
+    event.xclient.message_type = minimizeMsgAtom;
+    event.xclient.window = win->winId();
+    event.xclient.format = 32;
+    event.xclient.data.l[0] = 1; // = start minimizing    
+    
+    app->x11EventFilter(&event);
+    QCOMPARE(minimizingSpy.count(), 1);
+    QCOMPARE(minimizingCanceledSpy.count(), 0);
+    QCOMPARE(minimizedSpy.count(), 0);
+    
+    event.xclient.data.l[0] = progress;
+    app->x11EventFilter(&event);
+    QCOMPARE(minimizingSpy.count(), minimizingCount);
+    QCOMPARE(minimizingCanceledSpy.count(), minimizingCanceledCount);
+    QCOMPARE(minimizedSpy.count(), minimizedCount);
+
+    MComponentData::unregisterWindow(win);
+    delete win;
+    delete app;
+}
+
+void Ut_MApplication::testMinimizingCanceledByClosedWindow()
+{  
+    const int windowsCount = 3;
+    
+    app = buildApp(1, "appName");
+    QList<MWindow*> windows;
+    for (int i = 0; i < windowsCount; ++i) {
+        MWindow *win = new MWindow();
+        MComponentData::registerWindow(win);
+        win->setProperty(MWindowPrivate::LogicallyClosedPropertyName, false);
+        windows.append(win);
+    }
+    
+    const Atom minimizeMsgAtom = XInternAtom(QX11Info::display(),
+                                             "_MEEGOTOUCH_MINIMIZE_ANIMATION",
+                                             false);
+    XEvent event;
+    memset(&event, 0, sizeof(event));
+    event.xclient.type = ClientMessage;
+    event.xclient.message_type = minimizeMsgAtom;
+    event.xclient.format = 32;
+    event.xclient.data.l[0] = 1; // 1 = start minimizing
+
+    QSignalSpy minimizingSpy(app, SIGNAL(minimizing()));
+    for (int i = 0; i < windowsCount; ++i) {
+        event.xclient.window = windows.at(i)->winId();
+        app->x11EventFilter(&event);
+    }
+    QCOMPARE(minimizingSpy.count(), windowsCount);
+    
+    QSignalSpy minimizingCanceledSpy(app, SIGNAL(minimizingCanceled()));
+    for (int i = 0; i < windowsCount; ++i) {
+        windows[i]->setProperty(MWindowPrivate::LogicallyClosedPropertyName, true);
+    }
+    QCOMPARE(minimizingCanceledSpy.count(), windowsCount);
+    
+    for (int i = 0; i < windowsCount; ++i) {
+        MComponentData::registerWindow(windows.at(i));
+    }
+    qDeleteAll(windows);
+    delete app;
+}
+#endif // Q_WS_X11
 
 void Ut_MApplication::prestartReleased()
 {

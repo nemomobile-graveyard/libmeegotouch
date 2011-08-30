@@ -33,6 +33,7 @@ PUBLIC_HEADERS += \
 
 PRIVATE_HEADERS += \
     $$CORE_SRC_DIR/mclassfactory.h \
+    $$CORE_SRC_DIR/mapplication_p.h \
     $$CORE_SRC_DIR/massembly_p.h \
     $$CORE_SRC_DIR/mdesktopentry_p.h \
     $$CORE_SRC_DIR/minputmethodstate_p.h \

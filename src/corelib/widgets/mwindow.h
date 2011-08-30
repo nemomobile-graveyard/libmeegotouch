@@ -644,6 +644,9 @@ private:
     friend class Ut_MWindow;
     friend class Ut_MSceneManager;
     friend class Ut_MOrientationTracker;
+
+    // to access LogicallyClosedPropertyName
+    friend class Ut_MApplication;
 #endif
 };
 
