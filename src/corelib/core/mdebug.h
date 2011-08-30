@@ -26,6 +26,8 @@
 
 class MWidgetController;
 class QGraphicsWidget;
+class QGraphicsView;
+class QGraphicsScene;
 
 class MDebug
 {
@@ -55,6 +57,8 @@ public:
 
     /*! Print out, using qWarning(), details all the children recursively, along with their geometry and sizehints. */
     static void printDebugChildInformation(QGraphicsWidget *widget, int initialIndentationDepth = 0);
+    static void printDebugSceneInformation(QGraphicsView *window);
+    static void printDebugSceneInformation(QGraphicsScene *scene);
 
 private:
     void flush();

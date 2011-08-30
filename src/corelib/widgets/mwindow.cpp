@@ -1464,13 +1464,6 @@ bool MWindow::event(QEvent *event)
             MApplication::setShowSize(!MApplication::showSize());
             updateNeeded = true;
         } else if (Qt::Key_B == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
-            if (!MApplication::showBoundingRect()) {
-                foreach (QGraphicsItem *item, scene()->items()) {
-                    QGraphicsWidget *widget = dynamic_cast<QGraphicsWidget*>(item);
-                    if (widget && !widget->parentWidget())
-                        MDebug::printDebugChildInformation(widget);
-                }
-            }
             MApplication::setShowBoundingRect(!MApplication::showBoundingRect());
             updateNeeded = true;
         } else if (Qt::Key_M == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
