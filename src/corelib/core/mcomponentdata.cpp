@@ -1107,6 +1107,10 @@ void MComponentData::setShowBoundingRect(bool show)
     if (!gMComponentDataPrivate) {
         qFatal("MComponentData::setShowBoundingRect() - MComponentData instance not yet created.");
     }
+
+    if (!gMComponentDataPrivate->showBoundingRect && show)
+        MDebug::printDebugSceneInformation(activeWindow());
+
     gMComponentDataPrivate->showBoundingRect = show;
 }
 

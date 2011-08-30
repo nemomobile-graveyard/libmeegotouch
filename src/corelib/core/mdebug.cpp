@@ -211,13 +211,13 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
     QTextStream s(stderr);
     s.setCodec("UTF-8");
     QString indentation;
-    for (int i = 0; i < initialIndentationDepth*4; i++)
+    for (int i = 0; i < initialIndentationDepth * 4; i++)
         indentation += ' ';
     s << indentation;
     QSizeF hfwPreferredSize = widget->effectiveSizeHint( Qt::PreferredSize, QSizeF(widget->geometry().width(), -1));
     QSizeF preferredSize = widget->effectiveSizeHint( Qt::PreferredSize, QSizeF(widget->preferredWidth(), -1));
     if (widget->isVisible()) {
-        s << rectToString(widget->geometry().toRect(), preferredSize );
+        s << rectToString(widget->geometry().toRect(), preferredSize);
         s << emphasize() << widget->metaObject()->className() << normal() << ' ';
     } else {
         s << deemphasize() << "invisible " << normal();
@@ -236,8 +236,8 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
     else if (mwidget && !mwidget->styleName().isEmpty())
         s << QString("(s:\"%1\") ").arg(mwidget->styleName());
 
-    s << sizeToString(widget->minimumSize().toSize() );
-    s << QString::fromUtf8("≤ ") << sizeToString( preferredSize.toSize() );
+    s << sizeToString(widget->minimumSize().toSize());
+    s << QString::fromUtf8("≤ ") << sizeToString( preferredSize.toSize());
     if (preferredSize.height() != hfwPreferredSize.height())
         s << "(hfw:" << sizeToString( hfwPreferredSize.toSize() ) << ')';
     if (widget->effectiveSizeHint( Qt::MaximumSize) != QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX))
@@ -280,8 +280,8 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
     QGraphicsLayout *layout = widget->layout();
     MLayout *mLayout = dynamic_cast<MLayout*>(layout);
     if (layout) {
-        QSizeF preferredSize = layout->effectiveSizeHint( Qt::PreferredSize, QSizeF(layout->preferredWidth(), -1));
-        QSizeF hfwPreferredSize = layout->effectiveSizeHint( Qt::PreferredSize, QSizeF(layout->geometry().width(), -1));
+        QSizeF preferredSize = layout->effectiveSizeHint(Qt::PreferredSize, QSizeF(layout->preferredWidth(), -1));
+        QSizeF hfwPreferredSize = layout->effectiveSizeHint(Qt::PreferredSize, QSizeF(layout->geometry().width(), -1));
 
         QGraphicsLinearLayout *linearLayout = dynamic_cast<QGraphicsLinearLayout*>(layout);
         s << indentation << " *"  << rectToString(layout->geometry().toRect(), preferredSize);
@@ -324,10 +324,10 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
         if (!widget->isVisible())
             s << deemphasize();
  
-        s << sizeToString(layout->minimumSize().toSize() );
-        s << QString::fromUtf8("≤ ") << sizeToString( preferredSize.toSize() );
+        s << sizeToString(layout->minimumSize().toSize());
+        s << QString::fromUtf8("≤ ") << sizeToString( preferredSize.toSize());
         if (preferredSize.height() != hfwPreferredSize.height())
-            s << "(hfw:" << sizeToString( hfwPreferredSize.toSize() ) << ')';
+            s << "(hfw:" << sizeToString(hfwPreferredSize.toSize()) << ')';
         if (layout->effectiveSizeHint( Qt::MaximumSize) != QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX))
             s << QString::fromUtf8("≤ ") << sizeToString(layout->maximumSize().toSize());
 
@@ -339,9 +339,25 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
     s.flush();
 
     foreach (QGraphicsItem *item, widget->childItems()) {
-        QGraphicsWidget *child = dynamic_cast<QGraphicsWidget *>(item);
-        if (child) {
-            printDebugChildInformation( child, initialIndentationDepth+1 );
+        if (item && item->isWidget()) {
+            printDebugChildInformation(static_cast<QGraphicsWidget*>(item), initialIndentationDepth + 1);
+        }
+    }
+}
+
+void MDebug::printDebugSceneInformation(QGraphicsView *window)
+{
+    if (window && window->scene())
+        MDebug::printDebugSceneInformation(window->scene());
+}
+
+void MDebug::printDebugSceneInformation(QGraphicsScene *scene)
+{
+    if (scene) {
+        foreach (QGraphicsItem *item, scene->items()) {
+            if (item && item->isWidget() && !item->parentWidget()) {
+                MDebug::printDebugChildInformation(static_cast<QGraphicsWidget*>(item));
+            }
         }
     }
 }
