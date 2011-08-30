@@ -47,6 +47,9 @@ MApplicationPrivate::MApplicationPrivate():
         xDamageEventBase(0),
         xDamageErrorBase(0),
         q_ptr(NULL)
+ #ifdef Q_WS_X11
+        , windowClosedWatcher(NULL)
+ #endif
 {
     QGraphicsLayout::setInstantInvalidatePropagation(true);
 #if defined(HAVE_XDAMAGE) && defined(Q_WS_X11)
@@ -63,6 +66,9 @@ MApplicationPrivate::MApplicationPrivate():
 
 MApplicationPrivate::~MApplicationPrivate()
 {
+#ifdef Q_WS_X11
+    delete windowClosedWatcher;
+#endif
     delete componentData;
 }
 #ifdef Q_WS_X11
@@ -79,6 +85,38 @@ void MApplicationPrivate::setWindowVisibility(MWindow * window, bool visible)
     } else {
         window->d_ptr->sendDelayedExitDisplayEvent();
     }
+}
+
+void MApplicationPrivate::emitMinimizeSignals(MWindow *window, int progress)
+{
+    Q_Q(MApplication);
+
+    if (window && !window->property(MWindowPrivate::LogicallyClosedPropertyName).toBool()) {
+        switch (progress) {
+        case 0: // minimizing was cancelled
+            windowClosedWatcher->unwatch(window);
+            emit q->minimizingCanceled();
+            break;
+        case 100: // minimizing finished
+            windowClosedWatcher->unwatch(window);
+            emit q->minimized();
+            break;
+        case 1:  // minimizing started
+            windowClosedWatcher->watch(window);
+            emit q->minimizing();
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void MApplicationPrivate::_q_windowClosedDuringMinimizing(QObject *window)
+{
+    Q_Q(MApplication);
+
+    windowClosedWatcher->unwatch(window);
+    emit q->minimizingCanceled();
 }
 
 int MApplicationPrivate::handleXError(Display *, XErrorEvent *)
@@ -164,7 +202,15 @@ MApplication::MApplication(int &argc, char **argv, MApplicationService *service)
 
 void MApplicationPrivate::init(int &argc, char **argv, const QString &appIdentifier, MApplicationService *newService)
 {
+    Q_Q(MApplication);
     componentData = MComponentData::createInstance(argc, argv, appIdentifier, newService);
+
+#ifdef Q_WS_X11
+    windowClosedWatcher = new MMultiObjectsPropertyWatcher;
+    windowClosedWatcher->setPropertyName(MWindowPrivate::LogicallyClosedPropertyName);
+    QObject::connect(windowClosedWatcher, SIGNAL(propertyChanged(QObject*)),
+                     q, SLOT(_q_windowClosedDuringMinimizing(QObject*)));
+#endif
 }
 
 void MApplicationPrivate::releasePrestart()
@@ -406,19 +452,14 @@ bool MApplication::x11EventFilter(XEvent *event)
     } else if (event->type == ClientMessage) {
         XClientMessageEvent *e = (XClientMessageEvent*) event;
         if (e->message_type == d->minimizeAnimationAtom) {
-            switch (e->data.l[0]) {
-            case 0:   // minimizing was cancelled
-                emit minimizingCanceled();
-                break;
-            case 1:   // minimizing started
-                emit minimizing();
-                break;
-            case 100: // minimizing finished
-                emit minimized();
-                break;
-            default:
-                break;
+            MWindow *windowToMinimize = NULL;
+            foreach (MWindow *window, windows()) {
+                if (window->winId() == e->window) {
+                    windowToMinimize = window;
+                    break;
+                }
             }
+            d->emitMinimizeSignals(windowToMinimize, e->data.l[0]);
         }
     }
 #ifdef HAVE_XDAMAGE
@@ -649,3 +690,5 @@ void MApplication::fastFloatMath(bool val)
 }
 
 #endif
+
+#include "moc_mapplication.cpp"

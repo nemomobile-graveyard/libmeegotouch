@@ -45,3 +45,46 @@ bool MDynamicPropertyWatcher::eventFilter(QObject* watched, QEvent* event)
     }
     return false;
 }
+
+
+MMultiObjectsPropertyWatcher::MMultiObjectsPropertyWatcher(QObject* parent)
+    : QObject(parent)
+{
+}
+
+void MMultiObjectsPropertyWatcher::watch(QObject *object)
+{
+    if (object) {
+        object->installEventFilter(this);
+        lastValues[object] = QVariant();
+    }
+}
+
+void MMultiObjectsPropertyWatcher::unwatch(QObject *object)
+{
+    if (object) {
+        object->removeEventFilter(this);
+        lastValues.remove(object);
+    }
+}
+
+void MMultiObjectsPropertyWatcher::setPropertyName(QString propertyName)
+{
+    this->propertyName = propertyName;
+}
+
+bool MMultiObjectsPropertyWatcher::eventFilter(QObject* watched, QEvent* event)
+{
+    if (event->type() == QEvent::DynamicPropertyChange &&
+        propertyName == static_cast<QDynamicPropertyChangeEvent*>(event)->propertyName())
+    {
+        QVariant newPropertyValue = watched->property(propertyName.toAscii());
+        if (!lastValues[watched].isValid() ||
+            newPropertyValue != lastValues[watched]) {
+
+            lastValues[watched] = newPropertyValue;
+            emit propertyChanged(watched);
+        }
+    }
+    return false;
+}

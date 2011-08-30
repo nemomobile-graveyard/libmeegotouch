@@ -78,6 +78,11 @@ private slots:
     void testIsPrestartedTerminateOnCloseMultiWindow();
     void testIsPrestartedLazyShutdownMultiWindow();
     void testPrestartedProperty();
+#ifdef Q_WS_X11
+    void testMinimizing_data();
+    void testMinimizing();
+    void testMinimizingCanceledByClosedWindow();
+#endif
     void mAppName();
 public slots:
 

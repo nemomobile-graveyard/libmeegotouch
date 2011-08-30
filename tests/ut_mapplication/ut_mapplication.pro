@@ -22,10 +22,12 @@ TEST_SOURCES = \
 # Input
 HEADERS += \
     ut_mapplication.h \
+    $$MSRCDIR/corelib/core/mdynamicpropertywatcher.h \
     $$TEST_HEADERS
 
 SOURCES += \
     ut_mapplication.cpp \
+    $$MSRCDIR/corelib/core/mdynamicpropertywatcher.cpp \
     $$TEST_SOURCES \
 
 # service classes

@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <QVariant>
+#include <QHash>
 
 /*
  Only tells that a dynamic property has changed when its actual value
@@ -46,6 +47,30 @@ Q_SIGNALS:
 private:
     QVariant lastPropertyValue;
     QObject *watchedObject;
+    QString propertyName;
+};
+
+/*
+  Simillar to MDynamicPropertyWatcher but property of multiple
+  objects can be monitored.
+ */
+class MMultiObjectsPropertyWatcher : public QObject
+{
+    Q_OBJECT
+public:
+    MMultiObjectsPropertyWatcher(QObject* parent = 0);
+
+    void watch(QObject *object);
+    void unwatch(QObject *object);
+    void setPropertyName(QString propertyName);
+
+    bool eventFilter(QObject* watched, QEvent* event);
+
+Q_SIGNALS:
+    void propertyChanged(QObject* );
+
+private:
+    QHash<QObject*, QVariant> lastValues;
     QString propertyName;
 };
 

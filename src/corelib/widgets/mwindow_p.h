@@ -82,7 +82,6 @@ public:
     bool orientationAngleLocked;
     bool orientationLocked;
 
-    bool isLogicallyClosed;
     bool isInSwitcher;
     bool closeOnLazyShutdown;
 
@@ -135,6 +134,7 @@ public:
     bool beforeFirstPaintEvent;
     int invisiblePaintCounter;
     MWindowBorderDecorator *borderDecorator;
+    static const char *LogicallyClosedPropertyName;
 
 protected:
     MWindow *q_ptr;

@@ -274,6 +274,10 @@ private:
     friend class MDeviceProfile;
     friend class MComponentCachePrivate;
     friend class MStyleSheet;
+
+#ifdef UNIT_TEST
+    friend class Ut_MApplication;
+#endif
 };
 
 #endif

@@ -74,6 +74,9 @@ namespace {
             "animatedOrientationChange";
 }
 
+
+const char* MWindowPrivate::LogicallyClosedPropertyName = "_m_logicallyClosed";
+
 /// Actual class
 
 MWindowPrivate::MWindowPrivate() :
@@ -81,7 +84,6 @@ MWindowPrivate::MWindowPrivate() :
     oldOrientation(M::Landscape), // the initial value is not used at all
     orientationAngleLocked(false),
     orientationLocked(false),
-    isLogicallyClosed(true),
     isInSwitcher(false),
     closeOnLazyShutdown(false),
     delayedMOnDisplayChangeEvent(0),
@@ -122,6 +124,7 @@ MWindowPrivate::~MWindowPrivate()
 void MWindowPrivate::init()
 {
     Q_Q(MWindow);
+    q->setProperty(LogicallyClosedPropertyName, true);
 
     displayExitedTimer.connect(&displayExitedTimer, SIGNAL(timeout()),
                                q, SLOT(_q_exitDisplayStabilized()));
@@ -730,7 +733,7 @@ void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
         return;
     }
 
-    isLogicallyClosed = true;
+    q->setProperty(LogicallyClosedPropertyName, true);
 
     MOnDisplayChangeEvent ev(false, QRectF(QPointF(0, 0), q->visibleSceneSize()));
     q->onDisplayChangeEvent(&ev);
@@ -744,7 +747,7 @@ void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
         // return to the prestarted state.
         bool allWindowsLogicallyClosed = true;
         Q_FOREACH(MWindow * win, MApplication::windows()) {
-            if (!win->d_ptr->isLogicallyClosed) {
+            if (!win->property(LogicallyClosedPropertyName).toBool()) {
                 allWindowsLogicallyClosed = false;
             }
         }
@@ -1603,7 +1606,7 @@ void MWindow::setVisible(bool visible)
                     }
                 }
             }
-            d->isLogicallyClosed = false;
+            setProperty(MWindowPrivate::LogicallyClosedPropertyName, false);
         }
     } else {
         MOnDisplayChangeEvent ev(visible, sceneRect());
