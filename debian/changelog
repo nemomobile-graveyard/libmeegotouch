@@ -1,3 +1,12 @@
+libmeegotouch (0.23.14-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#279528 - Adding MContainer to layout causes a crash
+  * Fixes: NB#255024 - Contacts, Calender page month View of date items, Weekdays name has wrong order in Arabic language
+  * Fixes: NB#274332 - [REG] Item pressed down highlight graphics are messed up in certain settings
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 30 Aug 2011 18:04:05 +0300
+
 libmeegotouch (0.23.13-1) unstable; urgency=low
 
   * New version
