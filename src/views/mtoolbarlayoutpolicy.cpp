@@ -360,7 +360,9 @@ void MToolBarLayoutPolicy::updateSpacers()
 {
     updateContentsMargins();
 
-    if (centerAllWidgets || (centerLabelOnlyButtons && widgetCount() > 0 && labelOnlyButtonCount() == widgetCount())) {
+    if (centerAllWidgets
+        || (centerLabelOnlyButtons && widgetCount() > 0 && labelOnlyButtonCount() == widgetCount())
+        || (widgetCount() == 1 && labelOnlyButtonCount() == 1)) {
         activateLeftSpacer(true);
         activateRightSpacer(true);
         activateMiddleSpacers(false);
@@ -434,6 +436,8 @@ qreal MToolBarLayoutPolicy::effectiveCenterOffset() const
         return centerOffset; //center offset is active for all widgets
     else if (centerLabelOnlyButtons && centerOffsetEnabledForLabelOnly && widgetCount() > 0 && labelOnlyButtonCount() == widgetCount())
         return centerOffset; //center offset is active for label only buttons and all buttons are such;
+    else if (widgetCount() == 1 && labelOnlyButtonCount() == 1)
+        return centerOffset; //single label only button -> possible center offset is used
     return 0.0f;
 }
 
