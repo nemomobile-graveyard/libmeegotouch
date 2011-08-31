@@ -169,7 +169,7 @@ void SingleSelectionDialogsPage::openStackedDialogs()
 
     connect(button, SIGNAL(clicked()), SLOT(openNestedDialog()));
 
-    dialog->appear(MSceneWindow::DestroyWhenDone);
+    dialog->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void SingleSelectionDialogsPage::openNestedDialog()
@@ -196,7 +196,7 @@ void SingleSelectionDialogsPage::openNestedDialog()
     nestedDialog->setCentralWidget(alignContainer);
     connect(button, SIGNAL(clicked()), SLOT(openNestedMessageBox()));
 
-    nestedDialog->appear(MSceneWindow::DestroyWhenDone);
+    nestedDialog->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void SingleSelectionDialogsPage::openNestedMessageBox()
@@ -207,7 +207,7 @@ void SingleSelectionDialogsPage::openNestedMessageBox()
     //% "I'm a nested message box"
     nestedMessageBox = new MMessageBox(qtTrId("xx_dialogs_and_notifications_stacked_dialog_messagebox_text"));
     nestedMessageBox->setObjectName("nestedMessageBox");
-    nestedMessageBox->appear(MSceneWindow::DestroyWhenDone);
+    nestedMessageBox->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void SingleSelectionDialogsPage::openSystemDialog()
@@ -295,7 +295,7 @@ void SingleSelectionDialogsPage::openDialogWithProgressIndicator()
     dialog->setObjectName("progressIndicatorDialog");
     dialog->centralWidget()->setLayout(layout);
     dialog->setProgressIndicatorVisible(true);
-    dialog->appear(MSceneWindow::DestroyWhenDone);
+    dialog->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void SingleSelectionDialogsPage::openDialogWithIcon()
@@ -328,7 +328,7 @@ void SingleSelectionDialogsPage::openDialogWithIcon()
     dialog->setObjectName("iconDialog");
     dialog->centralWidget()->setLayout(layout);
     dialog->setTitleBarIconId("icon-l-default-application");
-    dialog->appear(MSceneWindow::DestroyWhenDone);
+    dialog->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void SingleSelectionDialogsPage::openLongDialog()
@@ -364,7 +364,7 @@ void SingleSelectionDialogsPage::openLongDialog()
         layout->addItem(printerItem);
     }
 
-    dialog->appear(MSceneWindow::DestroyWhenDone);
+    dialog->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void SingleSelectionDialogsPage::setDialogProgressIndicatorVisible(bool visible)

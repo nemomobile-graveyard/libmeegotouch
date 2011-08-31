@@ -210,7 +210,7 @@ void QueryDialogsPage::openMessageBox(MessageBoxOptions options)
     if (options & NoAsDefaultButton)
         dialog->button(M::NoButton)->setStyleName("CommonQueryActionButton");
 
-    dialog->appear(MSceneWindow::DestroyWhenDone);
+    dialog->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 
