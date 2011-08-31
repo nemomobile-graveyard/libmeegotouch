@@ -83,7 +83,15 @@ MRemoteThemeDaemon::~MRemoteThemeDaemon()
     Q_D(MRemoteThemeDaemon);
 
     if (connected()) {
-        d->socket.close();
+        d->socket.disconnectFromServer();
+        // give max 10ms for the socket to write all pending data.
+        if(!d->socket.waitForDisconnected(10)) {
+            // not disconnected yet
+            // d->socket.error() can be called to determine the cause of the error.
+
+            // force socket disconnect, all pending data in write buffer will be cleared.
+            d->socket.abort();
+        }
     }
     delete d_ptr;
 }
