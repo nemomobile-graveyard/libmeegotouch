@@ -32,4 +32,6 @@ HEADERS += \
     $$MSRCDIR/corelib/theme/mthemedaemonprotocol.h \
     $$MSRCDIR/corelib/theme/mthemedaemonclient.h \
 
+support_files.files += svg
+
 include(../common_bot.pri)
