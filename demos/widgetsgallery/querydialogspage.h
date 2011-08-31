@@ -42,7 +42,9 @@ public:
         Default = 0,
         Icon = 1,
         LargeText = 2,
-        NgfEffect = 4
+        NgfEffect = 4,
+        WithoutDefaultButtons = 8,
+        NoAsDefaultButton = 16
     };
     Q_DECLARE_FLAGS(MessageBoxOptions, MessageBoxOption)
 

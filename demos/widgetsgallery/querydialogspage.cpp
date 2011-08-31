@@ -155,6 +155,12 @@ void QueryDialogsPage::itemClicked(const QModelIndex &index)
     case 4:
         openMessageBox(NgfEffect);
         break;
+    case 5:
+        openMessageBox(Icon | WithoutDefaultButtons);
+        break;
+    case 6:
+        openMessageBox(Icon | WithoutDefaultButtons | NoAsDefaultButton);
+        break;
     default:
         break;
     }
@@ -198,6 +204,12 @@ void QueryDialogsPage::openMessageBox(MessageBoxOptions options)
 #endif
 
     dialog = messageBox;
+
+    if (options & WithoutDefaultButtons)
+        dialog->button(M::YesButton)->setStyleName("CommonQueryButton");
+    if (options & NoAsDefaultButton)
+        dialog->button(M::NoButton)->setStyleName("CommonQueryActionButton");
+
     dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
@@ -220,6 +232,10 @@ void QueryDialogsPage::retranslateUi()
     queryDialogTypes << qtTrId("xx_wg_query_dialogs_big_query_dialog_with_icon");
     //% "Query Dialog with NGF effect"
     queryDialogTypes << qtTrId("xx_wg_query_dialogs_query_dialog_with_ngf_effect");
+    //% "Query Dialog without default buttons"
+    queryDialogTypes << qtTrId("xx_wg_query_dialogs_query_dialog_without_default_buttons");
+    //% "Query Dialog with No as default button"
+    queryDialogTypes << qtTrId("xx_wg_query_dialogs_query_dialog_with_no_as_default_button");
 
 
     static_cast<QStringListModel *>(list->itemModel())->setStringList(queryDialogTypes);
