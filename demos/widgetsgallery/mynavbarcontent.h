@@ -2,10 +2,11 @@
 #define MYNAVBARCONTENT_H
 
 #include <MWidget>
+#include <MStylableWidget>
 
 class MyNavBarContentPrivate;
 
-class MyNavBarContent : public QGraphicsWidget
+class MyNavBarContent : public MStylableWidget
 {
     Q_OBJECT
 

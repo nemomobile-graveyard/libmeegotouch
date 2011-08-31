@@ -23,6 +23,10 @@
     release-feedback: ;
 }
 
+#myNavBarContent {
+    margin-top: 2px;
+}
+
 #ageSlider {
     minimum-feedback-interval: 40;
 }

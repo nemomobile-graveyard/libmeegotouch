@@ -23,7 +23,7 @@ MyNavBarContentPrivate::~MyNavBarContentPrivate()
 }
 
 MyNavBarContent::MyNavBarContent(QGraphicsItem *parent)
-    : QGraphicsWidget(parent), d(new MyNavBarContentPrivate(this))
+    : MStylableWidget(parent), d(new MyNavBarContentPrivate(this))
 {
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
     layout->setContentsMargins(0, 0, 0, 0);
