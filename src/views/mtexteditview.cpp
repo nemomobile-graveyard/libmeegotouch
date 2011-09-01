@@ -109,8 +109,9 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       focusingTap(true)
 {
     // copy text options from actual document to prompt
-    QTextOption option = document()->defaultTextOption();
-    promptTextDocument->setDefaultTextOption(option);
+    QTextOption promptOption = document()->defaultTextOption();
+    promptOption.setWrapMode(QTextOption::NoWrap);
+    promptTextDocument->setDefaultTextOption(promptOption);
 
     selectionFormat.setForeground(Qt::white);
     selectionFormat.setBackground(Qt::black);
