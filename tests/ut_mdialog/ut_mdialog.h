@@ -64,6 +64,7 @@ private slots:
     void testSystemModalDialog();
     void testCentralWidgetSurviveDoubleDelete();
     void testDisappearedSystemDialogKeepsStandAloneWindowIfAppearIsPending();
+    void testAppearOnScene();
 };
 
 #endif

@@ -25,6 +25,7 @@
 
 #include <MButton>
 #include <MDialog>
+#include <MScene>
 #include <MSceneWindow>
 #include <MLayout>
 #include <MPannableWidget>
@@ -499,4 +500,11 @@ void Ut_MDialog::testDisappearedSystemDialogKeepsStandAloneWindowIfAppearIsPendi
     QVERIFY(dialog->d_func()->standAloneWindow != 0);
 }
 
-QTEST_APPLESS_MAIN(Ut_MDialog);
+void Ut_MDialog::testAppearOnScene()
+{
+    QVERIFY(!appWin->scene()->items().contains(dialog));
+    dialog->appear(appWin->scene());
+    QVERIFY(appWin->scene()->items().contains(dialog));
+}
+
+QTEST_APPLESS_MAIN(Ut_MDialog)
