@@ -27,11 +27,13 @@
 #include <MAction>
 #include <MLinearLayoutPolicy>
 
+class QStringListModel;
+
 class ViewHeaderPage : public TemplatePage
 {
     Q_OBJECT
-public:
 
+public:
     ViewHeaderPage();
     virtual ~ViewHeaderPage();
     virtual QString timedemoTitle();
@@ -39,6 +41,10 @@ public:
     virtual void createContent();
 
 protected:
+    MLinearLayoutPolicy *createNormalPolicy(MLayout *layout);
+    MLinearLayoutPolicy *createFixedPolicy(MLayout *layout);
+    QStringListModel *createListModel();
+
     virtual void retranslateUi();
 
 private slots:
@@ -46,14 +52,11 @@ private slots:
     void fixed();
 
 private:
-    void addFiller(MLinearLayoutPolicy *policy);
-
-    MPannableViewport *viewport;
-    MContainer *pannableContainer;
-    MContainer *fixedContainer;
-    MLabel *headerLabel;
     MAction *actionNormal;
     MAction *actionFixed;
+
+    MLinearLayoutPolicy *normalPolicy;
+    MLinearLayoutPolicy *fixedPolicy;
 };
 
 #endif // VIEWHEADERPAGE_H

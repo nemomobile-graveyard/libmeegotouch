@@ -19,18 +19,87 @@
 
 #include "viewheaderpage.h"
 
+#include <MApplication>
 #include <MPannableViewport>
-#include <MWidgetController>
+#include <MList>
 #include <MLayout>
 #include <MLinearLayoutPolicy>
 #include <MLabel>
-#include <MPositionIndicator>
 #include <MBasicListItem>
 #include <MAction>
-#include <MContainer>
+#include <MAbstractCellCreator>
+
+#include <QGraphicsLinearLayout>
+#include <QStringListModel>
+
+namespace {
+    class BasicListItemCreator : public MAbstractCellCreator<MBasicListItem>
+    {
+    public:
+        MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const
+        {
+            MWidget *cell = recycler.take(MBasicListItem::staticMetaObject.className());
+            if (!cell) {
+                cell = new MBasicListItem;
+            }
+            updateCell(index, cell);
+            return cell;
+        }
+
+        void updateCell(const QModelIndex &index, MWidget *cell) const
+        {
+            MBasicListItem *item = qobject_cast<MBasicListItem*>(cell);
+            Q_ASSERT(item);
+            item->setTitle(index.data().toString());
+        }
+    };
+
+    class ViewHeader : public MWidgetController
+    {
+    public:
+        ViewHeader(QGraphicsItem *parent = 0) :
+            MWidgetController(parent),
+            linearLayout(0),
+            titleWidget(0)
+        {
+            setStyleName(inv("CommonHeaderPanel"));
+            setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+
+            linearLayout = new QGraphicsLinearLayout(Qt::Horizontal, this);
+            titleWidget = new MLabel(this);
+            titleWidget->setTextElide(true);
+            titleWidget->setStyleName("CommonHeader");
+
+            linearLayout->addItem(titleWidget);
+        }
+
+        void setTitle(const QString &title)
+        {
+            titleWidget->setText(title);
+        }
+
+    private:
+        QString inv(QString stylename)
+        {
+            if (MApplication::instance()->objectName() == "widgetsgallery") {
+                return stylename;
+            } else {
+                return stylename.append("Inverted");
+            }
+        }
+
+    private:
+        QGraphicsLinearLayout *linearLayout;
+        MLabel *titleWidget;
+    };
+}
 
 ViewHeaderPage::ViewHeaderPage()
-    : TemplatePage(TemplatePage::ApplicationView)
+    : TemplatePage(TemplatePage::ApplicationView),
+      actionNormal(0),
+      actionFixed(0),
+      normalPolicy(0),
+      fixedPolicy(0)
 {
 }
 
@@ -47,99 +116,98 @@ void ViewHeaderPage::createContent()
 {
     MApplicationPage::createContent();
     pannableViewport()->setAcceptGesturesFromAnyDirection(true);
-
+    pannableViewport()->setVerticalPanningPolicy(MPannableViewport::PanningAsNeeded);
     setStyleName(inv("CommonApplicationPage"));
 
-    MLayout *layout = new MLayout();
-    MLinearLayoutPolicy *layoutPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
-    layoutPolicy->setContentsMargins(0, 0, 0, 0);
-    layoutPolicy->setSpacing(0);
+    MLayout *layout = new MLayout(centralWidget());
+    layout->setContentsMargins(0,0,0,0);
 
-    MWidgetController *header = new MWidgetController();
-    header->setStyleName(inv("CommonHeaderPanel"));
-    header->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    headerLabel = new MLabel(header);
-    headerLabel->setStyleName(inv("CommonHeader"));
-    layoutPolicy->addItem(header);
+    normalPolicy = createNormalPolicy(layout);
+    fixedPolicy = createFixedPolicy(layout);
 
-    fixedContainer = new MContainer();
-    fixedContainer->setStyleName(inv("CommonContainer"));
-
-    MLayout *fixedContainerLayout = new MLayout(fixedContainer->centralWidget());
-    MLinearLayoutPolicy *fixedContainerPolicy = new MLinearLayoutPolicy(fixedContainerLayout, Qt::Vertical);
-    fixedContainerPolicy->setContentsMargins(0, 0, 0, 0);
-    fixedContainerPolicy->setSpacing(0);
-
-    addFiller(fixedContainerPolicy);
-
-    layoutPolicy->addItem(fixedContainer);
-
-    viewport = new MPannableViewport();
-    viewport->positionIndicator()->setStyleName(inv("CommonPositionIndicator"));
-    viewport->setAutoRange(true);
-    viewport->setMinimumHeight(500);
-    layoutPolicy->addItem(viewport);
-
-    pannableContainer = new MContainer();
-    pannableContainer->setStyleName(inv("CommonContainer"));
-
-    MLayout *pannableContainerLayout = new MLayout(pannableContainer->centralWidget());
-    MLinearLayoutPolicy *pannableContainerPolicy = new MLinearLayoutPolicy(pannableContainerLayout, Qt::Vertical);
-    pannableContainerPolicy->setContentsMargins(0, 0, 0, 0);
-    pannableContainerPolicy->setSpacing(0);
-
-    addFiller(pannableContainerPolicy);
-
-    viewport->setWidget(pannableContainer);
-
-    centralWidget()->setLayout(layout);
+    normalPolicy->activate();
 
     /* Set up the toolbar */
     actionNormal = new MAction(this);
     actionNormal->setObjectName("normalAction");
     actionNormal->setLocation(MAction::ToolBarLocation);
+    actionNormal->setEnabled(false);
     addAction(actionNormal);
     connect(actionNormal, SIGNAL(triggered()), this, SLOT(normal()));
 
     actionFixed = new MAction(this);
     actionFixed->setObjectName("fixedAction");
     actionFixed->setLocation(MAction::ToolBarLocation);
+    actionFixed->setEnabled(true);
     addAction(actionFixed);
     connect(actionFixed, SIGNAL(triggered()), this, SLOT(fixed()));
 
     retranslateUi();
 }
 
-void ViewHeaderPage::addFiller(MLinearLayoutPolicy *policy)
+MLinearLayoutPolicy *ViewHeaderPage::createNormalPolicy(MLayout *layout)
 {
-    for (int i = 0; i < 30; i++) {
-        MBasicListItem *li = new MBasicListItem(MBasicListItem::SingleTitle);
-        li->setStyleName(inv("CommonBasicListItem"));
-        li->setTitle("Filler");
-        policy->addItem(li);
-    }
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    policy->setContentsMargins(0,0,0,0);
+    policy->setSpacing(0);
+
+    MList *list = new MList;
+    list->setCellCreator(new BasicListItemCreator);
+    list->setItemModel(createListModel());
+
+    ViewHeader *header = new ViewHeader;
+    //% "View Header"
+    header->setTitle(qtTrId("xx_viewheader_page_view_header"));
+
+    policy->addItem(header);
+    policy->addItem(list);
+
+    return policy;
+}
+
+MLinearLayoutPolicy *ViewHeaderPage::createFixedPolicy(MLayout *layout)
+{
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    policy->setContentsMargins(0,0,0,0);
+    policy->setSpacing(0);
+
+    MPannableViewport *viewport = new MPannableViewport;
+    MList *list = new MList(viewport);
+    list->setCellCreator(new BasicListItemCreator);
+    list->setItemModel(createListModel());
+    viewport->setWidget(list);
+
+    ViewHeader *header = new ViewHeader;
+    //% "Fixed View Header"
+    header->setTitle(qtTrId("xx_viewheader_page_fixed_view_header"));
+
+    policy->addItem(header);
+    policy->addItem(viewport);
+
+    return policy;
+}
+
+QStringListModel *ViewHeaderPage::createListModel()
+{
+    QStringList items;
+    for (int i = 0; i < 30; i++)
+        items << QString("Item #%1").arg(QString::number(i));
+
+    return new QStringListModel(items);
 }
 
 void ViewHeaderPage::normal()
 {
-    setPannable(true);
-    viewport->setMaximumHeight(0);
-    viewport->setVisible(false);
-    fixedContainer->setVisible(true);
-    fixedContainer->setMaximumHeight(-1);
-    //% "View Header"
-    headerLabel->setText(qtTrId("xx_viewheader_page_view_header"));
+    normalPolicy->activate();
+    actionNormal->setEnabled(false);
+    actionFixed->setEnabled(true);
 }
 
 void ViewHeaderPage::fixed()
 {
-    setPannable(false);
-    fixedContainer->setMaximumHeight(0);
-    fixedContainer->setVisible(false);
-    viewport->setVisible(true);
-    viewport->setMaximumHeight(-1);
-    //% "Fixed View Header"
-    headerLabel->setText(qtTrId("xx_viewheader_page_fixed_view_header"));
+    fixedPolicy->activate();
+    actionNormal->setEnabled(true);
+    actionFixed->setEnabled(false);
 }
 
 void ViewHeaderPage::retranslateUi()
@@ -148,15 +216,6 @@ void ViewHeaderPage::retranslateUi()
     setTitle(qtTrId("xx_viewheader_page_title"));
     if (!isContentCreated())
         return;
-
-    //% "View Header"
-    headerLabel->setText(qtTrId("xx_viewheader_page_view_header"));
-
-    //% "Fixed Content"
-    fixedContainer->setTitle(qtTrId("xx_viewheader_page_fixed_content"));
-
-    //% "Pannable Content"
-    pannableContainer->setTitle(qtTrId("xx_viewheader_page_pannable_content"));
 
     //% "Normal"
     actionNormal->setText(qtTrId("xx_view_header_page_normal"));
