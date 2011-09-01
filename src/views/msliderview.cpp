@@ -582,12 +582,6 @@ MSliderGroove::MSliderGroove(QGraphicsItem *parent) :
     MWidget(parent),
     controller(0),
     orientation(Qt::Horizontal),
-    backgroundBaseImage(0),
-    backgroundElapsedImage(0),
-    backgroundReceivedImage(0),
-    backgroundVerticalBaseImage(0),
-    backgroundVerticalElapsedImage(0),
-    backgroundVerticalReceivedImage(0),
     grooveThickness(0),
     grooveMargin(0),
     minimum(0),
@@ -898,21 +892,21 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     if (orientation == Qt::Horizontal) {
         qreal handle_center = sliderHandle->pos().x() + sliderHandle->rect().width() / 2.0;
 
-        if (backgroundBaseImage) {
-            backgroundBaseImage->borders(&left, &right, &top, &bottom);
+        if (!backgroundBaseImage.isNull()) {
+            backgroundBaseImage.data()->borders(&left, &right, &top, &bottom);
             horizontalMargins = left + right;
         }
 
         qreal vAdjustment = (grooveRect.height() - grooveThickness) / 2;
         grooveRect.adjust(grooveMargin, vAdjustment, -grooveMargin, -vAdjustment);
 
-        if (backgroundBaseImage) {
+        if (!backgroundBaseImage.isNull()) {
             if (grooveRect.width() >= qreal(horizontalMargins))
-                backgroundBaseImage->draw(grooveRect.toRect(), painter);
+                backgroundBaseImage.data()->draw(grooveRect.toRect(), painter);
         }
 
         if (showSeekBar) {
-            if (backgroundReceivedImage) {
+            if (!backgroundReceivedImage.isNull()) {
                 QRectF receivedRect = grooveRect;
 
                 if (!reverse) {
@@ -934,11 +928,11 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
                 }
 
                 if (receivedRect.width() >= qreal(horizontalMargins))
-                    backgroundReceivedImage->draw(receivedRect.toRect(), painter);
+                    backgroundReceivedImage.data()->draw(receivedRect.toRect(), painter);
             }
         }
 
-        if (backgroundElapsedImage) {
+        if (!backgroundElapsedImage.isNull()) {
             QRectF elapsedRect = grooveRect;
 
             if (!reverse) {
@@ -953,28 +947,28 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
             }
 
             if (elapsedRect.width() >= qreal(horizontalMargins))
-                backgroundElapsedImage->draw(elapsedRect.toRect(), painter);
+                backgroundElapsedImage.data()->draw(elapsedRect.toRect(), painter);
         }
     }
 
     if (orientation == Qt::Vertical) {
         qreal handle_center = sliderHandle->pos().y() + sliderHandle->rect().height() / 2.0;
 
-        if (backgroundVerticalBaseImage) {
-            backgroundVerticalBaseImage->borders(&left, &right, &top, &bottom);
+        if (!backgroundVerticalBaseImage.isNull()) {
+            backgroundVerticalBaseImage.data()->borders(&left, &right, &top, &bottom);
             verticalMargins = top + bottom;
         }
 
         qreal hAdjustment = (grooveRect.width() - grooveThickness) / 2;
         grooveRect.adjust(hAdjustment, grooveMargin, -hAdjustment, -grooveMargin);
 
-        if (backgroundVerticalBaseImage) {
+        if (!backgroundVerticalBaseImage.isNull()) {
             if (grooveRect.width() >= qreal(verticalMargins))
-                backgroundVerticalBaseImage->draw(grooveRect.toRect(), painter);
+                backgroundVerticalBaseImage.data()->draw(grooveRect.toRect(), painter);
         }
 
         if (showSeekBar) {
-            if (backgroundVerticalReceivedImage) {
+            if (!backgroundVerticalReceivedImage.isNull()) {
                 QRectF receivedRect = grooveRect;
 
                 receivedRect.setTop(valueToScreenCoordinate(loadedContentMaximum));
@@ -986,11 +980,11 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
                     receivedRect.setTop(grooveRect.top());
 
                 if (receivedRect.height() >= qreal(verticalMargins))
-                    backgroundVerticalReceivedImage->draw(receivedRect.toRect(), painter);
+                    backgroundVerticalReceivedImage.data()->draw(receivedRect.toRect(), painter);
             }
         }
 
-        if (backgroundVerticalElapsedImage) {
+        if (!backgroundVerticalElapsedImage.isNull()) {
             QRectF elapsedRect = grooveRect;
 
             if (value < maximum) {
@@ -999,7 +993,7 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
             }
 
             if (elapsedRect.height() >= qreal(verticalMargins))
-                backgroundVerticalElapsedImage->draw(elapsedRect.toRect(), painter);
+                backgroundVerticalElapsedImage.data()->draw(elapsedRect.toRect(), painter);
         }
     }
 }
