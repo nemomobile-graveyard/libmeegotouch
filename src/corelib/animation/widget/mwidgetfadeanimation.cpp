@@ -105,11 +105,11 @@ void MWidgetFadeAnimation::updateState(QAbstractAnimation::State newState, QAbst
 
         if (d->direction == In) {
             targetWidget()->setOpacity(0);
-            d->opacityAnimation->setStartValue(0);
+            d->opacityAnimation->setStartValue((qreal)0);
             d->opacityAnimation->setEndValue(d->originalOpacity);
         } else {
             d->opacityAnimation->setStartValue(d->originalOpacity);
-            d->opacityAnimation->setEndValue(0);
+            d->opacityAnimation->setEndValue((qreal)0);
         }
 
         d->played = true;
