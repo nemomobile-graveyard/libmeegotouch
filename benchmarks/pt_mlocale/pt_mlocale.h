@@ -56,6 +56,7 @@ private slots:
     void benchmarkFormatNumberDoubleArabic();
     void benchmarkFormatNumberDoubleWestern();
     void benchmarkChineseSorting();
+    void benchmarkCollatorStrengthSwitching();
 #endif
 };
 

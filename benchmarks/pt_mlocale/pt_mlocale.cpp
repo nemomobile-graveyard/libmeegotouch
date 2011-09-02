@@ -257,4 +257,17 @@ void Pt_MLocale::benchmarkChineseSorting()
 }
 #endif
 
+#ifdef HAVE_ICU
+void Pt_MLocale::benchmarkCollatorStrengthSwitching()
+{
+    MLocale localeZh("zh_CN@collation=pinyin");
+    MLocale localeDa("da_DK");
+    MCollator collatorZh = localeZh.collator();
+    MCollator collatorDa = localeDa.collator();
+    QBENCHMARK {
+        collatorDa.setStrength(MLocale::CollatorStrengthPrimary);
+        collatorDa.setStrength(MLocale::CollatorStrengthQuaternary);
+    }
+}
+#endif
 QTEST_APPLESS_MAIN(Pt_MLocale);
