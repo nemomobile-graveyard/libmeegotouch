@@ -2,7 +2,7 @@ es_419{
     NumberElements{
         latn{
             symbols{
-                decimal { "," }
+                decimal { "." }
                 group { " " }
             }
         }

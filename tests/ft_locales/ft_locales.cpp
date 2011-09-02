@@ -4454,9 +4454,9 @@ void Ft_Locales::checkAvailableLocales()
             + newLinePlusSupportedLocaleName + "\tPercent value\t"
             + locale.formatPercent(-12.3456789, 4)
             + newLinePlusSupportedLocaleName + "\tCurrency value\t"
-            + locale.formatCurrency(1234.56, "EUR")
+            + locale.formatCurrency(1234.56, "")
             + newLinePlusSupportedLocaleName + "\tNegative Currency value\t"
-            + locale.formatCurrency(-1234.56, "EUR");
+            + locale.formatCurrency(-1234.56, "");
         for (unsigned i = 0; i < 2; ++i) {
             MLocale::CalendarType calendarType;
             Q_UNUSED(calendarType);
