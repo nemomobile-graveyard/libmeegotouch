@@ -327,12 +327,12 @@ void MListIndexViewPrivate::_q_updateGeometry()
 
     q->updateGeometry();
     if (viewport)
-        controller->setPos(containerRect.width() - q->size().width(), containerRect.top() + viewport->pos().y());
+        controller->setPos(containerRect.width() - controller->preferredWidth(), containerRect.top() + viewport->pos().y());
 
     tooltip()->setPos(controller->mapFromParent(containerRect.left(), tooltip()->pos().y()));
     tooltip()->resize(containerRect.width(), tooltip()->size().height());
 
-    positionIndicatorPosition.setX((q->size().width() - q->style()->positionIndicator()->width()) / 2);
+    positionIndicatorPosition.setX((controller->preferredWidth() - q->style()->positionIndicator()->width()) / 2);
 }
 
 void MListIndexViewPrivate::_q_updateTitles()
