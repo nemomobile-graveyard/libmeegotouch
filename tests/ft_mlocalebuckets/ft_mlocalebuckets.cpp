@@ -694,6 +694,27 @@ void Ft_MLocaleBuckets::sortTestFiles_data()
     QTest::newRow("th_TH")
         << "th_TH"
         << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("da_DK")
+        << "da_DK"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("bem_ZM")
+        << "bem_ZM"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("cs_CZ")
+        << "cs_CZ"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("cs_CZ")
+        << "cs_CZ"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("pl_PL")
+        << "pl_PL"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("hu_HU")
+        << "hu_HU"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("kab_DZ")
+        << "kab_DZ"
+        << "ft_mlocalebuckets_test-input.txt";
 }
 
 void Ft_MLocaleBuckets::sortTestFiles()
