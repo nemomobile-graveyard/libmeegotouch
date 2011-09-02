@@ -10,7 +10,7 @@ es{
             symbols{
                 decimal { "," }
                 exponential { "E" }
-                group { " " }
+                group { "." }
                 infinity { "∞" }
                 list { ";" }
                 minusSign { "-" }

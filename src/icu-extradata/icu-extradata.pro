@@ -50,16 +50,6 @@ greaterThan(ICUVERSION, 4.4) {
                       data46/ar_YE.txt \
                       data46/es.txt \
                       data46/es_419.txt \
-                      data46/es_DO.txt \
-                      data46/es_GT.txt \
-                      data46/es_HN.txt \
-                      data46/es_MX.txt \
-                      data46/es_NI.txt \
-                      data46/es_PA.txt \
-                      data46/es_PE.txt \
-                      data46/es_PR.txt \
-                      data46/es_SV.txt \
-                      data46/es_US.txt \
                       data46/fa.txt \
                       data46/fa_AF.txt \
                       data46/pt.txt \
@@ -77,16 +67,6 @@ greaterThan(ICUVERSION, 4.4) {
                       data/ar_YE.txt \
                       data/es.txt \
                       data/es_419.txt \
-                      data/es_DO.txt \
-                      data/es_GT.txt \
-                      data/es_HN.txt \
-                      data/es_MX.txt \
-                      data/es_NI.txt \
-                      data/es_PA.txt \
-                      data/es_PE.txt \
-                      data/es_PR.txt \
-                      data/es_SV.txt \
-                      data/es_US.txt \
                       data/fa.txt \
                       data/fa_AF.txt \
                       data/pt.txt \
