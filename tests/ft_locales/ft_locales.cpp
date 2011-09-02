@@ -1532,50 +1532,58 @@ void Ft_Locales::testMLocaleIndexBucket_data()
     QTest::addColumn<QStringList>("stringsSorted");
     QTest::addColumn<QStringList>("expectedBuckets");
 
+    QStringList englishStringsSorted =
+        (QStringList()
+         <<"ç"<<"Ç"<<"cote"<<"coté"<<"côte"<<"côté"
+         <<"f"<<"F"<<"ff"<<"ﬀ"<<"Ff"<<"ffi"<<"ﬃ"<<"Ffi"<<"ﬄ"<<"ﬁ"<<"ﬂ"
+         <<"i"<<"I"<<"ï"<<"Ï"<<"İ"<<"ı"
+         <<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"
+         <<"s"<<"S"<<"ſ"<<"ß"<<"ẞ"
+         <<"test"<<"Test"
+         <<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"
+         <<"沙紀"
+            );
+    QStringList englishExpectedBuckets =
+        (QStringList()
+         <<"C"<<"C"<<"C"<<"C"<<"C"<<"C"
+         <<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"
+         <<"I"<<"I"<<"I"<<"I"<<"I"<<"I"
+         <<"O"<<"O"<<"O" <<"O" <<"O"
+         <<"S"<<"S"<<"S"<<"S"<<"S"
+         <<"T"<<"T"
+         <<"Z"<<"Z"<<"Z"<<"Z"<<"Z"
+         <<"沙"
+            );
     QTest::newRow("en_US")
         <<"ja_JP"
         <<"en_US"
-        <<(QStringList()
-           <<"ç"<<"Ç"<<"cote"<<"coté"<<"côte"<<"côté"
-           <<"f"<<"F"<<"ff"<<"ﬀ"<<"Ff"<<"ffi"<<"ﬃ"<<"Ffi"<<"ﬄ"<<"ﬁ"<<"ﬂ"
-           <<"i"<<"I"<<"ï"<<"Ï"<<"İ"<<"ı"
-           <<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"
-           <<"s"<<"S"<<"ſ"<<"ß"<<"ẞ"
-           <<"test"<<"Test"
-           <<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"
-           <<"沙紀"
-            )
-        <<(QStringList()
-           <<"C"<<"C"<<"C"<<"C"<<"C"<<"C"
-           <<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"
-           <<"I"<<"I"<<"I"<<"I"<<"I"<<"I"
-           <<"O"<<"O"<<"O" <<"O" <<"O"
-           <<"S"<<"S"<<"S"<<"S"<<"S"
-           <<"T"<<"T"
-           <<"Z"<<"Z"<<"Z"<<"Z"<<"Z"
-           <<"沙"
-            );
+        << englishStringsSorted
+        << englishExpectedBuckets;
+    QStringList turkishStringsSorted =
+        (QStringList()
+         <<"cote"<<"coté"<<"côte"<<"côté"
+         <<"ç"<<"Ç"
+         <<"ı"<<"I"<<"i"<<"İ"
+         <<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"
+         <<"s"<<"S"<<"ß"<<"ẞ"
+         <<"test"<<"Test"
+         <<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"
+         <<"沙紀");
+    QStringList turkishExpectedBuckets =
+        (QStringList()
+         <<"C"<<"C"<<"C"<<"C"
+         <<"Ç"<<"Ç"
+         <<"I"<<"I"<<"İ"<<"İ"
+         <<"Ö"<<"Ö"<<"Ö"<<"Ö"<<"Ö"
+         <<"S"<<"S"<<"S"<<"S"
+         <<"T"<<"T"
+         <<"Z"<<"Z"<<"Z"<<"Z"<<"Z"
+         <<"沙");
     QTest::newRow("tr_TR")
         <<"ja_JP"
         <<"tr_TR"
-        <<(QStringList()
-           <<"cote"<<"coté"<<"côte"<<"côté"
-           <<"ç"<<"Ç"
-           <<"ı"<<"I"<<"i"<<"İ"
-           <<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"
-           <<"s"<<"S"<<"ß"<<"ẞ"
-           <<"test"<<"Test"
-           <<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"
-           <<"沙紀")
-        <<(QStringList()
-           <<"C"<<"C"<<"C"<<"C"
-           <<"Ç"<<"Ç"
-           <<"I"<<"I"<<"İ"<<"İ"
-           <<"Ö"<<"Ö"<<"Ö"<<"Ö"<<"Ö"
-           <<"S"<<"S"<<"S"<<"S"
-           <<"T"<<"T"
-           <<"Z"<<"Z"<<"Z"<<"Z"<<"Z"
-           <<"沙");
+        << turkishStringsSorted
+        << turkishExpectedBuckets;
     QStringList germanStringsSorted =
         (QStringList()
          <<"Afghanistan"
@@ -1931,31 +1939,130 @@ void Ft_Locales::testMLocaleIndexBucket_data()
         <<"es_MX"
         << spanishStringsSorted
         << spanishExpectedBuckets;
+    QStringList finnishStringsSorted =
+        (QStringList()
+         <<"a"
+         <<"aa"
+         <<"aaaa"
+         <<"aaao"
+         <<"aabae"
+         <<"z"
+         <<"åao"
+            );
+    QStringList finnishExpectedBuckets =
+        (QStringList()
+         <<"A"
+         <<"A"
+         <<"A"
+         <<"A"
+         <<"A"
+         <<"Z"
+         <<"Å"
+            );
+    QTest::newRow("fi_FI")
+        <<"ja_JP"
+        <<"fi_FI"
+        << finnishStringsSorted
+        << finnishExpectedBuckets;
+    QStringList danishStringsSorted =
+        (QStringList()
+         <<"a"
+         <<"z"
+         <<"aa"
+         <<"åao"
+         <<"aaao"
+         <<"aabae"
+         <<"aaaa"
+            );
+    QStringList danishExpectedBuckets =
+        (QStringList()
+         <<"A"
+         <<"Z"
+         <<"Å"
+         <<"Å"
+         <<"Å"
+         <<"Å"
+         <<"Å"
+            );
+    QTest::newRow("da_DK")
+        <<"ja_JP"
+        <<"da_DK"
+        << danishStringsSorted
+        << danishExpectedBuckets;
+    QStringList hungarianStringsSorted =
+        (QStringList()
+         <<"a"
+         <<"z"
+         <<"zs"
+            );
+    QStringList hungarianExpectedBuckets =
+        (QStringList()
+         <<"A"
+         <<"Z"
+         <<"ZS"
+            );
+    QTest::newRow("hu_HU")
+        <<"ja_JP"
+        <<"hu_HU"
+        << hungarianStringsSorted
+        << hungarianExpectedBuckets;
+    QStringList czechStringsSorted =
+        (QStringList()
+         <<"c"
+         <<"Cc"
+         <<"CC"
+         <<"č"
+         <<"č"
+         <<"Č"
+         <<"Ěrčk"
+         <<"Etsk"
+         <<"Ézfd"
+         <<"h"
+         <<"H"
+         <<"ch"
+         <<"cH"
+         <<"Ch"
+         <<"CH"
+         <<"i"
+         <<"I"
+         <<"ů"
+         <<"Ů"
+         <<"Ž"
+         <<"α"
+         <<"Α"
+         <<"ワタシ"
+         <<"沙紀");
+    QStringList czechExpectedBuckets =
+        (QStringList()
+         <<"C"
+         <<"C"
+         <<"C"
+         <<"Č"
+         <<"Č"
+         <<"Č"
+         <<"E"
+         <<"E"
+         <<"E"
+         <<"H"
+         <<"H"
+         <<"CH"
+         <<"CH"
+         <<"CH"
+         <<"CH"
+         <<"I"
+         <<"I"
+         <<"U"
+         <<"U"
+         <<"Ž"
+         <<"Α"
+         <<"Α"
+         <<"ワ"
+         <<"沙");
     QTest::newRow("cs_CZ")
         <<"ja_JP"
         <<"cs_CZ"
-        <<(QStringList()
-           <<"c"<<"Cc"<<"CC"
-           <<"č"<<"č"<<"Č"
-           << "Ěrčk" << "Etsk" << "Ézfd"
-           <<"h"<<"H"
-           <<"ch"<<"cH"<<"Ch"<<"CH"
-           <<"i"<<"I"
-           <<"ů"<<"Ů"
-           <<"α"<<"Α"
-           <<"ワタシ"
-           <<"沙紀")
-        <<(QStringList()
-           <<"C"<<"C"<<"C"
-           <<"Č"<<"Č"<<"Č"
-           <<"E"<<"E"<<"E"
-           <<"H"<<"H"
-           <<"CH"<<"CH"<<"CH"<<"CH"
-           <<"I"<<"I"
-           <<"U"<<"U"
-           <<"Α"<<"Α"
-           <<"ワ"
-           <<"沙");
+        << czechStringsSorted
+        << czechExpectedBuckets;
     QStringList russianStringsSorted =
         (QStringList()
          <<"c"

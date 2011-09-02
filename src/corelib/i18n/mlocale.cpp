@@ -3611,7 +3611,7 @@ QStringList MLocale::exemplarCharactersIndex() const
                 charStr.split(QLatin1String(" "),QString::SkipEmptyParts);
             // to get all characters with pinyin starting with z
             // (last one is 蓙) into the Z bucket
-            exemplarCharactersIndex << QString::fromUtf8("α");
+            exemplarCharactersIndex << QString::fromUtf8("Α"); // GREEK CAPITAL LETTER ALPHA
             return exemplarCharactersIndex;
         }
         if(collationLocaleName.contains(QLatin1String("collation=stroke")))
@@ -3717,6 +3717,13 @@ QString MLocale::indexBucket(const QString &str, const QStringList &buckets, con
             }
         }
     }
+    // return the last bucket if any substring starting from the beginning compares
+    // primary equal to the last bucket label:
+    for (int i = 0; i < strUpperCase.size(); ++i)
+        if(!coll(buckets.last(),strUpperCase.left(i+1))
+           && !coll(strUpperCase.left(i+1),buckets.last()))
+            return buckets.last();
+    // last resort, no appropriate bucket found:
     return firstCharacter;
 }
 #endif
