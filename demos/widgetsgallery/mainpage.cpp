@@ -656,7 +656,7 @@ void MainPage::createContent()
     populateLayout();
 
     QStringList themeStrings;
-    int currentThemeIndex;
+    int currentThemeIndex = 0;
 
     QList<ThemeInfo> themes = findAvailableThemes();
     const int themesCount = themes.count();
