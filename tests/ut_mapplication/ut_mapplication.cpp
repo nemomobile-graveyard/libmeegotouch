@@ -104,10 +104,10 @@ void Ut_MApplication::mApplicationConstructor_data()
 {
     QTest::addColumn<int>("count");
     QTest::addColumn<QString>("params");
-    QTest::newRow("hw") << 2 <<  QString("-show-br -show-fps");
-    QTest::newRow("hw-fullscreen") << 3 <<  QString("-show-br -show-fps -fullscreen");
-    QTest::newRow("sw") << 2 <<  QString("-software -show-br");
-    QTest::newRow("sw-fullscreen") << 3 <<  QString("-software -show-br -fullscreen");
+    QTest::newRow("hw") << 3 <<  QString("appName -show-br -show-fps");
+    QTest::newRow("hw-fullscreen") << 4 <<  QString("appName -show-br -show-fps -fullscreen");
+    QTest::newRow("sw") << 3 <<  QString("appName -software -show-br");
+    QTest::newRow("sw-fullscreen") << 4 <<  QString("appName -software -show-br -fullscreen");
 }
 
 MApplication *Ut_MApplication::buildApp(int count, const QString &params, MApplicationService *service)
@@ -154,7 +154,7 @@ MApplication *Ut_MApplication::buildPrestartApp(int count, const QString &params
     MApplication *retVal = 0;
 
     QChar sep(' ');
-    static char *argv[MAX_PARAMS] = {'\0'};;
+    static char *argv[MAX_PARAMS] = {'\0'};
     static int x = 0;
     x = 0; //we have to always reset it
 
