@@ -3,8 +3,8 @@ ar_SA	Country endonym	المملكة العربية السعودية
 ar_SA	Decimal point	٫
 ar_SA	Floating Point Number	‪-١٢٣٤٥٦٧٨٩٫٠١٢‬
 ar_SA	Percent value	‪-١٬٢٣٤٫٥٦٧٩%‬
-ar_SA	Currency value	‪١٢٣٤٫٥٦€‬
-ar_SA	Negative Currency value	‪-١٢٣٤٫٥٦€‬
+ar_SA	Currency value	‪١٢٣٤٫٥٦ر.س.‬
+ar_SA	Negative Currency value	‪-١٢٣٤٫٥٦ر.س.‬
 ar_SA	Name of month 01 (Gregorian calendar), stand-alone, wide	يناير
 ar_SA	Name of month 02 (Gregorian calendar), stand-alone, wide	فبراير
 ar_SA	Name of month 03 (Gregorian calendar), stand-alone, wide	مارس
@@ -699,8 +699,8 @@ da_DK	Country endonym	Danmark
 da_DK	Decimal point	,
 da_DK	Floating Point Number	-123.456.789,012
 da_DK	Percent value	-1.234,5679 %
-da_DK	Currency value	1.234,56 €
-da_DK	Negative Currency value	-1.234,56 €
+da_DK	Currency value	1.234,56 kr
+da_DK	Negative Currency value	-1.234,56 kr
 da_DK	Name of month 01 (Gregorian calendar), stand-alone, wide	Januar
 da_DK	Name of month 02 (Gregorian calendar), stand-alone, wide	Februar
 da_DK	Name of month 03 (Gregorian calendar), stand-alone, wide	Marts
@@ -1047,8 +1047,8 @@ de_CH	Country endonym	Schweiz
 de_CH	Decimal point	.
 de_CH	Floating Point Number	-123'456'789.012
 de_CH	Percent value	-1'234.5679 %
-de_CH	Currency value	€ 1'234.56
-de_CH	Negative Currency value	€-1'234.56
+de_CH	Currency value	CHF 1'234.55
+de_CH	Negative Currency value	CHF-1'234.55
 de_CH	Name of month 01 (Gregorian calendar), stand-alone, wide	Januar
 de_CH	Name of month 02 (Gregorian calendar), stand-alone, wide	Februar
 de_CH	Name of month 03 (Gregorian calendar), stand-alone, wide	März
@@ -2439,8 +2439,8 @@ en	Country endonym
 en	Decimal point	.
 en	Floating Point Number	-123,456,789.012
 en	Percent value	-1,234.5679%
-en	Currency value	€1,234.56
-en	Negative Currency value	(€1,234.56)
+en	Currency value	¤1,234.56
+en	Negative Currency value	(¤1,234.56)
 en	Name of month 01 (Gregorian calendar), stand-alone, wide	January
 en	Name of month 02 (Gregorian calendar), stand-alone, wide	February
 en	Name of month 03 (Gregorian calendar), stand-alone, wide	March
@@ -3135,8 +3135,8 @@ en_GB	Country endonym	United Kingdom
 en_GB	Decimal point	.
 en_GB	Floating Point Number	-123,456,789.012
 en_GB	Percent value	-1,234.5679%
-en_GB	Currency value	€1,234.56
-en_GB	Negative Currency value	-€1,234.56
+en_GB	Currency value	£1,234.56
+en_GB	Negative Currency value	-£1,234.56
 en_GB	Name of month 01 (Gregorian calendar), stand-alone, wide	January
 en_GB	Name of month 02 (Gregorian calendar), stand-alone, wide	February
 en_GB	Name of month 03 (Gregorian calendar), stand-alone, wide	March
@@ -3483,8 +3483,8 @@ en_US	Country endonym	United States
 en_US	Decimal point	.
 en_US	Floating Point Number	-123,456,789.012
 en_US	Percent value	-1,234.5679%
-en_US	Currency value	€1,234.56
-en_US	Negative Currency value	(€1,234.56)
+en_US	Currency value	$1,234.56
+en_US	Negative Currency value	($1,234.56)
 en_US	Name of month 01 (Gregorian calendar), stand-alone, wide	January
 en_US	Name of month 02 (Gregorian calendar), stand-alone, wide	February
 en_US	Name of month 03 (Gregorian calendar), stand-alone, wide	March
@@ -3831,8 +3831,8 @@ en_US_POSIX	Country endonym	United States
 en_US_POSIX	Decimal point	.
 en_US_POSIX	Floating Point Number	-123456789.01234
 en_US_POSIX	Percent value	-1234.5679%
-en_US_POSIX	Currency value	€ 1234.56
-en_US_POSIX	Negative Currency value	-€ 1234.56
+en_US_POSIX	Currency value	$ 1234.56
+en_US_POSIX	Negative Currency value	-$ 1234.56
 en_US_POSIX	Name of month 01 (Gregorian calendar), stand-alone, wide	January
 en_US_POSIX	Name of month 02 (Gregorian calendar), stand-alone, wide	February
 en_US_POSIX	Name of month 03 (Gregorian calendar), stand-alone, wide	March
@@ -4177,10 +4177,10 @@ en_US_POSIX & en_US	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24   
 es_419	Language endonym	español (América Latina)
 es_419	Country endonym	Latinoamérica y el Caribe
 es_419	Decimal point	,
-es_419	Floating Point Number	-123 456 789,012
-es_419	Percent value	-1 234,5679%
-es_419	Currency value	€ 1 234,56
-es_419	Negative Currency value	-€ 1 234,56
+es_419	Floating Point Number	-123.456.789,012
+es_419	Percent value	-1.234,5679%
+es_419	Currency value	¤ 1.234,56
+es_419	Negative Currency value	-¤ 1.234,56
 es_419	Name of month 01 (Gregorian calendar), stand-alone, wide	Enero
 es_419	Name of month 02 (Gregorian calendar), stand-alone, wide	Febrero
 es_419	Name of month 03 (Gregorian calendar), stand-alone, wide	Marzo
@@ -4875,8 +4875,8 @@ fa_IR	Country endonym	ایران
 fa_IR	Decimal point	٫
 fa_IR	Floating Point Number	‪−۱۲۳٬۴۵۶٬۷۸۹٫۰۱۲‬
 fa_IR	Percent value	‪−۱٬۲۳۴٫۵۶۷۹%‬
-fa_IR	Currency value	‪€ ۱٬۲۳۴٫۵۶‬
-fa_IR	Negative Currency value	‪€ −۱٬۲۳۴٫۵۶‬
+fa_IR	Currency value	‪﷼ ۱٬۲۳۵‬
+fa_IR	Negative Currency value	‪﷼ −۱٬۲۳۵‬
 fa_IR	Name of month 01 (Gregorian calendar), stand-alone, wide	ژانویه
 fa_IR	Name of month 02 (Gregorian calendar), stand-alone, wide	فوریه
 fa_IR	Name of month 03 (Gregorian calendar), stand-alone, wide	مارس
@@ -6267,8 +6267,8 @@ he_IL	Country endonym	ישראל
 he_IL	Decimal point	.
 he_IL	Floating Point Number	‪-123,456,789.012‬
 he_IL	Percent value	‪-1,234.5679%‬
-he_IL	Currency value	‪1,234.56 €‬
-he_IL	Negative Currency value	‪-1,234.56 €‬
+he_IL	Currency value	‪1,234.56 ₪‬
+he_IL	Negative Currency value	‪-1,234.56 ₪‬
 he_IL	Name of month 01 (Gregorian calendar), stand-alone, wide	ינואר
 he_IL	Name of month 02 (Gregorian calendar), stand-alone, wide	פברואר
 he_IL	Name of month 03 (Gregorian calendar), stand-alone, wide	מרס
@@ -6615,8 +6615,8 @@ hi_IN	Country endonym	भारत
 hi_IN	Decimal point	.
 hi_IN	Floating Point Number	-१२,३४,५६,७८९.०१२
 hi_IN	Percent value	-१,२३४.५६७९%
-hi_IN	Currency value	€ १,२३४.५६
-hi_IN	Negative Currency value	-€ १,२३४.५६
+hi_IN	Currency value	रु. १,२३४.५६
+hi_IN	Negative Currency value	-रु. १,२३४.५६
 hi_IN	Name of month 01 (Gregorian calendar), stand-alone, wide	जनवरी
 hi_IN	Name of month 02 (Gregorian calendar), stand-alone, wide	फरवरी
 hi_IN	Name of month 03 (Gregorian calendar), stand-alone, wide	मार्च
@@ -6963,8 +6963,8 @@ id_ID	Country endonym	Indonesia
 id_ID	Decimal point	,
 id_ID	Floating Point Number	-123.456.789,012
 id_ID	Percent value	-1.234,5679%
-id_ID	Currency value	€1.234,56
-id_ID	Negative Currency value	-€1.234,56
+id_ID	Currency value	Rp1.235
+id_ID	Negative Currency value	-Rp1.235
 id_ID	Name of month 01 (Gregorian calendar), stand-alone, wide	Januari
 id_ID	Name of month 02 (Gregorian calendar), stand-alone, wide	Februari
 id_ID	Name of month 03 (Gregorian calendar), stand-alone, wide	Maret
@@ -7659,8 +7659,8 @@ ja_JP	Country endonym	日本
 ja_JP	Decimal point	.
 ja_JP	Floating Point Number	-123,456,789.012
 ja_JP	Percent value	-1,234.5679%
-ja_JP	Currency value	€1,234.56
-ja_JP	Negative Currency value	-€1,234.56
+ja_JP	Currency value	￥1,235
+ja_JP	Negative Currency value	-￥1,235
 ja_JP	Name of month 01 (Gregorian calendar), stand-alone, wide	1月
 ja_JP	Name of month 02 (Gregorian calendar), stand-alone, wide	2月
 ja_JP	Name of month 03 (Gregorian calendar), stand-alone, wide	3月
@@ -8007,8 +8007,8 @@ ko_KR	Country endonym	대한민국
 ko_KR	Decimal point	.
 ko_KR	Floating Point Number	-123,456,789.012
 ko_KR	Percent value	-1,234.5679%
-ko_KR	Currency value	€1,234.56
-ko_KR	Negative Currency value	-€1,234.56
+ko_KR	Currency value	₩1,235
+ko_KR	Negative Currency value	-₩1,235
 ko_KR	Name of month 01 (Gregorian calendar), stand-alone, wide	1월
 ko_KR	Name of month 02 (Gregorian calendar), stand-alone, wide	2월
 ko_KR	Name of month 03 (Gregorian calendar), stand-alone, wide	3월
@@ -8355,8 +8355,8 @@ ms_MY	Country endonym	Malaysia
 ms_MY	Decimal point	.
 ms_MY	Floating Point Number	-123,456,789.012
 ms_MY	Percent value	-1,234.5679%
-ms_MY	Currency value	€1,234.56
-ms_MY	Negative Currency value	(€1,234.56)
+ms_MY	Currency value	RM1,234.56
+ms_MY	Negative Currency value	(RM1,234.56)
 ms_MY	Name of month 01 (Gregorian calendar), stand-alone, wide	Januari
 ms_MY	Name of month 02 (Gregorian calendar), stand-alone, wide	Februari
 ms_MY	Name of month 03 (Gregorian calendar), stand-alone, wide	Mac
@@ -8703,8 +8703,8 @@ nb_NO	Country endonym	Norge
 nb_NO	Decimal point	,
 nb_NO	Floating Point Number	-123 456 789,012
 nb_NO	Percent value	-1 234,5679 %
-nb_NO	Currency value	EUR 1 234,56
-nb_NO	Negative Currency value	-EUR 1 234,56
+nb_NO	Currency value	kr 1 234,56
+nb_NO	Negative Currency value	-kr 1 234,56
 nb_NO	Name of month 01 (Gregorian calendar), stand-alone, wide	Januar
 nb_NO	Name of month 02 (Gregorian calendar), stand-alone, wide	Februar
 nb_NO	Name of month 03 (Gregorian calendar), stand-alone, wide	Mars
@@ -9399,8 +9399,8 @@ nn_NO	Country endonym	Noreg
 nn_NO	Decimal point	,
 nn_NO	Floating Point Number	−123 456 789,012
 nn_NO	Percent value	−1 234,5679 %
-nn_NO	Currency value	1 234,56 EUR
-nn_NO	Negative Currency value	−1 234,56 EUR
+nn_NO	Currency value	1 234,56 kr
+nn_NO	Negative Currency value	−1 234,56 kr
 nn_NO	Name of month 01 (Gregorian calendar), stand-alone, wide	Januar
 nn_NO	Name of month 02 (Gregorian calendar), stand-alone, wide	Februar
 nn_NO	Name of month 03 (Gregorian calendar), stand-alone, wide	Mars
@@ -9747,8 +9747,8 @@ no_NO	Country endonym	Norge
 no_NO	Decimal point	,
 no_NO	Floating Point Number	-123 456 789,012
 no_NO	Percent value	-1 234,5679 %
-no_NO	Currency value	EUR 1 234,56
-no_NO	Negative Currency value	-EUR 1 234,56
+no_NO	Currency value	kr 1 234,56
+no_NO	Negative Currency value	-kr 1 234,56
 no_NO	Name of month 01 (Gregorian calendar), stand-alone, wide	Januar
 no_NO	Name of month 02 (Gregorian calendar), stand-alone, wide	Februar
 no_NO	Name of month 03 (Gregorian calendar), stand-alone, wide	Mars
@@ -10095,8 +10095,8 @@ pt_BR	Country endonym	Brasil
 pt_BR	Decimal point	,
 pt_BR	Floating Point Number	-123.456.789,012
 pt_BR	Percent value	-1.234,5679%
-pt_BR	Currency value	€1.234,56
-pt_BR	Negative Currency value	(€1.234,56)
+pt_BR	Currency value	R$1.234,56
+pt_BR	Negative Currency value	(R$1.234,56)
 pt_BR	Name of month 01 (Gregorian calendar), stand-alone, wide	Janeiro
 pt_BR	Name of month 02 (Gregorian calendar), stand-alone, wide	Fevereiro
 pt_BR	Name of month 03 (Gregorian calendar), stand-alone, wide	Março
@@ -10791,8 +10791,8 @@ ru_RU	Country endonym	Россия
 ru_RU	Decimal point	,
 ru_RU	Floating Point Number	-123 456 789,012
 ru_RU	Percent value	-1 234,5679 %
-ru_RU	Currency value	1 234,56 €
-ru_RU	Negative Currency value	-1 234,56 €
+ru_RU	Currency value	1 234,56 руб.
+ru_RU	Negative Currency value	-1 234,56 руб.
 ru_RU	Name of month 01 (Gregorian calendar), stand-alone, wide	Январь
 ru_RU	Name of month 02 (Gregorian calendar), stand-alone, wide	Февраль
 ru_RU	Name of month 03 (Gregorian calendar), stand-alone, wide	Март
@@ -11139,8 +11139,8 @@ sv_SE	Country endonym	Sverige
 sv_SE	Decimal point	,
 sv_SE	Floating Point Number	−123 456 789,012
 sv_SE	Percent value	−1 234,5679 %
-sv_SE	Currency value	1 234,56 €
-sv_SE	Negative Currency value	−1 234,56 €
+sv_SE	Currency value	1 234,56 kr
+sv_SE	Negative Currency value	−1 234,56 kr
 sv_SE	Name of month 01 (Gregorian calendar), stand-alone, wide	Januari
 sv_SE	Name of month 02 (Gregorian calendar), stand-alone, wide	Februari
 sv_SE	Name of month 03 (Gregorian calendar), stand-alone, wide	Mars
@@ -11487,8 +11487,8 @@ th_TH	Country endonym	ไทย
 th_TH	Decimal point	.
 th_TH	Floating Point Number	-123,456,789.012
 th_TH	Percent value	-1,234.5679%
-th_TH	Currency value	€1,234.56
-th_TH	Negative Currency value	€-1,234.56
+th_TH	Currency value	฿1,234.56
+th_TH	Negative Currency value	฿-1,234.56
 th_TH	Name of month 01 (Gregorian calendar), stand-alone, wide	มกราคม
 th_TH	Name of month 02 (Gregorian calendar), stand-alone, wide	กุมภาพันธ์
 th_TH	Name of month 03 (Gregorian calendar), stand-alone, wide	มีนาคม
@@ -11835,8 +11835,8 @@ tr_TR	Country endonym	Türkiye
 tr_TR	Decimal point	,
 tr_TR	Floating Point Number	-123.456.789,012
 tr_TR	Percent value	-% 1.234,5679
-tr_TR	Currency value	1.234,56 €
-tr_TR	Negative Currency value	-1.234,56 €
+tr_TR	Currency value	1.234,56 TL
+tr_TR	Negative Currency value	-1.234,56 TL
 tr_TR	Name of month 01 (Gregorian calendar), stand-alone, wide	Ocak
 tr_TR	Name of month 02 (Gregorian calendar), stand-alone, wide	Şubat
 tr_TR	Name of month 03 (Gregorian calendar), stand-alone, wide	Mart
@@ -12183,8 +12183,8 @@ uk_UA	Country endonym	Україна
 uk_UA	Decimal point	,
 uk_UA	Floating Point Number	-123 456 789,012
 uk_UA	Percent value	-1 234,5679%
-uk_UA	Currency value	1 234,56 €
-uk_UA	Negative Currency value	-1 234,56 €
+uk_UA	Currency value	1 234,56 ₴
+uk_UA	Negative Currency value	-1 234,56 ₴
 uk_UA	Name of month 01 (Gregorian calendar), stand-alone, wide	Січень
 uk_UA	Name of month 02 (Gregorian calendar), stand-alone, wide	Лютий
 uk_UA	Name of month 03 (Gregorian calendar), stand-alone, wide	Березень
@@ -12531,8 +12531,8 @@ ur_PK	Country endonym	پاکستان
 ur_PK	Decimal point	.
 ur_PK	Floating Point Number	‪-123,456,789.012‬
 ur_PK	Percent value	‪-1,234.5679%‬
-ur_PK	Currency value	‪€1,234.56‬
-ur_PK	Negative Currency value	‪€-1,234.56‬
+ur_PK	Currency value	‪PKRs1,235‬
+ur_PK	Negative Currency value	‪PKRs-1,235‬
 ur_PK	Name of month 01 (Gregorian calendar), stand-alone, wide	جنوری
 ur_PK	Name of month 02 (Gregorian calendar), stand-alone, wide	فروری
 ur_PK	Name of month 03 (Gregorian calendar), stand-alone, wide	مار چ
@@ -12879,8 +12879,8 @@ zh_CN@collation=pinyin	Country endonym	中国
 zh_CN@collation=pinyin	Decimal point	.
 zh_CN@collation=pinyin	Floating Point Number	-123,456,789.012
 zh_CN@collation=pinyin	Percent value	-1,234.5679%
-zh_CN@collation=pinyin	Currency value	€1,234.56
-zh_CN@collation=pinyin	Negative Currency value	-€1,234.56
+zh_CN@collation=pinyin	Currency value	￥1,234.56
+zh_CN@collation=pinyin	Negative Currency value	-￥1,234.56
 zh_CN@collation=pinyin	Name of month 01 (Gregorian calendar), stand-alone, wide	一月
 zh_CN@collation=pinyin	Name of month 02 (Gregorian calendar), stand-alone, wide	二月
 zh_CN@collation=pinyin	Name of month 03 (Gregorian calendar), stand-alone, wide	三月
@@ -13110,7 +13110,7 @@ zh_CN@collation=pinyin	Name of weekday 05 (Islamic calendar), format, narrow	五
 zh_CN@collation=pinyin	Name of weekday 06 (Islamic calendar), format, narrow	六
 zh_CN@collation=pinyin	Name of weekday 07 (Islamic calendar), format, narrow	日
 zh_CN@collation=pinyin	Collation sample	/ # % ∮ ☺ ♨ 01 ٠١ ०१ 02 ٠٢ ०२ 04 ٠٤ ٠۴ ०४ 05 ٠٥ ٠۵ ०५ 06 ٠٦ ٠۶ ०६ 1 ١ १ 11 ١١ ११ 12 ١٢ १२ 14 ١٤ ١۴ १४ 15 ١٥ ١۵ १५ 16 ١٦ ١۶ १६ 2 ٢ २ 21 ٢١ २१ 22 ٢٢ २२ 24 ٢٤ ٢۴ २४ 25 ٢٥ ٢۵ २५ 26 ٢٦ ٢۶ २६ 4 ٤ ۴ ४ 5 ٥ ۵ ५ 6 ٦ ۶ ६ 爱 播 此 得 俄 二 鳩山 楽谷 内山 攀 若山 三 沙紀 山田 松下 小中 一 正 中 中村 竹山 竹山 á Á a A ă Ă å Å ä Ä b c č ca ča čc ch cH Ch CH coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz d ď da ďa dz ďz ě e ěa ea ěz ez h H i I ň ň Ň n N ňa na ňz nz o O ö Ö oegh öfgh r ř ra řa rz řz s š sa ša sz šz t ť ta ťa tz ťz ú U ů Ů z ž za ža zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン
-zh_CN@collation=pinyin	Exemplar characters index	[Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
+zh_CN@collation=pinyin	Exemplar characters index	[ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 zh_CN@collation=pinyin	Scripts used	Hani
 zh_CN@collation=pinyin	%r (locale specific 12 hour “TimeShort”)	下午2:31
 zh_CN@collation=pinyin	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -13227,8 +13227,8 @@ zh_CN@collation=stroke	Country endonym	中国
 zh_CN@collation=stroke	Decimal point	.
 zh_CN@collation=stroke	Floating Point Number	-123,456,789.012
 zh_CN@collation=stroke	Percent value	-1,234.5679%
-zh_CN@collation=stroke	Currency value	€1,234.56
-zh_CN@collation=stroke	Negative Currency value	-€1,234.56
+zh_CN@collation=stroke	Currency value	￥1,234.56
+zh_CN@collation=stroke	Negative Currency value	-￥1,234.56
 zh_CN@collation=stroke	Name of month 01 (Gregorian calendar), stand-alone, wide	一月
 zh_CN@collation=stroke	Name of month 02 (Gregorian calendar), stand-alone, wide	二月
 zh_CN@collation=stroke	Name of month 03 (Gregorian calendar), stand-alone, wide	三月
@@ -13575,8 +13575,8 @@ zh_Hans_CN	Country endonym	中国
 zh_Hans_CN	Decimal point	.
 zh_Hans_CN	Floating Point Number	-123,456,789.012
 zh_Hans_CN	Percent value	-1,234.5679%
-zh_Hans_CN	Currency value	€1,234.56
-zh_Hans_CN	Negative Currency value	-€1,234.56
+zh_Hans_CN	Currency value	￥1,234.56
+zh_Hans_CN	Negative Currency value	-￥1,234.56
 zh_Hans_CN	Name of month 01 (Gregorian calendar), stand-alone, wide	一月
 zh_Hans_CN	Name of month 02 (Gregorian calendar), stand-alone, wide	二月
 zh_Hans_CN	Name of month 03 (Gregorian calendar), stand-alone, wide	三月
@@ -13923,8 +13923,8 @@ zh_Hant_TW	Country endonym	台灣
 zh_Hant_TW	Decimal point	.
 zh_Hant_TW	Floating Point Number	-123,456,789.012
 zh_Hant_TW	Percent value	-1,234.5679%
-zh_Hant_TW	Currency value	€1,234.56
-zh_Hant_TW	Negative Currency value	-€1,234.56
+zh_Hant_TW	Currency value	NT$1,234.56
+zh_Hant_TW	Negative Currency value	-NT$1,234.56
 zh_Hant_TW	Name of month 01 (Gregorian calendar), stand-alone, wide	一月
 zh_Hant_TW	Name of month 02 (Gregorian calendar), stand-alone, wide	二月
 zh_Hant_TW	Name of month 03 (Gregorian calendar), stand-alone, wide	三月
