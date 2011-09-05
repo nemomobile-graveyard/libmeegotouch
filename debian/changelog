@@ -1,3 +1,14 @@
+libmeegotouch (0.23.16-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#275484 - it is not possible to tell the value set by a declarative setting slider
+  * Fixes: NB#279445 - List index in some conditions is not present in the list sheet
+  * Fixes: NB#279531 Recipient tooltip is shown on two lines in Finnish and not fully shown, regression from 1.0
+  * Fixes: NB#279391 - White screen or half white screen visible in view header page in widgetsgallery.
+  * Fixes: NB#262820 - COREWEB: 'MScalableImage::borders MSliderGroove::paint _q_paintItem QGraphicsScenePrivate::drawItemHelper QGraphicsScenePrivate::draw'
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 05 Sep 2011 13:07:42 +0300
+
 libmeegotouch (0.23.15-1) unstable; urgency=low
 
   * New version
