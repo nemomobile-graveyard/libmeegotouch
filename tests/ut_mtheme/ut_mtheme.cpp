@@ -29,12 +29,12 @@
 
 #include <QEventLoop>
 #include <QtTest>
-#include <QString>
-#include <QProcess>
 
 namespace {
     const char *KnownIconId = "meegotouch-combobox-indicator";
     const char *UnknownIconId = "whatever";
+
+    const int MaxWaitingInterval = 20000;
 };
 
 void Ut_MTheme::initTestCase()
@@ -158,38 +158,63 @@ void Ut_MTheme::testThemeChangeCompleted()
 {
     QList<ThemeInfo> themes = findAvailableThemes();
 
+    if (themes.count() <= 1)
+        QSKIP("Too few themes to test theme changing", SkipAll);
+
     MGConfItem themeNameItem("/meegotouch/theme/name");
-
     QSignalSpy themeChange(m_theme, SIGNAL(themeChangeCompleted()));
-
     QEventLoop eventLoop;
-
     const QString initialTheme = themeNameItem.value().toString();
 
-    connect(m_theme, SIGNAL(themeChangeCompleted()), &eventLoop, SLOT(quit()));
+    QObject::connect(m_theme, SIGNAL(themeChangeCompleted()), &eventLoop, SLOT(quit()));
 
-    //This time should be same as: THEME_CHANGE_TIMEOUT at mthemedaemon (3 seconds)
+    //This time is for preventing infinite waiting, timeout should be big enough
+    //as loading theme can take over a dozen of seconds
     QTimer eventLoopQuitTimer;
-    eventLoopQuitTimer.setInterval(3000);
+    eventLoopQuitTimer.setInterval(MaxWaitingInterval);
     eventLoopQuitTimer.setSingleShot(true);
     QObject::connect(&eventLoopQuitTimer, SIGNAL(timeout()),
                      &eventLoop, SLOT(quit()));
 
+    QElapsedTimer elapsedTimer;
+    elapsedTimer.start();
     for (int i = 0; i < themes.size(); i++) {
         //We set every theme available except the current one
         if (m_theme->currentTheme() != themes[i].theme) {
+            int count = themeChange.count();
             themeNameItem.set(themes[i].theme);
             QVERIFY(themeNameItem.value().toString() == themes[i].theme);
+
+            //change completion was not yet signaled, let's wait for it
+            //this checking is made in case MLocalThemeDaemon is used and
+            //it signals immediately
+            if (themeChange.count() == count) {
+                eventLoopQuitTimer.start();
+                eventLoop.exec();
+                eventLoopQuitTimer.stop();
+            }
+
+            qDebug() << QString("theme changed in %1ms").arg(elapsedTimer.restart());
+        }
+    }
+    //Coming back to the initial theme if needed
+    //There are two possibilities:
+    //- number of changes made in the loop are the same as number of themes
+    //that will be for example if initial theme is the last one in the list,
+    //- after loop the we don't current theme != initialTheme so we can spy
+    //for one more themeChangeCompleted() signal
+    if (m_theme->currentTheme() != initialTheme) {
+        int count = themeChange.count();
+        themeNameItem.set(initialTheme);
+
+        if (themeChange.count() == count) {
             eventLoopQuitTimer.start();
             eventLoop.exec();
             eventLoopQuitTimer.stop();
         }
+
+        qDebug() << QString("theme changed in %1ms").arg(elapsedTimer.restart());
     }
-    //Coming back to the initial theme
-    themeNameItem.set(initialTheme);
-    eventLoopQuitTimer.start();
-    eventLoop.exec();
-    eventLoopQuitTimer.stop();
     QVERIFY(themeNameItem.value().toString() == initialTheme);
     //After all we should have so many signals as themes installed due to we go through all the themes
     QCOMPARE(themeChange.count(), themes.size());
