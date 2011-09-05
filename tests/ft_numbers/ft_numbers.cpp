@@ -1058,11 +1058,11 @@ void Ft_Numbers::testDoubles_data()
     QTest::newRow("es 1234567.1234567")
             << QString("es")
             << double(1234567.1234567)
-            << QString("1 234 567,123");
+            << QString("1.234.567,123");
     QTest::newRow("es_419 1234567.1234567")
             << QString("es_419")
             << double(1234567.1234567)
-            << QString("1 234 567,123");
+            << QString("1.234.567,123");
     QTest::newRow("es_DO 1234567.1234567")
             << QString("es_DO")
             << double(1234567.1234567)
