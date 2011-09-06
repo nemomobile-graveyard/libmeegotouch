@@ -1393,6 +1393,7 @@ void MSceneManagerPrivate::pushPage(MSceneWindow *page, bool animatedTransition)
             setSceneWindowState(previousPage, MSceneWindow::Disappeared);
 
         setSceneWindowState(currentPage, MSceneWindow::Appeared);
+        applySceneWindowTransitionsFromPageSwitchQueue();
     }
 }
 
@@ -1442,6 +1443,7 @@ void MSceneManagerPrivate::popPage(bool animatedTransition)
             setSceneWindowState(previousPage, MSceneWindow::Appeared);
 
         setSceneWindowState(currentPage, MSceneWindow::Disappeared);
+        applySceneWindowTransitionsFromPageSwitchQueue();
     }
 
     setCurrentPage(previousPage);

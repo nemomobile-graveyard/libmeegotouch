@@ -105,6 +105,7 @@ private slots:
     void testInvalidOrientationAngle();
     void testApplicationMenuBelowStatusBar_data();
     void testApplicationMenuBelowStatusBar();
+    void testPageTransitionsQueue();
 private:
     MComponentData* m_componentData;
 };

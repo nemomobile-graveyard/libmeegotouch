@@ -1669,4 +1669,26 @@ void Ut_MSceneManager::testApplicationMenuBelowStatusBar()
     QCOMPARE(menu->geometry().top(), statusBar->geometry().height());
 }
 
+void Ut_MSceneManager::testPageTransitionsQueue()
+{
+    gMWindowIsOnDisplay = true;
+    mWindow->show();
+
+    MApplicationPage* page1 = new MApplicationPage;
+    MApplicationPage* page2 = new MApplicationPage;
+    MApplicationPage* page3 = new MApplicationPage;
+    sm->appearSceneWindowNow(page1);
+
+    page2->appear();                 // (1)
+    sm->appearSceneWindowNow(page3); // (2)
+    page2->appear();                 // (3)
+
+    sm->fastForwardPageSwitchAnimation(); // finishes (1) transition
+
+    // (2) is immediate and then (3) transition should start
+    QCOMPARE(page1->sceneWindowState(), MSceneWindow::Disappeared);
+    QCOMPARE(page2->sceneWindowState(), MSceneWindow::Appearing);
+    QCOMPARE(page3->sceneWindowState(), MSceneWindow::Disappearing);
+}
+
 QTEST_MAIN(Ut_MSceneManager);
