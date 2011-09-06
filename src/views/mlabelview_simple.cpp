@@ -347,16 +347,15 @@ QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
     textLayout.setFont(font);
     textLayout.setTextOption(viewPrivate->textOptions);
 
-    int lineCount = 0;
     int elideAtLineNumber = -1;
-    qreal leading = fm.leading();
-    qreal height = -leading;
+    const qreal leading = fm.leading();
 
     QString text;
     bool firstVariant = true;
 
     foreach (const QString &stringVariant, stringVariants) {
-        lineCount = 0;
+        qreal height = -leading;
+        int lineCount = 0;
         elideAtLineNumber = -1;
         text = stringVariant;
         if (!firstVariant) {
