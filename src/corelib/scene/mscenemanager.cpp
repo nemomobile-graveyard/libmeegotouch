@@ -826,11 +826,7 @@ QGraphicsWidget *MSceneManagerPrivate::rootElementForSceneWindow(MSceneWindow *s
             root = homeButtonRootElement;
             break;
         case MSceneWindow::Banner:
-            if (sceneWindow->styleName() == MBannerType::ShortEventBanner)
-                root = rootElement;
-            else
-                //For all the MBanners except ShortEventBanner
-                root = homeButtonRootElement;
+            root = rootElement;
             break;
         case MSceneWindow::DockWidget:
             if (sceneWindow->alignment().testFlag(Qt::AlignTop)) {
