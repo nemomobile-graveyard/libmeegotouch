@@ -5565,6 +5565,125 @@ void Ut_MCalendar::testWeekdayType_data()
        << 7
        <<  0 <<  0 <<  0 <<  0 <<  1 <<        3 <<  0
        << -1 << -1 << -1 << -1 <<  0 << 86400000 << -1;
+   QTest::newRow("en_US")
+       << "en_US"
+       << "en_US"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("as_IN")
+       << "as_IN"
+       << "as_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("bn_IN")
+       << "bn_IN"
+       << "bn_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("bo_IN")
+       << "bo_IN"
+       << "bo_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("en_IN")
+       << "en_IN"
+       << "en_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("gu_IN")
+       << "gu_IN"
+       << "gu_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("hi_IN")
+       << "hi_IN"
+       << "bn_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("kn_IN")
+       << "kn_IN"
+       << "kn_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("kok_IN")
+       << "kok_IN"
+       << "kok_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("ml_IN")
+       << "ml_IN"
+       << "ml_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("mr_IN")
+       << "mr_IN"
+       << "mr_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("ne_IN")
+       << "ne_IN"
+       << "ne_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("or_IN")
+       << "or_IN"
+       << "or_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("pa_Guru_IN")
+       << "pa_Guru_IN"
+       << "pa_Guru_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("pa_IN")
+       << "pa_IN"
+       << "pa_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("ta_IN")
+       << "ta_IN"
+       << "ta_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("te_IN")
+       << "te_IN"
+       << "te_IN"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 <<        3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
 }
 
 void Ut_MCalendar::testWeekdayType()

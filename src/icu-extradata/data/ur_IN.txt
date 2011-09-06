@@ -5,4 +5,10 @@ ur_IN{
         "#,##,##0%;-#,##,##0%",
         "#E0",
     }
+    calendar{
+        gregorian{
+            DateTimeElements:intvector { 1, 4 }
+            weekend:intvector { 7, 0, 1, 86400000 }
+        }
+    }
 }

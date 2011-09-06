@@ -15,6 +15,22 @@ greaterThan(ICUVERSION, 4.4) {
                  data/de.txt \
                  data/en_GB.txt \
                  data/en_IE.txt \
+                 data/as_IN.txt \
+                 data/bn_IN.txt \
+                 data/bo_IN.txt \
+                 data/en_IN.txt \
+                 data/gu_IN.txt \
+                 data/hi_IN.txt \
+                 data/kn_IN.txt \
+                 data/kok_IN.txt \
+                 data/ml_IN.txt \
+                 data/mr_IN.txt \
+                 data/ne_IN.txt \
+                 data/or_IN.txt \
+                 data/pa_Guru_IN.txt \
+                 data/pa_IN.txt \
+                 data/ta_IN.txt \                 
+                 data/te_IN.txt \                 
                  data/en_SG.txt \
                  data/es_AR.txt \
                  data/fi.txt \
