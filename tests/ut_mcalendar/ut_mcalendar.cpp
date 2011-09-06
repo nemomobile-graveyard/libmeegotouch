@@ -65,6 +65,11 @@ void Ut_MCalendar::cleanup()
 {
 }
 
+void Ut_MCalendar::testDataPaths()
+{
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
+}
+
 void Ut_MCalendar::testTimeZones()
 {
     qDebug() << "systemTimeZone() =" << MCalendar::systemTimeZone();
@@ -838,7 +843,6 @@ void Ut_MCalendar::testIcuFormatString()
     QFETCH(QString, timeFullResult);
 
     MLocale locale(language);
-    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     locale.setTimeFormat24h(timeFormat24h);
@@ -1500,7 +1504,6 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime()
     QFETCH(QString, timeFullResult);
 
     MLocale locale(localeName);
-    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
@@ -2556,7 +2559,6 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
     QFETCH(QString, timeFullResult);
 
     MLocale locale(localeName);
-    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
@@ -4174,7 +4176,6 @@ void Ut_MCalendar::testPosixFormatPattern()
     QFETCH(QString, expectedResult);
 
     MLocale locale(localeName);
-    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     locale.setCalendarType(calendarType);
@@ -4595,7 +4596,6 @@ void Ut_MCalendar::testFormatDateTimeICU()
     QFETCH(QString, result);
 
     MLocale locale(localeName);
-    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
@@ -4742,7 +4742,6 @@ void Ut_MCalendar::testWeekdaySymbols()
     QFETCH(QStringList, symbols);
 
     MLocale locale(language);
-    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     MCalendar mcal(calendarType);
@@ -4932,7 +4931,6 @@ void Ut_MCalendar::testMonthSymbols()
     QFETCH(QStringList, symbols);
 
     MLocale locale(language);
-    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     MCalendar mcal(calendarType);
@@ -5090,7 +5088,6 @@ void Ut_MCalendar::testDateYearAndMonth()
     QFETCH(QString, expectedResult);
 
     MLocale locale(localeName);
-    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     locale.setCategoryLocale(MLocale::MLcTime, lcNumeric);
@@ -5233,7 +5230,6 @@ void Ut_MCalendar::testDateWeekdayAbbreviatedAndDayOfMonth()
     QFETCH(QString, expectedResult);
 
     MLocale locale(localeName);
-    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     locale.setCategoryLocale(MLocale::MLcTime, lcNumeric);
@@ -5376,7 +5372,6 @@ void Ut_MCalendar::testDateWeekdayWideAndDayOfMonth()
     QFETCH(QString, expectedResult);
 
     MLocale locale(localeName);
-    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     locale.setCategoryLocale(MLocale::MLcTime, lcNumeric);
@@ -5708,7 +5703,6 @@ void Ut_MCalendar::testWeekdayType()
     QFETCH(int, sundayTransition);
 
     MLocale locale(language);
-    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     locale.setCalendarType(calendarType);
     MCalendar calendar(locale);
