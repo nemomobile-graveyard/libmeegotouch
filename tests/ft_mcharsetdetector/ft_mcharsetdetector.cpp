@@ -1860,6 +1860,14 @@ void Ft_MCharsetDetector::testDetection_data()
         << "ISO-8859-1"
         << "ISO-8859-1"
         << "fi";
+        QTest::newRow("empty")
+        << ""
+        << ""
+        << ""
+        << false
+        << "UTF-8"
+        << "UTF-8"
+        << "";
 }
 
 void Ft_MCharsetDetector::testDetection()
