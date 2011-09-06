@@ -19,11 +19,12 @@
 
 #include <MApplication>
 #include "ut_mlistitem.h"
+#include "mlistitem.h"
 
 void Ut_MListItem::initTestCase()
 {
     static int argc = 1;
-    static char *app_name[1] = { (char *) "./Ut_MGraphicsClipEffect" };
+    static char *app_name[1] = { (char *) "./ut_mlistitem" };
     app = new MApplication(argc, app_name);
 }
 
@@ -34,7 +35,7 @@ void Ut_MListItem::cleanupTestCase()
 
 void Ut_MListItem::init()
 {
-    listItem = new MListItem ();
+    listItem = new MListItem();
 }
 
 void Ut_MListItem::cleanup()

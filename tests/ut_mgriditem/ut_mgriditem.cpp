@@ -20,14 +20,15 @@
 #include <MApplication>
 #include <QPixmap>
 #include "ut_mgriditem.h"
-#include <QGraphicsView>
+#include "mgriditem.h"
+#include "mgriditem_p.h"
 
 #define TITLE "testtitle"
 
 void Ut_MGridItem::initTestCase()
 {
     static int argc = 1;
-    static char *app_name[1] = { (char *) "./Ut_MGridItem" };
+    static char *app_name[1] = { (char *) "./ut_mgriditem" };
     app = new MApplication(argc, app_name);
 }
 

@@ -21,13 +21,9 @@
 #define UT_MGRIDITEM_H
 
 #include <QtTest/QtTest>
-#include <QtGui/QMainWindow>
-#include "mgriditem.h"
-#include "mgriditem_p.h"
-
-#define MARGIN 10
 
 class MApplication;
+class MGridItem;
 
 class Ut_MGridItem : public QObject
 {
@@ -53,12 +49,9 @@ private slots:
     void testIsSubtitleVisible ();
     void testSetSelected ();
 
-
-
  private:
     MApplication *app;
     MGridItem *gridItem;
-
 };
 
 #endif // UT_MGRIDITEM_H

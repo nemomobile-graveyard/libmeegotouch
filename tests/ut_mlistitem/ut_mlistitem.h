@@ -21,11 +21,9 @@
 #define UT_MLISTITEM_H
 
 #include <QtTest/QtTest>
-#include <QtGui/QMainWindow>
-#include "mlistitem.h"
-#include "mlistitem_p.h"
 
 class MApplication;
+class MListItem;
 
 class Ut_MListItem : public QObject
 {
