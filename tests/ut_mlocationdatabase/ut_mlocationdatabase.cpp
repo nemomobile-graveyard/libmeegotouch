@@ -192,11 +192,6 @@ void Ut_MLocationDatabase::testCitiesInTimeZone_data()
     QTest::addColumn<QString>("timeZoneId");
     QTest::addColumn<QStringList>("keysOfSomeExpectedMatches");
 
-    QTest::newRow("America/Guayaquil")
-        << "America/Guayaquil"
-        << (QStringList()
-            << "qtn_clk_city_ecuad_quito"
-            );
     QTest::newRow("America/Los_Angeles")
         << "America/Los_Angeles"
         << (QStringList()
