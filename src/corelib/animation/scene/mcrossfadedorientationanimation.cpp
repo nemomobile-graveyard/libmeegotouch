@@ -24,6 +24,9 @@
 #include <QGraphicsWidget>
 #include <QPropertyAnimation>
 
+#include <mwindow.h>
+#include <mscenelayereffect.h>
+
 #include <QDebug>
 
 void MCrossFadedOrientationAnimationPrivate::init(const QRectF &visibleSceneRect)
@@ -38,7 +41,12 @@ void MCrossFadedOrientationAnimationPrivate::init(const QRectF &visibleSceneRect
     rootElementRotationAnimation->setEasingCurve(q->style()->rotationEasingCurve());
 
     rootElementFadeInAnimation = new QPropertyAnimation(0, "opacity", q);
-    rootElementFadeInAnimation->setStartValue(0.0);
+    // QT doesn’t try to draw QGraphicsItems with opacity 0.
+    // This is an undocummented behavior (QTBUG-18267).
+    // root element must always be drawn because there might be
+    // a scene layer effect in there that ignores the parent's opacity, so
+    // it will always be drawn.
+    rootElementFadeInAnimation->setStartValue(0.001);
     rootElementFadeInAnimation->setEndValue(1.0);
     rootElementFadeInAnimation->setDuration(q->style()->duration());
     rootElementFadeInAnimation->setEasingCurve(q->style()->fadingEasingCurve());
@@ -263,6 +271,65 @@ QPointF MCrossFadedOrientationAnimationPrivate::calculateRotationPointSceneCoord
     return rotationPointScene;
 }
 
+bool MCrossFadedOrientationAnimationPrivate::renderedByTranslucentWindow()
+{
+    Q_Q(MCrossFadedOrientationAnimation);
+
+    QGraphicsScene *scene = q->rootElement()->scene();
+    if (!scene || scene->views().count() == 0)
+        return false;
+
+    MWindow *window = qobject_cast<MWindow*>(scene->views().at(0));
+
+    return window && window->testAttribute(Qt::WA_TranslucentBackground);
+}
+
+QGraphicsWidget *MCrossFadedOrientationAnimationPrivate::findLayerEffect(
+        QGraphicsItem *currentItem, int currentLevel)
+{
+    QGraphicsWidget *layerEffect = 0;
+
+    if (currentItem->isWidget()) {
+        layerEffect =
+            qobject_cast<MSceneLayerEffect*>(
+                    static_cast<QGraphicsWidget*>(currentItem));
+
+        if (layerEffect)
+            return layerEffect;
+    }
+
+    // We don't go deeper than 3 levels when searching for a layer effect
+    // Maximum depth case would be:
+    //
+    //      1                         2                           3
+    // subRootElement -> sceneWindowAndLayerEffectBinder -> sceneLayerEffect
+    if (currentLevel == 3) {
+        return 0;
+    }
+
+    int nextLevel = currentLevel + 1;
+    foreach (QGraphicsItem* child, currentItem->childItems()) {
+        layerEffect = findLayerEffect(child, nextLevel);
+        if (layerEffect)
+            break;
+    }
+
+    return layerEffect;
+}
+
+void MCrossFadedOrientationAnimationPrivate::fetchBackgroundLayerEffect()
+{
+    Q_Q(MCrossFadedOrientationAnimation);
+
+    backgroundLayerEffectPointer.clear();
+
+    QGraphicsWidget *layerEffect = findLayerEffect(q->rootElement(), 0);
+    if (!layerEffect)
+        return;
+
+    backgroundLayerEffectPointer = layerEffect;
+}
+
 MCrossFadedOrientationAnimation::MCrossFadedOrientationAnimation(
         const QRectF &visibleSceneRect, QObject *parent) :
     MOrientationAnimation(new MCrossFadedOrientationAnimationPrivate, parent)
@@ -315,7 +382,29 @@ void MCrossFadedOrientationAnimation::updateState(
     Q_D(MCrossFadedOrientationAnimation);
 
     if (newState == QAbstractAnimation::Running) {
+        if (d->renderedByTranslucentWindow()) {
+            // for cases like status menu and system dialogs (i.e. translucent MWindows
+            // with a dimmed background) we want the layer effect to stand still
+            // (position, rotation and opacity) during the entire rotation animation.
+            // That will improve the visual quality of the animation.
+            d->fetchBackgroundLayerEffect();
+        }
+        QGraphicsWidget *backgroundLayerEffect = d->backgroundLayerEffectPointer.data();
+
+        if (backgroundLayerEffect) {
+            // we don't want it to show up in the snapshot
+            backgroundLayerEffect->hide();
+
+            // don't let the animation affect his opacity.
+            backgroundLayerEffect->setFlag(QGraphicsItem::ItemIgnoresParentOpacity, true);
+        }
+
         d->createRootElementSnapshot();
+
+        if (backgroundLayerEffect) {
+            // bring it back, now that the snapshot has been taken
+            backgroundLayerEffect->show();
+        }
 
         // Let the scene windows and widgets have their final sizes and positions
         // within the root element.
@@ -325,6 +414,12 @@ void MCrossFadedOrientationAnimation::updateState(
 
     } else if (newState == QAbstractAnimation::Stopped) {
         d->destroyRootElementSnapshot();
+
+        QGraphicsWidget *backgroundLayerEffect = d->backgroundLayerEffectPointer.data();
+        if (backgroundLayerEffect) {
+            // bring the flag back to its default value
+            backgroundLayerEffect->setFlag(QGraphicsItem::ItemIgnoresParentOpacity, false);
+        }
     }
 
     MParallelAnimationGroup::updateState(newState, oldState);
