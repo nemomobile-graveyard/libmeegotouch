@@ -66,6 +66,10 @@ private:
     MListIndexViewPrivate *d_ptr;
 
     Q_PRIVATE_SLOT(d_func(), void _q_attachToListContainer())
+    Q_PRIVATE_SLOT(d_func(), void _q_dettachFromListContainer())
+
+    Q_PRIVATE_SLOT(d_func(), void _q_attachToViewport())
+    Q_PRIVATE_SLOT(d_func(), void _q_dettachFromViewport())
 
     Q_PRIVATE_SLOT(d_func(), void _q_showIfNeeded())
     Q_PRIVATE_SLOT(d_func(), void _q_appearOnSceneWindow())

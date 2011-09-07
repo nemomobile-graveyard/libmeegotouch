@@ -73,7 +73,10 @@ protected:
     void scrollToGroupHeader(int y);
 
     void _q_attachToListContainer();
+    void _q_dettachFromListContainer();
+
     void _q_attachToViewport();
+    void _q_dettachFromViewport();
 
     void _q_showIfNeeded();
     void _q_appearOnSceneWindow();
