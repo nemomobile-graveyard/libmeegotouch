@@ -23,8 +23,23 @@ fa{
     calendar{
         gregorian{
              AmPmMarkers{
-                 "AM",
-                 "PM",
+                 "ق.ظ",
+                 "ب.ظ",
+             }
+             DateTimePatterns{
+                 "‫H:mm:ss (zzzz)‬",
+                 "‫H:mm:ss (z)‬",
+                 "‫H:mm:ss‬",
+                 "‫H:mm‬",
+                 "‫EEEE d MMMM y‬",
+                 "‫d MMMM y‬",
+                 "‫d MMM y‬",
+                 "‫d‏/M‏/y‬",
+                 "‫{1}،‏ {0}‬",
+                 "‫{1}، ساعت {0}‬",
+                 "‫{1}، ساعت {0}‬",
+                 "‫{1}،‏ {0}‬",
+                 "‫{1}،‏ {0}‬",
              }
         }
     }

@@ -9,8 +9,8 @@ fa_AF{
     calendar{
         gregorian{
              AmPmMarkers{
-                 "AM",
-                 "PM",
+                 "ق.ظ",
+                 "ب.ظ",
              }
         }
     }

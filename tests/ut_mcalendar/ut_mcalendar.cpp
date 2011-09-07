@@ -2166,14 +2166,14 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 2004
         << 6
         << 15
-        << "۶/۱۵/۰۴"
-        << "جون ۱۵, ۲۰۰۴"
-        << "جون ۱۵, ۲۰۰۴"
-        << "سه‌شنبه, جون ۱۵, ۲۰۰۴"
-        << "۱۴:۳۱"
-        << "۱۴:۳۱:۰۰"
-        << "۱۴:۳۱:۰۰ (GMT+۰۳:۰۰)"
-        << "۱۴:۳۱:۰۰ (وقت تابستانی شرق اروپا)";
+        << "‫۱۵‏/۶‏/۲۰۰۴‬"
+        << "‫۱۵ جون ۲۰۰۴‬"
+        << "‫۱۵ جون ۲۰۰۴‬"
+        << "‫سه‌شنبه ۱۵ جون ۲۰۰۴‬"
+        << "‫۱۴:۳۱‬"
+        << "‫۱۴:۳۱:۰۰‬"
+        << "‫۱۴:۳۱:۰۰ (GMT+۰۳:۰۰)‬"
+        << "‫۱۴:۳۱:۰۰ (وقت تابستانی شرق اروپا)‬";
     QTest::newRow("15.6.2004_fa_IR_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2185,14 +2185,14 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 2004
         << 6
         << 15
-        << "6/15/04"
-        << "جون 15, 2004"
-        << "جون 15, 2004"
-        << "سه‌شنبه, جون 15, 2004"
-        << "14:31"
-        << "14:31:00"
-        << "14:31:00 (GMT+03:00)"
-        << "14:31:00 (وقت تابستانی شرق اروپا)";
+        << "‫15‏/6‏/2004‬"
+        << "‫15 جون 2004‬"
+        << "‫15 جون 2004‬"
+        << "‫سه‌شنبه 15 جون 2004‬"
+        << "‫14:31‬"
+        << "‫14:31:00‬"
+        << "‫14:31:00 (GMT+03:00)‬"
+        << "‫14:31:00 (وقت تابستانی شرق اروپا)‬";
     QTest::newRow("15.6.2004_fa_IR_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2204,14 +2204,14 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 2004
         << 6
         << 15
-        << "۶/۱۵/۰۴"
-        << "جون ۱۵, ۲۰۰۴"
-        << "جون ۱۵, ۲۰۰۴"
-        << "سه‌شنبه, جون ۱۵, ۲۰۰۴"
-        << "۱۴:۳۱"
-        << "۱۴:۳۱:۰۰"
-        << "۱۴:۳۱:۰۰ (GMT+۰۳:۰۰)"
-        << "۱۴:۳۱:۰۰ (وقت تابستانی شرق اروپا)";
+        << "‫۱۵‏/۶‏/۲۰۰۴‬"
+        << "‫۱۵ جون ۲۰۰۴‬"
+        << "‫۱۵ جون ۲۰۰۴‬"
+        << "‫سه‌شنبه ۱۵ جون ۲۰۰۴‬"
+        << "‫۱۴:۳۱‬"
+        << "‫۱۴:۳۱:۰۰‬"
+        << "‫۱۴:۳۱:۰۰ (GMT+۰۳:۰۰)‬"
+        << "‫۱۴:۳۱:۰۰ (وقت تابستانی شرق اروپا)‬";
     QTest::newRow("15.6.2004_fa_IR_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2223,14 +2223,14 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 2004
         << 6
         << 15
-        << "۶/۱۵/۰۴"
-        << "جون ۱۵, ۲۰۰۴"
-        << "جون ۱۵, ۲۰۰۴"
-        << "سه‌شنبه, جون ۱۵, ۲۰۰۴"
-        << "۱۴:۳۱"
-        << "۱۴:۳۱:۰۰"
-        << "۱۴:۳۱:۰۰ (GMT+۰۳:۰۰)"
-        << "۱۴:۳۱:۰۰ (وقت تابستانی شرق اروپا)";
+        << "‫۱۵‏/۶‏/۲۰۰۴‬"
+        << "‫۱۵ جون ۲۰۰۴‬"
+        << "‫۱۵ جون ۲۰۰۴‬"
+        << "‫سه‌شنبه ۱۵ جون ۲۰۰۴‬"
+        << "‫۱۴:۳۱‬"
+        << "‫۱۴:۳۱:۰۰‬"
+        << "‫۱۴:۳۱:۰۰ (GMT+۰۳:۰۰)‬"
+        << "‫۱۴:۳۱:۰۰ (وقت تابستانی شرق اروپا)‬";
     QTest::newRow("15.6.2004_fa_IR_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2242,14 +2242,14 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 2004
         << 6
         << 15
-        << "6/15/04"
-        << "جون 15, 2004"
-        << "جون 15, 2004"
-        << "سه‌شنبه, جون 15, 2004"
-        << "14:31"
-        << "14:31:00"
-        << "14:31:00 (GMT+03:00)"
-        << "14:31:00 (وقت تابستانی شرق اروپا)";
+        << "‫15‏/6‏/2004‬"
+        << "‫15 جون 2004‬"
+        << "‫15 جون 2004‬"
+        << "‫سه‌شنبه 15 جون 2004‬"
+        << "‫14:31‬"
+        << "‫14:31:00‬"
+        << "‫14:31:00 (GMT+03:00)‬"
+        << "‫14:31:00 (وقت تابستانی شرق اروپا)‬";
     QTest::newRow("15.6.2004_fa_IR_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2261,14 +2261,14 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 2004
         << 6
         << 15
-        << "6/15/04"
-        << "جون 15, 2004"
-        << "جون 15, 2004"
-        << "سه‌شنبه, جون 15, 2004"
-        << "14:31"
-        << "14:31:00"
-        << "14:31:00 (GMT+03:00)"
-        << "14:31:00 (وقت تابستانی شرق اروپا)";
+        << "‫15‏/6‏/2004‬"
+        << "‫15 جون 2004‬"
+        << "‫15 جون 2004‬"
+        << "‫سه‌شنبه 15 جون 2004‬"
+        << "‫14:31‬"
+        << "‫14:31:00‬"
+        << "‫14:31:00 (GMT+03:00)‬"
+        << "‫14:31:00 (وقت تابستانی شرق اروپا)‬";
     QTest::newRow("15.6.2004_ur_PK_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2619,9 +2619,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
                 expectedResult = dateResults[dateType] + ", " + timeResults[timeType];
             else if(locale.categoryName(MLocale::MLcTime).startsWith("fa_IR")) {
                 if (dateType == MLocale::DateShort || dateType == MLocale::DateMedium)
-                        expectedResult = dateResults[dateType] + "،‏ " + timeResults[timeType];
+                        expectedResult = "‫" + dateResults[dateType] + "،‏ " + timeResults[timeType] + "‬";
                     else
-                        expectedResult = dateResults[dateType] + "، ساعت " + timeResults[timeType];
+                        expectedResult = "‫" + dateResults[dateType] + "، ساعت " + timeResults[timeType]  + "‬";
             }
             else if(locale.categoryName(MLocale::MLcTime).startsWith("vi")) {
                 expectedResult = timeResults[timeType] + " " + dateResults[dateType];
