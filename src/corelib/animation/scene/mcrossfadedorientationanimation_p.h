@@ -5,6 +5,8 @@
 
 #include "msnapshotitem.h"
 
+#include <QWeakPointer>
+
 class QPropertyAnimation;
 
 class MCrossFadedOrientationAnimationPrivate : public MOrientationAnimationPrivate
@@ -33,6 +35,10 @@ public:
     // Calculates the rotation point in scene coordinates.
     QPointF calculateRotationPointSceneCoords(M::OrientationAngle angle);
 
+    bool renderedByTranslucentWindow();
+    static QGraphicsWidget *findLayerEffect(QGraphicsItem *currentItem, int currentLevel);
+    void fetchBackgroundLayerEffect();
+
     MSnapshotItem *snapshot;
 
     // visible scene rect, in scene coordinates.
@@ -50,6 +56,8 @@ public:
 
     // The rotation point of the snapshot item, in its local coordinates.
     QPointF snapshotRotationPoint;
+
+    QWeakPointer<QGraphicsWidget> backgroundLayerEffectPointer;
 };
 
 #endif
