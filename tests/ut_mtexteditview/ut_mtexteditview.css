@@ -1,0 +1,8 @@
+MTextEditStyle {
+    toolbar-style-name: "TestToolbarStyleName";
+}
+
+MEditorToolbarStyle {
+    hide-timeout: 3125;
+    hide-animation-duration: 2193;
+}

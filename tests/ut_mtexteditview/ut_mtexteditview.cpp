@@ -29,12 +29,15 @@
 
 #include <MApplication>
 #include <MApplicationWindow>
+#include <MApplicationPage>
 #include <MScene>
+#include <MSceneManager>
 
 #include <mtextedit.h>
 #include <mtexteditview.h>
 
 #include "corelib/widgets/mtextedit_p.h"
+#include "views/meditortoolbar.h"
 #include "views/mtexteditview_p.h"
 
 Q_DECLARE_METATYPE(Qt::FocusReason)
@@ -46,10 +49,20 @@ void Ut_MTextEditView::initTestCase()
     MApplication::setLoadMInputContext(false);
     m_app = new MApplication(dummyArgc, dummyArgv);
     m_appWindow = new MApplicationWindow;
+    m_scene = new MScene;
+    m_parent = new MWidget;
+    m_scene->addItem(m_parent);
+    m_sceneManager = new MSceneManager(m_scene);
+    MTheme::loadCSS(qApp->applicationDirPath() + "/ut_mtexteditview.css");
 }
 
 void Ut_MTextEditView::cleanupTestCase()
 {
+    delete m_sceneManager;
+    m_scene = 0;
+    m_sceneManager = 0;
+    delete m_parent;
+    m_parent = 0;
     delete m_appWindow;
     m_appWindow = 0;
     delete m_app;
@@ -59,7 +72,7 @@ void Ut_MTextEditView::cleanupTestCase()
 
 void Ut_MTextEditView::init()
 {
-    m_controller = new MTextEdit(MTextEditModel::MultiLine, "");
+    m_controller = new MTextEdit(MTextEditModel::MultiLine, "", m_parent);
     m_subject = new MTextEditView(m_controller);
     m_controller->setView(m_subject);
 }
@@ -114,13 +127,48 @@ void Ut_MTextEditView::testBoundingRect()
 
 void Ut_MTextEditView::testStyleUpdated()
 {
-    qDebug() << "Nothing to test now for styleUpdated";
-    //Hard to say whether we can test this function, because all the attribute is read from css file
-    /*m_subject->styleUpdated();
-    QString activeTextStyle = m_subject->styleAttribute<QString>(MTextEditViewPrivate::ActiveTextStyleAttribute);
-    QCOMPARE(activeTextStyle,"WaveUnderline");*/
+    m_subject->d_func()->showEditorToolbar();
+    QVERIFY(m_subject->d_func()->editorToolbar != 0);
+    // the test values of properties is specified in CSS file
+    QCOMPARE(m_subject->d_func()->editorToolbar->styleName(), QString("TestToolbarStyleName"));
+    QCOMPARE(m_subject->d_func()->editorToolbar->autohideTimer.interval(), 3125);
+    // animation duration is set only during actual start of hiding
+    m_subject->d_func()->editorToolbar->startAnimatedHide();
+    QCOMPARE(m_subject->d_func()->editorToolbar->hideAnimation.duration(), 2193);
+    m_subject->d_func()->editorToolbar->hideAnimation.stop();
 }
 
+void Ut_MTextEditView::testAutohideTimes()
+{
+    // the delays are set in CSS. See also testStyleUpdated()
+
+    // toolbar is to set to autohide
+    m_controller->setText("");
+    m_subject->d_func()->showEditorToolbar();
+
+    qDebug("check autohide");
+    QEventLoop loop;
+    connect(&m_subject->d_func()->editorToolbar->autohideTimer, SIGNAL(timeout()), &loop, SLOT(quit()));
+    QTime start = QTime::currentTime();
+    loop.exec();
+    int hideStarted = start.msecsTo(QTime::currentTime());
+    QVERIFY(hideStarted > 3000 && hideStarted < 3300);
+
+    qDebug("check hide animation");
+    QEventLoop loop2;
+    connect(&m_subject->d_func()->editorToolbar->hideAnimation, SIGNAL(finished()), &loop2, SLOT(quit()));
+    loop2.exec();
+    int hideFinished = start.msecsTo(QTime::currentTime());
+    QVERIFY(hideFinished > 5000 && hideFinished < 5500);
+
+    qDebug("check no hide if selected");
+    m_controller->setText("test text");
+    m_controller->setSelection(0, 5, false);
+    m_subject->d_func()->showEditorToolbar();
+    QSignalSpy checkTimeout(&m_subject->d_func()->editorToolbar->autohideTimer, SIGNAL(timeout()));
+    QTest::qWait(4000);
+    QVERIFY(checkTimeout.empty());
+}
 
 void Ut_MTextEditView::testResizeEvent()
 {

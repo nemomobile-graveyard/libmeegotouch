@@ -56,6 +56,10 @@ class MWidget;
 class MEditorToolbar : public MStylableWidget
 {
     Q_OBJECT
+
+#ifdef UNIT_TEST
+    friend class Ut_MTextEditView;
+#endif
 public:
     //! \brief Construct MEditorToolbar and make it follow \a followWidget
     explicit MEditorToolbar(const MWidget &followWidget);
