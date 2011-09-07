@@ -2331,6 +2331,7 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
     if (textInteractionFlags() == Qt::NoTextInteraction)
         return;
 
+    d->disableUpdateMicroFocus();
     int cursorPositionBefore = cursorPosition();
 
     deselect();
@@ -2428,6 +2429,7 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
     if (cursorPosition() != cursorPositionBefore) {
         d->updateMicroFocus();
     }
+    d->enableUpdateMicroFocus(true);
 }
 
 void MTextEdit::handleMouseMove(int cursorPosition, QGraphicsSceneMouseEvent *event)
