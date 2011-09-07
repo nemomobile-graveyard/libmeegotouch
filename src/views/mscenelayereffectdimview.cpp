@@ -25,6 +25,7 @@
 #include "mscenelayereffectmodel.h"
 #include <mdeviceprofile.h>
 #include "mscenemanager.h"
+#include <mscalableimage.h>
 
 //! \internal
 class MSceneLayerEffectDimViewPrivate : public MSceneWindowViewPrivate
@@ -74,7 +75,13 @@ void MSceneLayerEffectDimView::paint(QPainter *painter, const QStyleOptionGraphi
 
     painter->setTransform(transform);
     painter->setOpacity(opacity);
-    painter->fillRect(boundingRect(), QColor(0, 0, 0));
+
+    if(style()->backgroundImage()) {
+        style()->backgroundImage()->draw(boundingRect(), painter);
+    } else {
+        painter->fillRect(boundingRect(), QColor(0, 0, 0));
+    }
+
     painter->setOpacity(oldOpacity);
 
     painter->setTransform(oldTransform);
