@@ -30,6 +30,7 @@
 #include <mlabelhighlighter.h>
 #include <mlabelview.h>
 #include <mpannableviewport.h>
+#include <mlocale.h>
 
 #include <QSignalSpy>
 #include <QTestEventList>
@@ -97,6 +98,7 @@ void Ut_MLabel::initTestCase()
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_mlabel" };
     app = new MApplication(argc, app_name);
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 
     MTheme::loadCSS(qApp->applicationDirPath() + "/ut_mlabel.css");
 }
@@ -137,6 +139,453 @@ void Ut_MLabel::testTestConstruction()
     delete label;
 }
 
+void Ut_MLabel::testAutomaticTextAlignment_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("text");
+    QTest::addColumn<bool>("wordWrap");
+    QTest::addColumn<Qt::Alignment>("alignment");
+    QTest::addColumn<Qt::Alignment>("finalAlignmentShouldBe");
+
+    //----------------------------------------------------------------------
+    // “ar” locale non-mirorred:
+    QTest::newRow("locale ar, left aligned english single line, wordwrap off")
+        << "ar"
+        << "This is plain text!"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale ar, left aligned english single line, wordwrap on")
+        << "ar"
+        <<  "This is plain text!"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale ar, left aligned english multiline, wordwrap off")
+        << "ar"
+        << "This is plain text!\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale ar, left aligned english multiline, wordwrap on")
+        << "ar"
+        << "This is plain text!\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+
+    QTest::newRow("locale ar, left aligned arabic single line, wordwrap off")
+        << "ar"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale ar, left aligned arabic single line, wordwrap on")
+        << "ar"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale ar, left aligned arabic multiline, wordwrap off")
+        << "ar"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale ar, left aligned arabic multiline, wordwrap on")
+        << "ar"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignRight);
+
+    QTest::newRow("locale ar, right aligned english single line, wordwrap off")
+        << "ar"
+        << "This is plain text!"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale ar, right aligned english single line, wordwrap on")
+        << "ar"
+        << "This is plain text!"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale ar, right aligned english multiline, wordwrap off")
+        << "ar"
+        << "This is plain text!\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale ar, right aligned english multiline, wordwrap on")
+        << "ar"
+        << "This is plain text!\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+
+    QTest::newRow("locale ar, right aligned arabic single line, wordwrap off")
+        << "ar"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale ar, right aligned arabic single line, wordwrap on")
+        << "ar"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale ar, right aligned arabic multiline, wordwrap off")
+        << "ar"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale ar, right aligned arabic multiline, wordwrap on")
+        << "ar"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignLeft);
+    //----------------------------------------------------------------------
+    // “en” locale, same as “ar” non-mirorred:
+    QTest::newRow("locale en, left aligned english single line, wordwrap off")
+        << "en"
+        << "This is plain text!"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale en, left aligned english single line, wordwrap on")
+        << "en"
+        <<  "This is plain text!"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale en, left aligned english multiline, wordwrap off")
+        << "en"
+        << "This is plain text!\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale en, left aligned english multiline, wordwrap on")
+        << "en"
+        << "This is plain text!\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+
+    QTest::newRow("locale en, left aligned arabic single line, wordwrap off")
+        << "en"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale en, left aligned arabic single line, wordwrap on")
+        << "en"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale en, left aligned arabic multiline, wordwrap off")
+        << "en"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale en, left aligned arabic multiline, wordwrap on")
+        << "en"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignRight);
+
+    QTest::newRow("locale en, right aligned english single line, wordwrap off")
+        << "en"
+        << "This is plain text!"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale en, right aligned english single line, wordwrap on")
+        << "en"
+        << "This is plain text!"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale en, right aligned english multiline, wordwrap off")
+        << "en"
+        << "This is plain text!\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale en, right aligned english multiline, wordwrap on")
+        << "en"
+        << "This is plain text!\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+
+    QTest::newRow("locale en, right aligned arabic single line, wordwrap off")
+        << "en"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale en, right aligned arabic single line, wordwrap on")
+        << "en"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale en, right aligned arabic multiline, wordwrap off")
+        << "en"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale en, right aligned arabic multiline, wordwrap on")
+        << "en"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignLeft);
+    //----------------------------------------------------------------------
+    // “ar@layout-direction=auto” locale, i.e. Arabic with mirrored UI:
+    QTest::newRow("locale ar@layout-direction=auto, left aligned english single line, wordwrap off")
+        << "ar@layout-direction=auto"
+        << "This is plain text!"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale ar@layout-direction=auto, left aligned english single line, wordwrap on")
+        << "ar@layout-direction=auto"
+        <<  "This is plain text!"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale ar@layout-direction=auto, left aligned english multiline, wordwrap off")
+        << "ar@layout-direction=auto"
+        << "This is plain text!\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale ar@layout-direction=auto, left aligned english multiline, wordwrap on")
+        << "ar@layout-direction=auto"
+        << "This is plain text!\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+
+    QTest::newRow("locale ar@layout-direction=auto, left aligned arabic single line, wordwrap off")
+        << "ar@layout-direction=auto"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale ar@layout-direction=auto, left aligned arabic single line, wordwrap on")
+        << "ar@layout-direction=auto"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale ar@layout-direction=auto, left aligned arabic multiline, wordwrap off")
+        << "ar@layout-direction=auto"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale ar@layout-direction=auto, left aligned arabic multiline, wordwrap on")
+        << "ar@layout-direction=auto"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignRight);
+
+    QTest::newRow("locale ar@layout-direction=auto, right aligned english single line, wordwrap off")
+        << "ar@layout-direction=auto"
+        << "This is plain text!"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale ar@layout-direction=auto, right aligned english single line, wordwrap on")
+        << "ar@layout-direction=auto"
+        << "This is plain text!"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale ar@layout-direction=auto, right aligned english multiline, wordwrap off")
+        << "ar@layout-direction=auto"
+        << "This is plain text!\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale ar@layout-direction=auto, right aligned english multiline, wordwrap on")
+        << "ar@layout-direction=auto"
+        << "This is plain text!\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+
+    QTest::newRow("locale ar@layout-direction=auto, right aligned arabic single line, wordwrap off")
+        << "ar@layout-direction=auto"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale ar@layout-direction=auto, right aligned arabic single line, wordwrap on")
+        << "ar@layout-direction=auto"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale ar@layout-direction=auto, right aligned arabic multiline, wordwrap off")
+        << "ar@layout-direction=auto"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale ar@layout-direction=auto, right aligned arabic multiline, wordwrap on")
+        << "ar@layout-direction=auto"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignLeft);
+    //----------------------------------------------------------------------
+    // “en@layout-direction=rtl” locale, i.e. English with UI forced to RTL direction:
+    QTest::newRow("locale en@layout-direction=rtl, left aligned english single line, wordwrap off")
+        << "en@layout-direction=rtl"
+        << "This is plain text!"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale en@layout-direction=rtl, left aligned english single line, wordwrap on")
+        << "en@layout-direction=rtl"
+        <<  "This is plain text!"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale en@layout-direction=rtl, left aligned english multiline, wordwrap off")
+        << "en@layout-direction=rtl"
+        << "This is plain text!\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale en@layout-direction=rtl, left aligned english multiline, wordwrap on")
+        << "en@layout-direction=rtl"
+        << "This is plain text!\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignLeft);
+
+    QTest::newRow("locale en@layout-direction=rtl, left aligned arabic single line, wordwrap off")
+        << "en@layout-direction=rtl"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale en@layout-direction=rtl, left aligned arabic single line, wordwrap on")
+        << "en@layout-direction=rtl"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale en@layout-direction=rtl, left aligned arabic multiline, wordwrap off")
+        << "en@layout-direction=rtl"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignRight);
+    QTest::newRow("locale en@layout-direction=rtl, left aligned arabic multiline, wordwrap on")
+        << "en@layout-direction=rtl"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignLeft)
+        << Qt::Alignment(Qt::AlignRight);
+
+    QTest::newRow("locale en@layout-direction=rtl, right aligned english single line, wordwrap off")
+        << "en@layout-direction=rtl"
+        << "This is plain text!"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale en@layout-direction=rtl, right aligned english single line, wordwrap on")
+        << "en@layout-direction=rtl"
+        << "This is plain text!"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale en@layout-direction=rtl, right aligned english multiline, wordwrap off")
+        << "en@layout-direction=rtl"
+        << "This is plain text!\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale en@layout-direction=rtl, right aligned english multiline, wordwrap on")
+        << "en@layout-direction=rtl"
+        << "This is plain text!\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignRight);
+
+    QTest::newRow("locale en@layout-direction=rtl, right aligned arabic single line, wordwrap off")
+        << "en@layout-direction=rtl"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale en@layout-direction=rtl, right aligned arabic single line, wordwrap on")
+        << "en@layout-direction=rtl"
+        << "ﺎﻠﻋﺮﺒﻳﺓ"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale en@layout-direction=rtl, right aligned arabic multiline, wordwrap off")
+        << "en@layout-direction=rtl"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << false
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("locale en@layout-direction=rtl, right aligned arabic multiline, wordwrap on")
+        << "en@layout-direction=rtl"
+        << "ﺎﻠﻋﺮﺒﻳﺓ\nSecond line"
+        << true
+        << Qt::Alignment(Qt::AlignRight)
+        << Qt::Alignment(Qt::AlignLeft);
+}
+
+void Ut_MLabel::testAutomaticTextAlignment()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, text);
+    QFETCH(bool, wordWrap);
+    QFETCH(Qt::Alignment, alignment);
+    QFETCH(Qt::Alignment, finalAlignmentShouldBe);
+
+    MLocale currentLocale;
+    MLocale locale(localeName);
+    MLocale::setDefault(locale);
+
+    label->setWordWrap(wordWrap);
+
+    label->setMinimumSize(500, 500);
+    label->setMaximumSize(500, 500);
+    label->setPreferredSize(500, 500);
+    label->setGeometry(QRectF(0, 0, 500, 500));
+    label->setAlignment(alignment | (label->alignment() & Qt::AlignVertical_Mask));
+
+    label->setText(text);
+    QVERIFY(text == label->text());
+
+    QImage image = captureImage(label);
+
+    /* Now verify that the alignment is correct by forcing it (with the absolute flag) to the alignment it should be, and
+     * checking that nothing changed*/
+    label->setAlignment(finalAlignmentShouldBe | Qt::AlignAbsolute | (label->alignment() & Qt::AlignVertical_Mask));
+    QImage shouldBeImage = captureImage(label);
+
+    QVERIFY(shouldBeImage == image);
+    MLocale::setDefault(currentLocale);
+}
 
 void Ut_MLabel::testTextAlignment_data()
 {
@@ -192,6 +641,29 @@ void Ut_MLabel::testTextAlignment()
     }
 }
 
+void Ut_MLabel::testTextAlignmentFromCSS_data()
+{
+    QTest::addColumn<QString>("styleName");
+    QTest::addColumn<Qt::Alignment>("alignment");
+
+    QTest::newRow("aligned left") << "leftAligned" << Qt::Alignment(Qt::AlignLeft);
+    QTest::newRow("aligned right") << "rightAligned" << Qt::Alignment(Qt::AlignRight);
+
+    QTest::newRow("aligned absolute left1") << "leftAbsoluteAligned1" << Qt::Alignment(Qt::AlignLeft | Qt::AlignAbsolute);
+    QTest::newRow("aligned absolute right1") << "rightAbsoluteAligned1" << Qt::Alignment(Qt::AlignRight | Qt::AlignAbsolute);
+
+    QTest::newRow("aligned absolute left2") << "leftAbsoluteAligned2" << Qt::Alignment(Qt::AlignLeft | Qt::AlignAbsolute);
+    QTest::newRow("aligned absolute right2") << "rightAbsoluteAligned2" << Qt::Alignment(Qt::AlignRight | Qt::AlignAbsolute);
+}
+
+void Ut_MLabel::testTextAlignmentFromCSS()
+{
+    QFETCH(QString, styleName);
+    QFETCH(Qt::Alignment, alignment);
+
+    label->setStyleName(styleName);
+    QCOMPARE(label->alignment() & Qt::AlignHorizontal_Mask, alignment);
+}
 void Ut_MLabel::testLayoutDirection_data()
 {
     QTest::addColumn<QString>("text");
@@ -1342,6 +1814,21 @@ void Ut_MLabel::testPreferredLineCount()
         QCOMPARE(view->renderedText(), QString("A") + ellipsisChar);
     else
         QCOMPARE(view->renderedText(), QString("A B C"));
+}
+void Ut_MLabel::testSingleLineElidingWithWordwrap()
+{
+    //Test that a long single line elides the same whether or not wordwrap is enabled
+    label->setTextElide(true);
+    label->setText("12345677535345234523532545342553245234523");
+    label->setMaximumWidth(label->preferredSize().width() / 2);
+    label->resize(label->preferredSize());
+
+    QImage imageWithoutWordWrap = captureImage(label);
+
+    label->setWordWrap(true);
+    QImage imageWithWordWrap = captureImage(label);
+
+    QVERIFY(imageWithoutWordWrap == imageWithWordWrap);
 }
 
 QTEST_APPLESS_MAIN(Ut_MLabel);
