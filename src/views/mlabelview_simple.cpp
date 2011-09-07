@@ -159,7 +159,6 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
 void MLabelViewSimple::setupModel()
 {
     viewPrivate->textOptions.setAlignment(viewPrivate->model()->alignment());
-    viewPrivate->autoSetTextDirection();
     updateStringVariants();
     if (viewPrivate->model()->wordWrap()) {
         viewPrivate->textOptions.setWrapMode(viewPrivate->model()->wrapMode());
@@ -181,7 +180,6 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
             if (!viewPrivate->controller->sizePolicy().hasHeightForWidth()) {
                 preferredSize = QSizeF(-1, -1);
             }
-            viewPrivate->autoSetTextDirection();
             needStringVariantsUpdate = true;
             needUpdate = true;
         } else if (member == MLabelModel::Color) {
@@ -203,7 +201,6 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
             needStringVariantsUpdate = true;
             needUpdate = true;
         } else if (member == MLabelModel::TextDirection) {
-            viewPrivate->autoSetTextDirection();
             needUpdate = true;
         } else if (member == MLabelModel::Alignment) {
             viewPrivate->textOptions.setAlignment(viewPrivate->model()->alignment());
@@ -283,16 +280,27 @@ void MLabelViewSimple::initializeTextProperties()
 
     const MLabelStyle *style = viewPrivate->style();
 
-    if (viewPrivate->textOptions.textDirection() == Qt::LayoutDirectionAuto)
-        viewPrivate->autoSetTextDirection();
+    // First, assume the text direction is left to right.  The size and vertical position will be
+    // correct, but possibly not the correct horizontal position.
+    paintingRect = viewPrivate->boundingRect().adjusted(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom());
 
-    paintingRect = (viewPrivate->textOptions.textDirection() == Qt::LeftToRight)
-        ? viewPrivate->boundingRect().adjusted(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom())
-        : viewPrivate->boundingRect().adjusted(style->paddingRight(), style->paddingTop(), -style->paddingLeft(), -style->paddingBottom());
+    // We now have the size that we want the text to fit into, so get the text to render
+    bool isMultipleLines;
+    const QString text = textToRender(paintingRect.size(), &isMultipleLines);
+
+    // Now we can use the text and whether we have multiple lines, to determine how we want to align
+    // the text.  This sets viewPrivate->textOptions.textDirection()
+    viewPrivate->autoSetTextDirection(text, isMultipleLines);
+
+    // Now that we have the correct textDirection we can fix the horizontal position of the
+    // paintingRect
+    if (viewPrivate->textOptions.textDirection() == Qt::RightToLeft) {
+        qreal adjust = style->paddingRight() - style->paddingLeft();
+        paintingRect.adjust(adjust, 0, -adjust, 0);
+    }
+
     paintingRectWithMargins = paintingRect.adjusted(0, -style->paddingTop() - style->marginTop() - style->reactiveMarginTop(), 0, style->paddingBottom() + style->marginBottom() + style->reactiveMarginBottom());
     textOffset = paintingRect.topLeft().toPoint();
-
-    const QString text = textToRender(paintingRect.size());
 
     staticText.setTextWidth(paintingRect.width());
     staticText.setTextOption(viewPrivate->textOptions);
@@ -338,7 +346,7 @@ void MLabelViewSimple::updateStringVariants()
         stringVariants << "";
 }
 
-QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
+QString MLabelViewSimple::textToRender(const QSizeF &renderSize, bool *isMultipleLines) const
 {
     QFont font = viewPrivate->controller->font();
     QFontMetricsF fm(font);
@@ -353,11 +361,13 @@ QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
     QString text;
     bool firstVariant = true;
 
-    foreach (const QString &stringVariant, stringVariants) {
+    if (isMultipleLines)
+        *isMultipleLines = false;
+    for (int i = 0; i < stringVariants.count(); ++i) {
         qreal height = -leading;
         int lineCount = 0;
         elideAtLineNumber = -1;
-        text = stringVariant;
+        text = stringVariants[i];
         if (!firstVariant) {
             textLayout.endLayout();
             textLayout.clearLayout();
@@ -370,18 +380,24 @@ QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
             if (!line.isValid())
                 break;
             lineCount++;
+            if (isMultipleLines)
+                *isMultipleLines = (lineCount > 1);
+
             height += leading;
             if (height <= renderSize.height()) {
                 line.setLineWidth(renderSize.width());
                 height += line.height();
-                if (!wrap() && line.naturalTextWidth() > renderSize.width()) {
-                    // We've exceed the maximum available width, so we need to elide this line
+                if (line.naturalTextWidth() > renderSize.width()) {
+                    // We've exceeded the maximum available width, so we need to elide this line
                     elideAtLineNumber = lineCount -1;
-                    break;
+                    // If we can elide, elide this string.  If we have an alternative variant
+                    // string, use that.  Else we have to just put up with the line being too long
+                    if (viewPrivate->model()->textElide() || i < stringVariants.count() - 1)
+                        break;
                 }
             }
             if (height > renderSize.height() && lineCount > 1) {
-                // We've exceed the maximum available space, so we need to elide the previous line
+                // We've exceeded the maximum available space, so we need to elide the previous line
                 elideAtLineNumber = lineCount - 2;
                 break;
             }

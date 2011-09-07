@@ -58,3 +58,21 @@ MLabelStyle#lineCount2 {
 MLabelStyle#lineCount3 {
     preferred-line-count: 3;
 }
+MLabelStyle#leftAligned {
+    horizontal-alignment: left;
+}
+MLabelStyle#rightAligned {
+    horizontal-alignment: right;
+}
+MLabelStyle#leftAbsoluteAligned1 {
+    horizontal-alignment: absolute left;
+}
+MLabelStyle#leftAbsoluteAligned2 {
+    horizontal-alignment: left absolute;
+}
+MLabelStyle#rightAbsoluteAligned1 {
+    horizontal-alignment: absolute right;
+}
+MLabelStyle#rightAbsoluteAligned2 {
+    horizontal-alignment: right absolute;
+}

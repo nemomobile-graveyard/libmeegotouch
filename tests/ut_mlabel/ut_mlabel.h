@@ -25,7 +25,8 @@
 #include <QtTest/QtTest>
 #include <QImage>
 
-class TestMLabel;
+
+Q_DECLARE_METATYPE(Qt::Alignment)
 
 class TestMLabel: public MLabel
 {
@@ -68,6 +69,8 @@ private slots:
     void cleanup();
 
     void testTextAlignment_data();
+    void testTextAlignmentFromCSS_data();
+    void testAutomaticTextAlignment_data();
     void testLayoutDirection_data();
     void testTextDirection_data();
     void testTextWordWrap_data();
@@ -78,6 +81,8 @@ private slots:
 
     void testTestConstruction();
     void testTextAlignment();
+    void testTextAlignmentFromCSS();
+    void testAutomaticTextAlignment();
     void testLayoutDirection();
     void testTextDirection();
     void testTextWordWrap();
@@ -140,6 +145,8 @@ private slots:
 
     void testPreferredLineCount_data();
     void testPreferredLineCount();
+
+    void testSingleLineElidingWithWordwrap();
 
 private:
     /**

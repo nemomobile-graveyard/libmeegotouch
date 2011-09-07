@@ -79,12 +79,13 @@ public:
     void initializeTextProperties();
 
     /**
-     * \param width Available width in pixels for the text.
+     * \param renderSize Available size in pixels for the text.
+     * \param isMultipleLines This is set to whether the text will take up more than one line
      * \return      Text that should be used for the rendering. Dependent on the available
      *              width, the wrapping-policies, eliding-settings and multilength-status
      *              adjustments are done.
      */
-    QString textToRender(const QSizeF &renderSize) const;
+    QString textToRender(const QSizeF &renderSize, bool *isMultipleLines) const;
 
     /**
      * \param text  Text that should be rendered.
@@ -322,8 +323,8 @@ public:
     bool displayAsRichText(QString text, Qt::TextFormat textFormat, int numberOfHighlighters) const;
 
     // Set the text direction and alignment in textOptions according to the text direction in
-    // the model or (if auto) based on the model text's content
-    void autoSetTextDirection();
+    // the model or (if auto) based on give text and whether it wraps over multiple lines
+    void autoSetTextDirection(const QString &text, bool isMultipleLines);
 
     // need define this for there are overload functions in controller
     MLabel *controller;

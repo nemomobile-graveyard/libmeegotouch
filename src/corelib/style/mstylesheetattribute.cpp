@@ -178,7 +178,8 @@ public:
         ALIGNMENTS["bottom"] = Qt::AlignBottom;
         ALIGNMENTS["vcenter"] = Qt::AlignVCenter;
         ALIGNMENTS["center"] = Qt::AlignCenter;
-        ALIGNMENTS["absolute"] = Qt::AlignAbsolute;
+        ALIGNMENTS["left absolute"] = ALIGNMENTS["absolute left"] = Qt::AlignLeft | Qt::AlignAbsolute;
+        ALIGNMENTS["right absolute"] = ALIGNMENTS["absolute right"] = Qt::AlignRight | Qt::AlignAbsolute;
 
         ORIENTATIONS["vertical"] = Qt::Vertical;
         ORIENTATIONS["horizontal"] = Qt::Horizontal;

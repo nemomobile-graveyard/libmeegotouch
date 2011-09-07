@@ -100,21 +100,20 @@ bool MLabelViewPrivate::displayAsRichText(QString text, Qt::TextFormat textForma
     return Qt::mightBeRichText(text) || (numberOfHighlighters > 0);
 }
 
-void MLabelViewPrivate::autoSetTextDirection()
+void MLabelViewPrivate::autoSetTextDirection(const QString &text, bool isMultipleLines)
 {
     // Set text direction
 
     Qt::LayoutDirection textDirection = model()->textDirection();
 
-    if (textDirection == Qt::LayoutDirectionAuto) {
-        textDirection = MLocale::directionForText(model()->text()); // look at the text content
-    }
+    if (textDirection == Qt::LayoutDirectionAuto)
+        textDirection = MLocale::directionForText(text); // look at the text content
     textOptions.setTextDirection(textDirection);
 
     // Set alignment
     Qt::LayoutDirection layoutDirection = MLocale::defaultLayoutDirection();
     if (layoutDirection == Qt::LayoutDirectionAuto
-        || model()->wordWrap()) {
+        || isMultipleLines) {
         layoutDirection = textDirection; // layout according to the text content
     }
     Qt::Alignment alignment = model()->alignment();
