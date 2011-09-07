@@ -186,13 +186,8 @@ void MListIndexViewPrivate::setDisplayMode(int mode)
 void MListIndexViewPrivate::_q_attachToListContainer()
 {
     Q_Q(MListIndexView);
-    if (container) {
-        if (container->windowType() == MSceneWindow::ApplicationPage)
-            q->disconnect(container, SIGNAL(exposedContentRectChanged()), q, SLOT(_q_updateGeometry()));
-        q->disconnect(container, SIGNAL(widthChanged()), q, SLOT(_q_updateGeometry()));
-        q->disconnect(container, SIGNAL(heightChanged()), q, SLOT(_q_updateGeometry()));
-        q->disconnect(container, SIGNAL(displayEntered()), q, SLOT(_q_appearOnSceneWindow()));
-    }
+
+    _q_dettachFromListContainer();
 
     if (q->model()->list()) {
         container = MListViewPrivateNamespace::findParentWidgetOfType<MSceneWindow>(q->model()->list());
@@ -206,20 +201,29 @@ void MListIndexViewPrivate::_q_attachToListContainer()
             q->connect(container, SIGNAL(widthChanged()), q, SLOT(_q_updateGeometry()));
             q->connect(container, SIGNAL(heightChanged()), q, SLOT(_q_updateGeometry()));
             q->connect(container, SIGNAL(displayEntered()), q, SLOT(_q_appearOnSceneWindow()));
+            q->connect(container, SIGNAL(destroyed()), q, SLOT(_q_dettachFromListContainer()));
             _q_updateGeometry();
         }
     }
     _q_attachToViewport();
 }
 
+void MListIndexViewPrivate::_q_dettachFromListContainer()
+{
+    Q_Q(MListIndexView);
+
+    if (container)
+       container->disconnect(q);
+
+    container = NULL;
+    _q_dettachFromViewport();
+}
+
 void MListIndexViewPrivate::_q_attachToViewport()
 {
     Q_Q(MListIndexView);
-    if (viewport) {
-        q->disconnect(viewport, SIGNAL(viewportSizeChanged(QSizeF)), q, SLOT(_q_updatePositionIndicatorPosition(QSizeF)));
-        q->disconnect(viewport, SIGNAL(positionChanged(QPointF)), q, SLOT(_q_updatePositionIndicatorPosition(QPointF)));
-        q->disconnect(viewport, SIGNAL(rangeChanged(QRectF)), q, SLOT(_q_updatePositionIndicatorPosition(QRectF)));
-    }
+
+    _q_dettachFromViewport();
 
     if (q->model()->list()) {
         viewport = MListViewPrivateNamespace::findParentWidgetOfType<MPannableViewport>(q->model()->list());
@@ -228,9 +232,20 @@ void MListIndexViewPrivate::_q_attachToViewport()
             q->connect(viewport, SIGNAL(viewportSizeChanged(QSizeF)), q, SLOT(_q_updatePositionIndicatorPosition(QSizeF)));
             q->connect(viewport, SIGNAL(positionChanged(QPointF)), q, SLOT(_q_updatePositionIndicatorPosition(QPointF)));
             q->connect(viewport, SIGNAL(rangeChanged(QRectF)), q, SLOT(_q_updatePositionIndicatorPosition(QRectF)));
+            q->connect(viewport, SIGNAL(destroyed()), q, SLOT(_q_dettachFromViewport()));
             _q_updatePositionIndicatorPosition(viewport->size());
         }
     }
+}
+
+void MListIndexViewPrivate::_q_dettachFromViewport()
+{
+    Q_Q(MListIndexView);
+
+    if (viewport)
+        viewport->disconnect(q);
+
+    viewport = NULL;
 }
 
 void MListIndexViewPrivate::scrollToGroupHeader(int y)
