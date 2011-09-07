@@ -64,6 +64,9 @@ private slots:
     void testSizeHint_data();
     void testSizeHint();
 
+    void testSignalsOnDestroy_data();
+    void testSignalsOnDestroy();
+
 private:
     MPannableViewport *subject;
 };

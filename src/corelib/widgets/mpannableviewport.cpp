@@ -337,15 +337,9 @@ MPannableViewport::~MPannableViewport()
 {
     Q_D(MPannableViewport);
 
-    QGraphicsWidget *oldwidget  = widget();
-
+    // The widget is owned by the viewport layout.
+    // Thus let the viewport layout destroy it.
     d->pannedWidget = NULL;
-    d->viewportLayout->setWidget(NULL);
-
-    if (oldwidget) {
-        delete oldwidget;
-        oldwidget = 0;
-    }
 }
 
 void MPannableViewport::setAutoRange(bool enable)
