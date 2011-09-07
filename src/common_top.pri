@@ -98,6 +98,11 @@ contains(DEFINES, HAVE_CONTENTACTION) {
     PKGCONFIG += contentaction-0.1
 }
 
+contains(DEFINES, HAVE_LIBMLOCALE) {
+    message( adding mlocale pkgconfig )
+    PKGCONFIG += mlocale
+}
+
 contains(DEFINES, HAVE_GCONF) {
     PKGCONFIG += gconf-2.0
 macx:PKGCONFIG += gobject-2.0

@@ -4,6 +4,7 @@ Priority: extra
 Maintainer: Adrian Yanes <ext-adrian.yanes@nokia.com>
 Build-Depends: debhelper (>= 5),
  libqt4-dev (>= 4.7.4~git20110728-0maemo1+0m6),
+ libmlocale-dev,
  libicu-dev,
  libqmsystem2-dev,
  libx11-dev,

@@ -74,6 +74,7 @@ CFG_DBUS=auto
 CFG_ICU=auto
 CFG_GCONF=auto
 CFG_MEEGOGRAPHICSSYSTEM=auto
+CFG_LIBMLOCALE=auto
 
 HAVE_LINUX=no
 HAVE_ICU=no
@@ -90,11 +91,12 @@ HAVE_MEEGOGRAPHICSSYSTEM=no
 HAVE_LIBNGF=no
 HAVE_QMSYSTEM2=no
 HAVE_MALIIT=no
+HAVE_LIBMLOCALE=no
 
 OPT_SHADOW=maybe
 
 IS_ARMEL=no
-   
+
 # initalize variables used for installation
 M_INSTALL_PREFIX=/usr/local
 M_INSTALL_SYSCONFDIR=/etc
@@ -287,6 +289,13 @@ while [ "$#" -gt 0 ]; do
             UNKNOWN_OPT=yes
         fi
         ;;
+    libmlocale)
+        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
+            CFG_LIBMLOCALE="$VAL"
+        else
+            UNKNOWN_OPT=yes
+        fi
+        ;;
     h|help)
         if [ "$VAL" = "yes" ]; then
             OPT_HELP="$VAL"
@@ -406,6 +415,19 @@ if [ "$CFG_ICU" != "no" ]; then
     fi
 fi
 
+# Test for libmlocale
+if [ "$CFG_LIBMLOCALE" != "no" ]; then
+    pkg-config mlocale
+    if [ $? -eq 0 ]; then
+        HAVE_LIBMLOCALE=yes
+    fi
+    if [ "$CFG_LIBMLOCALE" = "yes" -a "$HAVE_LIBMLOCALE" = "no" ]; then
+        echo "You specified  -libmlocale  but libmlocale was not found."
+        echo "Please install the libmlocale-dev package."
+        exit 1
+    fi
+fi
+
 # Test for pkg-config enabled dependencies
 which pkg-config > /dev/null
 if [ $? -eq 0 ]; then
@@ -466,9 +488,9 @@ if [ $? -eq 0 ]; then
     fi
 
     # For Scratchbox and  For OBS/MeeGo
-    if [ ! -z "`uname -m | grep arm`" ]; then   
-    	IS_ARMEL=yes  
-    fi      
+    if [ ! -z "`uname -m | grep arm`" ]; then
+        IS_ARMEL=yes
+    fi
 
     if [ "$CFG_MEEGOGRAPHICSSYSTEM" != "no" ]; then
         if  [ "$IS_ARMEL" = "yes" ]; then
@@ -568,6 +590,9 @@ Additional options:
     -no-icu .................. Do not compile with ICU support.
  +  -icu ..................... Compile with ICU support.
 
+    -no-libmlocale ........... Do not compile with libmlocale support.
+ +  -libmlocale .............. Compile with libmlocale support.
+
     -no-meegographicssystem .. Do not compile with meego graphicssystem support.
  +  -meegographicssystem ..... Compile with meego graphicssystem support.
 
@@ -616,7 +641,7 @@ if [ "$CFG_TESTABLE" = "yes" ]; then
 fi
 
 if [ "$CFG_NO_WERROR" = "yes" ]; then
-    MEEGOTOUCHCONFIG_FEATURES="$MEEGOTOUCHCONFIG_FEATURES no-werror" 	
+    MEEGOTOUCHCONFIG_FEATURES="$MEEGOTOUCHCONFIG_FEATURES no-werror"
 fi
 
 if [ "$CFG_TIMESTAMPS" = "yes" ]; then
@@ -703,7 +728,7 @@ fi
 
 if [ "$IS_ARMEL" = "yes" ]; then
     MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS IS_ARMEL"
-fi                               
+fi
 
 if [ "$HAVE_LIBNGF" = "yes" ]; then
     MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_LIBNGF"
@@ -715,6 +740,10 @@ fi
 
 if [ "$HAVE_MALIIT" = "yes" ]; then
     MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_MALIIT"
+fi
+
+if [ "$HAVE_LIBMLOCALE" = "yes" ]; then
+    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_LIBMLOCALE"
 fi
 
 cat >>"$MEEGOTOUCHCONFIG.tmp" <<EOF
@@ -920,6 +949,7 @@ echo "MeeGo graphicssystem ............ $HAVE_MEEGOGRAPHICSSYSTEM"
 echo "Non-graphical feedback client ... $HAVE_LIBNGF"
 echo "QmSystem ........................ $HAVE_QMSYSTEM2"
 echo "Maliit .......................... $HAVE_MALIIT"
+echo "libmlocale ...................... $HAVE_LIBMLOCALE"
 
 if [ "$CFG_DEV" = "yes" ]; then
     echo ""
