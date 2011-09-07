@@ -470,4 +470,60 @@ void Ut_MPannableViewport::testPositionIndicatorViewportSizeAfterReenabled()
     QCOMPARE(subject->size(), subject->positionIndicator()->viewportSize());
 }
 
+void Ut_MPannableViewport::testSignalsOnDestroy_data()
+{
+    QTest::addColumn<bool>("instantInvalidateEnabled");
+
+    QTest::newRow("instant invalidate propagation enabled") << true;
+    QTest::newRow("instant invalidate propagation disabled") << false;
+}
+
+void Ut_MPannableViewport::testSignalsOnDestroy()
+{
+    QFETCH(bool, instantInvalidateEnabled);
+
+    bool oldInstantInvalidateEnabled = QGraphicsLayout::instantInvalidatePropagation();
+
+    QGraphicsLayout::setInstantInvalidatePropagation(instantInvalidateEnabled);
+
+    QGraphicsWidget *panel = new QGraphicsWidget;
+    panel->setMinimumSize(500, 500);
+
+    subject->setParentItem(panel);
+    subject->setAutoRange(true);
+    MWidgetController *widget = new MWidgetController(subject);
+    widget->setMinimumHeight(1000);
+    subject->resize(panel->minimumSize());
+    subject->setWidget(widget);
+
+    qApp->processEvents();
+    qApp->processEvents();
+
+    QCOMPARE(subject->size(), panel->minimumSize());
+    QCOMPARE(widget->size().height(), (qreal)1000);
+
+    QSignalSpy rangeChangedSpy(subject, SIGNAL(rangeChanged(QRectF)));
+    QSignalSpy positionChangedSpy(subject, SIGNAL(positionChanged(QPointF)));
+
+    QSignalSpy subjectDestroyedSpy(subject, SIGNAL(destroyed()));
+    QSignalSpy widgetDestroyedSpy(widget, SIGNAL(destroyed()));
+
+    delete panel;
+    subject = 0;
+
+    QCOMPARE(rangeChangedSpy.count(), 0);
+    QCOMPARE(positionChangedSpy.count(), 0);
+    QCOMPARE(subjectDestroyedSpy.count(), 1);
+    QCOMPARE(widgetDestroyedSpy.count(), 1);
+
+    qApp->processEvents();
+
+    QCOMPARE(rangeChangedSpy.count(), 0);
+    QCOMPARE(positionChangedSpy.count(), 0);
+    QCOMPARE(subjectDestroyedSpy.count(), 1);
+    QCOMPARE(widgetDestroyedSpy.count(), 1);
+
+    QGraphicsLayout::setInstantInvalidatePropagation(oldInstantInvalidateEnabled);
+}
+
 QTEST_APPLESS_MAIN(Ut_MPannableViewport)
