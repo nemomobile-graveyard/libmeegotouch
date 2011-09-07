@@ -62,6 +62,7 @@ class M_VIEWS_EXPORT MSliderView : public MWidgetView
 
     //! \internal
     Q_PROPERTY(int position READ position WRITE setPosition)
+    Q_PROPERTY(QPointF handlePos READ handlePos WRITE setHandlePos)
     //! \internal_end
 
 public:
@@ -172,6 +173,9 @@ private:
     //! \internal
     int position() const;
     void setPosition(int position);
+
+    QPointF handlePos() const;
+    void setHandlePos(const QPointF& pos);
     //! \internal_end
 
 private Q_SLOTS:

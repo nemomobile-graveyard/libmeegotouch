@@ -1025,6 +1025,17 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     }
 }
 
+MSliderHandle* MSliderGroove::handle() const
+{
+    return sliderHandle;
+}
+
+void MSliderGroove::setHandlePos(const QPointF& pos)
+{
+    sliderHandle->setPos(pos);
+    updateHandleIndicatorPos();
+}
+
 //repositions slider handle (and slider handle indicator)
 void MSliderGroove::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
@@ -1447,7 +1458,7 @@ QPropertyAnimation* MSliderViewPrivate::createPositionAnimation()
 {
     Q_Q(MSliderView);
 
-    QPropertyAnimation *animation = positionAnimation = new QPropertyAnimation(q, "position", 0);
+    QPropertyAnimation *animation = positionAnimation = new QPropertyAnimation(q, "handlePos", 0);
     animation->setDuration(150);
     animation->setEasingCurve(QEasingCurve::OutSine);
 
@@ -1495,12 +1506,11 @@ int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
             if (!positionAnimation) {
                 positionAnimation = createPositionAnimation();
             }
-            positionAnimation->setEndValue(newValue);
+            positionAnimation->setEndValue(sliderGroove->valueToHandlePos(newValue));
             positionAnimation->start();
             usingAnimation = true;
-        } else {
-            position = newValue;
         }
+        position = newValue;
         controller->setValue(newValue);
     }
 
@@ -1638,7 +1648,7 @@ void MSliderView::updateData(const QList<const char *>& modifications)
             updateGeometry();
         }
         if (member == MSliderModel::State)
-            d->updateSliderGroove();
+            d->sliderGroove->setSliderState(model()->state());
         else if (member == MSliderModel::Minimum)
             d->updateSliderGroove();
         else if (member == MSliderModel::Maximum)
@@ -1935,6 +1945,18 @@ void MSliderView::setPosition(int position)
 
     d->position = position;
     d->updateSliderGroove();
+}
+
+QPointF MSliderView::handlePos() const
+{
+    Q_D(const MSliderView);
+    return d->sliderGroove->handle()->pos();
+}
+
+void MSliderView::setHandlePos(const QPointF& pos)
+{
+    Q_D(MSliderView);
+    return d->sliderGroove->setHandlePos(pos);
 }
 
 M_REGISTER_VIEW_NEW(MSliderView, MSlider)
