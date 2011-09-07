@@ -25,6 +25,7 @@
 #include <QColor>
 
 #include <mwidgetstyle.h>
+#include <QEasingCurve>
 
 class QPixmap;
 class MScalableImage;
@@ -191,6 +192,18 @@ class M_VIEWS_EXPORT MSliderStyle : public MWidgetStyle
         \brief When slider is moved over this speed there will be no feedback (in mm/s)
       */
     M_STYLE_ATTRIBUTE(int, feedbackSpeedLimit, FeedbackSpeedLimit)
+
+    /*!
+        \property MSlider::easingCurve
+        \brief Easing curve for the position animation of the handle.
+      */
+    M_STYLE_ATTRIBUTE(QEasingCurve, handleAnimationEasingCurve, HandleAnimationEasingCurve)
+
+    /*!
+        \property MSlider::handleAnimationDuration
+        \brief Duration for the handle position animation (ms).
+      */
+    M_STYLE_ATTRIBUTE(int, handleAnimationDuration, HandleAnimationDuration)
 };
 
 class M_VIEWS_EXPORT MSliderStyleContainer : public MWidgetStyleContainer

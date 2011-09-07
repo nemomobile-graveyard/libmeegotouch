@@ -1461,8 +1461,8 @@ QPropertyAnimation* MSliderViewPrivate::createPositionAnimation()
     Q_Q(MSliderView);
 
     QPropertyAnimation *animation = positionAnimation = new QPropertyAnimation(q, "handlePos", 0);
-    animation->setDuration(150);
-    animation->setEasingCurve(QEasingCurve::OutSine);
+    animation->setDuration(q->style()->handleAnimationDuration());
+    animation->setEasingCurve(q->style()->handleAnimationEasingCurve());
 
     return animation;
 }
