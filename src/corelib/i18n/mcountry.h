@@ -70,6 +70,9 @@ class M_CORE_EXPORT MCountry
     void setEnglishName( const QString& val );
     void setLocalName( const QString& val );
 
+    friend class MLocationDatabasePrivate;
+    friend class MCity;
+
   private:
     MCountryPrivate *const d_ptr;
     Q_DECLARE_PRIVATE(MCountry)

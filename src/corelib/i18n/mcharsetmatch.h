@@ -166,6 +166,8 @@ public:
      */
     void setConfidence(qint32 confidence);
 
+    friend class MCharsetDetector;
+
 private:
     MCharsetMatchPrivate *const d_ptr;
     Q_DECLARE_PRIVATE(MCharsetMatch)

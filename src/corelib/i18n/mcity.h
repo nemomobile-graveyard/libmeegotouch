@@ -136,6 +136,8 @@ class M_CORE_EXPORT MCity
     void setTimeZone( const QString& val );
     void setCountry( const MCountry& val );
 
+    friend class MLocationDatabasePrivate;
+
   private:
     MCityPrivate *const d_ptr;
     Q_DECLARE_PRIVATE(MCity)

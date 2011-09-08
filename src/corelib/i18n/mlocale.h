@@ -2058,6 +2058,9 @@ public:
      */
     static Qt::LayoutDirection defaultLayoutDirection();
 
+    static void initMLocale();
+    static void clearSystemDefault();
+
 Q_SIGNALS:
     void settingsChanged();
     /*!
@@ -2087,6 +2090,7 @@ private:
     friend class MCollator;
     friend struct MStaticLocaleDestroyer;
     friend class MIcuBreakIteratorPrivate;
+    friend class MBreakIterator;
 
 private Q_SLOTS:
     void refreshSettings();

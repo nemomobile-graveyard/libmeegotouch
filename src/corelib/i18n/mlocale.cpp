@@ -1935,7 +1935,19 @@ MLocale &MLocale::operator=(const MLocale &other)
     return *this;
 }
 
+void MLocale::initMLocale()
+{
+    // do not do anything here
+}
 
+void MLocale::clearSystemDefault()
+{
+    if ( MLocale::s_systemDefault )
+    {
+        delete MLocale::s_systemDefault;
+        MLocale::s_systemDefault = 0;
+    }
+}
 
 ///////////////////
 //// normal methods
