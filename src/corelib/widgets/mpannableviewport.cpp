@@ -490,7 +490,7 @@ void MPannableViewport::setPositionIndicator(MPositionIndicator *positionIndicat
 {
     Q_D(MPannableViewport);
 
-    if (!positionIndicator) {
+    if (!positionIndicator || positionIndicator == d->positionIndicator) {
         return;
     }
 
