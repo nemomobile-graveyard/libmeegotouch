@@ -45,6 +45,9 @@ private slots:
     void verticalAlignment();
     void buttonsFromModel();
 
+    void testButtonBoxVisibility();
+    void testTitleBarVisibility();
+
 private:
     QGraphicsWidget *fetchWidget(QGraphicsWidget &widget,
                                  const QString &objectName) const;
