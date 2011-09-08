@@ -87,7 +87,7 @@ public:
     /*!
      * \brief Constructs a pannable viewport with a \a parent.
      */
-    MPannableViewport(QGraphicsItem *parent = 0);
+    explicit MPannableViewport(QGraphicsItem *parent = 0);
 
     /*!
      * \brief Destroys the pannable widget.
