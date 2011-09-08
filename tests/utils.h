@@ -60,49 +60,70 @@ namespace Ut_Utils
  *                                                    &TesteeType::setParam,
  *                                                    &TesteeType::param);
  *  tester.set(new SetterParamType);
+ *  tester.setReparents(new SetterParamType);
+ *  teser.setSelfAssignment(new SetterParamType,
+ *                          &SetterParamType::aParameterlessPredicate)
+ *
  *
  *  TesteeType and SetterParamType must match the type where the function
  *  pointers were first declared, i.e., for non-virtual methods the most basic
  *  class that implements them.
+ *  aParameterlessPredicate should have the signature
+ *  "bool SetterParamType::somethingIsTrue() const".
  *
  *  See Ut_MTextEdit::testSetters for an example.
  */
 
-template<class T>
-class MAbstractTester
-{
-public:
-    virtual void set(T *arg, bool checkAccidientialDestruction = true) = 0;
-    virtual void setReparents(T *arg, bool takesOwnership = true) = 0;
-    virtual T * get() = 0;
-};
-
 template <class R, class T>
 class MSetterTester
-    : public MAbstractTester<T>
 {
 public:
     MSetterTester(R *newObj,
                   void (R::*newSetterFunction)(T *arg),
                   T *  (R::*newGetterFunction)())
         : setterFunction(newSetterFunction)
+        , constGetterFunction(0)
         , getterFunction(newGetterFunction)
         , obj(newObj)
     {}
 
-    virtual void set(T *arg, bool checkAccidentialDestruction = true)
+    MSetterTester(R *newObj,
+                  void (R::*newSetterFunction)(T *arg),
+                  T *  (R::*newGetterFunction)() const)
+        : setterFunction(newSetterFunction)
+        , constGetterFunction(newGetterFunction)
+        , getterFunction(0)
+        , obj(newObj)
+    {}
+
+    virtual void set(T *arg)
     {
         (*obj.*setterFunction)(arg);
-
         QCOMPARE(arg, get());
+    }
 
-        if (checkAccidentialDestruction) {
-            // Setting arg again should not lead to its destruction, but some
-            // getters cleanup whatever was previously set, and maybe forget
-            // to guard against self-assignment:
-            (*obj.*setterFunction)(arg);
-            delete arg;
-        }
+    virtual void setSelfAssignment(T *arg, bool (T::*verify)())
+    {
+        setSelfAssignment(arg, (bool (T::*)() const)(verify));
+    }
+
+    virtual void setSelfAssignment(T *arg, bool (T::*verify)() const)
+    {
+        set(arg);
+
+        // Setting arg again should not lead to its destruction, but some
+        // getters cleanup whatever was previously set, and maybe forget
+        // to guard against self-assignment:
+        set(arg);
+
+        // Using the verify method to check whether the object is still valid:
+        (void) (*arg.*verify)();
+    }
+
+    virtual void setZero()
+    {
+        (*obj.*setterFunction)(0);
+        QVERIFY(not get());
     }
 
     virtual void setReparents(T *arg, bool takesOwnership = true)
@@ -129,13 +150,15 @@ public:
         setReparents(arg, false);
     }
 
-    virtual T* get()
+    virtual T* get() const
     {
-        return (*obj.*getterFunction)();
+        return (constGetterFunction ? (*obj.*constGetterFunction)()
+			            : (*obj.*getterFunction)());
     }
 
 private:
     void (R::*setterFunction)(T *arg);
+    T *  (R::*constGetterFunction)() const;
     T *  (R::*getterFunction)();
     R *obj;
 };

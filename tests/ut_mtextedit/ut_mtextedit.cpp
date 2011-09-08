@@ -3193,7 +3193,8 @@ void Ut_MTextEdit::testSetters()
     MSetterTester<MWidgetController, MWidgetModel> tester(m_subject.get(),
                                                           &MWidgetController::setModel,
                                                           &MWidgetController::model);
-    tester.set(new MTextEditModel, false);
+    tester.set(new MTextEditModel);
+    tester.setSelfAssignment(new MTextEditModel, &QObject::isWidgetType);
     tester.setDoesNotReparent(new MTextEditModel);
 }
 
