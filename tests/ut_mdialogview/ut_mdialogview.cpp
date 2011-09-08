@@ -214,6 +214,48 @@ void Ut_MDialogView::buttonsCustomStyles()
     QCOMPARE(button->styleName(), buttonStyleName);
 }
 
+void Ut_MDialogView::testButtonBoxVisibility()
+{
+    MDialog *controller = new MDialog;
+    controller->setButtonBoxVisible(false);
+    MDialogView *view = new MDialogView(controller);
+    controller->setView(view);
+    QGraphicsWidget *buttonBox = view->d_func()->buttonBox;
+    QGraphicsLinearLayout *dialogBoxLayout = view->d_func()->dialogBoxLayout;
+
+    QVERIFY(!controller->model()->buttonBoxVisible());
+    QVERIFY(dialogBoxLayout->count() > 0);
+    QVERIFY2(!buttonBox->isVisible(), "Button box should not be visible.");
+
+    // Button box should not be present in the layout.
+    for (int i = 0; i < dialogBoxLayout->count(); ++i) {
+        QVERIFY2(dialogBoxLayout->itemAt(i) != buttonBox, "Button box should not be present in the layout.");
+    }
+
+    delete controller;
+}
+
+void Ut_MDialogView::testTitleBarVisibility()
+{
+    MDialog *controller = new MDialog;
+    controller->setStyleName("FullsizeDialogNoTitle");
+    MDialogView *view = new MDialogView(controller);
+    controller->setView(view);
+    QGraphicsWidget *titleBar = view->d_func()->titleBar;
+    QGraphicsLinearLayout *dialogBoxLayout = view->d_func()->dialogBoxLayout;
+
+    QVERIFY(!view->style()->hasTitleBar());
+    QVERIFY(dialogBoxLayout->count() > 0);
+    QVERIFY2(!titleBar->isVisible(), "Title bar should not be visible.");
+
+    // Button box should not be present in the layout.
+    for (int i = 0; i < dialogBoxLayout->count(); ++i) {
+        QVERIFY2(dialogBoxLayout->itemAt(i) != titleBar, "Title bar should not be present in the layout.");
+    }
+
+    delete controller;
+}
+
 QGraphicsWidget *Ut_MDialogView::fetchWidget(QGraphicsWidget &widget,
         const QString &objectName) const
 {

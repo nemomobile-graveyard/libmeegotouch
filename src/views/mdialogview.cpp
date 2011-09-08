@@ -351,7 +351,17 @@ void MDialogViewPrivate::updateTitleBarVisibility()
     Q_Q(MDialogView);
     bool visible = q->style()->titleBarHeight() > 0.0 && q->style()->hasTitleBar();
 
-    if (titleBar->isVisible() == visible) {
+    int layoutIndex = -1;
+    for (int i = 0; i < dialogBoxLayout->count(); ++i) {
+        if (dialogBoxLayout->itemAt(i) == titleBar) {
+            layoutIndex = i;
+            break;
+        }
+    }
+
+    // Check if requested visiblity is hidden, and widget is not in the layout,
+    // or if requested visible is visible, and widget is exactly at the request location.
+    if ((!visible && layoutIndex == -1) || (visible && layoutIndex == 0)) {
         // nothing to do here
         return;
     }
@@ -382,7 +392,17 @@ void MDialogViewPrivate::updateTitleBarVisibility()
 void MDialogViewPrivate::updateWidgetVisibility(QGraphicsWidget *widget, bool visible, int index,
         QGraphicsLinearLayout *layout)
 {
-    if (widget->isVisible() == visible) {
+    int layoutIndex = -1;
+    for (int i = 0; i < layout->count(); ++i) {
+        if (layout->itemAt(i) == widget) {
+            layoutIndex = i;
+            break;
+        }
+    }
+
+    // Check if requested visiblity is hidden, and widget is not in the layout,
+    // or if requested visible is visible, and widget is exactly at the request location.
+    if ((!visible && layoutIndex == -1) || (visible && layoutIndex == index)) {
         // nothing to do here
         return;
     }

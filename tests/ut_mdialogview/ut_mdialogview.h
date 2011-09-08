@@ -46,6 +46,9 @@ private slots:
     void buttonsFromModel();
     void buttonsCustomStyles();
 
+    void testButtonBoxVisibility();
+    void testTitleBarVisibility();
+
 private:
     QGraphicsWidget *fetchWidget(QGraphicsWidget &widget,
                                  const QString &objectName) const;
