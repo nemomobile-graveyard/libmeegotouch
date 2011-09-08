@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "ut_translations.h"
+
 #include <MGConfItem>
 #include <MApplication>
 
@@ -55,6 +56,7 @@ void Ut_Translations::cleanupTestCase()
 
 void Ut_Translations::init()
 {
+    MLocale::initMLocale();
     // could also use: QCoreApplication::applicationDirPath()
     // but it seems to have some problems under scratchbox
     MLocale::setTranslationPaths(
@@ -779,7 +781,8 @@ void Ut_Translations::testGettingTheDefaultLocaleFromTheEnvironment()
 {
     QFETCH(QString, localeName);
 
-    MLocale::s_systemDefault = NULL;
+    MLocale::clearSystemDefault();
+
     qputenv("LANG", qPrintable(localeName));
     QCOMPARE(QString(qgetenv("LANG")), QString(localeName));
 

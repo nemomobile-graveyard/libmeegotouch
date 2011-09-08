@@ -44,10 +44,10 @@ void Ut_MCalendar::initTestCase()
     qDebug() << "libicu44 package version is:" << icuPackageVersion;
 
     QString fiResourceName = QString(M_ICUEXTRADATA_DIR) + QDir::separator() +  QString(ICUUSRDATA) + QDir::separator() +  QString("fi.res");
-    qDebug() << "Finnish resource file:" << fiResourceName; //"/usr/share/meegotouch/icu/usrdt44l/fi.res"
+    qDebug() << "Finnish resource file:" << fiResourceName; //"/usr/share/mlocale/icu/usrdt44l/fi.res"
 
     QFile fiResource(fiResourceName);
-    QVERIFY2(fiResource.exists(), "File /usr/share/meegotouch/icu/usrdt44l/fi.res does not exist. The files in /usr/share/meegotouch/icu/usrdt44l/ are needed for this test, please check why they are missing.");
+    QVERIFY2(fiResource.exists(), "File /usr/share/mlocale/icu/usrdt44l/fi.res does not exist. The files in /usr/share/mlocale/icu/usrdt44l/ are needed for this test, please check why they are missing.");
 }
 
 void Ut_MCalendar::cleanupTestCase()
@@ -67,8 +67,12 @@ void Ut_MCalendar::cleanup()
 
 void Ut_MCalendar::testDataPaths()
 {
-    MLocale l;
+    MLocale locale;
+#ifdef HAVE_LIBMLOCALE
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/mlocale/icu"));
+#else
     QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
+#endif
 }
 
 void Ut_MCalendar::testTimeZones()
