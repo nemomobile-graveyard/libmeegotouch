@@ -41,12 +41,16 @@ void MSnapshotItem::updateSnapshot()
     Q_ASSERT(graphicsView);
 
     bool grabContent = true;
-    if (MGraphicsSystemHelper::isRunningMeeGoGraphicsSystem()) {
+    if (MGraphicsSystemHelper::isRunningMeeGoGraphicsSystem() &&
+        QGLContext::currentContext())
+    {
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
         graphicsView->installEventFilter(this);
 #endif
         const QRect rect = m_boundingRect.toRect();
+
         framebufferObject = new QGLFramebufferObject(rect.size());
+
         if (framebufferObject->isValid()) {
             QPainter painter(framebufferObject);
             graphicsView->render(&painter, QRectF(), rect);
