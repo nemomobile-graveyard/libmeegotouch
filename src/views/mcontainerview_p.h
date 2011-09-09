@@ -65,8 +65,6 @@ public:
 
     const MScalableImage *background;
 
-    //! Whether the header is in "pressed" state
-    bool headerPressed;
 
     MProgressIndicator *progressIndicator;
 

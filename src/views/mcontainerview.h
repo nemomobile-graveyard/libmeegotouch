@@ -76,12 +76,6 @@ private Q_SLOTS:
     virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end
 
-public Q_SLOTS:
-    void headerPressed();
-    void headerReleased();
-    void headerCanceled();
-    void headerMoved();
-
 Q_SIGNALS:
     /*!
      * \brief Signal for informing that the header was clicked

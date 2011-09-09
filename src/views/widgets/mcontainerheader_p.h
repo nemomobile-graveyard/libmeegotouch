@@ -41,11 +41,13 @@ protected:
     virtual void cancelEvent(MCancelEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
+private:
+    MContainerHeader *controller;
+    bool expectMouseReleaseEvent;
+    QPointF pressScenePos;
+
 signals:
-    void pressed();
-    void released();
-    void canceled();
-    void moved();
+    void clicked();
 };
 
 /*!
@@ -62,8 +64,5 @@ public:
     virtual ~MContainerHeader() {}
 
 signals:
-    void pressed();
-    void released();
-    void canceled();
-    void moved();
+    void clicked();
 };

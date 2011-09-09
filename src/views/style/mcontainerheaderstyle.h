@@ -32,6 +32,23 @@ class M_VIEWS_EXPORT MContainerHeaderStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MContainerHeaderStyle)
+
+    /*!
+        \property MContainerHeaderStyle::pressTimeout
+        \brief timeout for button press.
+
+    */
+    M_STYLE_ATTRIBUTE(int, pressTimeout, PressTimeout)
+
+    /*!
+       \property MContainerHeaderStyle::maxDistanceForClick
+
+       If the pointer gets further away from the press point than this value
+       a cancel event is sent. Thus no click can take place (for this
+       press-move-release cycle) even if the pointer is released over the
+       button.
+     */
+    M_STYLE_ATTRIBUTE(int, maxDistanceForClick, MaxDistanceForClick)
 };
 
 class M_VIEWS_EXPORT MContainerHeaderStyleContainer : public MWidgetStyleContainer

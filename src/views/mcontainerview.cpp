@@ -59,7 +59,6 @@ MContainerViewPrivate::MContainerViewPrivate()
     , title(0)
     , text(0)
     , background(0)
-    , headerPressed(false)
     , progressIndicator(0)
     , q_ptr(0)
 {
@@ -304,12 +303,10 @@ void MContainerView::updateData(const QList<const char *>& modifications)
     // make sure the header exists before icons or centralWidget are set
     // or modified
     if (model->headerVisible()) {
-        d->createHeader();
-
-        QObject::connect(d->header, SIGNAL(pressed()), this, SLOT(headerPressed()));
-        QObject::connect(d->header, SIGNAL(released()), this, SLOT(headerReleased()));
-        QObject::connect(d->header, SIGNAL(moved()), this, SLOT(headerMoved()));
-        QObject::connect(d->header, SIGNAL(canceled()), this, SLOT(headerCanceled()));
+        if (!d->header) {
+            d->createHeader();
+            QObject::connect(d->header, SIGNAL(clicked()), this, SIGNAL(headerClicked()));
+        }
 
         // update labels
         d->title->setText(model->title());
@@ -375,10 +372,10 @@ void MContainerView::setupModel()
 
     // initially creating the header if defined in the model
     if (model()->headerVisible()) {
-        d->createHeader();
-
-        QObject::connect(d->header, SIGNAL(pressed()), this, SLOT(headerPressed()));
-        QObject::connect(d->header, SIGNAL(released()), this, SLOT(headerReleased()));
+        if (!d->header) {
+            d->createHeader();
+            QObject::connect(d->header, SIGNAL(clicked()), this, SIGNAL(headerClicked()));
+        }
 
         d->title->setText(model()->title());
         if (!model()->text().isEmpty()) {
@@ -411,43 +408,6 @@ void MContainerView::setupModel()
     if (model()->progressIndicatorVisible()) {
         d->createProgressIndicator();
         d->layoutProgressIndicator();
-    }
-}
-
-void MContainerView::headerMoved()
-{
-    Q_D(MContainerView);
-
-    if (d->headerPressed) {
-        d->headerPressed = false;
-        update();
-    }
-}
-
-void MContainerView::headerCanceled()
-{
-    Q_D(MContainerView);
-
-    if (d->headerPressed) {
-        d->headerPressed = false;
-        update();
-    }
-}
-
-void MContainerView::headerPressed()
-{
-    Q_D(MContainerView);
-    d->headerPressed = true;
-}
-
-void MContainerView::headerReleased()
-{
-    Q_D(MContainerView);
-
-    if (d->headerPressed) {
-        emit headerClicked();
-        d->headerPressed = false;
-        update();
     }
 }
 
