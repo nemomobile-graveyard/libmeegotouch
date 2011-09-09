@@ -470,6 +470,13 @@ void Ut_MPannableViewport::testPositionIndicatorViewportSizeAfterReenabled()
     QCOMPARE(subject->size(), subject->positionIndicator()->viewportSize());
 }
 
+void Ut_MPannableViewport::testSettingSamePositionIndicatorTwice()
+{
+    MPositionIndicator *positionIndicator = subject->positionIndicator();
+    // Would cause a crash if this case is not taken care of
+    subject->setPositionIndicator(positionIndicator);
+}
+
 void Ut_MPannableViewport::testSignalsOnDestroy_data()
 {
     QTest::addColumn<bool>("instantInvalidateEnabled");

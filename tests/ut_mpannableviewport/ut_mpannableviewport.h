@@ -57,6 +57,8 @@ private slots:
     void testPositionIndicatorRangeAfterReenabled();
     void testPositionIndicatorViewportSizeAfterReenabled();
 
+    void testSettingSamePositionIndicatorTwice();
+
     void testSetClipping();
     void testRangeSetting();
     void testExtendedRange_data();
