@@ -21,6 +21,7 @@
 #include "mservicelistener_stub.h"
 #include "contextproperty_stub.h"
 #include <mdeviceprofile.h>
+#include <morientationtracker_p.h>
 
 #include <MComponentData>
 #include <MWindow>
@@ -679,6 +680,44 @@ void Ut_MOrientationTracker::testSensorPropertiesSubscription()
     QVERIFY(!mTracker->isSubscribedToSensorProperties());
 }
 
+/*
+ Regression test for https://projects.maemo.org/bugzilla/show_bug.cgi?id=281865
+ */
+void Ut_MOrientationTracker::testClosestAngleUsedWhenCurrentOneNotValid()
+{
+    supportedAnglesStubLists[KeyboardOpen].clear();
+    supportedAnglesStubLists[KeyboardOpen] << M::Angle0;
+
+    supportedAnglesStubLists[KeyboardClosed].clear();
+    supportedAnglesStubLists[KeyboardClosed] << M::Angle0;
+    supportedAnglesStubLists[KeyboardClosed] << M::Angle270;
+
+    disableRemoteScreen();
+    setTVOutIsConnected(false);
+    setDeviceOrientationAngle(M::Angle180);
+    setKeyboardIsOpen(false);
+
+    // I don't want any windows to be created yet
+    delete window1;
+    window1 = 0;
+    delete window2;
+    window2 = 0;
+
+    // invalidate current angle
+    // That simulates an application start-up situation, where currentAngle is 0
+    delete mTracker->d_func()->currentAngle;
+    mTracker->d_func()->currentAngle = 0;
+
+    // and now finally create a window. It will fetch the current
+    // orientation angle during its construction, which will be invalid.
+    // That will make orientation tracker check if the device orientation
+    // (180) is a valid one. Since it's not (valid ones are either 0 or 270),
+    // it will have to fall back to angle 270 since this is the closest valid
+    // one to 180.
+    window1 = new MWindow;
+    QCOMPARE((int)window1->orientationAngle(), (int)M::Angle270);
+}
+
 ///////////////////////////////////////////////////////
 //////////////////HELPER FUNCTIONS/////////////////////
 ///////////////////////////////////////////////////////
@@ -788,6 +827,13 @@ void Ut_MOrientationTracker::setDeviceIsLyingFlat(bool enable)
 
     deviceIsFlatPropStub->stubReset();
     deviceIsFlatPropStub->stubSetReturnValue("value", QVariant(value));
+}
+
+void Ut_MOrientationTracker::disableRemoteScreen()
+{
+    gContextPropertyStubMap->findStub("RemoteScreen.TopEdge")->stubReset();
+    gContextPropertyStubMap->findStub("RemoteScreen.TopEdge")->
+            stubSetReturnValue("value", QVariant(""));
 }
 
 QTEST_MAIN(Ut_MOrientationTracker);

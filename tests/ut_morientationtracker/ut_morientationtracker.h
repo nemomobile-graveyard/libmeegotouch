@@ -72,6 +72,8 @@ private slots:
 
     void testSensorPropertiesSubscription();
 
+    void testClosestAngleUsedWhenCurrentOneNotValid();
+
 private:
     /*  Helper members   */
 
@@ -86,6 +88,7 @@ private:
     static void emitDeviceOrientationAngleChanged();
     static void showWindowAndSendDisplayEvent(MWindow *window);
     static void setDeviceIsLyingFlat(bool enable);
+    static void disableRemoteScreen();
 
     MOrientationTracker *mTracker;
     MComponentData* m_componentData;
