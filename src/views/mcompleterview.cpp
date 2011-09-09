@@ -87,8 +87,17 @@ MCompleterViewPrivate::~MCompleterViewPrivate()
     delete completionsButton;
     completionsButton = 0;
 
-    delete popup;
-    popup  = 0;
+    if (popup) {
+        // The deletion of popup might cause the emission of its disappeared() signal.
+        // That, on its turn, would cause one of our slots to be called.
+        // To avoid that we brake the connections between this instance and popup
+        // right away instead of waiting for ~QObject() to do that, which will be
+        // too late in this case.
+        disconnect(popup, 0, this, 0);
+
+        delete popup;
+        popup  = 0;
+    }
 }
 
 
