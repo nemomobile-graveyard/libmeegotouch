@@ -1,3 +1,16 @@
+libmeegotouch (0.23.17-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#276230 - Rotation of opened status menu looks bad
+  * Fixes: NB#280501 - Inconsistent placement of information banners and system banners when status area is not visible
+  * Fixes: NB#281338 - Crash observed in list index.
+  * Fixes: NB#281046 - Notification; Clipped notification with multiple new mail
+  * Fixes: NB#277104 - Region > Number and Currency Format are (maybe) wrong for Mexican Region
+  * Fixes: NB#280030 - Navigation bar disappears if page transition happens with orientation change.
+  * Fixes: NB#265711 - alphabetical sorting of documents is wrong in Danish
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 09 Sep 2011 10:04:41 +0200
+
 libmeegotouch (0.23.16-1) unstable; urgency=low
 
   * New version
