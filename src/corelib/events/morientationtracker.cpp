@@ -87,7 +87,7 @@ QVariant MContextProperty::value(const QVariant &def) const
 #endif
 
 MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *controller) :
-    currentAngle(M::Angle0),
+    currentAngle(0),
     currentIsCovered(false),
     currentIsTvConnected(false),
     currentIsKeyboardOpen(MKeyboardStateTracker::instance()->isOpen())
@@ -115,12 +115,13 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 #endif
 
     if (MComponentData::isOrientationForced()) {
-        currentAngle = MComponentData::forcedOrientationAngle();
-        M::Orientation orientation = MDeviceProfile::instance()->orientationFromAngle(currentAngle);
+        currentAngle = new M::OrientationAngle;
+        *currentAngle = MComponentData::forcedOrientationAngle();
+        M::Orientation orientation = MDeviceProfile::instance()->orientationFromAngle(*currentAngle);
 
         foreach(MWindow * window, MApplication::windows()) {
             if (window->orientation() == orientation)
-                window->setOrientationAngle(currentAngle);
+                window->setOrientationAngle(*currentAngle);
         }
         //orientation is fixed so we do not need to register for any signals
         return;
@@ -172,6 +173,7 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 
 MOrientationTrackerPrivate::~MOrientationTrackerPrivate()
 {
+    delete currentAngle;
 #ifdef HAVE_CONTEXTSUBSCRIBER
     delete videoRouteProperty;
     delete topEdgeProperty;
@@ -294,8 +296,9 @@ void MOrientationTrackerPrivate::doUpdateOrientationAngle(M::OrientationAngle an
     //Check if the keyboard was just closed, old angle is supported and
     //if device is lying flat (like on the table)
     if (currentIsKeyboardOpen == true && isKeyboardOpen == false
-        && MDeviceProfile::instance()->orientationAngleIsSupported(currentAngle, isKeyboardOpen) &&
-        isDeviceFlat) {
+        && currentAngle
+        && MDeviceProfile::instance()->orientationAngleIsSupported(*currentAngle, isKeyboardOpen)
+        && isDeviceFlat) {
         currentIsKeyboardOpen = isKeyboardOpen;
         //do nothing
         return;
@@ -311,21 +314,13 @@ void MOrientationTrackerPrivate::doUpdateOrientationAngle(M::OrientationAngle an
     } else if (!MDeviceProfile::instance()->orientationAngleIsSupported(angle, isKeyboardOpen)) {
         //it seems that orientation does not match allowed for current kybrd state.
         //check if the previous one was ok:
-        if (MDeviceProfile::instance()->orientationAngleIsSupported(currentAngle, isKeyboardOpen)) {
+        if (currentAngle
+            && MDeviceProfile::instance()->orientationAngleIsSupported(*currentAngle, isKeyboardOpen)) {
             //it was: let's just use an old angle
-            angle = currentAngle;
+            angle = *currentAngle;
         } else {
-            //it was not: let's use first allowed:
-            if (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle0, isKeyboardOpen))
-                angle = M::Angle0;
-            else if (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle270, isKeyboardOpen))
-                angle = M::Angle270;
-            else if (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle90, isKeyboardOpen))
-                angle = M::Angle90;
-            else if (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle180, isKeyboardOpen))
-                angle = M::Angle180;
-            else
-                qFatal("MOrientationTrackerPrivate::updateOrientationAngle() - current keyboard state does not seem to be covered in target configuration file");
+            //it was not: let's use the closest allowed angle
+            angle = findClosestAllowedAngle(angle, isKeyboardOpen);
         }
     }
     rotateWindows(angle);
@@ -337,15 +332,48 @@ void MOrientationTrackerPrivate::doUpdateOrientationAngle(M::OrientationAngle an
 #endif //HAVE_CONTEXTSUBSCRIBER
 }
 
+M::OrientationAngle MOrientationTrackerPrivate::findClosestAllowedAngle(M::OrientationAngle angle, bool isKeyboardOpen)
+{
+    // try angle+90 degrees
+    int candidateAngle = (angle + 90) % 360;
+    if (MDeviceProfile::instance()->orientationAngleIsSupported((M::OrientationAngle)candidateAngle, isKeyboardOpen)) {
+        return (M::OrientationAngle)candidateAngle;
+    }
+
+    // try angle-90 degrees
+    candidateAngle = angle - 90;
+    if (candidateAngle < 0) {
+        candidateAngle = 360 + candidateAngle;
+    }
+    if (MDeviceProfile::instance()->orientationAngleIsSupported((M::OrientationAngle)candidateAngle, isKeyboardOpen)) {
+        return (M::OrientationAngle)candidateAngle;
+    }
+
+    // try angle+180 degrees
+    candidateAngle = (angle + 180) % 360;
+    if (MDeviceProfile::instance()->orientationAngleIsSupported((M::OrientationAngle)candidateAngle, isKeyboardOpen)) {
+        return (M::OrientationAngle)candidateAngle;
+    }
+
+    // give up. That just cannot happen.
+    qFatal("MOrientationTrackerPrivate::findClosestAllowedAngle() - "
+           "current keyboard state does not seem to be covered in target configuration file");
+
+    // to make compiler happy. should never be reached due to the qFatal() above
+    return M::Angle0;
+}
+
 #ifdef HAVE_CONTEXTSUBSCRIBER
 void MOrientationTrackerPrivate::rotateWindows(M::OrientationAngle angle)
 {
-    if (angle == currentAngle && !hasJustSubscribedToSensorProperties) {
+    if (currentAngle && angle == *currentAngle && !hasJustSubscribedToSensorProperties) {
         return;
     }
 
     hasJustSubscribedToSensorProperties = false;
-    currentAngle = angle;
+    if (!currentAngle)
+        currentAngle = new M::OrientationAngle;
+    *currentAngle = angle;
     // instead of emitting a signal we have to explicitely call setOrientationAngle
     // on windows, because this is very often excuted before the application's
     // event loop is started and leads to crash in QMetaObject
@@ -426,8 +454,8 @@ M::OrientationAngle MOrientationTracker::orientationAngle() const
         priv->unsubscribeFromSensorProperties();
     }
 #endif
-
-    return d->currentAngle;
+    Q_ASSERT(d->currentAngle);
+    return *(d->currentAngle);
 }
 
 void MOrientationTracker::childEvent(QChildEvent *event)
