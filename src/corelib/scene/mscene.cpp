@@ -564,7 +564,7 @@ QGraphicsItem *MScenePrivate::actualClickFocusTarget(QGraphicsItem *item)
     const bool canBeFocusedByClick = (item->isEnabled()
                                       && item->flags() & QGraphicsItem::ItemIsFocusable
                                       && (!item->isWidget()
-                                          || static_cast<QGraphicsWidget *>(item)->focusPolicy() == Qt::ClickFocus));
+                                          || (static_cast<QGraphicsWidget *>(item)->focusPolicy() & Qt::ClickFocus) == Qt::ClickFocus));
     if (!canBeFocusedByClick) {
         item = 0;
     }
