@@ -62,7 +62,7 @@ void MGraphicsHighlightEffectPrivate::applyStyle()
     strengthAnimation->setDuration(q->style()->duration());
     strengthAnimation->setStartValue(q->style()->startStrength());
     strengthAnimation->setEndValue(q->style()->endStrength());
-
+    deltaStrength = -1;
 
     animationGroup->addAnimation(delayAnimation);
     animationGroup->addAnimation(strengthAnimation);
@@ -73,19 +73,19 @@ void MGraphicsHighlightEffectPrivate::applyStyle()
 
 void MGraphicsHighlightEffectPrivate::drawComposedImage(QPainter *painter)
 {
-    composed = pixmapCached.toImage();
+    if (deltaStrength > 0) {
+        if (!composer)
+            composer = new QPainter();
 
-    if (!composer)
-        composer = new QPainter();
-
-    if (composer->begin(&composed)) {
-        composer->setCompositionMode(QPainter::CompositionMode_SourceAtop);
-        composer->setOpacity(strength);
-        composer->fillRect(composed.rect(), highlightColor);
-        composer->end();
+        if (!composer->isActive()) {
+            composer->begin(&pixmapCached);
+            composer->setCompositionMode(QPainter::CompositionMode_SourceAtop);
+        }
+        composer->setOpacity(deltaStrength);
+        composer->fillRect(pixmapCached.rect(), highlightColor);
     }
 
-    painter->drawImage(offsetCached, composed);
+    painter->drawPixmap(offsetCached, pixmapCached);
 }
 
 MGraphicsHighlightEffect::MGraphicsHighlightEffect(QObject *parent)
@@ -104,6 +104,9 @@ MGraphicsHighlightEffect::~MGraphicsHighlightEffect()
 void MGraphicsHighlightEffect::setStrength(qreal strength)
 {
     Q_D(MGraphicsHighlightEffect);
+    if (d->deltaStrength == -1)
+        d->deltaStrength = strength;
+    d->deltaStrength = strength - d->strength;
     d->strength = strength;
     update();
 }
@@ -135,11 +138,4 @@ void MGraphicsHighlightEffect::draw(QPainter *painter)
         d->pixmapCached = sourcePixmap(Qt::LogicalCoordinates, &d->offsetCached, QGraphicsEffect::NoPad);
 
     d->drawComposedImage(painter);
-}
-
-void MGraphicsHighlightEffect::sourceChanged(ChangeFlags flags)
-{
-    Q_UNUSED(flags);
-    Q_D(MGraphicsHighlightEffect);
-    d->pixmapCached = QPixmap();
 }
