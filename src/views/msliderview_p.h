@@ -205,6 +205,7 @@ public:
     void setIndicatorImage(const QString &id);
 
     int screenPointToValue(const QPointF &point) const;
+    QPointF valueToHandlePos(int value) const;
 
     QRectF clickableArea() const;
     QRectF clickableHandleArea() const;

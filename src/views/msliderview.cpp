@@ -812,6 +812,33 @@ int MSliderGroove::screenPointToValue(const QPointF &point) const
     return qBound(minimum, minimum + offset, maximum);
 }
 
+QPointF MSliderGroove::valueToHandlePos(int value) const
+{
+    qreal w = sliderHandle->effectiveSizeHint(Qt::PreferredSize).width();
+    qreal h = sliderHandle->effectiveSizeHint(Qt::PreferredSize).height();
+    QPointF newPos((rect().width() - w) / 2.0f, (rect().height() - h) / 2.0f);
+
+    int range = maximum - minimum;
+    QRectF valueRangeRect = rect();
+
+    if (minimum != maximum) {
+        if (orientation == Qt::Horizontal) {
+            valueRangeRect.adjust(0, 0, - w, 0);
+
+            if (!qApp->isRightToLeft())
+                newPos.setX(valueRangeRect.left() + (value - minimum) * valueRangeRect.width() / range);
+            else
+                newPos.setX(valueRangeRect.left() + (maximum - value) * valueRangeRect.width() / range);
+        } else if (orientation == Qt::Vertical) {
+            valueRangeRect.adjust(0, h/2.0, 0, - w / 2.0);
+
+            newPos.setX(valueRangeRect.top() + (maximum - value) * valueRangeRect.height() / range);
+        }
+    }
+
+    return newPos;
+}
+
 //determines clickable area which is basically the
 //exact area of slider groove
 QRectF MSliderGroove::clickableArea() const
@@ -1071,27 +1098,7 @@ void MSliderGroove::setGeometry(const QRectF &rect)
 //by handle remains inside rect occupied by groove
 void MSliderGroove::updateHandlePos()
 {
-    qreal w = sliderHandle->effectiveSizeHint(Qt::PreferredSize).width();
-    qreal h = sliderHandle->effectiveSizeHint(Qt::PreferredSize).height();
-    QPointF newPos((rect().width() - w) / 2.0f, (rect().height() - h) / 2.0f);
-
-    int range = maximum - minimum;
-    QRectF valueRangeRect = rect();
-
-    if (minimum != maximum) {
-        if (orientation == Qt::Horizontal) {
-            valueRangeRect.adjust(0, 0, - w, 0);
-
-            if (!qApp->isRightToLeft())
-                newPos.setX(valueRangeRect.left() + (value - minimum) * valueRangeRect.width() / range);
-            else
-                newPos.setX(valueRangeRect.left() + (maximum - value) * valueRangeRect.width() / range);
-        } else if (orientation == Qt::Vertical) {
-            valueRangeRect.adjust(0, h/2.0, 0, - w / 2.0);
-
-            newPos.setX(valueRangeRect.top() + (maximum - value) * valueRangeRect.height() / range);
-        }
-    }
+    QPointF newPos = valueToHandlePos(value);
 
     if (newPos != sliderHandle->pos()) {
         sliderHandle->setPos(newPos);
