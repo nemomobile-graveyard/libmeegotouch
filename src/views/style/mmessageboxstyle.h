@@ -26,6 +26,24 @@ class M_VIEWS_EXPORT MMessageBoxStyle : public MDialogStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MMessageBoxStyle)
+
+    /*!
+        \property MMessageBoxStyle::iconStyleName
+        \brief The style name which gets assigned to the internal icon.
+    */
+    M_STYLE_ATTRIBUTE(QString, iconStyleName, IconStyleName)
+
+    /*!
+        \property MMessageBoxStyle::titleStyleName
+        \brief The style name which gets assigned to the internal title label.
+    */
+    M_STYLE_ATTRIBUTE(QString, titleStyleName, TitleStyleName)
+
+    /*!
+        \property MMessageBoxStyle::textStyleName
+        \brief The style name which gets assigned to the internal body text label.
+    */
+    M_STYLE_ATTRIBUTE(QString, textStyleName, TextStyleName)
 };
 
 class M_VIEWS_EXPORT MMessageBoxStyleContainer : public MDialogStyleContainer

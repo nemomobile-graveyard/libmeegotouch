@@ -44,18 +44,22 @@ MMessageBoxViewPrivate::~MMessageBoxViewPrivate()
 
 MImageWidget *MMessageBoxViewPrivate::iconImageWidget()
 {
+    Q_Q(MMessageBoxView);
+
     if (!iconImage) {
         iconImage = new MImageWidget(contents);
-        iconImage->setStyleName("CommonQueryIcon");
+        iconImage->setStyleName(q->style()->iconStyleName());
     }
     return iconImage;
 }
 
 MLabel *MMessageBoxViewPrivate::titleLabelWidget()
 {
+    Q_Q(MMessageBoxView);
+
     if (!titleLabel) {
         titleLabel = new MLabel(contents);
-        titleLabel->setStyleName("CommonQueryTitle");
+        titleLabel->setStyleName(q->style()->titleStyleName());
         titleLabel->setTextElide(false);
         titleLabel->setWordWrap(true);
         titleLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
@@ -66,9 +70,11 @@ MLabel *MMessageBoxViewPrivate::titleLabelWidget()
 
 MLabel *MMessageBoxViewPrivate::textLabelWidget()
 {
+    Q_Q(MMessageBoxView);
+
     if (!textLabel) {
         textLabel = new MLabel(contents);
-        textLabel->setStyleName("CommonQueryText");
+        textLabel->setStyleName(q->style()->textStyleName());
         textLabel->setWordWrap(true);
         textLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         textLabel->setAlignment(Qt::AlignCenter);
@@ -224,6 +230,15 @@ void MMessageBoxView::applyStyle() {
     MDialogView::applyStyle();
 
     d->updateLayout();
+
+    if (d->iconImage)
+        d->iconImage->setStyleName(style()->iconStyleName());
+
+    if (d->titleLabel)
+        d->titleLabel->setStyleName(style()->titleStyleName());
+
+    if (d->textLabel)
+        d->textLabel->setStyleName(style()->textStyleName());
 }
 
 M_REGISTER_VIEW_NEW(MMessageBoxView, MMessageBox)
