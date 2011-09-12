@@ -1,8 +1,36 @@
-libmeegotouch (0.24.1~1) unstable; urgency=low
+libmeegotouch (0.24.1-1) unstable; urgency=low
 
-  * [unreleased]
+  * New version
+  * Fixes: NB#280683 - Sync and backup> Bakup : Wrong date and time order in Farsi
+  * Fixes: NB#280641 - [TASK] MSlider's transition is not styleable
+  * Fixes: NB#272012 - [crash] Non-reproducible crash: QGLContext::format
+  * Fixes: NB#281564 - Multiline SMS/IM sliding notification is wrongly displayed
+  * Fixes: NB#278388 - MList loses its focus if a list item is tapped
+  * Fixes: NB#278546 - The page handling gets mixed up if a window is minimized and restored while page transitions are on-going
+  * Fixes: NB#281734 - Messaging-ui is crashing in certain scenario
+  * Fixes: NB#277393 - Arabic texts are not aligned to the Right in MLabel
+  * Fixes: NB#280918 - Dialogs still show the button box and title bar, even if they were hidden.
+  * Fixes: NB#276230 - Rotation of opened status menu looks bad
+  * Fixes: NB#281338 - Crash observed in list index.
+  * Fixes: NB#281046 - Notification; Clipped notification with multiple new mail
+  * Fixes: NB#281198 - Infinite loop passing empty bytearray to MCharsetDetector
+  * Fixes: NB#280973 - Week days are changed as week ends, if we change the regional format to 'India(English)'
+  * Fixes: NB#277104 - Region > Number and Currency Format are (maybe) wrong for Mexican Region
+  * Fixes: NB#265711 - alphabetical sorting of documents is wrong in Danish
+  * Fixes: NB#280030 - Navigation bar disappears if page transition happens with orientation change.
+  * Fixes: NB#279445 - List index in some conditions is not present in the list sheet
+  * Fixes: NB#272617 - Input field of custom navigation bar is improperly aligned under development theme.
+  * Fixes: NB#278041 - Missing theme icon for base in widgetsgallery.
+  * Fixes: NB#279391 - White screen or half white screen visible in view header page in widgetsgallery.
+  * Fixes: NB#261728 - H-RTComm; The string §qtn_comm_import§ is not centered.
+  * Fixes: NB#279508 - Sometimes MApplication::activeWindow() returns wrong window
+  * Fixes: NB#279304 - crash observed in mthemedaemon
+  * Fixes: NB#279092 - coreweb:/usr/bin/fenix "Fails at ~MRemoteThemeDaemonPrivate "
+  * Fixes: NB#277632 - Systemwide sheet does not change its orientation after it has been cancelled once
+  * Fixes: NB#280076 - [TASK] Enable shadow for toolbar
+  * Fixes: NB#271099 - [TASK] In dialogs, positive action should have blue button.
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 30 Aug 2011 18:09:34 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 12 Sep 2011 15:52:09 +0200
 
 libmeegotouch (0.24.0-1) unstable; urgency=low
 
