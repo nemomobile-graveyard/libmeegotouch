@@ -1370,8 +1370,11 @@ void MSceneManagerPrivate::pushPage(MSceneWindow *page, bool animatedTransition)
     // due to eiter a change in the escape button state or presence (triggered from a
     // change in the page history, if the escape mode is in "auto") or finally due
     // to a change in the current page, which will cause the nav bar to be repopulated.
-    if (currentPage && animatedTransition && navigationBarAnimation)
+    if (currentPage && animatedTransition && navigationBarAnimation) {
         navigationBarAnimation->takeContentSnapshot();
+        // animation is delayed so force showing snapshot now to avoid flickering
+        navigationBarAnimation->showSnapshotHideContent();
+    }
 
     if (currentPage && currentPage != page) {
         previousPage = currentPage;
@@ -1407,8 +1410,11 @@ void MSceneManagerPrivate::popPage(bool animatedTransition)
     // due to eiter a change in the escape button state or presence (triggered from a
     // change in the page history, if the escape mode is in "auto") or finally due
     // to a change in the current page, which will cause the nav bar to be repopulated.
-    if (animatedTransition && navigationBarAnimation)
+    if (animatedTransition && navigationBarAnimation) {
         navigationBarAnimation->takeContentSnapshot();
+        // animation is delayed so force showing snapshot now to avoid flickering
+        navigationBarAnimation->showSnapshotHideContent();
+    }
 
     // Pages in the history might have been deleted overtime.
     while (previousPage == 0 && !pageHistory.isEmpty()) {

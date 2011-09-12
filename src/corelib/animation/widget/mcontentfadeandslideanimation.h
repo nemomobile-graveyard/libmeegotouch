@@ -41,6 +41,8 @@ public:
 
 public slots:
     void takeContentSnapshot();
+    void showSnapshotHideContent();
+    void hideSnapshotShowContent();
 
 protected:
     //! \reimp

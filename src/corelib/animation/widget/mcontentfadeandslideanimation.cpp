@@ -169,6 +169,24 @@ void MContentFadeAndSlideAnimation::takeContentSnapshot()
         d->snapshotItem->updateSnapshot(d->contentItem);
 }
 
+void MContentFadeAndSlideAnimation::showSnapshotHideContent()
+{
+    Q_D(MContentFadeAndSlideAnimation);
+
+    d->snapshotItem->setParentItem(d->targetWidget);
+    d->snapshotItem->setOpacity((qreal)1.0);
+    d->snapshotItem->setPos(d->contentItem->pos());
+    d->contentItem->setOpacity((qreal)0.0);
+}
+
+void MContentFadeAndSlideAnimation::hideSnapshotShowContent()
+{
+    Q_D(MContentFadeAndSlideAnimation);
+
+    d->targetWidget->scene()->removeItem(d->snapshotItem);
+    d->contentItem->setOpacity((qreal)1.0);
+}
+
 void MContentFadeAndSlideAnimation::setTargetWidget(MWidgetController *targetWidget)
 {
     Q_D(MContentFadeAndSlideAnimation);
@@ -188,7 +206,7 @@ void MContentFadeAndSlideAnimation::updateState(QAbstractAnimation::State newSta
     if (oldState == QAbstractAnimation::Stopped &&
         newState == QAbstractAnimation::Running)
     {
-        d->fadeOut->setStartValue(1.0);
+        d->fadeOut->setStartValue((qreal)1.0);
         d->fadeOut->setEndValue(style()->fadeOutOpacity());
         d->fadeOut->setDuration(style()->fadeOutDuration());
         d->fadeOut->setEasingCurve(style()->fadeOutEasingCurve());
@@ -203,7 +221,7 @@ void MContentFadeAndSlideAnimation::updateState(QAbstractAnimation::State newSta
         d->delay->setDuration(style()->delay());
 
         d->fadeIn->setStartValue(style()->fadeInOpacity());
-        d->fadeIn->setEndValue(d->contentItem->opacity());
+        d->fadeIn->setEndValue((qreal)1.0);
         d->fadeIn->setDuration(style()->fadeInDuration());
         d->fadeIn->setEasingCurve(style()->fadeInEasingCurve());
         d->fadeIn->setTargetObject(d->contentItem);
@@ -214,19 +232,15 @@ void MContentFadeAndSlideAnimation::updateState(QAbstractAnimation::State newSta
         d->slideIn->setEasingCurve(style()->slideInEasingCurve());
         d->slideIn->setTargetObject(d->contentItem);
 
-        d->snapshotItem->setParentItem(d->targetWidget);
-
-        // animation is delayed so apply initial values now
-        d->contentItem->setOpacity(d->fadeIn->startValue().toReal());
-        d->contentItem->setPos(d->slideIn->startValue().toPointF());
+        showSnapshotHideContent();
 
     } else if (oldState == QAbstractAnimation::Running &&
                newState == QAbstractAnimation::Stopped)
     {
-        d->targetWidget->scene()->removeItem(d->snapshotItem);
+        hideSnapshotShowContent();
 
         // apply final values (for cases when animation was stopped in the middle)
-        d->contentItem->setOpacity(d->fadeIn->endValue().toReal());
+        // opacity is already restored in hideSnapshotShowContent
         d->contentItem->setPos(d->slideIn->endValue().toPointF());
     }
 
