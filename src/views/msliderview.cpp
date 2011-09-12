@@ -47,6 +47,8 @@
 #include "mlayout.h"
 #include "mlinearlayoutpolicy.h"
 
+const int HANDLE_ANIMATION_THRESHOLD = 5;
+
 MSliderHandle::MSliderHandle(QGraphicsItem *parent) :
     MWidget(parent),
     orientation(Qt::Horizontal),
@@ -1481,10 +1483,10 @@ int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
     //slider handle middle point then slider handle width / height
     //(depending on slider orientation)
     if (q->model()->orientation() == Qt::Horizontal) {
-        if (qAbs(event->pos().x() - clickableHandleRect.center().x()) > clickableHandleRect.width())
+        if (qAbs(event->pos().x() - clickableHandleRect.center().x()) > HANDLE_ANIMATION_THRESHOLD)
             needAnimation = true;
     } else {
-        if (qAbs(event->pos().y() - clickableHandleRect.center().y()) > clickableHandleRect.height())
+        if (qAbs(event->pos().y() - clickableHandleRect.center().y()) > HANDLE_ANIMATION_THRESHOLD)
             needAnimation = true;
     }
 
