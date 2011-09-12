@@ -274,6 +274,7 @@ void SliderPage::retranslateUi()
     brightnessContainer->setTitle(qtTrId("xx_slider_brightness_label"));
 
     brightnessSlider->setRange(0, 100);
+    brightnessSlider->setSteps(4);
     brightnessSlider->setMinLabelVisible(false);
     brightnessSlider->setMaxLabelVisible(false);
     brightnessSlider->setHandleLabelVisible(true);
