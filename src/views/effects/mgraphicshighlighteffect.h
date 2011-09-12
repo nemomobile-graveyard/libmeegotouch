@@ -47,6 +47,7 @@ public:
 
 protected:
     virtual void draw(QPainter *painter);
+    virtual void sourceChanged(ChangeFlags flags);
 
 private:
     M_GRAPHICS_EFFECT(MGraphicsHighlightEffectStyle)

@@ -51,8 +51,8 @@ private:
 
     QColor highlightColor;
     qreal strength;
-    qreal deltaStrength;
 
+    QImage composed;
     QPainter *composer;
 
     QSequentialAnimationGroup *animationGroup;
