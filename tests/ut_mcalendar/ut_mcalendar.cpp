@@ -67,6 +67,7 @@ void Ut_MCalendar::cleanup()
 
 void Ut_MCalendar::testDataPaths()
 {
+    MLocale l;
     QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
 }
 
