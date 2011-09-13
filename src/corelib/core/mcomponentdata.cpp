@@ -565,24 +565,13 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
 #endif
 
     QGestureRecognizer::unregisterRecognizer(Qt::TapAndHoldGesture);
-    QGestureRecognizer::registerRecognizer(new MTapAndHoldRecognizer());
+    MComponentData::registerDefaultRecognizer(Qt::TapAndHoldGesture);
 
     QGestureRecognizer::unregisterRecognizer(Qt::PanGesture);
-
-    // We assume that ARM targets have a touchscreen and therefore generate
-    // QTouchEvents. In such case MPanRecognizerTouch (which uses QTouchEvents)
-    // can be used and produces better results than MPanRecognizer
-    // (which uses QMouseEvents).
-    // A better way to do it would be using QSystemDeviceInfo::inputMethodType(),
-    // but it's not worth bringing up this dependency just for this if{}else{} here.
-#ifdef __arm__
-    QGestureRecognizer::registerRecognizer(new MPanRecognizerTouch);
-#else
-    QGestureRecognizer::registerRecognizer(new MPanRecognizer());
-#endif
+    MComponentData::registerDefaultRecognizer(Qt::PanGesture);
 
     QGestureRecognizer::unregisterRecognizer(Qt::SwipeGesture);
-    QGestureRecognizer::registerRecognizer(new MSwipeRecognizer());
+    MComponentData::registerDefaultRecognizer(Qt::SwipeGesture);
 
     q->setShowCursor(showCursor);
 }
@@ -1410,6 +1399,37 @@ bool MComponentData::isMeeGoWindowManagerRunning()
 #endif  // Q_WS_X11
 
     return retValue;
+}
+
+bool MComponentData::registerDefaultRecognizer(Qt::GestureType type)
+{
+    bool registered = true;
+    switch(type)
+    {
+    case Qt::SwipeGesture:
+        QGestureRecognizer::registerRecognizer(new MSwipeRecognizer());
+        break;
+    case Qt::PanGesture:
+        // We assume that ARM targets have a touchscreen and therefore generate
+        // QTouchEvents. In such case MPanRecognizerTouch (which uses QTouchEvents)
+        // can be used and produces better results than MPanRecognizer
+        // (which uses QMouseEvents).
+        // A better way to do it would be using QSystemDeviceInfo::inputMethodType(),
+        // but it's not worth bringing up this dependency just for this if{}else{} here.
+#ifdef __arm__
+        QGestureRecognizer::registerRecognizer(new MPanRecognizerTouch);
+#else
+        QGestureRecognizer::registerRecognizer(new MPanRecognizer());
+#endif
+        break;
+    case Qt::TapAndHoldGesture:
+        QGestureRecognizer::registerRecognizer(new MTapAndHoldRecognizer());
+        break;
+    default:
+        registered = false;
+    }
+
+    return registered;
 }
 
 #ifdef Q_WS_X11

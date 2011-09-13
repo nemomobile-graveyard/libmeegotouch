@@ -204,6 +204,23 @@ public:
     //! Returns whether MCompositor is present
     static bool isMeeGoWindowManagerRunning();
 
+    /*!
+      \brief Registers MeeGo Touch default recognizer for the given type of gesture
+
+      If you temporarily disable recognition of some gesture type (or replace its
+      recognizer) by calling QGestureRecognizer::unregisterRecognizer()
+      (followed by QGestureRecognizer::registerRecognizer() in the replacement case) you can
+      later on restore the original recognizer provided by MeeGo Touch by calling this method.
+
+      Note that MApplication already registers all MeeGo Touch gesture recognizers during
+      its initialization, thus it only makes sense to call this method if you've called
+      QGestureRecognizer::unregisterRecognizer() for \param type beforehand.
+
+      Returns true if a gesture recognizer was registered for the given \param type and
+      false if there's no default gesture recognizer in MeeGo Touch for \param type.
+    */
+    static bool registerDefaultRecognizer(Qt::GestureType type);
+
     //! \internal
     static M::OrientationAngle forcedOrientationAngle();
 
