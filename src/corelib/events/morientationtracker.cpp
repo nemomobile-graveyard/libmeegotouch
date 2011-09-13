@@ -101,7 +101,6 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     , currentWindowAngleProperty(new MContextProperty("/Screen/CurrentWindow/OrientationAngle"))
     , desktopAngleProperty(new MContextProperty("/Screen/Desktop/OrientationAngle"))
     , isSubscribedToSensorProperties(false)
-    , hasJustSubscribedToSensorProperties(false)
 #endif
     , rotationsDisabled(false)
     , pendingOrientationAngleUpdate(false)
@@ -274,63 +273,111 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
         return;
     }
 
-    QString topEdge = topEdgeProperty->value().toString();
     QString remoteTopEdge = remoteTopEdgeProperty->value().toString();
 
     if ((remoteTopEdgeListener->isServicePresent() != MServiceListener::Present) || remoteTopEdge.isEmpty()) {
-        M::OrientationAngle angle = angleForTopEdge(topEdge);
-        bool isDeviceFlat = isFlatProperty->value().toBool();
-        bool isKeyboardOpen = MKeyboardStateTracker::instance()->isOpen();
-        doUpdateOrientationAngle(angle, isKeyboardOpen, isDeviceFlat, currentIsTvConnected);
+
+        updateTrackerOrientationAngle();
+
+        foreach(MWindow * window, MApplication::windows()) {
+            updateWindowOrientationAngle(window);
+        }
     } else {
         M::OrientationAngle angle = angleForTopEdge(remoteTopEdge);
-        rotateWindows(angle);
+        foreach(MWindow * window, MApplication::windows()) {
+            if (windowIsFollowingDeviceOrientation(window))
+                rotateToAngleIfAllowed(angle, window);
+        }
     }
+
+    currentIsKeyboardOpen = MKeyboardStateTracker::instance()->isOpen();
 #endif
 }
 
-void MOrientationTrackerPrivate::doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
-                                                          bool isDeviceFlat, bool tvIsConnected)
-{
 #ifdef HAVE_CONTEXTSUBSCRIBER
+M::OrientationAngle MOrientationTrackerPrivate::updateOrientationAngle(M::OrientationAngle *currentAngle)
+{
+    M::OrientationAngle targetAngle = (M::OrientationAngle)-1;
+    M::OrientationAngle deviceAngle = angleForTopEdge(topEdgeProperty->value().toString());
+    bool isDeviceFlat = isFlatProperty->value().toBool();
+    bool isKeyboardOpen = MKeyboardStateTracker::instance()->isOpen();
+
     //Check if the keyboard was just closed, old angle is supported and
     //if device is lying flat (like on the table)
     if (currentIsKeyboardOpen == true && isKeyboardOpen == false
         && currentAngle
         && MDeviceProfile::instance()->orientationAngleIsSupported(*currentAngle, isKeyboardOpen)
         && isDeviceFlat) {
-        currentIsKeyboardOpen = isKeyboardOpen;
-        //do nothing
-        return;
-    }
-    currentIsKeyboardOpen = isKeyboardOpen;
-
-    if (tvIsConnected) { // TV forces landscape for now, no transformations
+        // do nothing
+        targetAngle = *currentAngle;
+    } else if (currentIsTvConnected) { // TV forces landscape for now, no transformations
         if (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Landscape) {
-            angle = M::Angle0;
+            targetAngle = M::Angle0;
         } else {
-            angle = M::Angle270;
+            targetAngle = M::Angle270;
         }
-    } else if (!MDeviceProfile::instance()->orientationAngleIsSupported(angle, isKeyboardOpen)) {
+    } else if (!MDeviceProfile::instance()->orientationAngleIsSupported(deviceAngle, isKeyboardOpen)) {
         //it seems that orientation does not match allowed for current kybrd state.
         //check if the previous one was ok:
         if (currentAngle
             && MDeviceProfile::instance()->orientationAngleIsSupported(*currentAngle, isKeyboardOpen)) {
             //it was: let's just use an old angle
-            angle = *currentAngle;
+            targetAngle = *currentAngle;
         } else {
             //it was not: let's use the closest allowed angle
-            angle = findClosestAllowedAngle(angle, isKeyboardOpen);
+            targetAngle = findClosestAllowedAngle(deviceAngle, isKeyboardOpen);
         }
+    } else {
+        // simple case. there's nothing stopping us from following the device orientation.
+        targetAngle = deviceAngle;
     }
-    rotateWindows(angle);
-#else
-    Q_UNUSED(angle);
-    Q_UNUSED(isKeyboardOpen);
-    Q_UNUSED(isDeviceFlat);
-    Q_UNUSED(tvIsConnected);
-#endif //HAVE_CONTEXTSUBSCRIBER
+
+    Q_ASSERT((int)targetAngle != -1);
+    return targetAngle;
 }
+#endif
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void MOrientationTrackerPrivate::updateTrackerOrientationAngle()
+{
+    M::OrientationAngle targetAngle = updateOrientationAngle(currentAngle);
+
+    if (!currentAngle)
+        currentAngle = new M::OrientationAngle;
+    *currentAngle = targetAngle;
+}
+#endif //HAVE_CONTEXTSUBSCRIBER
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+bool MOrientationTrackerPrivate::windowIsFollowingDeviceOrientation(MWindow *window)
+{
+    if (windowsFollowingDesktop.contains(window))
+        return false;
+
+    // If there's no current app. window angle to follow, those windows are
+    // free to rotate like the others
+    if ((windowsFollowingCurrentAppWindow.contains(window) ||
+         windowsFollowingWithConstraintsCurrentAppWindow.contains(window))
+        && currentWindowAnglePropertyContainsValidAngle())
+        return false;
+
+    return true;
+}
+#endif //HAVE_CONTEXTSUBSCRIBER
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void MOrientationTrackerPrivate::updateWindowOrientationAngle(MWindow *window)
+{
+    if (!windowIsFollowingDeviceOrientation(window))
+        return;
+
+    M::OrientationAngle windowAngle = window->orientationAngle();
+    M::OrientationAngle targetAngle = updateOrientationAngle(&windowAngle);
+
+    if (targetAngle != windowAngle)
+        rotateToAngleIfAllowed(targetAngle, window);
+}
+#endif //HAVE_CONTEXTSUBSCRIBER
 
 M::OrientationAngle MOrientationTrackerPrivate::findClosestAllowedAngle(M::OrientationAngle angle, bool isKeyboardOpen)
 {
@@ -363,45 +410,14 @@ M::OrientationAngle MOrientationTrackerPrivate::findClosestAllowedAngle(M::Orien
     return M::Angle0;
 }
 
-#ifdef HAVE_CONTEXTSUBSCRIBER
-void MOrientationTrackerPrivate::rotateWindows(M::OrientationAngle angle)
-{
-    if (currentAngle && angle == *currentAngle && !hasJustSubscribedToSensorProperties) {
-        return;
-    }
-
-    hasJustSubscribedToSensorProperties = false;
-    if (!currentAngle)
-        currentAngle = new M::OrientationAngle;
-    *currentAngle = angle;
-    // instead of emitting a signal we have to explicitely call setOrientationAngle
-    // on windows, because this is very often excuted before the application's
-    // event loop is started and leads to crash in QMetaObject
-
-    bool haveCurrWindowAngle = currentWindowAnglePropertyContainsValidAngle();
-
-    foreach(MWindow * window, MApplication::windows()) {
-
-        // If there's no current app. window angle to follow, those windows are
-        // free to rotate like the others
-        if (haveCurrWindowAngle &&
-            (windowsFollowingCurrentAppWindow.contains(window) ||
-             windowsFollowingWithConstraintsCurrentAppWindow.contains(window)))
-            continue;
-
-        if (windowsFollowingDesktop.contains(window))
-            continue;
-
-        rotateToAngleIfAllowed(angle, window);
-    }
-}
-#endif //HAVE_CONTEXTSUBSCRIBER
-
 void MOrientationTrackerPrivate::rotateToAngleIfAllowed(M::OrientationAngle angle, MWindow* window)
 {
     M::Orientation orientation = MDeviceProfile::instance()->orientationFromAngle(angle);
     if (!window->isOrientationAngleLocked() &&
         (!window->isOrientationLocked() || window->orientation() == orientation)) {
+        // instead of emitting a signal we have to explicitely call setOrientationAngle
+        // on windows, because this is very often excuted before the application's
+        // event loop is started and leads to crash in QMetaObject
         window->setOrientationAngle(angle);
     }
 }
@@ -485,13 +501,6 @@ bool MOrientationTracker::isSubscribedToSensorProperties() const
 #endif
 }
 
-void MOrientationTracker::doUpdateOrientationAngle(
-        M::OrientationAngle angle, bool isKeyboardOpen,
-        bool isDeviceFlat, bool tvIsConnected)
-{
-    Q_D(MOrientationTracker);
-    d->doUpdateOrientationAngle(angle, isKeyboardOpen, isDeviceFlat, tvIsConnected);
-}
 #ifdef HAVE_CONTEXTSUBSCRIBER
 void MOrientationTrackerPrivate::subscribeToSensorProperties()
 {
@@ -528,7 +537,6 @@ void MOrientationTrackerPrivate::waitForSensorPropertiesToSubscribe()
     isFlatProperty->waitForSubscription(true);
     remoteTopEdgeListener->startListening(true);
     isSubscribedToSensorProperties = true;
-    hasJustSubscribedToSensorProperties = true;
 }
 
 void MOrientationTracker::handleCurrentAppWindowOrientationAngleChange()

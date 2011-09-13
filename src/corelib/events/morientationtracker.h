@@ -71,9 +71,6 @@ private:
     friend class Ut_MOrientationTracker;
 #endif
 
-    // For testing purposes
-    void doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
-                                  bool isDeviceFlat, bool tvIsConnected);
     void disableRotations();
     void enableRotations();
     bool isSubscribedToSensorProperties() const;

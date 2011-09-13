@@ -66,26 +66,28 @@ public:
     ~MOrientationTrackerPrivate();
     static MOrientationTracker *tracker;
 
+    // Angle returned by MOrientationTracker::orientationAngle()
     // will be null if there's no current angle yet, like during startup.
     M::OrientationAngle *currentAngle;
 
     bool currentIsCovered;
     bool currentIsTvConnected;
     bool currentIsKeyboardOpen;
-    void doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
-                                  bool isDeviceFlat, bool tvIsConnected);
     // Returns the closest orientation angle to the given one that is allowed
     // according to current profile.
     M::OrientationAngle findClosestAllowedAngle(M::OrientationAngle angle, bool isKeyboardOpen);
     void reevaluateSubscriptionToSensorProperties();
     void rotateToAngleIfAllowed(M::OrientationAngle angle, MWindow* window);
 #ifdef HAVE_CONTEXTSUBSCRIBER
+    void updateTrackerOrientationAngle();
+    void updateWindowOrientationAngle(MWindow *window);
+    M::OrientationAngle updateOrientationAngle(M::OrientationAngle *currentAngle);
+    bool windowIsFollowingDeviceOrientation(MWindow *window);
     bool checkIfOrientationUpdatesRequired();
     M::OrientationAngle angleForTopEdge(const QString topEdge) const;
     void subscribeToSensorProperties();
     void unsubscribeFromSensorProperties();
     void waitForSensorPropertiesToSubscribe();
-    void rotateWindows(M::OrientationAngle angle);
     //Properties based on sensors states
     ContextProperty *videoRouteProperty;
     ContextProperty *topEdgeProperty;
@@ -97,7 +99,6 @@ public:
     MContextProperty *currentWindowAngleProperty;
     MContextProperty *desktopAngleProperty;
     bool isSubscribedToSensorProperties;
-    bool hasJustSubscribedToSensorProperties;
 #endif
     bool rotationsDisabled;
     bool pendingOrientationAngleUpdate;
