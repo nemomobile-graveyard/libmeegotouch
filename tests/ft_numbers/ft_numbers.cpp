@@ -1438,17 +1438,17 @@ void Ft_Numbers::testToDouble_data()
             << QString("sv_SE")
             << QString("1E+10")
             << int(0)
-            << false // OK not to parse this in Swedish?
-            << double(0)
-            << QString("0");
+            << true // Swedish has “×10^” as exponential symbol but we accept “e” and “E” as well
+            << double(1E+10)
+            << QString("10 000 000 000");
 
         QTest::newRow("sv_SE 1e+10")
             << QString("sv_SE")
             << QString("1e+10")
             << int(0)
-            << false // OK not to parse this in Swedish?
-            << double(0)
-            << QString("0");
+            << true // Swedish has “×10^” as exponential symbol but we accept “e” and “E” as well
+            << double(1E+10)
+            << QString("10 000 000 000");
 
         QTest::newRow("sv_SE 1×10^10")
             << QString("sv_SE")
@@ -2036,16 +2036,16 @@ void Ft_Numbers::testToFloat_data()
         QTest::newRow("sv_SE 1E+10")
             << QString("sv_SE")
             << QString("1E+10")
-            << false // OK not to parse this in Swedish?
-            << float(0)
-            << QString("0");
+            << true // Swedish has “×10^” as exponential symbol but we accept “e” and “E” as well
+            << float(1e+10)
+            << QString("10 000 000 000");
 
         QTest::newRow("sv_SE 1e+10")
             << QString("sv_SE")
             << QString("1e+10")
-            << false // OK not to parse this in Swedish?
-            << float(0)
-            << QString("0");
+            << true // Swedish has “×10^” as exponential symbol but we accept “e” and “E” as well
+            << float(1e+10)
+            << QString("10 000 000 000");
 
         QTest::newRow("sv_SE 1×10^10")
             << QString("sv_SE")
