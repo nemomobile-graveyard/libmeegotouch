@@ -2480,6 +2480,9 @@ double MLocale::toDouble(const QString &s, bool *ok) const
             decimalFormatSymbols->getSymbol(DecimalFormatSymbols::kExponentialSymbol));
     QString parseInput = s;
     d->removeDirectionalFormattingCodes(&parseInput);
+    // accept “e” or “E” always as exponential symbols, even if the
+    // locale uses something completely different:
+    parseInput.replace(QChar('e'), exponentialSymbol, Qt::CaseInsensitive);
     // parse the exponential symbol in the input case insensitive:
     parseInput.replace(exponentialSymbol, exponentialSymbol, Qt::CaseInsensitive);
     icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(parseInput);
@@ -2552,6 +2555,9 @@ float MLocale::toFloat(const QString &s, bool *ok) const
             decimalFormatSymbols->getSymbol(DecimalFormatSymbols::kExponentialSymbol));
     QString parseInput = s;
     d->removeDirectionalFormattingCodes(&parseInput);
+    // accept “e” or “E” always as exponential symbols, even if the
+    // locale uses something completely different:
+    parseInput.replace(QChar('e'), exponentialSymbol, Qt::CaseInsensitive);
     // parse the exponential symbol in the input case insensitive:
     parseInput.replace(exponentialSymbol, exponentialSymbol, Qt::CaseInsensitive);
     icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(parseInput);
