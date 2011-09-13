@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <QTimer>
 #include <MWidgetModel>
 #include <MWidgetView>
 #include "mcontainerheaderstyle.h"
@@ -36,6 +37,7 @@ public:
     MContainerHeaderView(MContainerHeader *controller);
 
 protected:
+    virtual void applyStyle();
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void cancelEvent(MCancelEvent *event);
@@ -45,9 +47,13 @@ private:
     MContainerHeader *controller;
     bool expectMouseReleaseEvent;
     QPointF pressScenePos;
+    QTimer liftTimer;
 
 signals:
     void clicked();
+
+private slots:
+    void lift();
 };
 
 /*!

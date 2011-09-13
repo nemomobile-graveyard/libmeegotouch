@@ -20,6 +20,7 @@
 #include <QGraphicsWidget>
 #include <QGraphicsSceneMouseEvent>
 #include <QApplication>
+#include <QTimer>
 #include <MCancelEvent>
 #include "mcontainerheader_p.h"
 #include "mviewconstants.h"
@@ -38,6 +39,9 @@ MContainerHeaderView::MContainerHeaderView(MContainerHeader *controller)
 {
     this->controller = controller;
     connect(this, SIGNAL(clicked()), controller, SIGNAL(clicked()));
+
+    liftTimer.setSingleShot(true);
+    connect(&liftTimer, SIGNAL(timeout()), SLOT(lift()));
 }
 
 void MContainerHeaderView::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -47,12 +51,17 @@ void MContainerHeaderView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     expectMouseReleaseEvent = true;
     pressScenePos = event->scenePos();
 
+    liftTimer.start();
+
     update();
 }
 
 void MContainerHeaderView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     style().setModeDefault();
+
+    if(liftTimer.isActive())
+        liftTimer.stop();
 
     if (!expectMouseReleaseEvent) {
         return;
@@ -99,11 +108,28 @@ void MContainerHeaderView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void MContainerHeaderView::cancelEvent(MCancelEvent *event)
 {
     Q_UNUSED(event);
+
+    if(liftTimer.isActive())
+        liftTimer.stop();
+
     style().setModeDefault();
     expectMouseReleaseEvent = false;
     update();
 }
 
+void MContainerHeaderView::lift()
+{
+    // Long press: cancel (same behaviour as MButton)
+    expectMouseReleaseEvent = false;
+    QApplication::postEvent(controller, new MCancelEvent);
+}
+
+void MContainerHeaderView::applyStyle()
+{
+    MWidgetView::applyStyle();
+
+    liftTimer.setInterval(style()->pressTimeout());
+}
 
 /*
  * Controller
