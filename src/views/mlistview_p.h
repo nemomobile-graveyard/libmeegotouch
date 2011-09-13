@@ -77,6 +77,11 @@ namespace MListViewPrivateNamespace
         }
         return i;
     }
+
+    inline bool intersects(int start, int end, int first, int last)
+    {
+        return (start >= first && start <= last) || (end >= first && end <= last) || (start <= first && end >= last);
+    }
 }
 
 class MListViewPrivate : public QObject

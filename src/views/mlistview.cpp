@@ -197,14 +197,14 @@ void MListView::setGeometry(const QRectF &rect)
 
         d_ptr->updatePannableViewportPosition();
 
-        if (d_ptr->lastGeometrySize != size() || d_ptr->clearVisibleOnRelayout) {
+        if (d_ptr->lastGeometrySize != rect.size() || d_ptr->clearVisibleOnRelayout) {
             d_ptr->viewWidth = rect.width();
             d_ptr->updateItemSize();
             d_ptr->updateSeparatorSize();
             relayoutItemsInViewportRect();
 
             d_ptr->scrollToLastIndex();
-            d_ptr->lastGeometrySize = size();
+            d_ptr->lastGeometrySize = rect.size();
         }
     }
 

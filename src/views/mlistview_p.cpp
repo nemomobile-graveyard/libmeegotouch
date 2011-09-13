@@ -237,7 +237,8 @@ bool MListViewPrivate::animateRowsInsertion(const QModelIndex &parent, int start
         end += parentFlatRow + 1;
     }
 
-    if (start > lastVisibleRow + 1 || !controller->isVisible())
+    if (start > lastVisibleRow + 1 || !controller->isVisible() ||
+            !MListViewPrivateNamespace::intersects(start, end, firstVisibleRow, lastVisibleRow))
         return false;
 
     start = firstVisibleRow > start ? firstVisibleRow : start;
@@ -266,7 +267,8 @@ bool MListViewPrivate::animateRowsRemoval(const QModelIndex &parent, int start, 
         end += parentFlatRow + 1;
     }
 
-    if (start > lastVisibleRow || !controller->isVisible())
+    if (start > lastVisibleRow || !controller->isVisible() ||
+            !MListViewPrivateNamespace::intersects(start, end, firstVisibleRow, lastVisibleRow))
         return false;
 
     start = firstVisibleRow > start ? firstVisibleRow : start;
