@@ -201,6 +201,16 @@ void MListView::setGeometry(const QRectF &rect)
             d_ptr->viewWidth = rect.width();
             d_ptr->updateItemSize();
             d_ptr->updateSeparatorSize();
+
+            if (d_ptr->lockPosition) {
+                if (d_ptr->pannableViewport) {
+                    qreal heightDelta = rect.size().height() - d_ptr->lastGeometrySize.height();
+                    if (heightDelta != 0)
+                        d_ptr->pannableViewport->physics()->setPosition(d_ptr->pannableViewport->position() + QPointF(0, heightDelta), false);
+                }
+                d_ptr->lockPosition = false;
+            }
+
             relayoutItemsInViewportRect();
 
             d_ptr->scrollToLastIndex();
@@ -296,8 +306,13 @@ void MListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &botto
  */
 void MListView::rowsInserted(const QModelIndex &parent, int start, int end, bool animated)
 {
-    if (!d_ptr->animateRowsInsertion(parent, start, end, animated))
+    if (!d_ptr->animateRowsInsertion(parent, start, end, animated)) {
+        int first = d_ptr->indexToFlatRow(model()->firstVisibleItem());
+        start = d_ptr->indexToFlatRow(model()->itemModel()->index(start, 0, parent));
+        end = d_ptr->indexToFlatRow(model()->itemModel()->index(end, 0, parent));
+        d_ptr->lockPosition = (start < first && end < first);
         layoutChanged();
+    }
 }
 
 /*!
@@ -308,8 +323,13 @@ void MListView::rowsInserted(const QModelIndex &parent, int start, int end, bool
  */
 void MListView::rowsRemoved(const QModelIndex &parent, int start, int end, bool animated)
 {
-    if (!d_ptr->animateRowsRemoval(parent, start, end, animated))
+    if (!d_ptr->animateRowsRemoval(parent, start, end, animated)) {
+        int first = d_ptr->indexToFlatRow(model()->firstVisibleItem());
+        start = d_ptr->indexToFlatRow(model()->itemModel()->index(start, 0, parent));
+        end = d_ptr->indexToFlatRow(model()->itemModel()->index(end, 0, parent));
+        d_ptr->lockPosition = (start < first && end < first);
         layoutChanged();
+    }
 }
 
 void MListView::layoutChanged()
