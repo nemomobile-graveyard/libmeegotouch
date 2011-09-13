@@ -202,10 +202,10 @@ MApplication::MApplication(int &argc, char **argv, MApplicationService *service)
 
 void MApplicationPrivate::init(int &argc, char **argv, const QString &appIdentifier, MApplicationService *newService)
 {
-    Q_Q(MApplication);
     componentData = MComponentData::createInstance(argc, argv, appIdentifier, newService);
 
 #ifdef Q_WS_X11
+    Q_Q(MApplication);
     windowClosedWatcher = new MMultiObjectsPropertyWatcher;
     windowClosedWatcher->setPropertyName(MWindowPrivate::LogicallyClosedPropertyName);
     QObject::connect(windowClosedWatcher, SIGNAL(propertyChanged(QObject*)),

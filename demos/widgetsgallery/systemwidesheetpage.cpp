@@ -24,7 +24,10 @@
 #include <MApplication>
 #include <MComboBox>
 #include <MMessageBox>
+
+#ifdef HAVE_DBUS
 #include "accessmanager.h"
+#endif // HAVE_DBUS
 
 SystemwideSheetPage::SystemwideSheetPage()
     : MApplicationPage()
@@ -51,11 +54,13 @@ void SystemwideSheetPage::createContent()
     createOrientationComboBox();
     mainLayout->addItem(orientationCombobox);
 
+#ifdef HAVE_DBUS
     chainedCheckbox = new LabeledCheckbox(this);
     //% "Chained, via service"
     chainedCheckbox->label->setText(qtTrId("xx_chained_via_service"));
     chainedCheckbox->button->setChecked(false);
     mainLayout->addItem(chainedCheckbox);
+#endif // HAVE_DBUS
 
     MButton *button = new MButton(this);
     //% "Open systemwide sheet"
@@ -98,11 +103,14 @@ void SystemwideSheetPage::createOrientationComboBox()
     orientationCombobox->setCurrentIndex(0);
 }
 
-void SystemwideSheetPage::openSystemwideSheet() {
+void SystemwideSheetPage::openSystemwideSheet()
+{
+#ifdef HAVE_DBUS
     if (chainedCheckbox->button->isChecked()) {
         openSystemwideSheetViaService();
         return;
     }
+#endif // HAVE_DBUS
 
     LoginSheet *loginSheet = new LoginSheet;
     loginSheet->setObjectName("loginSheet");
@@ -126,6 +134,7 @@ void SystemwideSheetPage::openSystemwideSheet() {
     loginSheet->appearSystemwide(MSceneWindow::DestroyWhenDone);
 }
 
+#ifdef HAVE_DBUS
 void SystemwideSheetPage::openSystemwideSheetViaService()
 {
     AccessManager manager("com.nokia.widgetsgallery.AccessManager");
@@ -153,3 +162,4 @@ void SystemwideSheetPage::openSystemwideSheetViaService()
         messageBox->appear(MSceneWindow::DestroyWhenDone);
     }
 }
+#endif // HAVE_DBUS

@@ -21,6 +21,7 @@
 #include <QStringList>
 #include <QObject>
 #include <QDebug>
+#include <QDir>
 
 #include <MApplication>
 #include <MApplicationService>
