@@ -102,8 +102,6 @@ SOURCES += main.cpp \
     headeredtextedit.cpp \
     labeledcheckbox.cpp \
     systemwidesheetpage.cpp \
-    accessmanager.cpp \
-    accessmanagerproxy.cpp
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -167,8 +165,14 @@ HEADERS += templatepage.h \
     headeredtextedit.h \
     labeledcheckbox.h \
     systemwidesheetpage.h \
-    accessmanager.h \
-    accessmanagerproxy.h
+
+contains(DEFINES, HAVE_DBUS) {
+    HEADERS += accessmanager.h \
+        accessmanagerproxy.h \
+
+    SOURCES += accessmanager.cpp \
+        accessmanagerproxy.cpp \
+}
 
 # theme
 include(theme/theme.pri)

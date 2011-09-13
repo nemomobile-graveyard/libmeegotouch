@@ -14,9 +14,6 @@ PUBLIC_HEADERS += \
     $$I18N_SRC_DIR/mcity.h \
     $$I18N_SRC_DIR/mlocationdatabase.h \
 
-PRIVATE_HEADERS += \
-    $$I18N_SRC_DIR/mcalendar_p.h \
-
 SOURCES += \
     $$I18N_SRC_DIR/mbreakiterator.cpp \
     $$I18N_SRC_DIR/mlocale.cpp \
@@ -34,7 +31,8 @@ contains(DEFINES, HAVE_ICU) {
 
     PRIVATE_HEADERS += \
         $$I18N_SRC_DIR/micubreakiterator.h \
-        $$I18N_SRC_DIR/micuconversions.h
+        $$I18N_SRC_DIR/micuconversions.h \
+        $$I18N_SRC_DIR/mcalendar_p.h \
 
     SOURCES += \
         $$I18N_SRC_DIR/mcalendar.cpp \

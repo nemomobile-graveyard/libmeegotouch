@@ -37,12 +37,17 @@ private Q_SLOTS:
 
 private:
     void createOrientationComboBox();
+
+#ifdef HAVE_DBUS
     void openSystemwideSheetViaService();
+#endif // HAVE_DBUS
 
     LabeledCheckbox *statusBarCheckbox;
     LabeledCheckbox *autoFocusCheckbox;
     MComboBox *orientationCombobox;
+#ifdef HAVE_DBUS
     LabeledCheckbox *chainedCheckbox;
+#endif // HAVE_DBUS
 };
 
 #endif
