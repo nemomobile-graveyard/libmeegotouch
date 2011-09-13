@@ -78,6 +78,15 @@ private:
     //enables all angles for device profile
     void setAllAngles(QList<M::OrientationAngle>* list);
 
+    static void setTVOutIsConnected(bool isConnected);
+    static void emitTVOutConnectionChanged();
+    static void setKeyboardIsOpen(bool isOpen);
+    static void emitKeyboardIsOpenChanged();
+    static void setDeviceOrientationAngle(M::OrientationAngle angle);
+    static void emitDeviceOrientationAngleChanged();
+    static void showWindowAndSendDisplayEvent(MWindow *window);
+    static void setDeviceIsLyingFlat(bool enable);
+
     MOrientationTracker *mTracker;
     MComponentData* m_componentData;
     MWindow *window1;

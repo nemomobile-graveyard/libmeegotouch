@@ -110,16 +110,26 @@ void Ut_MOrientationTracker::testOrientationPolicyWithoutConstraints()
     setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
     setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
 
-    mTracker->doUpdateOrientationAngle(newAngle, newKeyboardState, false, false);
+    setTVOutIsConnected(false);
+    setKeyboardIsOpen(newKeyboardState);
+    setDeviceOrientationAngle(newAngle);
 
-    QCOMPARE(window1->orientationAngle(), newAngle);
-    QCOMPARE(window2->orientationAngle(), newAngle);
+    // Show our windows. Will make MOrientationTracker start tracking context properties
+    showWindowAndSendDisplayEvent(window1);
+    showWindowAndSendDisplayEvent(window2);
+
+    // Will cause MOrientationTrackerPrivate::updateOrientationAngle()
+    // slot to be called
+    emitDeviceOrientationAngleChanged();
+
+    QCOMPARE((int)window1->orientationAngle(), (int)newAngle);
+    QCOMPARE((int)window2->orientationAngle(), (int)newAngle);
 }
 
 void Ut_MOrientationTracker::testOrientationPolicyWithTVConnectedConstraint_data()
 {
-    QTest::addColumn<M::OrientationAngle>("newAngle");
-    QTest::addColumn<bool>("newKeyboardState");
+    QTest::addColumn<M::OrientationAngle>("deviceAngle");
+    QTest::addColumn<bool>("keyboardIsOpen");
     QTest::newRow("Angle0, keyboard open") << M::Angle0 << true;
     QTest::newRow("Angle90, keyboard open") << M::Angle90 << true;
     QTest::newRow("Angle180, keyboard open") << M::Angle180 << true;
@@ -132,22 +142,35 @@ void Ut_MOrientationTracker::testOrientationPolicyWithTVConnectedConstraint_data
 
 void Ut_MOrientationTracker::testOrientationPolicyWithTVConnectedConstraint()
 {
-    QFETCH(M::OrientationAngle, newAngle);
-    QFETCH(bool, newKeyboardState);
+    QFETCH(M::OrientationAngle, deviceAngle);
+    QFETCH(bool, keyboardIsOpen);
 
     setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
     setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
 
-    mTracker->doUpdateOrientationAngle(newAngle, newKeyboardState, false, true);
+    setTVOutIsConnected(true);
+    setKeyboardIsOpen(keyboardIsOpen);
+    setDeviceOrientationAngle(deviceAngle);
 
-    QCOMPARE(window1->orientationAngle(), M::Angle0);
-    QCOMPARE(window2->orientationAngle(), M::Angle0);
+    // Show our windows. Will make MOrientationTracker start tracking context properties
+    showWindowAndSendDisplayEvent(window1);
+    showWindowAndSendDisplayEvent(window2);
+
+    // Update internal boolean in MOrientationTracker with the value of this context property
+    emitTVOutConnectionChanged();
+
+    // Will cause MOrientationTrackerPrivate::updateOrientationAngle()
+    // slot to be called
+    emitDeviceOrientationAngleChanged();
+
+    QCOMPARE((int)window1->orientationAngle(), (int)M::Angle0);
+    QCOMPARE((int)window2->orientationAngle(), (int)M::Angle0);
 }
 
 void Ut_MOrientationTracker::testOrientationPolicyDeviceFlatAndKeyboardJustClosed_data()
 {
-    QTest::addColumn<M::OrientationAngle>("firstAngle");
-    QTest::addColumn<M::OrientationAngle>("secondAngle");
+    QTest::addColumn<M::OrientationAngle>("firstDeviceAngle");
+    QTest::addColumn<M::OrientationAngle>("secondDeviceAngle");
 
     QTest::newRow("Angle0 -> 90") << M::Angle0 << M::Angle90;
     QTest::newRow("Angle90 -> 180") << M::Angle90 << M::Angle180;
@@ -157,26 +180,42 @@ void Ut_MOrientationTracker::testOrientationPolicyDeviceFlatAndKeyboardJustClose
 
 void Ut_MOrientationTracker::testOrientationPolicyDeviceFlatAndKeyboardJustClosed()
 {
-    QFETCH(M::OrientationAngle, firstAngle);
-    QFETCH(M::OrientationAngle, secondAngle);
+    QFETCH(M::OrientationAngle, firstDeviceAngle);
+    QFETCH(M::OrientationAngle, secondDeviceAngle);
 
     setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
     setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
 
-    //set in normal way
-    mTracker->doUpdateOrientationAngle(firstAngle, true, false, false);
+    setTVOutIsConnected(false);
+    setDeviceOrientationAngle(firstDeviceAngle);
+    setDeviceIsLyingFlat(false);
+    setKeyboardIsOpen(true);
 
-    //emulate state - keyboard just closed while device flat - no rotation
-    mTracker->doUpdateOrientationAngle(secondAngle, false, true, false);
+    // Show our windows. Will make MOrientationTracker start tracking context properties
+    showWindowAndSendDisplayEvent(window1);
+    showWindowAndSendDisplayEvent(window2);
 
-    QCOMPARE(window1->orientationAngle(), firstAngle);
-    QCOMPARE(window2->orientationAngle(), firstAngle);
+    // Update internal boolean in MOrientationTracker with the
+    // value of this context property
+    emitTVOutConnectionChanged();
+
+    emitKeyboardIsOpenChanged();
+
+    setDeviceOrientationAngle(secondDeviceAngle);
+    setDeviceIsLyingFlat(true);
+
+    // keyboard has just been closed while device is flat - no rotation
+    setKeyboardIsOpen(false);
+    emitKeyboardIsOpenChanged();
+
+    QCOMPARE((int)window1->orientationAngle(), (int)firstDeviceAngle);
+    QCOMPARE((int)window2->orientationAngle(), (int)firstDeviceAngle);
 }
 
 void Ut_MOrientationTracker::testOrientationPolicyDeviceProfileConstraints_data()
 {
     QTest::addColumn<M::OrientationAngle>("allowedAngle");
-    QTest::addColumn<M::OrientationAngle>("sensorAngle");
+    QTest::addColumn<M::OrientationAngle>("deviceAngle");
 
     QTest::newRow("Angle90, allowed 0") << M::Angle0 << M::Angle90;
     QTest::newRow("Angle180, allowed 90") << M::Angle90 << M::Angle180;
@@ -187,7 +226,11 @@ void Ut_MOrientationTracker::testOrientationPolicyDeviceProfileConstraints_data(
 void Ut_MOrientationTracker::testOrientationPolicyDeviceProfileConstraints()
 {
     QFETCH(M::OrientationAngle, allowedAngle);
-    QFETCH(M::OrientationAngle, sensorAngle);
+    QFETCH(M::OrientationAngle, deviceAngle);
+
+    setTVOutIsConnected(false);
+    setDeviceIsLyingFlat(false);
+    setKeyboardIsOpen(true);
 
     supportedAnglesStubLists[KeyboardOpen].clear();
     supportedAnglesStubLists[KeyboardOpen] << allowedAngle;
@@ -195,10 +238,18 @@ void Ut_MOrientationTracker::testOrientationPolicyDeviceProfileConstraints()
     supportedAnglesStubLists[KeyboardClosed].clear();
     supportedAnglesStubLists[KeyboardClosed] << allowedAngle;
 
-    mTracker->doUpdateOrientationAngle(sensorAngle, true, false, false);
+    setDeviceOrientationAngle(deviceAngle);
 
-    QCOMPARE(window1->orientationAngle(), allowedAngle);
-    QCOMPARE(window2->orientationAngle(), allowedAngle);
+    // Show our windows. Will make MOrientationTracker start tracking context properties
+    showWindowAndSendDisplayEvent(window1);
+    showWindowAndSendDisplayEvent(window2);
+
+    // Cause MOrientationTracker to update orientation angles according to the
+    // new values of all context properties
+    emitDeviceOrientationAngleChanged();
+
+    QCOMPARE((int)window1->orientationAngle(), (int)allowedAngle);
+    QCOMPARE((int)window2->orientationAngle(), (int)allowedAngle);
 }
 
 void Ut_MOrientationTracker::testWindowOrientationAngleLock_data()
@@ -228,10 +279,21 @@ void Ut_MOrientationTracker::testWindowOrientationAngleLock()
     window2->setOrientationAngle(lockedAngle2);
     window2->lockOrientationAngle();
 
-    mTracker->doUpdateOrientationAngle(sensorAngle, true, false, false);
+    setDeviceOrientationAngle(sensorAngle);
+    setKeyboardIsOpen(true);
+    setDeviceIsLyingFlat(false);
+    setTVOutIsConnected(false);
 
-    QCOMPARE(window1->orientationAngle(), lockedAngle1);
-    QCOMPARE(window2->orientationAngle(), lockedAngle2);
+    // Show our windows. Will make MOrientationTracker start tracking context properties
+    showWindowAndSendDisplayEvent(window1);
+    showWindowAndSendDisplayEvent(window2);
+
+    // Cause MOrientationTracker to update orientation angles according to the
+    // new values of all context properties
+    emitDeviceOrientationAngleChanged();
+
+    QCOMPARE((int)window1->orientationAngle(), (int)lockedAngle1);
+    QCOMPARE((int)window2->orientationAngle(), (int)lockedAngle2);
 }
 
 void Ut_MOrientationTracker::testWindowOrientationLock_data()
@@ -265,10 +327,21 @@ void Ut_MOrientationTracker::testWindowOrientationLock()
     M::Orientation orientation2 = (lockedAngle2 == M::Angle90 || lockedAngle2 == M::Angle270)?
                                   M::Portrait : M::Landscape;
 
-    mTracker->doUpdateOrientationAngle(sensorAngle, true, false, false);
+    setDeviceOrientationAngle(sensorAngle);
+    setKeyboardIsOpen(true);
+    setDeviceIsLyingFlat(false);
+    setTVOutIsConnected(false);
 
-    QCOMPARE(window1->orientation(), orientation1);
-    QCOMPARE(window2->orientation(), orientation2);
+    // Show our windows. Will make MOrientationTracker start tracking context properties
+    showWindowAndSendDisplayEvent(window1);
+    showWindowAndSendDisplayEvent(window2);
+
+    // Cause MOrientationTracker to update orientation angles according to the
+    // new values of all context properties
+    emitDeviceOrientationAngleChanged();
+
+    QCOMPARE((int)window1->orientation(), (int)orientation1);
+    QCOMPARE((int)window2->orientation(), (int)orientation2);
 }
 
 void Ut_MOrientationTracker::testWindowRemoteOrientationLock_data()
@@ -615,5 +688,106 @@ void Ut_MOrientationTracker::setAllAngles(QList<M::OrientationAngle> *list)
     *list << M::Angle0 << M::Angle90 << M::Angle180 << M::Angle270;
 }
 
-QTEST_MAIN(Ut_MOrientationTracker);
+void Ut_MOrientationTracker::setTVOutIsConnected(bool isConnected)
+{
+    QString value;
+    if (isConnected) {
+        value = "tvout";
+    } else {
+        value = "";
+    }
 
+    gContextPropertyStubMap->findStub("com.nokia.policy.video_route")->stubReset();
+    gContextPropertyStubMap->findStub("com.nokia.policy.video_route")
+            ->stubSetReturnValue("value", QVariant(value));
+}
+
+void Ut_MOrientationTracker::emitTVOutConnectionChanged()
+{
+    QMetaObject::invokeMethod(
+        gContextPropertyStubMap->findStub("com.nokia.policy.video_route")->getProxy(),
+        "valueChanged");
+}
+
+void Ut_MOrientationTracker::setKeyboardIsOpen(bool isOpen)
+{
+    QString value;
+
+    if (isOpen) {
+        value = "true";
+    } else {
+        value = "false";
+    }
+
+    gContextPropertyStubMap->findStub("/maemo/InternalKeyboard/Open")->stubReset();
+    gContextPropertyStubMap->findStub("/maemo/InternalKeyboard/Open")
+            ->stubSetReturnValue("value", QVariant(value));
+}
+
+void Ut_MOrientationTracker::emitKeyboardIsOpenChanged()
+{
+    QMetaObject::invokeMethod(
+        gContextPropertyStubMap->findStub("/maemo/InternalKeyboard/Open")->getProxy(),
+        "valueChanged");
+}
+
+void Ut_MOrientationTracker::setDeviceOrientationAngle(M::OrientationAngle angle)
+{
+    QString topEdge;
+
+    switch(angle) {
+        case M::Angle0:
+            topEdge = "top";
+            break;
+        case M::Angle90:
+            topEdge = "right";
+            break;
+        case M::Angle180:
+            topEdge = "bottom";
+            break;
+        case M::Angle270:
+            topEdge = "left";
+            break;
+        default:
+            qFatal("invalid orientation angle");
+    };
+
+    StubMap<QString, ContextProperty>::StubType *topEdgePropStub =
+            gContextPropertyStubMap->findStub("Screen.TopEdge");
+
+    topEdgePropStub->stubReset();
+    topEdgePropStub->stubSetReturnValue("value", QVariant(topEdge));
+}
+
+void Ut_MOrientationTracker::emitDeviceOrientationAngleChanged()
+{
+    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("Screen.TopEdge")
+                              ->getProxy(), "valueChanged");
+
+}
+
+void Ut_MOrientationTracker::showWindowAndSendDisplayEvent(MWindow *window)
+{
+    window->show();
+    MOnDisplayChangeEvent displayEvent(true, QRectF(QPointF(0,0), window->visibleSceneSize()));
+    qApp->sendEvent(window, &displayEvent);
+}
+
+void Ut_MOrientationTracker::setDeviceIsLyingFlat(bool enable)
+{
+    QString value;
+
+    if (enable) {
+        value = "true";
+    } else {
+        value = "false";
+    }
+
+    StubMap<QString, ContextProperty>::StubType *deviceIsFlatPropStub =
+            gContextPropertyStubMap->findStub("Position.IsFlat");
+
+    deviceIsFlatPropStub->stubReset();
+    deviceIsFlatPropStub->stubSetReturnValue("value", QVariant(value));
+}
+
+QTEST_MAIN(Ut_MOrientationTracker);
