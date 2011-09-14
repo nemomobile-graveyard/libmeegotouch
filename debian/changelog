@@ -1,3 +1,12 @@
+libmeegotouch (0.23.18-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#279585 - MTextEdit returns mask chars instead of actual chars in some cases
+  * Fixes: NB#281734 - Messaging-ui is crashing in certain scenario
+  * Fixes: NB#280918 - Dialogs still show the button box and title bar, even if they were hidden.
+ 
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Wed, 14 Sep 2011 11:40:21 +0300
+
 libmeegotouch (0.23.17-1) unstable; urgency=low
 
   * New version
