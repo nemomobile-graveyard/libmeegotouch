@@ -718,6 +718,61 @@ void Ut_MOrientationTracker::testClosestAngleUsedWhenCurrentOneNotValid()
     QCOMPARE((int)window1->orientationAngle(), (int)M::Angle270);
 }
 
+/*
+ Regression test for the following issue:
+
+ pre-conditions:
+  - window and device is in angle 0.
+  - desktop orientation is locked in angle 270
+  - allowed orientation angles are 0 and 270
+
+ steps:
+  1 - minimize window.
+    > window will follow desktop orientation and therefore
+      will rotate to angle 270
+  2 - make device orientation be 180
+  3 - restore window to foreground
+
+ expected outcome:
+  window comes to foreground and stays in angle 270 since angle 180
+  is not allowed
+
+ actual outcome:
+  window will come to foreground in angle 270 and then rotate to
+  angle 0 since angle 0 was the last valid value of
+  MOrientationTrackerPrivate::currenAngle
+ */
+void Ut_MOrientationTracker::testWindowDoesNotRotateUnnecessarily()
+{
+    supportedAnglesStubLists[KeyboardClosed].clear();
+    supportedAnglesStubLists[KeyboardClosed] << M::Angle0;
+    supportedAnglesStubLists[KeyboardClosed] << M::Angle270;
+
+    setTVOutIsConnected(false);
+    setKeyboardIsOpen(false);
+    setDeviceIsLyingFlat(false);
+    setDesktopOrientationAngle(M::Angle270);
+    setDeviceOrientationAngle(M::Angle0);
+
+    showWindowAndSendDisplayEvent(window1);
+
+    QCOMPARE((int)window1->orientationAngle(), (int)M::Angle0);
+
+    // minimize it
+    window1->setWindowState((window1->windowState() & ~Qt::WindowActive)
+                            | Qt::WindowMinimized);
+
+    QCOMPARE((int)window1->orientationAngle(), (int)M::Angle270);
+
+    setDeviceOrientationAngle(M::Angle180);
+
+    // restore it
+    window1->setWindowState((window1->windowState() & ~Qt::WindowMinimized)
+                            | Qt::WindowActive);
+
+    QCOMPARE((int)window1->orientationAngle(), (int)M::Angle270);
+}
+
 ///////////////////////////////////////////////////////
 //////////////////HELPER FUNCTIONS/////////////////////
 ///////////////////////////////////////////////////////
@@ -834,6 +889,34 @@ void Ut_MOrientationTracker::disableRemoteScreen()
     gContextPropertyStubMap->findStub("RemoteScreen.TopEdge")->stubReset();
     gContextPropertyStubMap->findStub("RemoteScreen.TopEdge")->
             stubSetReturnValue("value", QVariant(""));
+}
+
+void Ut_MOrientationTracker::setDesktopOrientationAngle(M::OrientationAngle angle)
+{
+    QString value;
+
+    switch(angle) {
+        case M::Angle0:
+            value = "0";
+            break;
+        case M::Angle90:
+            value = "90";
+            break;
+        case M::Angle180:
+            value = "180";
+            break;
+        case M::Angle270:
+            value = "270";
+            break;
+        default:
+            qFatal("invalid orientation angle");
+    };
+
+    StubMap<QString, ContextProperty>::StubType *desktopAnglePropStub =
+            gContextPropertyStubMap->findStub("/Screen/Desktop/OrientationAngle");
+
+    desktopAnglePropStub->stubReset();
+    desktopAnglePropStub->stubSetReturnValue("value", QVariant(value));
 }
 
 QTEST_MAIN(Ut_MOrientationTracker);

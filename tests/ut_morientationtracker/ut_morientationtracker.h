@@ -74,6 +74,8 @@ private slots:
 
     void testClosestAngleUsedWhenCurrentOneNotValid();
 
+    void testWindowDoesNotRotateUnnecessarily();
+
 private:
     /*  Helper members   */
 
@@ -89,6 +91,7 @@ private:
     static void showWindowAndSendDisplayEvent(MWindow *window);
     static void setDeviceIsLyingFlat(bool enable);
     static void disableRemoteScreen();
+    static void setDesktopOrientationAngle(M::OrientationAngle angle);
 
     MOrientationTracker *mTracker;
     MComponentData* m_componentData;
