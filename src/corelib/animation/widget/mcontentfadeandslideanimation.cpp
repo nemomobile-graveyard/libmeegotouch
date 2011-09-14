@@ -173,6 +173,9 @@ void MContentFadeAndSlideAnimation::showSnapshotHideContent()
 {
     Q_D(MContentFadeAndSlideAnimation);
 
+    if (d->contentItem.isNull())
+        return;
+
     d->snapshotItem->setParentItem(d->targetWidget);
     d->snapshotItem->setOpacity((qreal)1.0);
     d->snapshotItem->setPos(d->contentItem->pos());
@@ -182,6 +185,9 @@ void MContentFadeAndSlideAnimation::showSnapshotHideContent()
 void MContentFadeAndSlideAnimation::hideSnapshotShowContent()
 {
     Q_D(MContentFadeAndSlideAnimation);
+
+    if (d->contentItem.isNull())
+        return;
 
     d->targetWidget->scene()->removeItem(d->snapshotItem);
     d->contentItem->setOpacity((qreal)1.0);
@@ -200,7 +206,7 @@ void MContentFadeAndSlideAnimation::updateState(QAbstractAnimation::State newSta
 {
     Q_D(MContentFadeAndSlideAnimation);
 
-    if (!d->contentItem)
+    if (d->contentItem.isNull())
         return;
 
     if (oldState == QAbstractAnimation::Stopped &&
