@@ -15,14 +15,16 @@ HEADERS += \
     $$MSRCDIR/views/mtexteditview_p.h \
     $$MSRCDIR/views/meditortoolbar.h \
     $$MSRCDIR/views/meditortoolbararrow.h \
-    $$MSRCDIR/views/mtopleveloverlay.h
+    $$MSRCDIR/views/mtopleveloverlay.h \
+    mtextselectionoverlay.h
 
 INCLUDEPATH += \
     $$MSRCDIR/corelib/widgets/ \
 
 # Use stubbed versions of mtextmagnifier.h
 # when compiling mtexteditview.cpp.
-QMAKE_CXXFLAGS += -include mtextmagnifier.h
+QMAKE_CXXFLAGS += -include mtextmagnifier.h \
+                  -include mtextselectionoverlay.h
 
 support_files.files += \
     ut_mtexteditview.css \

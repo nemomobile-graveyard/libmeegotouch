@@ -19,6 +19,8 @@
 #ifndef MTEXTMAGNIFIER_H
 #define MTEXTMAGNIFIER_H
 
+#include <QRectF>
+
 class MWidget;
 class QSizeF;
 class QPointF;
@@ -45,6 +47,11 @@ public:
     bool isAppeared() const
     {
         return false;
+    }
+
+    QRectF sceneBoundingRect() const
+    {
+        return QRectF();
     }
 };
 
