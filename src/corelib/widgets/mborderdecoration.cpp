@@ -27,6 +27,18 @@ MBorderDecoration::MBorderDecoration()
     : MSceneWindow(new MSceneWindowPrivate, new MSceneWindowModel,
                    MSceneWindow::BorderDecoration)
 {
+    // Presence of a MBorderDecoration should not affect interactions
+    // at all (such as grabbing mouse input, gestures, focus), unlike other scene
+    // windows. Thus the flags set by MSceneWindow base class should be reverted here.
+    setAcceptTouchEvents(false);
+    ungrabGesture(Qt::PanGesture);
+    ungrabGesture(Qt::TapGesture);
+    ungrabGesture(Qt::TapAndHoldGesture);
+    ungrabGesture(Qt::PinchGesture);
+    ungrabGesture(Qt::SwipeGesture);
+    setFlag(QGraphicsItem::ItemStopsClickFocusPropagation, false);
+    setFlag(QGraphicsItem::ItemHasNoContents, true);
+    setFocusPolicy(Qt::NoFocus);
 }
 
 MBorderDecoration::~MBorderDecoration()
