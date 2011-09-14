@@ -54,6 +54,9 @@ MContextProperty::MContextProperty(const QString &key, QObject *parent)
 
 MContextProperty::~MContextProperty()
 {
+    unsubscribe();
+    delete m_contextProperty;
+    m_contextProperty = 0;
 }
 
 void MContextProperty::subscribeAndWaitForSubscription()
