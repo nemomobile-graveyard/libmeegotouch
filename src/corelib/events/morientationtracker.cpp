@@ -472,6 +472,12 @@ M::OrientationAngle MOrientationTracker::orientationAngle() const
         priv->updateOrientationAngle();
         priv->unsubscribeFromSensorProperties();
     }
+#else
+    // If there's no context subscriber currentAngle is never initialized.
+    if (!d->currentAngle) {
+        const_cast<MOrientationTrackerPrivate*>(d)->currentAngle = new M::OrientationAngle;
+        *(const_cast<MOrientationTrackerPrivate*>(d)->currentAngle) = M::Angle0;
+    }
 #endif
     Q_ASSERT(d->currentAngle);
     return *(d->currentAngle);
