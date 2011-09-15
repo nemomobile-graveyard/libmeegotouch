@@ -108,7 +108,7 @@ void TextEntryPanningPage::retranslateUi()
 
     //% "This page contains text fields inside pannable viewport. "
     //% "You can toggle whether panning removes focus or not.\n\n"
-    //% "Text fields can also be inside nested viewports and
+    //% "Text fields can also be inside nested viewports and "
     //% "the framework should make sure focused one is always visible."
     infoLabel->setText(qtTrId("xx_textpan_page_info_label").replace('\n', "<br>"));
 
