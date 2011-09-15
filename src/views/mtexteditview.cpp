@@ -65,6 +65,10 @@ namespace
 
     // Editor toolbar action property that affects toolbar closing
     const char * const NoCloseToolbarOnTriggerProperty("noCloseToolbarOnTrigger");
+
+    inline bool isGreater(const QSizeF &s1, const QSizeF &s2) {
+        return s1.width() < s2.width() || s1.height() < s2.height();
+    }
 }
 
 
@@ -1282,7 +1286,6 @@ MTextEditView::~MTextEditView()
     delete d_ptr;
 }
 
-
 void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_D(const MTextEditView);
@@ -1299,7 +1302,6 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     }
 
     // mTimestamp("MTextEditView", QString("start text=%1").arg(d->document()->toPlainText()));
-    painter->save();
 
     // as sanity check use style clipping only if it's smaller than real padding
     int leftClipping = qMin<int>(s->textClippingLeft(), paddingLeft);
@@ -1313,16 +1315,30 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
                                             -rightClipping,
                                             -bottomClipping));
     clipping = clipping.intersected(option->exposedRect);
-    painter->setClipRect(clipping, Qt::IntersectClip);
 
     // If text does not fit inside widget, it may have to be scrolled
     const qreal dx = -d->hscroll + paddingLeft;
     const qreal dy = -d->vscroll + s->paddingTop();
-    painter->translate(dx, dy);
-    // draw actual text to the screen
 
-    if (d->isPromptVisible
-        || d->promptShowHideAnimation.state() == QAbstractAnimation::Running) {
+    bool clip = false;
+
+    bool showPrompt = d->isPromptVisible || d->promptShowHideAnimation.state() == QAbstractAnimation::Running;
+    // If the prompt is visible than clip according to it, else according to activeDocument.
+    if (showPrompt)
+        clip = isGreater(clipping.size(), d->promptDocument()->size());
+    else
+        clip = isGreater(clipping.size(), d->activeDocument()->size());
+
+
+    if (clip) {
+        painter->save();
+        painter->setClipRect(clipping, Qt::IntersectClip);
+    }
+
+    painter->translate(dx, dy);
+
+    // draw actual text to the screen
+    if (showPrompt) {
         // with no content we show the prompt text if there is prompt text
         QAbstractTextDocumentLayout::PaintContext paintContext;
         QColor promptColor = s->promptColor();
@@ -1350,10 +1366,10 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     paintContext.clip.translate(-dx, -dy);
     d->activeDocument()->documentLayout()->draw(painter, paintContext);
 
-    painter->restore();
+    if (clip)
+        painter->restore();
     // mTimestamp("MTextEditView", QString("end text=%1").arg(d->document()->toPlainText()));
 }
-
 
 void MTextEditView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
