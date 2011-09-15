@@ -48,6 +48,9 @@ private slots:
     void testThatActiveStyleIsUsedInActiveState();
     void testExposedRectTranslation();
 
+    void testDrawBackground_data();
+    void testDrawBackground();
+
 private:
     void setBottomMarginParameter(MWidgetStyleContainer &container, int param);
 

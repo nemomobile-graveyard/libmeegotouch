@@ -20,6 +20,9 @@
 #include <QObject>
 #include <QGraphicsSceneMouseEvent>
 #include <QStyleOptionGraphicsItem>
+#include <QPixmap>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 
 #include <mwidgetview.h>
 
@@ -225,6 +228,114 @@ void Ut_MWidgetView::testExposedRectTranslation()
              QRectF(-5, -5, 10, 10));
     QCOMPARE(subject->lastFgExposedRect,
              QRectF(0, 0, 10, 10));
+}
+
+void Ut_MWidgetView::testDrawBackground_data()
+{
+    QTest::addColumn<qreal>("parentOpacity");
+    QTest::addColumn<qreal>("itemOpacity");
+    QTest::addColumn<qreal>("itemBackgroundOpacity");
+    QTest::addColumn<bool>("itemIgnoresParentOpacity");
+    QTest::addColumn<QRgb>("backgroundColor");
+    QTest::addColumn<QRgb>("expectedColor");
+
+    // Composed color is 0x00 + 0xFF * 0 = 0 ~0x00
+    QTest::newRow("parent, item and background opaque")
+            << (qreal)1.0 << (qreal)1.0 << (qreal)1.0 << false << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0x00,0x00,0x00,0xFF);
+    // Composed color is 0x00 + 0xFF * 0.5 = 127.5 ~0x80
+    QTest::newRow("parent opaque, item semi-transparent, background opaque")
+            << (qreal)1.0 << (qreal)0.5 << (qreal)1.0 << false << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0x80,0x80,0x80,0xFF);
+    // Same as previous computation
+    QTest::newRow("parent semi-transparent, item opaque, background opaque")
+            << (qreal)0.5 << (qreal)1.0 << (qreal)1.0 << false << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0x80,0x80,0x80,0xFF);
+    // Same as previous computation
+    QTest::newRow("parent and item opaque, background semi-transparent")
+            << (qreal)1.0 << (qreal)1.0 << (qreal)0.5 << false << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0x80,0x80,0x80,0xFF);
+    // Composed color is 0x00 + 0xFF * 0.75 = 191.25 ~0xC0
+    QTest::newRow("parent and item semi-transparent, background opaque")
+            << (qreal)0.5 << (qreal)0.5 << (qreal)1.0 << false << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0xC0,0xC0,0xC0,0xFF);
+    // Same as previous
+    QTest::newRow("parent opaque, item and background semi-transparent")
+            << (qreal)1.0 << (qreal)0.5 << (qreal)0.5 << false << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0xC0,0xC0,0xC0,0xFF);
+    // Same as previous
+    QTest::newRow("parent semi-transparent, item opaque, background semi-transparent")
+            << (qreal)0.5 << (qreal)1.0 << (qreal)0.5 << false << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0xC0,0xC0,0xC0,0xFF);
+    // Composed color is 0x00 + 0xFF * 0.875 = 223.125 ~0xE0
+    QTest::newRow("parent, item and background semi-transparent")
+            << (qreal)0.5 << (qreal)0.5 << (qreal)0.5 << false << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0xE0,0xE0,0xE0,0xFF);
+
+
+    // Same combinations, but item ignores parent opacity
+    // Composed color is 0x00 + 0xFF * 0 = 0 ~0x00
+    QTest::newRow("parent, item and background opaque, item ignores parent opacity")
+            << (qreal)1.0 << (qreal)1.0 << (qreal)1.0 << true << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0x00,0x00,0x00,0xFF);
+    // Composed color is 0x00 + 0xFF * 0.5 = 127.5 ~0x80
+    QTest::newRow("parent opaque, item semi-transparent, background opaque, item ignores parent opacity")
+            << (qreal)1.0 << (qreal)0.5 << (qreal)1.0 << true << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0x80,0x80,0x80,0xFF);
+    // Composed color is 0x00 + 0xFF * 0 = 0 ~0x00
+    QTest::newRow("parent semi-transparent, item opaque, background opaque, item ignores parent opacity")
+            << (qreal)0.5 << (qreal)1.0 << (qreal)1.0 << true << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0x00,0x00,0x00,0xFF);
+    // Composed color is 0x00 + 0xFF * 0.5 = 127.5 ~0x80
+    QTest::newRow("parent and item opaque, background semi-transparent, item ignores parent opacity")
+            << (qreal)1.0 << (qreal)1.0 << (qreal)0.5 << true << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0x80,0x80,0x80,0xFF);
+    // Same as previous
+    QTest::newRow("parent and item semi-transparent, background opaque, item ignores parent opacity")
+            << (qreal)0.5 << (qreal)0.5 << (qreal)1.0 << true << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0x80,0x80,0x80,0xFF);
+    // Composed color is 0x00 + 0xFF * 0.75 = 191.25 ~0xC0
+    QTest::newRow("parent opaque, item and background semi-transparent, item ignores parent opacity")
+            << (qreal)1.0 << (qreal)0.5 << (qreal)0.5 << true << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0xC0,0xC0,0xC0,0xFF);
+    // Composed color is 0x00 + 0xFF * 0.5 = 127.5 ~0x80
+    QTest::newRow("parent semi-transparent, item opaque, background semi-transparent, item ignores parent opacity")
+            << (qreal)0.5 << (qreal)1.0 << (qreal)0.5 << true << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0x80,0x80,0x80,0xFF);
+    // Composed color is 0x00 + 0xFF * 0.75 = 191.25 ~0xC0
+    QTest::newRow("parent, item and background semi-transparent, item ignores parent opacity")
+            << (qreal)0.5 << (qreal)0.5 << (qreal)0.5 << true << qRgba(0x00,0x00,0x00,0xFF) << qRgba(0xC0,0xC0,0xC0,0xFF);
+}
+
+void Ut_MWidgetView::testDrawBackground()
+{
+    QFETCH(qreal, parentOpacity);
+    QFETCH(qreal, itemOpacity);
+    QFETCH(qreal, itemBackgroundOpacity);
+    QFETCH(bool, itemIgnoresParentOpacity);
+    QFETCH(QRgb, backgroundColor);
+    QFETCH(QRgb, expectedColor);
+
+    // Prepare scene
+    QGraphicsScene *scene = new QGraphicsScene;
+    QGraphicsView *window = new QGraphicsView;
+    window->setBackgroundBrush(Qt::white);
+    window->resize(100,100);
+    window->setScene(scene);
+
+    // Prepare parent widget
+    QGraphicsWidget *parent = new QGraphicsWidget;
+    m_controller->setParentItem(parent);
+    parent->setOpacity(parentOpacity);
+    scene->addItem(parent);
+
+    // Prepare test widget view
+    MWidgetView *view = new MWidgetView;
+    m_controller->setView(view);
+    m_subject = view;
+    m_controller->setGeometry(QRectF(0, 0, 100, 100));
+    m_controller->setOpacity(itemOpacity);
+    m_controller->setFlag(QGraphicsItem::ItemIgnoresParentOpacity, itemIgnoresParentOpacity);
+
+    // Get pointer to writable style.
+    MWidgetStyle *style = const_cast<MWidgetStyle *>(m_subject->style().operator ->());
+    style->setBackgroundColor(QColor::fromRgba(backgroundColor));
+    style->setBackgroundOpacity(itemBackgroundOpacity);
+
+    QImage image = QPixmap::grabWidget(window).toImage();
+    QCOMPARE(image.pixel(50, 50), expectedColor);
+
+    scene->removeItem(parent);
+    m_controller->setParentItem(NULL);
+
+    delete parent;
+    delete window;
+    delete scene;
 }
 
 QTEST_APPLESS_MAIN(Ut_MWidgetView)

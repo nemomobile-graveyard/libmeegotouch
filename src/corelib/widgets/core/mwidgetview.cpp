@@ -718,7 +718,7 @@ void MWidgetView::drawBackground(QPainter *painter, const QStyleOptionGraphicsIt
     const MWidgetStyle *s = style().operator ->();
 
     qreal oldOpacity = painter->opacity();
-    painter->setOpacity(oldOpacity * s->backgroundOpacity() * effectiveOpacity());
+    painter->setOpacity(oldOpacity * s->backgroundOpacity());
 
     if (s->backgroundTiles().isValid()) {
         s->backgroundTiles()[model()->layoutPosition()]->draw(0.0,0.0, currentSize.width(), currentSize.height(), painter);
