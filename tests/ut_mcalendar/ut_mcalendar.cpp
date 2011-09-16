@@ -5163,7 +5163,7 @@ void Ut_MCalendar::testDateWeekdayAbbreviatedAndDayOfMonth_data()
         << "cs_CZ"
         << "cs_CZ"
         << "ccc d"
-        << "pá 16";
+        << "Pá 16";
     QTest::newRow("fi_FI")
         << MLocale::GregorianCalendar
         << QDateTime(QDate(2011,12,16),QTime(18,42,5))
@@ -5305,7 +5305,7 @@ void Ut_MCalendar::testDateWeekdayWideAndDayOfMonth_data()
         << "cs_CZ"
         << "cs_CZ"
         << "cccc d"
-        << "pátek 16";
+        << "Pátek 16";
     QTest::newRow("fi_FI")
         << MLocale::GregorianCalendar
         << QDateTime(QDate(2011,12,16),QTime(18,42,5))
