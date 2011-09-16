@@ -56,9 +56,6 @@ private slots:
 
     void testDisabledSelected();
 
-    //regression test for NB#256910
-    void testLabelCreation();
-
 private:
 
     QImage captureImage(MButton *button);

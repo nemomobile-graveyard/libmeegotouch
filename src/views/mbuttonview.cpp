@@ -164,8 +164,8 @@ void MButtonViewPrivate::calcIconTextRects()
         QSizeF iconSize(iconWidth, iconHeight);
         QPointF iconPosition(0, 0);
 
-        //text visible?
-        if (q->model()->textVisible()) {
+        //text visible and valid?
+        if (q->model()->textVisible() && !q->model()->text().isEmpty()) {
             textSize.setWidth(qMin(textSize.width(), contentRect.width() - iconWidth - hTextMargin));
             switch (q->style()->iconAlign()) {
                 //icon on left and text on right
@@ -208,7 +208,7 @@ void MButtonViewPrivate::calcIconTextRects()
             //icon on top and text on bottom
             default: {
                 iconPosition = QPointF(contentRect.center().x() - (iconWidth / 2), contentRect.top());
-                qreal textY = iconPosition.y() + iconSize.height() + q->style()->textMarginTop();
+                qreal textY = iconRect.bottom() + q->style()->textMarginTop();
                 qreal textHeight = contentRect.height() - iconHeight - vTextMargin;
                 if (textHeight < textSize.height()) {
                     textY -= textSize.height() - textHeight;
@@ -336,7 +336,7 @@ void MButtonViewPrivate::setText(const QString &text)
 {
     Q_Q(MButtonView);
 
-    if (q->model()->textVisible()) {
+    if (q->model()->textVisible() && !text.isEmpty()) {
         if (!label) {
             label = new MLabel(controller);
             label->setTextElide(true);
@@ -348,10 +348,8 @@ void MButtonViewPrivate::setText(const QString &text)
             label->setVisible(true);
         label->setText(text);
     } else {
-        if (label) {
-            label->setText(text);
+        if (label)
             label->setVisible(false);
-         }
     }
 }
 
