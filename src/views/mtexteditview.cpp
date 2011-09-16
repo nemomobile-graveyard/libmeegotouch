@@ -1350,6 +1350,8 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         QTextCursor startCursor(d->document());
         startCursor.setPosition(0);
         QTextBlockFormat tbf = startCursor.blockFormat();
+        // Do not override layout direction. Prompt always has direction based on contents.
+        tbf.setLayoutDirection(Qt::LayoutDirectionAuto);
         QTextCursor promptCursor(d->promptDocument());
         promptCursor.setPosition(0);
         promptCursor.setBlockFormat(tbf);
