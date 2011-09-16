@@ -343,7 +343,13 @@ M::OrientationAngle MOrientationTrackerPrivate::updateOrientationAngle(M::Orient
 #ifdef HAVE_CONTEXTSUBSCRIBER
 void MOrientationTrackerPrivate::updateTrackerOrientationAngle()
 {
-    M::OrientationAngle targetAngle = updateOrientationAngle(currentAngle);
+    // This angle is always the closest valid one to the device orientation.
+    // Unlike the angle of regular windows, which keep their current orientation
+    // if the device in an unsupported orientation. That's why we do not
+    // pass currentAngle as a parameter here. MOrientationTracker doesn't have
+    // a current orientation to preserve, it just caches the value to be returned
+    // by MOrientationTracker::orientationAngle()
+    M::OrientationAngle targetAngle = updateOrientationAngle(0);
 
     if (!currentAngle)
         currentAngle = new M::OrientationAngle;
