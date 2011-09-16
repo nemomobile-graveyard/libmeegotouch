@@ -76,6 +76,8 @@ private slots:
 
     void testWindowDoesNotRotateUnnecessarily();
 
+    void testOrientationAngleIsClosestAllowedAngle();
+
 private:
     /*  Helper members   */
 

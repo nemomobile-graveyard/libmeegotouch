@@ -773,6 +773,37 @@ void Ut_MOrientationTracker::testWindowDoesNotRotateUnnecessarily()
     QCOMPARE((int)window1->orientationAngle(), (int)M::Angle270);
 }
 
+/*
+  Regression test for https://projects.maemo.org/bugzilla/show_bug.cgi?id=282644
+
+  The angle returned by MOrientationTracker::orientationAngle() is always the closest
+  allowed angle to device's angle
+ */
+void Ut_MOrientationTracker::testOrientationAngleIsClosestAllowedAngle()
+{
+    supportedAnglesStubLists[KeyboardClosed].clear();
+    supportedAnglesStubLists[KeyboardClosed] << M::Angle0;
+    supportedAnglesStubLists[KeyboardClosed] << M::Angle270;
+
+    setTVOutIsConnected(false);
+    setKeyboardIsOpen(false);
+    setDeviceIsLyingFlat(false);
+    setDeviceOrientationAngle(M::Angle0);
+
+    // make sure MOrientationTracker update its internal cache of
+    // the orientationAngle() computation
+    emitDeviceOrientationAngleChanged();
+
+    QCOMPARE((int)mTracker->orientationAngle(), (int)M::Angle0);
+
+    // device is now in an unsupported angle
+    setDeviceOrientationAngle(M::Angle180);
+    emitDeviceOrientationAngleChanged();
+
+    // angle 270 is the closest allowed angle
+    QCOMPARE((int)mTracker->orientationAngle(), (int)M::Angle270);
+}
+
 ///////////////////////////////////////////////////////
 //////////////////HELPER FUNCTIONS/////////////////////
 ///////////////////////////////////////////////////////
