@@ -1,3 +1,11 @@
+libmeegotouch (0.23.19-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#276436 - WidgetsGallery: rotation of Progress Bar page results in shift and improper scrolling
+  * Fixes: NB#278388 - MList loses its focus if a list item is tapped
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Fri, 16 Sep 2011 12:38:37 +0300
+
 libmeegotouch (0.23.18-1) unstable; urgency=low
 
   * New version
