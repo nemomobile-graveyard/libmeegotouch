@@ -2536,6 +2536,25 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "14:31:00"
         << "14:31:00 GMT+03:00"
         << "14:31:00 GMT+03:00";
+    QTest::newRow("21.7.2008_en_CA mixed with cs_CZ Gregorian")
+        << QString("cs_CZ")
+        << QString("cs_CZ") // lc_messages
+        << QString("en_CA@calendar=gregorian;mix-time-and-language=yes") // lc_time
+        << QString("cs_CA")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::DefaultCalendar
+        << 2008
+        << 7
+        << 21
+        << "08-07-21"
+        << "2008-07-21"
+        << "21 Červenec, 2008"
+        << "Pondělí, 21 Červenec, 2008"
+        << "2:31 PM"
+        << "2:31:00 PM"
+        << "2:31:00 PM GMT+03:00"
+        << "2:31:00 PM Východoevropský letní čas";
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
