@@ -2330,7 +2330,8 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
     if (textInteractionFlags() == Qt::NoTextInteraction)
         return;
 
-    int cursorPositionBefore = cursorPosition();
+    int cursorPositionBefore = d->cursor()->position();
+    bool updatePending = false;
 
     deselect();
 
@@ -2373,6 +2374,7 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
                     emit selectionChanged();
                     d->sendCopyAvailable(true);
                     d->doubleClickSelectionTime = QTime::currentTime();
+                    updatePending = true;
                 }
             } else if (inputMethodCorrectionEnabled()
                        && !isReadOnly()) {
@@ -2420,7 +2422,7 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
         d->notifyInputContextMouseHandler(eventCursorPosition, event);
     }
 
-    if (cursorPosition() != cursorPositionBefore) {
+    if (updatePending || d->cursor()->position() != cursorPositionBefore) {
         d->updateMicroFocus();
     }
 }
