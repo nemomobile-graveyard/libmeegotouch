@@ -1556,15 +1556,15 @@ void MGroupHeaderListViewPrivate::updateItemSize()
 
 int MGroupHeaderListViewPrivate::indexToFlatRow(const QModelIndex &index) const
 {
-    if (!index.isValid())
+    if (!index.isValid() || headersRows.isEmpty())
         return -1;
 
     if (index.parent().isValid()) {
         // always need to add 1 because of parent.
-        return headersRows[index.parent().row()] + index.row() + 1;
+        return headersRows.count() > index.parent().row() ? headersRows[index.parent().row()] + index.row() + 1 : -1;
     }
 
-    return headersRows[index.row()];
+    return headersRows.count() > index.row() ? headersRows[index.row()] : -1;
 }
 
 MWidget *MGroupHeaderListViewPrivate::createItem(int row)

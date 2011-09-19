@@ -56,6 +56,8 @@ private slots:
     void testPrivateLocateLastVisibleIndexInRowAt();
     void testPrivateUpdateItemSize();
 
+    void testIndexToFlatRowAssert();
+
 private:
     MListView *m_subject;
 

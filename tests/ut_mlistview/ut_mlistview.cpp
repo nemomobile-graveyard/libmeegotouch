@@ -242,6 +242,27 @@ void Ut_MListView::testPrivateUpdateItemSize()
 	d->MListViewPrivate::updateItemSize();
 }
 
+void Ut_MListView::testIndexToFlatRowAssert()
+{
+    QVERIFY(m_subject->model()->showGroups());
+
+    MGroupHeaderListViewPrivate *d = static_cast<MGroupHeaderListViewPrivate*>(m_subject->d_func());
+
+    QVector<int> oldHeaderRows = d->headersRows;
+    d->headersRows.clear();
+    QVERIFY(d->headersRows.isEmpty());
+
+    int result = d->indexToFlatRow(d->model->index(0, 0));
+    QCOMPARE(result, -1);
+
+    d->headersRows.append(0);
+    d->headersRows.append(15);
+
+    result = d->indexToFlatRow(d->model->index(2, 0));
+    d->headersRows = oldHeaderRows;
+    QCOMPARE(result, -1);
+}
+
 void MDummyTestWidget::emitClickItem()
 {
     emit itemClickSignal();
