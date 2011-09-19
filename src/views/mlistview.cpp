@@ -205,8 +205,9 @@ void MListView::setGeometry(const QRectF &rect)
             if (d_ptr->lockPosition) {
                 if (d_ptr->pannableViewport) {
                     qreal heightDelta = rect.size().height() - d_ptr->lastGeometrySize.height();
-                    if (heightDelta != 0)
-                        d_ptr->pannableViewport->physics()->setPosition(d_ptr->pannableViewport->position() + QPointF(0, heightDelta), false);
+                    QPointF lockedViewportPosition = d_ptr->pannableViewport->position() + QPointF(0, heightDelta);
+                    if (heightDelta != 0 && d_ptr->pannableViewport->range().contains(lockedViewportPosition))
+                        d_ptr->pannableViewport->physics()->setPosition(lockedViewportPosition, false);
                 }
                 d_ptr->lockPosition = false;
             }
