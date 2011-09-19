@@ -207,6 +207,8 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
 
         if (indicatorPositionY < 0) {
             indicatorHeight += indicatorPositionY;
+            if(minimumIndicatorSize > indicatorHeight)
+                indicatorHeight = minimumIndicatorSize;
             indicatorPositionY = 0;
         }
 
