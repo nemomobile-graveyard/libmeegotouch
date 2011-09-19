@@ -3717,7 +3717,7 @@ QString MLocale::indexBucket(const QString &str, const QStringList &buckets, con
             }
             else {
                 if(buckets.first() == QString::fromUtf8("一")) // stroke count sorting
-                    return QString::number(i)+QString::fromUtf8("筆");
+                    return QString::number(i)+QString::fromUtf8("劃");
                 else
                     return buckets[i-1];
             }
