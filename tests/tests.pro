@@ -215,6 +215,7 @@ SUBDIRS     =  \
     ut_mgraphicshighlighteffect \
     ut_mhelpbutton \
     ut_mpreloader \
+    ut_mlistindex \
 
 # enable only when we have icu available
 

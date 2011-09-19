@@ -51,7 +51,8 @@ void MListIndexPrivate::updateListConnections(MList *list)
 {
     Q_Q(MListIndex);
 
-    q->disconnect(q->model()->list());
+    if (q->model()->list())
+        q->model()->list()->disconnect(q);
 
     if (list)
         q->connect(list, SIGNAL(visibleChanged()), q, SLOT(_q_updateVisibility()));
