@@ -15,6 +15,8 @@
 #ifndef MGRAPHICSSYSTEMHELPER_H
 #define MGRAPHICSSYSTEMHELPER_H
 
+#include "mexport.h"
+
 class MWindow;
 class QGLContext;
 struct PixmapCacheEntry;
@@ -24,7 +26,7 @@ struct  MPixmapHandle;
 class QPixmap;
 class QSize;
 
-class MGraphicsSystemHelper
+class M_CORE_EXPORT MGraphicsSystemHelper
 {
 public:
     static void pixmapFromImage(PixmapCacheEntry *cacheEntry, const QImage& image, const QString &uniqueKey, const QSize &requestedSize);
@@ -37,6 +39,8 @@ public:
     static bool canSwitchBetweenSoftwareAndHardwareRendering();
 
     static void enableSwitchEvents();
+
+    static void forceSoftwareRendering();
 };
 
 

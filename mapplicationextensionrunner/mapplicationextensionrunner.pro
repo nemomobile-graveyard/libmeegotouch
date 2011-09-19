@@ -5,7 +5,8 @@ INCLUDEPATH += . \
     ../src/extensions/mashup/mashup \
     ../src/extensions/mashup/appletcommunication \
     ../src/extensions/mashup/appletinterface \
-    ../src/extensions/applicationextension
+    ../src/extensions/applicationextension \
+    ../src/corelib/core
 
 DEPENDPATH += $$INCLUDEPATH
 QMAKE_LIBDIR += ../lib

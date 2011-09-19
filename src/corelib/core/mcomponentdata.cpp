@@ -594,9 +594,10 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
     // Configure application according to switches
     for (int i = 1; i < argc; ++i) {
         QString s(argv[i]);
-        if (s == "-software")
+        if (s == "-software") {
             softwareRendering = true;
-        else if (s == "-fullscreen")
+            MGraphicsSystemHelper::forceSoftwareRendering();
+        } else if (s == "-fullscreen")
             fullScreen = true;
         else if (s == "-show-br")
             showBoundingRect = true;

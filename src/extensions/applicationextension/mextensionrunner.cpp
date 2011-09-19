@@ -408,20 +408,6 @@ void MExtensionRunner::createAppletPixmap(Qt::HANDLE handle)
     // Create a QPixmap out of the pixmap handle
     pixmap = QPixmap::fromX11Pixmap(handle, QPixmap::ExplicitlyShared);
     image = QImage(pixmap.size(), QImage::Format_ARGB32);
-
-#ifdef QT_OPENGL_LIB
-    // The QGLWidget takes the ownership of the context
-    QGLContext *context = new QGLContext(QGLFormat::defaultFormat(), &pixmap);
-    context->create();
-    if (context->isValid()) {
-        qDebug() << "Direct HW accelerated rendering to pixmap is supported.";
-        view->setViewport(new QGLWidget(context));
-    } else {
-        qDebug() << "Direct HW accelerated rendering to pixmap is NOT supported.";
-        delete context;
-        context = NULL;
-    }
-#endif
 }
 
 void MExtensionRunner::sceneChanged(const QList<QRectF> &region)

@@ -33,6 +33,7 @@
 #include <QProcess>
 #include <QFile>
 
+#include "mgraphicssystemhelper.h"
 #include "mapplicationextensionrunner.h"
 #include <MApplication>
 #include <MApplicationService>
@@ -107,6 +108,8 @@ int main(int argc, char **argv)
 
     int returnValue = 0;
     MApplication *app = new MApplication(argc, argv, metadata.resourceIdentifier(), new MyApplicationService());
+    MGraphicsSystemHelper::forceSoftwareRendering();
+
     MApplicationExtensionRunner *runner = new MApplicationExtensionRunner;
     if (!runner->init(argv[1], metadata)) {
         mWarning("MApplicationExtensionRunner") << "Application extension" << argv[2] << "initialization failed.";

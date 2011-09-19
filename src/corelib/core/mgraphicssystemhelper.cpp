@@ -236,3 +236,11 @@ void MGraphicsSystemHelper::enableSwitchEvents()
     }
 #endif
 }
+
+void MGraphicsSystemHelper::forceSoftwareRendering()
+{
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+    QMeeGoGraphicsSystemHelper::switchToRaster();
+    QMeeGoGraphicsSystemHelper::setSwitchPolicy(QMeeGoGraphicsSystemHelper::NoSwitch);
+#endif
+}
