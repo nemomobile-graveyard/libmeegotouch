@@ -20,6 +20,68 @@ vi{
                  "{0} {1}",
                  "{0} {1}",
              }
-        }
+             monthNames{
+                 format{
+                     abbreviated{
+                        "thg 1",
+                        "thg 2",
+                        "thg 3",
+                        "thg 4",
+                        "thg 5",
+                        "thg 6",
+                        "thg 7",
+                        "thg 8",
+                        "thg 9",
+                        "thg 10",
+                        "thg 11",
+                        "thg 12",
+                     }
+                     wide{
+                        "tháng 1", // "tháng một",
+                        "tháng 2", // "tháng hai",
+                        "tháng 3", // "tháng ba",
+                        "tháng 4", // "tháng tư",
+                        "tháng 5", // "tháng năm",
+                        "tháng 6", // "tháng sáu",
+                        "tháng 7", // "tháng bảy",
+                        "tháng 8", // "tháng tám",
+                        "tháng 9", // "tháng chín",
+                        "tháng 10", // "tháng mười",
+                        "tháng 11", // "tháng mười một",
+                        "tháng 12", // "tháng mười hai", <- this is too long, would be clipped
+                     }
+                 }
+                 stand-alone{
+                     abbreviated{
+                        "Thg 1",
+                        "Thg 2",
+                        "Thg 3",
+                        "Thg 4",
+                        "Thg 5",
+                        "Thg 6",
+                        "Thg 7",
+                        "Thg 8",
+                        "Thg 9",
+                        "Thg 10",
+                        "Thg 11",
+                        "Thg 12",
+                     }
+                     wide{
+                        "Tháng 1",
+                        "Tháng 2",
+                        "Tháng 3",
+                        "Tháng 4",
+                        "Tháng 5",
+                        "Tháng 6",
+                        "Tháng 7",
+                        "Tháng 8",
+                        "Tháng 9",
+                        "Tháng 10",
+                        "Tháng 11",
+                        "Tháng 12",
+                     }
+                 }
+             }
+         }
     }
 }

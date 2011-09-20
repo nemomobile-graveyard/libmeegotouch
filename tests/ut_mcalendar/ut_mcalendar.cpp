@@ -2535,7 +2535,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "21/07/2008"
         << "21-07-2008"
         << "21 tháng 7 năm 2008"
-        << "Thứ hai, ngày 21 tháng bảy năm 2008"
+        << "Thứ hai, ngày 21 tháng 7 năm 2008"
         << "14:31"
         << "14:31:00"
         << "14:31:00 GMT+03:00"
