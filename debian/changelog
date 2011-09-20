@@ -1,8 +1,29 @@
-libmeegotouch (0.24.2~1) unstable; urgency=low
+libmeegotouch (0.24.2-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#277314 - Regional format; Translation improvement for "stroke" in Hong Kong Chinese.
+  * Fixes: NB#269569 - Weather widget (mapplicationextensionrunner) always has a GL context
+  * Fixes: NB#282644 - Fenix is displayed upside down when re-launched in inverted landscape
+  * Fixes: NB#276811, m_pHost->hasSelection(valid); is returning false if though there is a selection in place
+  * Fixes: NB#274428 - search field does not lose the focus while accessing the quick search
+  * Fixes: NB#281175 - Settings; Regional format: Unexpected behavior in changing dates after selecting a different region format
+  * Fixes: NB#280792 - [TASK] Investigate allowing reregistering Gesture reccognizers
+  * Fixes: NB#279933 - Wrong alignment for prompts in Arabic UI + English input & English UI + Arabic input
+  * Fixes: NB#281964, Text entry tooltip alignment is changing after focus in.
+  * Fixes: MWidgetView::drawBackground - does not respect widget opacity.
+  * Fixes: NB#278362 - Uppercase keyboard quickly appears when tapping the first word
+  * Fixes: NB#270611 - [TASK] MList item append/remove to/from the top causes the view position to shift to wrong place on the list
+  * Fixes: unterminated string
+  * Fixes: MOrientationTracker never initializes currentAngle without context subscriber.
+  * Fixes: NB#269671 - MContainerHeader does not react to tap on the device
+  * Fixes: memory leak in MContextProperty
+  * Fixes: NB#281865 - Application appears upside down when started with device in "inverted" landcape
+  * Fixes: NB#280411 - MBorderDecoration stops focus propagation
+  * Fixes: NB#282307 - The api toDouble() does not support scientific notation in regional format Sweden.
+  * Fixes: NB#276627 - Back button flickers when swiching pages.
+  * Fixes: NB#281840 - Unable to adjust size of icon used in MMessageBox via CSS.
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 12 Sep 2011 15:55:09 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 20 Sep 2011 10:15:42 +0200
 
 libmeegotouch (0.24.1-1) unstable; urgency=low
 
