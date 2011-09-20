@@ -283,6 +283,16 @@ bool MSheet::isHeaderVisible() const
     return model()->headerVisible();
 }
 
+void MSheet::setHeaderFloating(bool floating)
+{
+    model()->setHeaderFloating(floating);
+}
+
+bool MSheet::isHeaderFloating() const
+{
+    return model()->headerFloating();
+}
+
 void MSheet::setStatusBarVisibleInSystemwide(bool visible)
 {
     Q_D(MSheet);

@@ -48,6 +48,12 @@ class M_CORE_EXPORT MSheetModel : public MSceneWindowModel
       \sa MSheet::centralWidgetSizePolicyRespected
      */
     M_MODEL_PROPERTY(bool, centralWidgetSizePolicyRespected, CentralWidgetSizePolicyRespected, true, false)
+
+    /*!
+        \property MSheetModel::headerFloating
+        \brief Flag to show if the header should overlap the central widget or should adjust central widget size.
+    */
+    M_MODEL_PROPERTY(bool, headerFloating, HeaderFloating, true, false)
 };
 
 #endif // MSHEETMODEL_H

@@ -97,6 +97,13 @@ class M_CORE_EXPORT MSheet : public MSceneWindow
     Q_PROPERTY(bool headerVisible READ isHeaderVisible WRITE setHeaderVisible)
 
     /*!
+       \property MSheet::headerFloating
+       \brief Defines whether the header should be overlapping the central widget or adjusting its size
+       By default this property is false (header is not overlapping the central widget).
+     */
+    Q_PROPERTY(bool headerFloating READ isHeaderFloating WRITE setHeaderFloating)
+
+    /*!
        \property MSheet::statusBarVisibleInSystemwide
        \brief Defines whether the status bar should be visible when sheet appears systemwide
 
@@ -249,6 +256,17 @@ public:
       \brief Returns whether the header is visible.
      */
     bool isHeaderVisible() const;
+
+    /*!
+      \brief Sets whether the header should overlap the central widget.
+      \param floating true if it should overlap the central widget content, false to take required size.
+     */
+    void setHeaderFloating(bool floating);
+
+    /*!
+      \brief Returns whether the header is overlapping the central widget.
+     */
+    bool isHeaderFloating() const;
 
     /*!
       \brief Sets whether the status bar will be visible for systemwide appearances.

@@ -25,6 +25,8 @@
 #include "mslotlayout.h"
 #include <mpannableviewport.h>
 #include <mpositionindicator.h>
+#include <mlayout.h>
+#include <mlinearlayoutpolicy.h>
 
 #include <QGraphicsAnchorLayout>
 #include <QGraphicsLinearLayout>
@@ -210,6 +212,8 @@ void MSheetCentralSlot::createPannableViewportAndPannedSlot()
 MSheetViewPrivate::MSheetViewPrivate()
     : q_ptr(0),
       rootLayout(0),
+      rootLayoutPolicy(0),
+      rootLayoutFloatingPolicy(0),
       headerSlot(0),
       headerHidingAnimation(0),
       centralSlot(0)
@@ -240,18 +244,29 @@ MSheetViewPrivate::~MSheetViewPrivate()
 void MSheetViewPrivate::init()
 {
     headerSlot = new MSheetSlot(controller);
+    headerSlot->setZValue(100);
 
-    rootLayout = new QGraphicsLinearLayout(Qt::Vertical, controller);
+    rootLayout = new MLayout(controller);
     rootLayout->setContentsMargins(0, 0, 0, 0);
-    rootLayout->setSpacing(0);
+    rootLayoutPolicy = new MLinearLayoutPolicy(rootLayout, Qt::Vertical);
+    rootLayoutPolicy->setContentsMargins(0, 0, 0, 0);
+    rootLayoutPolicy->setSpacing(0);
+    rootLayoutFloatingPolicy = new MLinearLayoutPolicy(rootLayout, Qt::Vertical);
+    rootLayoutFloatingPolicy->setContentsMargins(0, 0, 0, 0);
+    rootLayoutFloatingPolicy->setSpacing(0);
     rootLayoutHeaderSpacer = new MSheetSpacer;
     rootLayoutHeaderSpacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     centralSlot = new MSheetCentralSlot(controller);
     centralSlot->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    centralSlot->setZValue(0);
 
-    rootLayout->addItem(rootLayoutHeaderSpacer);
-    rootLayout->addItem(centralSlot);
+    // normal layout
+    rootLayoutPolicy->addItem(rootLayoutHeaderSpacer);
+    rootLayoutPolicy->addItem(centralSlot);
+
+    // floating header layout
+    rootLayoutFloatingPolicy->addItem(centralSlot);
 }
 
 void MSheetViewPrivate::updateStyle()
@@ -303,7 +318,7 @@ void MSheetViewPrivate::setupHeaderHidingAnimation()
     headerAnimation->setTargetObject(headerSlot);
     headerAnimation->setPropertyName("y");
     headerAnimation->setStartValue(0);
-    headerAnimation->setEndValue(-headerSlot->geometry().height());
+    headerAnimation->setEndValue(-headerSlot->preferredHeight());
     headerAnimation->setEasingCurve(QEasingCurve::Linear);
     headerAnimation->setDuration(300);
 
@@ -317,6 +332,16 @@ void MSheetViewPrivate::setupHeaderHidingAnimation()
 
     headerHidingAnimation->addAnimation(centralAnimation);
     headerHidingAnimation->addAnimation(headerAnimation);
+}
+
+void MSheetViewPrivate::updateRootLayoutActivePolicy()
+{
+    Q_Q(MSheetView);
+
+    if (q->model()->headerFloating())
+        rootLayoutFloatingPolicy->activate();
+    else
+        rootLayoutPolicy->activate();
 }
 
 //////////////
@@ -343,6 +368,7 @@ void MSheetView::setupModel()
     modifications << MSheetModel::CentralWidget;
     modifications << MSheetModel::HeaderVisible;
     modifications << MSheetModel::CentralWidgetSizePolicyRespected;
+    modifications << MSheetModel::HeaderFloating;
 
     updateData(modifications);
 }
@@ -364,6 +390,8 @@ void MSheetView::updateData(const QList<const char *> &modifications)
         else if (member == MSheetModel::CentralWidgetSizePolicyRespected) {
             d->centralSlot->setWidgetSizePolicyRespected(
                 model()->centralWidgetSizePolicyRespected());
+        } else if (member == MSheetModel::HeaderFloating) {
+            d->updateRootLayoutActivePolicy();
         }
     }
 }

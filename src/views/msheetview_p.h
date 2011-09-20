@@ -33,6 +33,8 @@ class MSheetSlot;
 class MSheetSpacer;
 class MPannableViewport;
 class MSlotLayout;
+class MLayout;
+class MLinearLayoutPolicy;
 
 class MSheetViewPrivate : public MSceneWindowViewPrivate
 {
@@ -47,11 +49,15 @@ public:
 
     void setupHeaderHidingAnimation();
 
+    void updateRootLayoutActivePolicy();
+
 private:
     Q_DECLARE_PUBLIC(MSheetView)
     MSheetView *q_ptr;
 
-    QGraphicsLinearLayout* rootLayout;
+    MLayout* rootLayout;
+    MLinearLayoutPolicy *rootLayoutPolicy;
+    MLinearLayoutPolicy *rootLayoutFloatingPolicy;
     MSheetSpacer* rootLayoutHeaderSpacer;
 
     MSheetSlot *headerSlot;
