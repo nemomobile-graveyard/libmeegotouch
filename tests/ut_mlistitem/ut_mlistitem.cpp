@@ -18,8 +18,15 @@
 ****************************************************************************/
 
 #include <MApplication>
+#include <QGraphicsSceneMouseEvent>
+#include <QStateMachine>
+#include <QState>
 #include "ut_mlistitem.h"
 #include "mlistitem.h"
+#include "mlistitemview.h"
+#include "mlistitemview_p.h"
+#include "mtapstatemachine.h"
+#include "mtapstatemachine_p.h"
 
 void Ut_MListItem::initTestCase()
 {
@@ -63,6 +70,52 @@ void Ut_MListItem::testLongTapped()
 {
     QPointF point (0, 0);
     listItem->longTapped(point);
+}
+
+void Ut_MListItem::testReleasedOnHide()
+{
+    MListItemView *view = new MListItemView(listItem);
+    listItem->setView(view);
+
+    QGraphicsScene *scene = new QGraphicsScene;
+    scene->addItem(listItem);
+
+    // needed for MTapStateMachine to start working
+    QCoreApplication::processEvents();
+
+    QStateMachine *machine = view->d_func()->tapStateMachine->d_func()->highlightMachine;;
+    QState *unhighlighted = view->d_func()->tapStateMachine->d_func()->unhighlightedState;
+    QState *highlighted = view->d_func()->tapStateMachine->d_func()->pressHighlightedState;
+
+    // initial state:
+    // view must not be down
+    QCOMPARE(view->d_func()->down, false);
+    // state machine must be in unhighlighted state
+    QVERIFY(machine->configuration().contains(unhighlighted));
+
+    // send press event and wait the for the initial press time
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setButton(Qt::LeftButton);
+    scene->sendEvent(listItem, &pressEvent);
+    QTest::qWait(1000);
+
+    // pressed state
+    // view must be down
+    QCOMPARE(view->d_func()->down, true);
+    // state machine must be in highlighted state
+    QVERIFY(machine->configuration().contains(highlighted));
+
+    // now hide the item
+    listItem->hide();
+
+    // hidden item state
+    // view must not be down
+    QCOMPARE(view->d_func()->down, false);
+    // state machine must be in unhighlighted state
+    QVERIFY(machine->configuration().contains(unhighlighted));
+
+    scene->removeItem(listItem);
+    delete scene;
 }
 
 QTEST_APPLESS_MAIN(Ut_MListItem)

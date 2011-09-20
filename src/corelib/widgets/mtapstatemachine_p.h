@@ -63,11 +63,13 @@ protected:
 
     QEventTransition *initialMousePressTransition;
     MCancelEventTransition *initCancelEventTransition;
+    QSignalTransition *initVisibleChangedTransition;
     QSignalTransition *timerHighlightTransition;
     QEventTransition *releaseUnhighlightTransition;
     QEventTransition *releaseTimedHighlightTransition;
     QSignalTransition *timerUnhighlightTransition;
     MCancelEventTransition *pressedCancelEventTransition;
+    QSignalTransition *pressedVisibleChangedTransition;
 
     QTimer *initialWaitTimer;
     QTimer *minimumHighlightTimer;
@@ -78,6 +80,7 @@ protected:
 #ifdef UNIT_TEST
     // Test unit is defined as a friend of production code to access private members
     friend class Ut_MTapStateMachine;
+    friend class Ut_MListItem;
 #endif
 
 private:

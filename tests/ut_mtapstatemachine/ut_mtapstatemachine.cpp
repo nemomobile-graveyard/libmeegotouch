@@ -64,7 +64,7 @@ void Ut_MTapStateMachine::initTestCase()
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_mtapstatemachine" };
     app = new MApplication(argc, app_name);
-    fakeObject = new QObject();
+    fakeObject = new QGraphicsWidget();
 }
 
 void Ut_MTapStateMachine::cleanupTestCase()
@@ -76,6 +76,7 @@ void Ut_MTapStateMachine::init()
 {
 
     machine = new MTapStateMachine(fakeObject);
+    fakeObject->show();
 }
 
 void Ut_MTapStateMachine::cleanup()
@@ -120,6 +121,23 @@ void Ut_MTapStateMachine::testShortTapAndRelease()
     QCOMPARE(spyRelease->count(),1);
 }
 
+void Ut_MTapStateMachine::testLongPressAndHide()
+{
+    QSignalSpy *spyDelayedPress = new QSignalSpy(machine, SIGNAL(delayedPress()));
+    QSignalSpy *spyRelease = new QSignalSpy(machine, SIGNAL(release()));
+
+    QCoreApplication::processEvents();
+
+    QCoreApplication::sendEvent(fakeObject, new QGraphicsSceneMouseEvent(QEvent::GraphicsSceneMousePress));
+    QCoreApplication::processEvents();
+    sleep(1);
+    QCoreApplication::processEvents();
+    fakeObject->hide();
+    QCoreApplication::processEvents();
+
+    QCOMPARE(spyDelayedPress->count(),1);
+    QCOMPARE(spyRelease->count(),1);
+}
 
 QTEST_APPLESS_MAIN(Ut_MTapStateMachine)
 

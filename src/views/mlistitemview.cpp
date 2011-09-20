@@ -51,6 +51,7 @@ void MListItemViewPrivate::init()
     tapStateMachine = new MTapStateMachine(controller);
     q->connect(tapStateMachine, SIGNAL(delayedPress()), q, SLOT(_q_applyPressedStyle()));
     q->connect(tapStateMachine, SIGNAL(release()), q, SLOT(_q_applyReleasedStyle()));
+    q->connect(controller, SIGNAL(visibleChanged()), q, SLOT(_q_releaseOnHide()));
 
 }
 
@@ -78,6 +79,20 @@ void MListItemViewPrivate::_q_applyReleasedStyle()
 
     q->applyStyle();
     q->update();
+}
+
+void MListItemViewPrivate::_q_releaseOnHide()
+{
+    Q_Q(MListItemView);
+
+    // Cancel pressed state when the item is hidden.
+    // This cancel event does only part of the job, as it  won't cause a transition
+    // in the MTapStateMachine. That transition will happen when the
+    // machine detects the visibleChanged() signal from the widget.
+    if (!controller->isVisible() && down) {
+        MCancelEvent e;
+        q->cancelEvent(&e);
+    }
 }
 
 void MListItemViewPrivate::click()

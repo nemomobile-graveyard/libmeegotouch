@@ -20,7 +20,7 @@
 #ifndef UT_MTAPSTATEMACHINE_H
 #define UT_MTAPSTATEMACHINE_H
 
-#include <QObject>
+#include <QGraphicsWidget>
 
 class MTapStateMachine;
 
@@ -30,7 +30,7 @@ class Ut_MTapStateMachine : public QObject
 
 private:
     MTapStateMachine*  machine;
-    QObject* fakeObject;
+    QGraphicsWidget* fakeObject;
 private slots:
     void initTestCase();
     void cleanupTestCase();
@@ -39,6 +39,7 @@ private slots:
 
     void testLongPressAndRelease();
     void testShortTapAndRelease();
+    void testLongPressAndHide();
 
 };
 

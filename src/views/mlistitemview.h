@@ -51,7 +51,11 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void _q_applyPressedStyle())
     Q_PRIVATE_SLOT(d_func(), void _q_applyReleasedStyle())
+    Q_PRIVATE_SLOT(d_func(), void _q_releaseOnHide())
 
+#ifdef UNIT_TEST
+    friend class Ut_MListItem;
+#endif
 };
 
 #endif // MLISTITEMVIEW_H

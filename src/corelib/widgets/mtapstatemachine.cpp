@@ -58,11 +58,13 @@ MTapStateMachinePrivate::MTapStateMachinePrivate() :
 
         initialMousePressTransition(0),
         initCancelEventTransition(0),
+        initVisibleChangedTransition(0),
         timerHighlightTransition(0),
         releaseUnhighlightTransition(0),
         releaseTimedHighlightTransition(0),
         timerUnhighlightTransition(0),
         pressedCancelEventTransition(0),
+        pressedVisibleChangedTransition(0),
 
         initialWaitTimer(0),
         minimumHighlightTimer(0),
@@ -111,6 +113,11 @@ MTapStateMachine::MTapStateMachine(QObject *parent)
     d->initCancelEventTransition->setTargetState(d->unhighlightedState);
     d->initialWaitState->addTransition(d->initCancelEventTransition);
 
+    //InitialWaitState -> unhighlightedState (on visible changed)
+    d->initVisibleChangedTransition = new QSignalTransition(parent, SIGNAL(visibleChanged()));
+    d->initVisibleChangedTransition->setTargetState(d->unhighlightedState);
+    d->initialWaitState->addTransition(d->initVisibleChangedTransition);
+
     //InitialWaitState -> timedHighlight (on mouse release)
     d->releaseTimedHighlightTransition = new QEventTransition(parent, QEvent::GraphicsSceneMouseRelease);
     d->releaseTimedHighlightTransition->setTargetState(d->timedHighlightedState);
@@ -131,6 +138,11 @@ MTapStateMachine::MTapStateMachine(QObject *parent)
     d->pressedCancelEventTransition->setTargetState(d->unhighlightedState);
     d->pressHighlightedState->addTransition(d->pressedCancelEventTransition);
 
+    //pressHighlightedState -> unhighlightedState (on visible changed)
+    d->pressedVisibleChangedTransition = new QSignalTransition(parent, SIGNAL(visibleChanged()));
+    d->pressedVisibleChangedTransition->setTargetState(d->unhighlightedState);
+    d->pressHighlightedState->addTransition(d->pressedVisibleChangedTransition);
+
     //TimedHighlightState -> UnhighlightedState (on timer)
     d->timerUnhighlightTransition = new QSignalTransition(d->minimumHighlightTimer, SIGNAL(timeout()));
     d->timerUnhighlightTransition->setTargetState(d->unhighlightedState);
@@ -144,8 +156,10 @@ MTapStateMachine::MTapStateMachine(QObject *parent)
     connect(d->timedHighlightedState, SIGNAL(exited()), d->minimumHighlightTimer, SLOT(stop()));
 
     connect(d->initCancelEventTransition, SIGNAL(triggered()), this, SIGNAL(release()));
+    connect(d->initVisibleChangedTransition, SIGNAL(triggered()), this, SIGNAL(release()));
     connect(d->releaseUnhighlightTransition, SIGNAL(triggered()), this, SIGNAL(release()));
     connect(d->pressedCancelEventTransition, SIGNAL(triggered()), this, SIGNAL(release()));
+    connect(d->pressedVisibleChangedTransition, SIGNAL(triggered()), this, SIGNAL(release()));
     connect(d->timerUnhighlightTransition, SIGNAL(triggered()), this, SIGNAL(release()));
 
     connect(d->pressHighlightedState, SIGNAL(entered()), this, SIGNAL(delayedPress()));

@@ -43,6 +43,8 @@ private slots:
     void testClicked();
     void testLongTapped();
 
+    void testReleasedOnHide();
+
  private:
     MApplication *app;
     MListItem *listItem;

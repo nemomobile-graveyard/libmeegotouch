@@ -37,6 +37,7 @@ public:
 
     void _q_applyPressedStyle();
     void _q_applyReleasedStyle();
+    void _q_releaseOnHide();
 
 private:
     bool down;
@@ -52,6 +53,10 @@ private:
     QPointF pressScenePos;
 private:
     Q_DECLARE_PUBLIC(MListItemView)
+
+#ifdef UNIT_TEST
+    friend class Ut_MListItem;
+#endif
 };
 
 #endif // MLISTITEMVIEW_P_H
