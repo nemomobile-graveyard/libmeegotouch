@@ -47,11 +47,6 @@ contains(DEFINES, HAVE_ICU) {
         $$I18N_SRC_DIR/mcharsetdetector.h \
         $$I18N_SRC_DIR/mcharsetmatch.h \
 
-    PRIVATE_HEADERS += \
-        $$I18N_SRC_DIR/micubreakiterator.h \
-        $$I18N_SRC_DIR/micuconversions.h \
-        $$I18N_SRC_DIR/mcalendar_p.h \
-
     contains(DEFINES, HAVE_LIBMLOCALE) {
         SOURCES += \
             $$I18N_SRC_DIR/mcalendar_proxy.cpp \
@@ -60,6 +55,11 @@ contains(DEFINES, HAVE_ICU) {
             $$I18N_SRC_DIR/mcharsetmatch_proxy.cpp \
 
     } else {
+        PRIVATE_HEADERS += \
+            $$I18N_SRC_DIR/micubreakiterator.h \
+            $$I18N_SRC_DIR/micuconversions.h \
+            $$I18N_SRC_DIR/mcalendar_p.h \
+
         SOURCES += \
             $$I18N_SRC_DIR/mcalendar.cpp \
             $$I18N_SRC_DIR/mcollator.cpp \
@@ -76,7 +76,6 @@ contains(DEFINES, HAVE_ICU) {
     !contains(DEFINES, HAVE_LIBMLOCALE) {
         SOURCES += \
             $$I18N_SRC_DIR/mnullbreakiterator.cpp
-
     }
 }
 
