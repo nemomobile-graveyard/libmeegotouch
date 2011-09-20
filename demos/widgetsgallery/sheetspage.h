@@ -79,6 +79,7 @@ private Q_SLOTS:
     void openLongSheet();
     void openListSheet();
     void openPhotoSheet();
+    void openTransparentHeaderSheet();
 
 private:
     void populatePhotoSheetCentralWidget(QGraphicsWidget *centralWidget);
@@ -98,6 +99,7 @@ private:
     MBasicListItem *sheetFromPhotoItem;
     MBasicListItem *longSheetItem;
     MBasicListItem *listSheetItem;
+    MBasicListItem *transparentHeaderSheetItem;
 
     MSheet *photoSheet;
     MSheet *fullScreenPhotoSheet;

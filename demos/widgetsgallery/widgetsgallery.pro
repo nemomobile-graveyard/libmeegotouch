@@ -102,6 +102,7 @@ SOURCES += main.cpp \
     headeredtextedit.cpp \
     labeledcheckbox.cpp \
     systemwidesheetpage.cpp \
+    transparentheadersheet.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -165,6 +166,7 @@ HEADERS += templatepage.h \
     headeredtextedit.h \
     labeledcheckbox.h \
     systemwidesheetpage.h \
+    transparentheadersheet.h \
 
 contains(DEFINES, HAVE_DBUS) {
     HEADERS += accessmanager.h \

@@ -51,6 +51,7 @@
 #include "listsheet.h"
 #include "systemwidesheetpage.h"
 #include "drilldownlistitem.h"
+#include "transparentheadersheet.h"
 
 ClickableImageWidget::ClickableImageWidget(QGraphicsItem *parent)
     : MImageWidget(parent),
@@ -152,6 +153,10 @@ void SheetsPage::populateLayout()
     listSheetItem = createListItemAndAddToLayout();
     ok = connect(listSheetItem, SIGNAL(clicked()), SLOT(openListSheet()));
     if (!ok) qFatal("signal connection failed");
+
+    transparentHeaderSheetItem = createListItemAndAddToLayout();
+    ok = connect(transparentHeaderSheetItem, SIGNAL(clicked()), SLOT(openTransparentHeaderSheet()));
+    if (!ok) qFatal("signal connection failed");
 }
 
 void SheetsPage::retranslateUi()
@@ -171,6 +176,8 @@ void SheetsPage::retranslateUi()
     longSheetItem->setTitle(qtTrId("xx_wg_sheets_long_sheet"));
     //% "List sheet"
     listSheetItem->setTitle(qtTrId("xx_wg_sheets_list_sheet"));
+    //% "Sheet with transparent header"
+    transparentHeaderSheetItem->setTitle(qtTrId("xx_wg_sheets_sheet_with_transparent_header"));
 }
 
 void SheetsPage::openLoginSheet()
@@ -214,6 +221,14 @@ void SheetsPage::openPhotoSheet()
     populatePhotoSheetHeader(photoSheet);
 
     photoSheet->appear(scene(), MSceneWindow::DestroyWhenDone);
+}
+
+void SheetsPage::openTransparentHeaderSheet()
+{
+    MSheet *transparentHeaderSheet = new TransparentHeaderSheet;
+    transparentHeaderSheet->setObjectName("transparentHeaderSheet");
+    transparentHeaderSheet->setStyleName("PhotoViewer");
+    transparentHeaderSheet->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void SheetsPage::populatePhotoSheetCentralWidget(QGraphicsWidget *centralWidget)
