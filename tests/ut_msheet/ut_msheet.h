@@ -54,6 +54,8 @@ private slots:
     void testChangingSystemwideModeOrientationAfterAppearance_data();
     void testChangingSystemwideModeOrientationAfterAppearance();
 
+    void testHeaderFloating();
+
 private:
     MWindow *fetchStandAloneWindowOfSubject();
 

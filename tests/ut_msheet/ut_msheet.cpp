@@ -346,6 +346,27 @@ void Ut_MSheet::testChangingSystemwideModeOrientationAfterAppearance()
              followsCurrentApplicationWindowOrientation);
 }
 
+void Ut_MSheet::testHeaderFloating()
+{
+    subject->appearSystemwide(MSceneWindow::KeepWhenDone);
+    STATE_COMPARE(subject->sceneWindowState(), MSceneWindow::Appeared);
+    QVERIFY(!subject->isHeaderFloating());
+
+    QSizeF sheetSize = subject->size();
+    QSizeF centralWidgetSize = subject->centralWidget()->size();
+    subject->setHeaderFloating(true);
+    qApp->processEvents();
+
+    QVERIFY(subject->isHeaderFloating());
+    QSizeF sheetSizeWithFloatingHeader = subject->size();
+    QSizeF centralWidgetSizeWithFloatingHeader = subject->centralWidget()->size();
+
+    QCOMPARE(sheetSize, sheetSizeWithFloatingHeader);
+    QCOMPARE(sheetSize, centralWidgetSizeWithFloatingHeader);
+    QVERIFY(centralWidgetSize != centralWidgetSizeWithFloatingHeader);
+    subject->dismiss();
+}
+
 MWindow *Ut_MSheet::fetchStandAloneWindowOfSubject()
 {
     if (subject->scene()
