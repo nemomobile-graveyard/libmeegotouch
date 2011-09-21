@@ -49,10 +49,17 @@ void Ut_MPannableViewportScroller::initTestCase()
 
     app->processEvents();
     scroller = new MPannableViewportScroller();
+
+    while (qApp->hasPendingEvents()) {
+        qApp->processEvents();
+    }
 }
 
 void Ut_MPannableViewportScroller::cleanupTestCase()
 {
+    while (qApp->hasPendingEvents()) {
+        qApp->processEvents();
+    }
     delete scroller;
     delete appWindow;
     delete app;
