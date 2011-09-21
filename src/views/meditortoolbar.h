@@ -31,6 +31,7 @@ class MTopLevelOverlay;
 class MButton;
 class MLinearLayoutPolicy;
 class MWidget;
+class EatMButtonGestureFilter;
 
 //! \internal
 
@@ -153,7 +154,19 @@ private:
     QTimer autohideTimer;
     QPropertyAnimation hideAnimation;
 
+    EatMButtonGestureFilter *eatMButtonGestureFilter;
+
     M_STYLABLE_WIDGET(MEditorToolbarStyle)
+};
+
+class EatMButtonGestureFilter : public QObject
+{
+    Q_OBJECT
+
+public:
+    EatMButtonGestureFilter(QObject *parent = 0);
+protected:
+    bool eventFilter(QObject *watched, QEvent *event);
 };
 
 //! \internal_end

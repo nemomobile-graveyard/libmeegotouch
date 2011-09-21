@@ -68,6 +68,8 @@ MEditorToolbar::MEditorToolbar(const MWidget &followWidget)
     hideAnimation.setStartValue(1.0);
     hideAnimation.setEndValue(0.0);
     QObject::connect(&hideAnimation, SIGNAL(finished()), this, SLOT(disappear()));
+
+    eatMButtonGestureFilter = new EatMButtonGestureFilter(this);
 }
 
 MEditorToolbar::~MEditorToolbar()
@@ -263,9 +265,15 @@ bool MEditorToolbar::event(QEvent *event)
         QAction *action(qobject_cast<QAction *>(actionEvent->action()));
         Q_ASSERT(action);
 
-        buttons << new MButton(action->text());
-        QObject::connect(buttons.back(), SIGNAL(clicked(bool)), action, SLOT(trigger()));
-        buttons.back()->setStyleName(action->objectName());
+        MButton *newButton = new MButton(action->text());
+        newButton->grabGesture(Qt::TapGesture);
+        newButton->grabGesture(Qt::TapAndHoldGesture);
+        newButton->installEventFilter(eatMButtonGestureFilter);
+        newButton->setStyleName(action->objectName());
+        QObject::connect(newButton, SIGNAL(clicked(bool)), action, SLOT(trigger()));
+
+        buttons << newButton;
+
         if (action->isVisible()) {
             visibilityUpdated();
         }
@@ -434,4 +442,19 @@ void MEditorToolbar::hideEditorItem()
     setFocusProxy(0);
     setFocusPolicy(Qt::NoFocus);
     hide();
+}
+
+EatMButtonGestureFilter::EatMButtonGestureFilter(QObject *parent)
+    :QObject(parent)
+{
+}
+
+bool EatMButtonGestureFilter::eventFilter(QObject *watched, QEvent *event)
+{
+    if (event->type() == QEvent::Gesture || event->type() == QEvent::GestureOverride) {
+        event->accept();
+        return true;
+    } else {
+        return QObject::eventFilter(watched, event);
+    }
 }
