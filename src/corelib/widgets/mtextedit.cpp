@@ -2060,10 +2060,6 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
     // Text direction depends on text contents on the row cursor is currently in,
     // and input language; connect appropriate signals.
 
-    // Workaround for NB#279585 - MTextEdit returns mask chars instead of actual chars in some cases
-    // disabled to avoid interference with handmade masking
-    // it tracks the document tightly, and does not feel like receiving unexpected update signals
-    #if 0
     d->_q_updateTextDirection();
     bool ok = true;
     ok &= connect(this, SIGNAL(cursorPositionChanged()),
@@ -2071,7 +2067,6 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
     ok &= connect(MInputMethodState::instance(), SIGNAL(languageChanged(QString)),
                   this, SLOT(_q_updateTextDirection()));
     Q_ASSERT(ok);
-    #endif
 
     if (sceneManager()) {
         d->requestAutoSip();
@@ -2106,16 +2101,12 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
     Q_UNUSED(event);
     Q_D(MTextEdit);
 
-    // Workaround for NB#279585 - MTextEdit returns mask chars instead of actual chars in some cases
-    // see comments in focusInEvent
-    #if 0
     bool ok = true;
     ok &= disconnect(this, SIGNAL(cursorPositionChanged()),
                      this, SLOT(_q_updateTextDirection()));
     ok &= disconnect(MInputMethodState::instance(), SIGNAL(languageChanged(QString)),
                      this, SLOT(_q_updateTextDirection()));
     Q_ASSERT(ok);
-    #endif
 
     disconnect(&d->signalEmitter, SIGNAL(scenePositionChanged()), this, SLOT(_q_handlePositionChanged()));
 

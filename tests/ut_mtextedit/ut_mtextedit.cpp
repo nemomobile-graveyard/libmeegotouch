@@ -3299,9 +3299,6 @@ void Ut_MTextEdit::testTextDirection_data()
 
 void Ut_MTextEdit::testTextDirection()
 {
-    // text direction logic is completely disabled by workaround
-    QSKIP("Disaled: Workaround for NB#279585 - MTextEdit returns mask chars instead of actual chars in some cases", SkipAll);
-
     QFETCH(QString, language);
     QFETCH(QString, text);
     QFETCH(IntegerList, cursorPositions);
