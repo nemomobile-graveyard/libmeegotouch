@@ -1289,7 +1289,7 @@ void parseAndGenerateStyleData(QString styleHeader, QString outdir)
     QList<QString> modes;
     StyleClass *c = parseStyleClassHeader(styleHeader, modes);
     if (!c) {
-        qWarning() << "Could not parse" << styleHeader;
+        qCritical() << "Could not parse" << styleHeader;
         return;
     }
 
@@ -1300,7 +1300,7 @@ void parseAndGenerateStyleData(QString styleHeader, QString outdir)
         styleDataHeader = "gen_" + c->name().toLower() + "data.h";
         styleDataCpp = "gen_" + c->name().toLower() + "data.cpp";
     } else {
-        if (outdir[outdir.count()-1] != QDir::separator())
+        if (!outdir.endsWith(QDir::separator()))
             outdir += QDir::separator();
         styleDataHeader = outdir + "gen_" + c->name().toLower() + "data.h";
         styleDataCpp = outdir + "gen_" + c->name().toLower() + "data.cpp";
@@ -1315,7 +1315,7 @@ void parseAndGenerateModelData(QString modelHeader, QString outdir)
 {
     ModelClass *c = parseModelClassHeader(modelHeader);
     if (!c) {
-        qWarning() << "Could not parse" << modelHeader;
+        qCritical() << "Could not parse" << modelHeader;
         return;
     }
 
@@ -1326,7 +1326,7 @@ void parseAndGenerateModelData(QString modelHeader, QString outdir)
         modelDataHeader = "gen_" + c->name().toLower() + "data.h";
         modelDataCpp = "gen_" + c->name().toLower() + "data.cpp";
     } else {
-        if (outdir[outdir.count()-1] != QDir::separator())
+        if (!outdir.endsWith(QDir::separator()))
             outdir += QDir::separator();
         modelDataHeader = outdir + "gen_" + c->name().toLower() + "data.h";
         modelDataCpp = outdir + "gen_" + c->name().toLower() + "data.cpp";

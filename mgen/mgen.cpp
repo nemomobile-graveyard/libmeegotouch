@@ -27,6 +27,7 @@
 int main(int argc, const char *argv[])
 {
     if (argc != 4 && argc != 3) {
+        qCritical() << "Wrong argument count, exiting..";
         qWarning() << "usage: mgen option header [outdir]";
         qWarning() << " option:";
         qWarning() << "   --model";
@@ -43,17 +44,17 @@ int main(int argc, const char *argv[])
     } else if (QString(argv[1]) == QString("--style")) {
         type = Style;
     } else {
-        qWarning() << "unknown option \"" << argv[1] << "\"";
+        qCritical() << "unknown option \"" << argv[1] << "\"";
         return 1;
     }
 
-    QString outdir;
+    QString outdir("");
 
     if (argc == 4) {
         outdir = argv[3];
     }
 
-    if (!QDir(outdir).exists()) {
+    if (!outdir.isEmpty() && !QDir(outdir).exists()) {
         QDir::current().mkdir(outdir);
     }
 

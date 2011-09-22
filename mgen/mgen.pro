@@ -18,6 +18,11 @@ DEFINES += QT_STRICT_ITERATORS
 macx:CONFIG -= app_bundle
 CONFIG += \
     qt \
+    console\
+
+CONFIG -= meegotouch
+QT -= dbus svg network gui
+
 
 SOURCES += \
     mgen.cpp \

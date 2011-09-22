@@ -21,6 +21,9 @@ CONFIG += \
     
 CONFIG += console
 
+CONFIG -= meegotouch
+QT -= dbus svg network gui
+
 SOURCES += \
     mmoc.cpp \
 
