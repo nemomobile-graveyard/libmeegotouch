@@ -96,6 +96,16 @@ void MSheetSlot::hideSlot()
     setVisible(false);
 }
 
+void MSheetSlot::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    event->accept();
+}
+
+void MSheetSlot::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    event->accept();
+}
+
 //////////////
 /// MSheetCentralSlot
 

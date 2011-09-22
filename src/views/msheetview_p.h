@@ -84,6 +84,8 @@ public slots:
 
 protected:
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     void resizeChildWidget();
