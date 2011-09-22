@@ -4,6 +4,8 @@ INCLUDEPATH += $$MSRCDIR/views \
             $$MSRCDIR/views/widgets \
             $$MSRCDIR/corelib/.gen \
             $$MSRCDIR/views/.gen \
+            ../../src/corelib/.gen \
+            ../../src/views/.gen \
 
 HEADERS += ut_mlistindex.h \
         $$MSRCDIR/views/widgets/mlistindex.h \
