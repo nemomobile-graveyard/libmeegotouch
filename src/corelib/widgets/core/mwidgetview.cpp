@@ -503,9 +503,10 @@ void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, con
         if (scene)
             mscene = qobject_cast<MScene*>(scene);
 
-        if (mscene)
+        if (mscene) {
             d->styleContainer->setSceneManager(mscene->sceneManager());
-        else
+            d->applyStyleIfNeeded();
+        } else
             d->styleContainer->setSceneManager(0);
     }
 }
