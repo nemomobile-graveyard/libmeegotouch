@@ -495,7 +495,7 @@ void MTextEditPrivate::_q_updateTextDirection()
         || q->model()->echo() == MTextEditModel::NoEcho // ...no text because of NoEcho
         // ...or if entering password; we cannot see the content anyhow.
         || q->model()->echo() == MTextEditModel::Password) {
-        dir = defaultTextDirection();
+        dir = inputMethodBasedTextDirection();
     } else {
         // Otherwise use content based text direction.
         dir = MLocale::directionForText(content);
@@ -509,7 +509,7 @@ void MTextEditPrivate::_q_updateTextDirection()
     }
 }
 
-Qt::LayoutDirection MTextEditPrivate::defaultTextDirection() const
+Qt::LayoutDirection MTextEditPrivate::inputMethodBasedTextDirection() const
 {
     QString language = MInputMethodState::instance()->language();
 
@@ -517,7 +517,7 @@ Qt::LayoutDirection MTextEditPrivate::defaultTextDirection() const
     if (!language.isEmpty()) {
         dir = QLocale(language).textDirection();
     } else {
-        dir = Qt::LeftToRight;
+        dir = Qt::LayoutDirectionAuto;
     }
 
     return dir;
