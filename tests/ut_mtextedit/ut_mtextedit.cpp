@@ -316,6 +316,8 @@ void Ut_MTextEdit::initTestCase()
  */
 void Ut_MTextEdit::cleanupTestCase()
 {
+    delete m_appWindow;
+    delete m_app;
 }
 
 
