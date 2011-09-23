@@ -151,6 +151,10 @@ public:
     void _q_checkPositionChanges();
     void _q_updateTextDirection();
 
+    //! \brief Direction based on first character that has strong directionality.
+    //! \returns Qt::LayoutDirectionAuto in case of no strong directional characters.
+    Qt::LayoutDirection strongDirectionForText(const QString &text) const;
+
     //! \brief Text direction based on current input method language.
     Qt::LayoutDirection inputMethodBasedTextDirection() const;
 
