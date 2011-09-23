@@ -80,8 +80,9 @@ private:
      */
     void showStatusIndicatorMenu();
 
-    //! Perform the haptic feedback for status bar press
+    //! Perform the haptic feedback for status bar press/release
     void playHapticsFeedback();
+    void playHapticsReleaseFeedback();
 
     //! position of mouse button press(firstPos) and position of last point of mouse move(lastPos)
     QPointF firstPos, lastPos;

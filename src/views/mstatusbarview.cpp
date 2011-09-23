@@ -400,6 +400,7 @@ void MStatusBarView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
                 M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
     if(rect.contains(touch)) {
+        playHapticsReleaseFeedback();
         showStatusIndicatorMenu();
     }
 }
@@ -517,6 +518,13 @@ void MStatusBarView::playHapticsFeedback()
 {
     if (style()->enableStatusIndicatorMenu()) {
         style()->pressFeedback().play();
+    }
+}
+
+void MStatusBarView::playHapticsReleaseFeedback()
+{
+    if (style()->enableStatusIndicatorMenu()) {
+        style()->releaseFeedback().play();
     }
 }
 
