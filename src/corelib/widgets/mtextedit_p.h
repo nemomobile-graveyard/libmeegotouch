@@ -152,7 +152,7 @@ public:
     void _q_updateTextDirection();
 
     //! \brief Text direction based on current input method language.
-    Qt::LayoutDirection defaultTextDirection() const;
+    Qt::LayoutDirection inputMethodBasedTextDirection() const;
 
     //! \brief Disable MTextEdit::updateMicroFocus().
     //!
