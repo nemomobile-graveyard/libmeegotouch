@@ -228,6 +228,7 @@ private:
     QTimer *positionChangeTimeout;
     bool hasPositionChangesToHandle;
     bool pasteFailed;
+    Qt::LayoutDirection layoutDirection;
 
     friend class MTextEditSignalEmitter;
     friend class MCompleterViewPrivate;
