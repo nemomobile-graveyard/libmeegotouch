@@ -1,3 +1,10 @@
+libmeegotouch (0.23.61-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#277393 - Arabic texts are not aligned to the Right in MLabel
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 23 Sep 2011 14:42:50 +0200
+
 libmeegotouch (0.23.60-1) unstable; urgency=low
 
   * New version
