@@ -488,52 +488,25 @@ void MTextEditPrivate::_q_updateTextDirection()
 {
     Q_Q(MTextEdit);
 
-    QTextCursor *cursor = this->cursor();
-    if (!cursor || cursor->isNull()) {
-        // Cannot update text direction because there is no cursor set in controller
-        return;
-    }
-
-    // Layout direction can be different in different rows.
-    // Therefore, set layout direction per block.
-    QTextBlock block = cursor->block();
-    if (!block.isValid()) {
-        return;
-    }
-
+    QString content = q->document()->toPlainText();
     Qt::LayoutDirection dir;
 
-    // Always use default (no content based) text direction if...
-    if (block.text().isEmpty() // ...there is no text, only cursor
+    if (content.isEmpty() // ...there is no text, only cursor
         || q->model()->echo() == MTextEditModel::NoEcho // ...no text because of NoEcho
         // ...or if entering password; we cannot see the content anyhow.
         || q->model()->echo() == MTextEditModel::Password) {
         dir = defaultTextDirection();
     } else {
         // Otherwise use content based text direction.
-        dir = Qt::LayoutDirectionAuto;
+        dir = MLocale::directionForText(content);
     }
 
-    // Update layout direction for the block if needed.
-    QTextBlockFormat format = block.blockFormat();
-    if (format.layoutDirection() != dir) {
-        format.setLayoutDirection(dir);
-        // Warning: Ignoring possible intentionally set LTR or RTL direction.
-        // This could be done via MTextEdit::document() or textCursor() interface.
-        // It is documented, however, that the use of those interfaces should
-        // be done with caution.
-        cursor->setBlockFormat(format);
-
+    QTextOption option = q->document()->defaultTextOption();
+    if (option.textDirection() != dir) {
+        option.setTextDirection(dir);
+        q->document()->setDefaultTextOption(option);
         q->update();
     }
-
-    // What this doesn't do is restore a previously touched
-    // block's direction back to LayoutDirectionAuto.
-    // However, it is unlikely that it will cause problems
-    // since whenever new content is added to an existing block
-    // (which has explicit direction set) this method will
-    // be called again, unless the content is added directly
-    // via MTextEdit::textCursor() interface.
 }
 
 Qt::LayoutDirection MTextEditPrivate::defaultTextDirection() const
