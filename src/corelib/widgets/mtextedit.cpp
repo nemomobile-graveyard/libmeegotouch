@@ -485,17 +485,20 @@ void MTextEditPrivate::_q_updateTextDirection()
     Q_Q(MTextEdit);
 
     QString content = q->document()->toPlainText();
-    Qt::LayoutDirection dir;
+    Qt::LayoutDirection dir = strongDirectionForText(content);
 
-    if (content.isEmpty() // ...there is no text, only cursor
+    // Set direction based on input method language if...
+    if (dir == Qt::LayoutDirectionAuto // ...text has no strong directionality
         || q->model()->echo() == MTextEditModel::NoEcho // ...no text because of NoEcho
         // ...or if entering password; we cannot see the content anyhow.
         || q->model()->echo() == MTextEditModel::Password) {
         dir = inputMethodBasedTextDirection();
-    } else {
-        // Otherwise use content based text direction.
-        dir = MLocale::directionForText(content);
     }
+
+    // Otherwise use content based text direction.
+    // The value Qt::LayoutDirectionAuto also uses text content
+    // to determine layout direction but this leads to different
+    // blocks having different layout directions.
 
     QTextOption option = q->document()->defaultTextOption();
     if (option.textDirection() != dir) {
@@ -503,6 +506,31 @@ void MTextEditPrivate::_q_updateTextDirection()
         q->document()->setDefaultTextOption(option);
         q->update();
     }
+}
+
+Qt::LayoutDirection MTextEditPrivate::strongDirectionForText(const QString &text) const
+{
+    QString::const_iterator textEnd = text.constEnd();
+
+    for (QString::const_iterator it = text.constBegin(); it != textEnd; ++it) {
+        switch(QChar::direction(it->unicode()))
+        {
+        case QChar::DirL:
+        case QChar::DirLRE:
+        case QChar::DirLRO:
+            return Qt::LeftToRight;
+        case QChar::DirAL:
+        case QChar::DirR:
+        case QChar::DirRLE:
+        case QChar::DirRLO:
+            return Qt::RightToLeft;
+        default:
+            break;
+        }
+    }
+    // Return Qt::LayoutDirectionAuto to indicate that the text
+    // contains no strong directional characters.
+    return Qt::LayoutDirectionAuto;
 }
 
 Qt::LayoutDirection MTextEditPrivate::inputMethodBasedTextDirection() const

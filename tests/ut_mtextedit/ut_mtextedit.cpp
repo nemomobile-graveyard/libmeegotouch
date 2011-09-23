@@ -3226,7 +3226,7 @@ void Ut_MTextEdit::testPreeditDiacritics()
 
 }
 
-// NB#252531
+// NB#252531, NB#282904
 void Ut_MTextEdit::testTextDirection_data()
 {
     QTest::addColumn<QString>("language");
@@ -3237,6 +3237,22 @@ void Ut_MTextEdit::testTextDirection_data()
     QTest::newRow("English, empty") << "en" << "" << Qt::LeftToRight;
     QTest::newRow("Arabic, empty") << "ar" << "" << Qt::RightToLeft;
     QTest::newRow("Hebrew, empty") << "he" << "" << Qt::RightToLeft;
+
+    // No strong directionality
+    QTest::newRow("Arabic, Arabic-Indic numbers") << "ar" << QString::fromUtf8("٥٧٧٩٩٧٥٤٣") << Qt::RightToLeft;
+    QTest::newRow("Arabic, Arabic numbers") << "ar" << "1234" << Qt::RightToLeft;
+    QTest::newRow("Arabic, special characters") << "ar" << "+)\"#(}/)" << Qt::RightToLeft;
+    QTest::newRow("English, Arabic-Indic numbers") << "en" << QString::fromUtf8("٥٧٧٩٩٧٥٤٣") << Qt::LeftToRight;
+    QTest::newRow("English, Arabic numbers") << "en" << "1234" << Qt::LeftToRight;
+    QTest::newRow("English, special characters") << "en" << "+)\"#(}/)" << Qt::LeftToRight;
+
+    // Strong directional characters at the end
+    QTest::newRow("strong directional chars at the end #1") << "ar" << QString::fromUtf8("٥٧٧٩٩٧٥٤٣abc") << Qt::LeftToRight;
+    QTest::newRow("strong directional chars at the end #2") << "ar" << QString::fromUtf8("٥٧٧٩٩٧٥٤٣\nabc") << Qt::LeftToRight;
+    QTest::newRow("strong directional chars at the end #3") << "ar" << QString::fromUtf8("٥٧٧٩٩٧٥٤٣\nلعربية") << Qt::RightToLeft;
+    QTest::newRow("strong directional chars at the end #4") << "ar" << QString::fromUtf8("1234لعربية") << Qt::RightToLeft;
+    QTest::newRow("strong directional chars at the end #5") << "ar" << QString::fromUtf8("+)\"#(}/)لعربية") << Qt::RightToLeft;
+    QTest::newRow("strong directional chars at the end #5") << "ar" << QString::fromUtf8("+)\"#(}/)abcلعربية") << Qt::LeftToRight;
 
     // Only strong directional characters. Input method language does not matter.
     QTest::newRow("latin text first") << "he" << "abcلعربية" << Qt::LeftToRight;
