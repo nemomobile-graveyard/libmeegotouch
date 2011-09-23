@@ -77,7 +77,8 @@ protected Q_SLOTS:
      * backspace to go to the first block.)
      */
     void _q_resetNewBlockMargin();
-    
+
+    void _q_updateLabelPosition();
 private:
     /*!
      *\brief: Label inside text input
