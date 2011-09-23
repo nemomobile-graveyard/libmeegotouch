@@ -77,6 +77,7 @@ class M_CORE_EXPORT MTextEdit : public MWidgetController
     Q_PROPERTY(MTextEditModel::EchoMode echoMode READ echoMode WRITE setEchoMode)
     Q_PROPERTY(bool autoSipEnabled READ isAutoSipEnabled WRITE setAutoSipEnabled)
     Q_PROPERTY(bool errorHighlight READ errorHighlight WRITE setErrorHighlight)
+    Q_PROPERTY(Qt::LayoutDirection layoutDirection READ layoutDirection WRITE setLayoutDirection)
 
 public:
     typedef M::TextContentType TextContentType; // workaround for moc bug
@@ -456,6 +457,25 @@ public:
      */
     void setErrorHighlight(bool showErrorHighlight);
 
+    /*!
+     * \brief returns layout direction for contents.
+     */
+    Qt::LayoutDirection layoutDirection() const;
+
+    /*!
+     * \brief sets layout direction for contents.
+     *
+     * default value is Qt::LayoutDirectionAuto,
+     * which means that text is placed according to its value
+     * (that is, text consisting of left-to-right symbols is aligned to left,
+     * otherwise it is aligned to right)
+     * if changed to Qt::LeftToRight or Qt::RightToLeft,
+     * text placement to be in the specified direction regardless of its value
+     *
+     * layout direction affects calculation of indentation, alignment of lines
+     * and other visual features
+     */
+    void setLayoutDirection(Qt::LayoutDirection alignment);
 public Q_SLOTS:
     /**
      * \brief Set text for this widget. This replaces the existing text.

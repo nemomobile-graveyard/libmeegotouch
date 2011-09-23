@@ -361,7 +361,8 @@ MTextEditPrivate::MTextEditPrivate()
       programmaticalDocumentChange(false),
       positionChangeTimeout(0),
       hasPositionChangesToHandle(false),
-      pasteFailed(false)
+      pasteFailed(false),
+      layoutDirection(Qt::LayoutDirectionAuto)
 {
 }
 
@@ -488,15 +489,21 @@ void MTextEditPrivate::_q_updateTextDirection()
 {
     Q_Q(MTextEdit);
 
-    QString content = q->document()->toPlainText();
-    Qt::LayoutDirection dir = strongDirectionForText(content);
+    Qt::LayoutDirection dir;
 
-    // Set direction based on input method language if...
-    if (dir == Qt::LayoutDirectionAuto // ...text has no strong directionality
-        || q->model()->echo() == MTextEditModel::NoEcho // ...no text because of NoEcho
-        // ...or if entering password; we cannot see the content anyhow.
-        || q->model()->echo() == MTextEditModel::Password) {
-        dir = inputMethodBasedTextDirection();
+    if (q->layoutDirection() == Qt::LayoutDirectionAuto) {
+	QString content = q->document()->toPlainText();
+	dir = strongDirectionForText(content);
+
+	// Set direction based on input method language if...
+	if (dir == Qt::LayoutDirectionAuto // ...text has no strong directionality
+	    || q->model()->echo() == MTextEditModel::NoEcho // ...no text because of NoEcho
+	    // ...or if entering password; we cannot see the content anyhow.
+	    || q->model()->echo() == MTextEditModel::Password) {
+	    dir = inputMethodBasedTextDirection();
+	}
+    } else {
+	dir = q->layoutDirection();
     }
 
     // Otherwise use content based text direction.
@@ -3451,4 +3458,15 @@ void MTextEdit::setErrorHighlight(bool showErrorHighlight)
     model()->setErrorHighlight(showErrorHighlight);
 }
 
+Qt::LayoutDirection MTextEdit::layoutDirection() const
+{
+    Q_D(const MTextEdit);
+    return d->layoutDirection;
+}
+
+void MTextEdit::setLayoutDirection(Qt::LayoutDirection dir)
+{
+    Q_D(MTextEdit);
+    d->layoutDirection = dir;
+}
 #include "moc_mtextedit.cpp"
