@@ -143,7 +143,7 @@ bool MLabelViewRich::resizeEvent(QGraphicsSceneResizeEvent *event)
 
     if (viewPrivate->controller->sizePolicy().hasHeightForWidth()) {
         //We just need to resize the document, and nothing more needed
-        textDocument.setTextWidth(event->newSize().width());
+        textDocument.setPageSize(event->newSize());
         return false; //No invalidate ever needed
     } else {
         // Without height for width, we have to invalidate when we change size.
@@ -158,7 +158,7 @@ bool MLabelViewRich::resizeEvent(QGraphicsSceneResizeEvent *event)
         // forward resize event to text document
         // if height is changed
         QSizeF oldSize(textDocument.size());
-        textDocument.setTextWidth(event->newSize().width());
+        textDocument.setPageSize(event->newSize());
         QSizeF newSize(textDocument.size());
         if (newSize.height() != oldSize.height())
             return true;
@@ -198,14 +198,11 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
         // even for a constraint width of -1 (unconstrained)
         QSizeF size;
         if (viewPrivate->controller->sizePolicy().hasHeightForWidth() || constraint.width() >= 0) {
-            qreal oldWidth = -1;
-            bool widthChanged = (constraint.width() != textDocument.size().width());
-            if (widthChanged) {
-                //By default, the label policy has height for width, meaning that the layout
-                //will pass us the constraint correctly, so we don't need to do anything special.
-                oldWidth = textDocument.textWidth();
-                textDocument.setTextWidth(constraint.width());
-            }
+            QSizeF oldPageSize = QSizeF(-1,-1);
+            //By default, the label policy has height for width, meaning that the layout
+            //will pass us the constraint correctly, so we don't need to do anything special.
+            oldPageSize = textDocument.pageSize();
+            textDocument.setTextWidth(constraint.width());
 
             size = textDocument.size();
 
@@ -241,8 +238,7 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
                 }
             }
 
-            if (widthChanged)
-                textDocument.setTextWidth(oldWidth);
+            textDocument.setPageSize(oldPageSize);
         } else {
             //If the user has manually disabled the sizepolicy heightForWidth and there is
             //no constraint, then we need to fall back to previous behavior of using the current
@@ -301,7 +297,7 @@ bool MLabelViewRich::updateData(const QList<const char *>& modifications)
 
             // Document text width must be enlarged just like resizeEvent()
             // does with labels that initially have richtext content.
-            textDocument.setTextWidth(viewPrivate->boundingRect().width());
+            textDocument.setPageSize(viewPrivate->boundingRect().size());
             needUpdate = true;
             textDocumentDirty = true;
         } else if (member == MLabelModel::Color) {
@@ -337,7 +333,7 @@ bool MLabelViewRich::updateData(const QList<const char *>& modifications)
             needUpdate = true;
             textDocumentDirty = true;
         } else if (member == MLabelModel::UseModelFont || member == MLabelModel::Font) {
-            textDocument.setTextWidth(viewPrivate->boundingRect().width());
+            textDocument.setPageSize(viewPrivate->boundingRect().size());
             needUpdate = true;
             textDocumentDirty = true;
         } else if (member == MLabelModel::Highlighters) {
@@ -414,7 +410,7 @@ void MLabelViewRich::cancelEvent(MCancelEvent *event)
 void MLabelViewRich::longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture)
 {
     // We ignore the gesture by default and only accept it later if the hot spot of
-    // the gesture was insid highlightable text.
+    // the gesture was inside the highlightable text.
     event->ignore(gesture);
 
     QPointF gesturePos = viewPrivate->controller->mapFromScene(gesture->position());
@@ -465,41 +461,40 @@ int MLabelViewRich::cursorPositionOfLastVisibleCharacter()
 void MLabelViewRich::updateRichTextEliding()
 {
     if (shouldElide()) {
-        //TODO
-        //Reconsider this. How can we efficiently find last FULLY visible character?
-        //Hit testing per pixel basis was bad and was not properly working. This
-        //implementation is as bad but this works correctly.
 
-        //estimate the last visible character by roughly removing text from label
-        int charJump = textDocument.characterCount() / 2;
+        textDocument.setPageSize(viewPrivate->boundingRect().size());
+        QFontMetrics fm(textDocument.defaultFont());
+        QSizeF ellipsisSize = fm.boundingRect(ellipsisString).size();
+        if (viewPrivate->boundingRect().width() < ellipsisSize.width() || viewPrivate->boundingRect().height() < ellipsisSize.height()) {
+            //There's not even room for the ellipsis
+            textDocument.clear();
+            return;
+        }
+
+        // The ellipsis should start from the last visible line, minus the ellipsis's width and height.  We
+        // don't have to be completely accurate in guessing where the ellipsis should go, but we
+        // need to only ever overestimate the charPositionForEllipsis value, never underestimate it.
+        QPointF positionForEllipsis = QPointF(viewPrivate->boundingRect().width() - ellipsisSize.width()+1,
+                qMin(viewPrivate->boundingRect().height(), textDocument.documentLayout()->documentSize().height()) - ellipsisSize.height() + 1);
+        int charPositionForEllipsis = textDocument.documentLayout()->hitTest(positionForEllipsis, Qt::FuzzyHit);
+
+        // Now we have a pretty good guess where the ellipsis should be.  In practise this is almost
+        // always completely accurate, but to be doubly sure, delete any letters as necessary until
+        // it's the right size.  Since we have to create an edit block anyway, this shouldn't be
+        // expensive to do, as long as we only have to delete one or two characters.  Note that we
+        // have to keep resetting the page size to force an immediate relayout so that we get a
+        // correct documentSize().  Maybe there is a better way?
         QTextCursor cursor(&textDocument);
         cursor.beginEditBlock();
-        while (shouldElide()) {
-            cursor.movePosition(QTextCursor::End);
-            charJump = textDocument.characterCount() / 2;
-            if (!charJump)
-                break;
-            cursor.setPosition(cursor.position() - charJump, QTextCursor::KeepAnchor);
-            cursor.removeSelectedText();
-            textDocument.setTextWidth(viewPrivate->boundingRect().width());
-        }
-        cursor.endEditBlock();
-        int charcount = textDocument.characterCount() + charJump;
-        textDocument.undo();
-
-        //find the last visible character by removing one character at a time
-        //starting from the rough estimation end position
-        charJump = 1;
-
-        cursor.beginEditBlock();
         cursor.movePosition(QTextCursor::End);
-        cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, textDocument.characterCount() - charcount);
+        cursor.setPosition(charPositionForEllipsis, QTextCursor::KeepAnchor);
         //Insert the ellipsis string, making sure we clear any existing formatting, leaving only the
         //default font
         QTextCharFormat format;
         format.setFont(textDocument.defaultFont());
         cursor.insertText(ellipsisString, format);
         cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, ellipsisString.size());
+        textDocument.setPageSize(viewPrivate->boundingRect().size());
 
         QTextLayout *layout = cursor.block().layout();
         QTextLine line = layout->lineForTextPosition(cursor.positionInBlock());
@@ -508,8 +503,13 @@ void MLabelViewRich::updateRichTextEliding()
                 textDocument.clear();
                 break;
             }
+            int position = cursor.position();
             cursor.deletePreviousChar();
-            textDocument.setTextWidth(viewPrivate->boundingRect().size().width());
+            if (cursor.position() < position) {
+                //This shouldn't happen, but maybe it can with tables, or divs etc.  Best to make sure otherwise we could hang here in an infinite loop
+                break;
+            }
+            textDocument.setPageSize(viewPrivate->boundingRect().size());
         }
         cursor.endEditBlock();
         isElided = true;

@@ -1890,4 +1890,42 @@ void Ut_MLabel::testRichTextPreferredLineCount()
     label->setTextElide(false);
     QCOMPARE(height, label->preferredHeight());
 }
+
+void Ut_MLabel::testSizeHintIncreasingWithFixedConstraint_data()
+{
+    QTest::addColumn<bool>("richText");
+    QTest::newRow("Plain text") << false;
+    QTest::newRow("Rich text") << true;
+}
+void Ut_MLabel::testSizeHintIncreasingWithFixedConstraint()
+{
+    QFETCH(bool, richText);
+    QString shorterText;
+    QString longerText;
+    if (richText) {
+        shorterText = "Hello there<br>How are you?";
+        longerText = shorterText + "<br><br><br><br><br><br><br><br><br><br>Bye!";
+    } else {
+        shorterText = "Hello there\nHow are you?";
+        longerText = shorterText + "\nBye!";
+    }
+
+    //Set the label to the longer text first, to get its preferred size
+    label->setWordWrap(true);
+    label->setText(longerText);
+    qreal width = label->preferredWidth();
+    QSizeF longerPreferredSize = label->sizeHint(Qt::PreferredSize, QSizeF(width,-1));
+
+    //Now change to the shorter text and resize
+    label->setText(shorterText);
+    label->resize(QSizeF(1,1));
+    label->resize(label->sizeHint(Qt::PreferredSize, QSizeF(width,-1)));
+    captureImage(label);
+    QCOMPARE(label->preferredWidth(), width);
+
+    //Now change back to the longer text
+    label->setText(longerText);
+    QCOMPARE(longerPreferredSize, label->sizeHint(Qt::PreferredSize, QSizeF(width,-1)));
+    QVERIFY(label->size().height() < label->sizeHint(Qt::PreferredSize, QSizeF(width,-1)).height());
+}
 QTEST_APPLESS_MAIN(Ut_MLabel);

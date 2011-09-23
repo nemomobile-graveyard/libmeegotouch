@@ -152,6 +152,9 @@ private slots:
 
     void testRichTextPreferredLineCount_data();
     void testRichTextPreferredLineCount();
+
+    void testSizeHintIncreasingWithFixedConstraint_data();
+    void testSizeHintIncreasingWithFixedConstraint();
 private:
     /**
      * Helper method for testSizeHint().
