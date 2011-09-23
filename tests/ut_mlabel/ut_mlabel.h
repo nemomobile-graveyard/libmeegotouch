@@ -148,6 +148,8 @@ private slots:
 
     void testSingleLineElidingWithWordwrap();
 
+    void testPaintOffsetNoAffectOnGeometry();
+
 private:
     /**
      * Helper method for testSizeHint().

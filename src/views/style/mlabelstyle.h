@@ -119,6 +119,14 @@ class M_VIEWS_EXPORT MLabelStyle : public MWidgetStyle
     */
     M_STYLE_ATTRIBUTE(QString, preferredLineCountBehavior, PreferredLineCountBehavior)
 
+    /*!
+      \property MLabelStyle::paintOffset
+      \brief Offsets the label painter by the given coordinates. Usually required to properly position font for rendering.
+
+      Default is 0,0, no additional translation for the painter.
+    */
+    M_STYLE_ATTRIBUTE(QPointF, paintOffset, PaintOffset)
+
 };
 
 /*!
