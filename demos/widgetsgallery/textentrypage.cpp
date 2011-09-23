@@ -652,7 +652,7 @@ void TextEntryPage::createContent()
     layoutPolicy->addItem(directIMPanel);
     row++;
 
-    HeaderedTextEdit *uneditableTextEdit = new HeaderedTextEdit(centralWidget());
+    uneditableTextEdit = new HeaderedTextEdit(centralWidget());
     uneditableTextEdit->setObjectName("uneditableTextEdit");
     uneditableTextEdit->setStyleName(inv("CommonEditorInputFieldMultiline"));
     uneditableTextEdit->setHeaderText("Recipient:");
@@ -779,6 +779,8 @@ void TextEntryPage::retranslateUi()
     labelErrorHighlighting->setText(qtTrId("xx_error_highlighting_label"));
     //% "Uneditable Text Edit:"
     uneditableTextEditLabel->setText(qtTrId("xx_textentry_uneditable_textedit"));
+    //% "Recipient:"
+    uneditableTextEdit->setHeaderText(qtTrId("xx_recipient_label"));
 
     //% "Read only field"
     labelReadOnly->setText(qtTrId("xx_textentry_readonly_label"));

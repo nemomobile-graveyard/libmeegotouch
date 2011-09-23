@@ -22,6 +22,7 @@
 
 #include <QList>
 
+#include "headeredtextedit.h"
 #include "templatepage.h"
 #include <MTextEdit>
 #include <QPointer>
@@ -95,6 +96,7 @@ private:
     QPointer<MLabel> labelCustomToolbar2;
     QPointer<MLabel> labelErrorHighlighting;
     QPointer<MLabel> uneditableTextEditLabel;
+    QPointer<HeaderedTextEdit> uneditableTextEdit;
     QPointer<MLabel> labelReadOnly;
 
     QPointer<MLabel> labelHeader1;
