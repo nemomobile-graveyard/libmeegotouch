@@ -19,12 +19,14 @@
 
 #include "headeredtextedit.h"
 #include <QDebug>
+#include <MLocale>
 
 HeaderedTextEdit::HeaderedTextEdit(QGraphicsItem *parent)
     : MTextEdit(MTextEditModel::MultiLine, QString(), parent),
     headerLabel(0)
 {
     connect(document(), SIGNAL(blockCountChanged(int)), this, SLOT(_q_resetNewBlockMargin()));
+    connect(this, SIGNAL(geometryChanged()), this, SLOT(_q_updateLabelPosition()));
 }
 
 HeaderedTextEdit::~HeaderedTextEdit()
@@ -68,7 +70,22 @@ void HeaderedTextEdit::_q_updateTextLeftMargin()
     // such as emails.
     // tbf.setLeftMargin(labelSize.width());
     tbf.setTextIndent(labelSize.width());
+    Qt::LayoutDirection dir = MLocale::directionForText(headerLabel->text());
+    setLayoutDirection(dir);
+    _q_updateLabelPosition();
     cursor.setBlockFormat(tbf);    
+}
+
+void HeaderedTextEdit::_q_updateLabelPosition()
+{
+    if (layoutDirection() == Qt::RightToLeft) {
+	QRectF geometry;
+	QSizeF labelSize = headerLabel->sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
+	geometry.setSize(labelSize);
+	QSizeF textSize = sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
+	geometry.setX(textSize.width() - labelSize.width());
+	headerLabel->setGeometry(geometry);
+    }
 }
 
 void HeaderedTextEdit::_q_resetNewBlockMargin()
