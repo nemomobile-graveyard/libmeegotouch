@@ -801,19 +801,11 @@ void MTextEditViewPrivate::handleDocumentUpdated()
     }
 
     // Update masked document's text direction.
-    if (maskedTextDocument
-        && controller->textCursor().block().isValid()) {
-        Qt::LayoutDirection dir = controller->textCursor().block().textDirection();
-
-        // Create text cursor for masked document.
-        QTextCursor maskCursor(maskedTextDocument);
-        maskCursor.setPosition(controller->cursorPosition());
-
-        QTextBlockFormat maskedFormat = maskCursor.block().blockFormat();
-        if (maskedFormat.layoutDirection() != dir) {
-            maskedFormat.setLayoutDirection(dir);
-            maskCursor.setBlockFormat(maskedFormat);
-        }
+    if (maskedTextDocument) {
+        Qt::LayoutDirection dir = document()->defaultTextOption().textDirection();
+        QTextOption option = maskedTextDocument->defaultTextOption();
+        option.setTextDirection(dir);
+        maskedTextDocument->setDefaultTextOption(option);
     }
 }
 
