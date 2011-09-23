@@ -145,7 +145,7 @@ void Pt_MLocale::benchmarkFormatNumberQLongLongArabic()
     QString localeName("ar");
     QString localeNameLcNumeric("ar_EG@numbers=arab");
     qlonglong number = qlonglong(-1542678073);
-    QString formatted("‪-١٬٥٤٢٬٦٧٨٬٠٧٣‬");
+    QString formatted("‪١٬٥٤٢٬٦٧٨٬٠٧٣-‬");
     MLocale locale(localeName);
     locale.setCategoryLocale(MLocale::MLcNumeric, localeNameLcNumeric);
 #if 0
@@ -197,7 +197,7 @@ void Pt_MLocale::benchmarkFormatNumberDoubleArabic()
     QString localeName("ar");
     QString localeNameLcNumeric("ar_EG@numbers=arab");
     double number = double(-1234567.1234567);
-    QString formatted("‪-١٬٢٣٤٬٥٦٧٫١٢٣‬");
+    QString formatted("‪١٬٢٣٤٬٥٦٧٫١٢٣-‬");
     MLocale locale(localeName);
     locale.setCategoryLocale(MLocale::MLcNumeric, localeNameLcNumeric);
 #if 0
