@@ -1831,4 +1831,25 @@ void Ut_MLabel::testSingleLineElidingWithWordwrap()
     QVERIFY(imageWithoutWordWrap == imageWithWordWrap);
 }
 
-QTEST_APPLESS_MAIN(Ut_MLabel);
+void Ut_MLabel::testPaintOffsetNoAffectOnGeometry()
+{
+    MLabelView *view = const_cast<MLabelView*>(qobject_cast<const MLabelView*>(label->view()));
+    MLabelStyle *style = const_cast<MLabelStyle*>(view->style().operator ->());
+    style->setPaintOffset(QPointF());
+    view->applyStyle();
+
+    label->setText("Sample");
+    qApp->processEvents();
+
+    QCOMPARE(style->paintOffset(), QPointF());
+    QRectF noOffsetGeometry = label->geometry();
+
+    style->setPaintOffset(QPointF(1000, 1000));
+    view->applyStyle();
+    qApp->processEvents();
+
+    QCOMPARE(style->paintOffset(), QPointF(1000,1000));
+    QCOMPARE(noOffsetGeometry, label->geometry());
+}
+
+QTEST_APPLESS_MAIN(Ut_MLabel)

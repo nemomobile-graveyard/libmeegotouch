@@ -334,6 +334,7 @@ public:
 
     QSizeF paddedSize;
     QTimer *highlighterUpdateTimer;
+    bool adjustPaintOffset;
 };
 
 #endif

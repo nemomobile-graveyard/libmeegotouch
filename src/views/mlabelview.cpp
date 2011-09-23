@@ -33,7 +33,8 @@
 
 MLabelViewPrivate::MLabelViewPrivate() :
     MWidgetViewPrivate(),
-    highlighterUpdateTimer(0)
+    highlighterUpdateTimer(0),
+    adjustPaintOffset(false)
 {
     impl = new MLabelViewSimple(this);
 }
@@ -151,6 +152,7 @@ void MLabelView::applyStyle()
     d->impl->applyStyle();
     const MLabelStyle* labelStyle = d->style();
     d->paddedSize = size() - QSizeF(labelStyle->paddingLeft() + labelStyle->paddingRight(), labelStyle->paddingTop() + labelStyle->paddingBottom());
+    d->adjustPaintOffset = !style()->paintOffset().isNull();
     updateGeometry();
 }
 
@@ -165,8 +167,13 @@ void MLabelView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem 
     if (labelStyle->textOpacity() >= 0.0)
         painter->setOpacity(d->controller->effectiveOpacity() * labelStyle->textOpacity());
 
+    if (d->adjustPaintOffset)
+        painter->translate(labelStyle->paintOffset());
     //give size adjusted with padding to the actual implementation class
     d->impl->drawContents(painter, d->paddedSize);
+
+    if (d->adjustPaintOffset)
+        painter->translate(labelStyle->paintOffset());
 
     painter->setOpacity(oldOpacity);
 }
