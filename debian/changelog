@@ -1,3 +1,9 @@
+libmeegotouch (0.23.20-1) unstable; urgency=low
+
+  * Fixes: NB#276811 - m_pHost->hasSelection(valid); is returning false if though there is a selection in place
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Fri, 23 Sep 2011 10:40:31 +0300
+
 libmeegotouch (0.23.19-1) unstable; urgency=low
 
   * New version
