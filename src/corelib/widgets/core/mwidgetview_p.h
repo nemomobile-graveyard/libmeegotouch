@@ -45,6 +45,7 @@ public: // public to inherited classes
     static void reloadChildItemsStyles(QGraphicsItem* item);
 
     const MWidgetStyle *currentStyle() const;
+    void applyStyleIfNeeded();
 
 //private: // public only to MWidgetView
     MWidgetController     *controller;

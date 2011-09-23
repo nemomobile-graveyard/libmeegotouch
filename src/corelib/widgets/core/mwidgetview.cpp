@@ -138,6 +138,15 @@ const MWidgetStyle *MWidgetViewPrivate::currentStyle() const
     return static_cast<const MWidgetStyle *>(styleContainer->currentStyle());
 }
 
+void MWidgetViewPrivate::applyStyleIfNeeded()
+{
+    styleContainer->updateCurrentStyle();
+    if (styleContainer->currentStyle() != appliedStyle) {
+        q_ptr->applyStyle();
+        appliedStyle = styleContainer->currentStyle();
+    }
+}
+
 MWidgetView::MWidgetView() :
     d_ptr(new MWidgetViewPrivate)
 {
@@ -461,7 +470,7 @@ void MWidgetViewPrivate::reloadChildItemsStyles(QGraphicsItem* item)
         if (view) {
             MWidgetStyleContainer& style = view->style();
             style.reloadStyles();
-            view->applyStyle();
+            view->d_func()->applyStyleIfNeeded();
         }
     }
 }
@@ -486,7 +495,7 @@ void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, con
         if (value.value<QGraphicsItem*>() != NULL) {
             mPerformanceWarning("MWidgetView::reloadChildItemsStyles") << "Styles are recursively reloaded due to parent change :" << d->controller;
             d->reloadChildItemsStyles(d->controller);
-            applyStyle();
+            d->applyStyleIfNeeded();
         }
     } else if (change == QGraphicsItem::ItemSceneChange) {
         QGraphicsScene *scene = value.value<QGraphicsScene*>();
@@ -517,11 +526,7 @@ void MWidgetView::orientationChangeEvent(MOrientationChangeEvent *event)
     Q_UNUSED(event);
     Q_D(MWidgetView);
 
-    style().updateCurrentStyle();
-    if (d->currentStyle() != d->appliedStyle) {
-        applyStyle();
-        d->appliedStyle = d->currentStyle();
-    }
+    d->applyStyleIfNeeded();
 }
 
 void MWidgetView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
