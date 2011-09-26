@@ -98,11 +98,9 @@ namespace {
         CustomListItemCreator()
             : defaultImage(Utils::imagesDir() + "DefaultAvatar.png")
         {
-            veryLongSubtitle = "This is multi-line elided text.";
+            veryLongSubtitle = "This is multi-line elided text. This is multi-line elided text. This is multi-line elided text. This is multi-line elided text. This is multi-line elided text. This is multi-line elided text. This is multi-line elided text. This is multi-line elided text. This is multi-line elided text. This is multi-line elided text.";
+            veryLongRichSubtitle = "This is multi-line <i>rich</i> <b>elided</b> text. This is multi-line <i>rich</i> <b>elided</b> text. This is multi-line <i>rich</i> <b>elided</b> text. This is multi-line <i>rich</i> <b>elided</b> text. This is multi-line <i>rich</i> <b>elided</b> text. This is multi-line <i>rich</i> <b>elided</b> text. This is multi-line <i>rich</i> <b>elided</b> text. This is multi-line <i>rich</i> <b>elided</b> text. This is multi-line <i>rich</i> <b>elided</b> text. This is multi-line <i>rich</i> <b>elided</b> text.";
 
-            for (int i = 10; i > 0; i--) {
-                veryLongSubtitle += " " + veryLongSubtitle;
-            }
         }
 
         MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
@@ -129,12 +127,16 @@ namespace {
                 return;
 
             item->setTitle(index.data().toString());
-            item->setSubtitle(veryLongSubtitle);
+            if (index.row() == 0)
+                item->setSubtitle(veryLongSubtitle);
+            else
+                item->setSubtitle(veryLongRichSubtitle);
             item->setImage(defaultImage);
         }
 
     private:
         QString veryLongSubtitle;
+        QString veryLongRichSubtitle;
         QImage defaultImage;
     };
 
