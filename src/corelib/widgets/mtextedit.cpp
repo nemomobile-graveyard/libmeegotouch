@@ -2111,7 +2111,9 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
                      this, SLOT(_q_updateTextDirection()));
     ok &= disconnect(MInputMethodState::instance(), SIGNAL(languageChanged(QString)),
                      this, SLOT(_q_updateTextDirection()));
-    Q_ASSERT(ok);
+    if (!ok) {
+        qWarning() << "Signal disconnection failed in MTextEdit::focusOutEvent";
+    }
 
     disconnect(&d->signalEmitter, SIGNAL(scenePositionChanged()), this, SLOT(_q_handlePositionChanged()));
 
