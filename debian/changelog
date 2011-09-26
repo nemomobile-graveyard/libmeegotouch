@@ -1,3 +1,11 @@
+libmeegotouch (0.23.62-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#283246, wrong text input layout for Arabic in new event screen after some operations
+  * Fixes: NB#282307 - The api toDouble() does not support scientific notation in regional format Sweden.
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 26 Sep 2011 11:34:54 +0200
+
 libmeegotouch (0.23.61-1) unstable; urgency=low
 
   * New version
