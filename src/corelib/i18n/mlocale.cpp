@@ -2677,7 +2677,7 @@ void MLocalePrivate::fixFormattedNumberForRTL(QString *formattedNumber) const
         // (actually some of the Arabic currency symbols have RLM markers in the icu
         // data ...).
         removeDirectionalFormattingCodes(formattedNumber);
-        if(formattedNumber->contains(QRegExp("[٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹]"))) {
+        if(formattedNumber->contains(QRegExp(QString::fromUtf8("[٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹]")))) {
             swapPostAndPrefixOfFormattedNumber(formattedNumber);
 #if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
             // icu >= 4.6 can use different symbols for different
