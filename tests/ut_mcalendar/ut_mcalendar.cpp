@@ -4657,6 +4657,96 @@ void Ut_MCalendar::testFormatDateTimeICU()
     QCOMPARE(locale.formatDateTimeICU(datetime, format), result);
 }
 
+void Ut_MCalendar::testTimeZoneDisplayNames_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("lcMessages");
+    QTest::addColumn<QString>("lcTime");
+    QTest::addColumn<QString>("lcNumeric");
+    QTest::addColumn<QString>("timeZone");
+    QTest::addColumn<QString>("result");
+
+    QTest::newRow("fi_FI")
+            << "fi_FI" // language
+            << "fi_FI" // lc_messages
+            << "fi_FI@mix-time-and-language=no" // lc_time
+            << "fi_FI" // lc_numeric
+            << "GMT+5:37"
+            << "UTC+5.37";
+    QTest::newRow("ar_AE")
+            << "fi_FI" // language
+            << "fi_FI" // lc_messages
+            << "ar_AE@mix-time-and-language=no" // lc_time
+            << "ar_AE@numbers=arab" // lc_numeric
+            << "GMT+5:37"
+            << "جرينتش+٠٥:٣٧";
+    QTest::newRow("ar_AE")
+            << "fi_FI" // language
+            << "fi_FI" // lc_messages
+            << "ar_AE@numbers=arab;mix-time-and-language=no" // lc_time
+            << "en_US" // lc_numeric
+            << "GMT+5:37"
+            << "جرينتش+٠٥:٣٧";
+    QTest::newRow("ar_AE")
+            << "fi_FI" // language
+            << "fi_FI" // lc_messages
+            << "ar_AE@mix-time-and-language=no" // lc_time
+            << "en_US" // lc_numeric
+            << "GMT+5:37"
+            << "جرينتش+05:37";
+    QTest::newRow("ar_AE")
+            << "fi_FI" // language
+            << "fi_FI" // lc_messages
+            << "ar_AE@mix-time-and-language=no" // lc_time
+            << "ar_AE@numbers=latn" // lc_numeric
+            << "GMT+5:37"
+            << "جرينتش+٠٥:٣٧";
+    QTest::newRow("zh_CN")
+            << "fi_FI" // language
+            << "fi_FI" // lc_messages
+            << "zh_CN@mix-time-and-language=no" // lc_time
+            << "zh_CN" // lc_numeric
+            << "GMT+5:37"
+            << "格林尼治标准时间+05:37";
+    QTest::newRow("zh_TW")
+            << "fi_FI" // language
+            << "fi_FI" // lc_messages
+            << "zh_TW@mix-time-and-language=no" // lc_time
+            << "zh_TW" // lc_numeric
+            << "GMT+5:37"
+            << "GMT+05:37";
+}
+
+void Ut_MCalendar::testTimeZoneDisplayNames()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, lcMessages);
+    QFETCH(QString, lcTime);
+    QFETCH(QString, lcNumeric);
+    QFETCH(QString, timeZone);
+    QFETCH(QString, result);
+
+    MLocale locale(localeName);
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
+    MCalendar mcal(locale,timeZone);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "--------------------\n"
+        << " localeName: " << localeName
+        << " lcMessages: " << lcMessages
+        << " lcTime: " << lcTime
+        << " lcNumeric: " << lcNumeric
+        << " actual result: " << locale.formatDateTimeICU(mcal, "zzzz")
+        << " expected result: " << result << "\n";
+    debugStream.flush();
+#endif
+    QCOMPARE(locale.formatDateTimeICU(mcal, "zzzz"), result);
+}
+
 void Ut_MCalendar::testWeekdaySymbols_data()
 {
     QTest::addColumn<QString>("language");

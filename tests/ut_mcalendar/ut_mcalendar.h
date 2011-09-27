@@ -99,6 +99,9 @@ private slots:
     void testFormatDateTimeICU_data();
     void testFormatDateTimeICU();
 
+    void testTimeZoneDisplayNames_data();
+    void testTimeZoneDisplayNames();
+
     void testWeekdaySymbols_data();
     void testWeekdaySymbols();
 
