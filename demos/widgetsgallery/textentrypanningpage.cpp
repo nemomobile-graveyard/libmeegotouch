@@ -65,17 +65,11 @@ void TextEntryPanningPage::createContent()
 
     layoutPolicy->addItem(infoLabel);
 
-    {   // Text edit and button in horizontal layout
-        MLayout *topLayout = new MLayout();
-        MLinearLayoutPolicy *topHorizontalPolicy = new MLinearLayoutPolicy(topLayout, Qt::Horizontal);
-        addTextEdit(topHorizontalPolicy, M::NumberContentType);
-
-        loseFocusOnPanButton = new MButton;
-        loseFocusOnPanButton->setStyleName(inv("CommonSingleButton"));
-        loseFocusOnPanButton->setCheckable(true);
-        topHorizontalPolicy->addItem(loseFocusOnPanButton);
-        layoutPolicy->addItem(topLayout);
-    }
+    addTextEdit(layoutPolicy, M::NumberContentType);
+    loseFocusOnPanButton = new MButton;
+    loseFocusOnPanButton->setStyleName(inv("CommonSingleButton"));
+    loseFocusOnPanButton->setCheckable(true);
+    layoutPolicy->addItem(loseFocusOnPanButton);
 
     addTextEdit(layoutPolicy, M::FreeTextContentType);
     addContentItems(layoutPolicy, 2);
