@@ -1613,6 +1613,7 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
                 case MSceneWindow::PopupList:
                 case MSceneWindow::MessageBox:
                 case MSceneWindow::Dialog:
+                case MSceneWindow::ApplicationMenu:
                 case MSceneWindow::ObjectMenu:
                 case MSceneWindow::Sheet:
                     freezeUIForAnimationDuration(window->d_func()->appearanceAnimation);
@@ -1777,6 +1778,7 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
             case MSceneWindow::PopupList:
             case MSceneWindow::MessageBox:
             case MSceneWindow::Dialog:
+            case MSceneWindow::ApplicationMenu:
             case MSceneWindow::ObjectMenu:
             case MSceneWindow::Sheet:
                 freezeUIForAnimationDuration(window->d_func()->disappearanceAnimation);
