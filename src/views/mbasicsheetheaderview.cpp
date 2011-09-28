@@ -193,6 +193,12 @@ void MBasicSheetHeaderView::updateData(const QList<const char *> &modifications)
             d->setProgressIndicatorVisible(model()->progressIndicatorVisible());
         }
     }
+
+    // If layout was invalidate by any of the previous changes, immediately activate it,
+    // to avoid flicker.
+    if (!d->layout->isActivated())
+        d->layout->activate();
+
     update();
 }
 
