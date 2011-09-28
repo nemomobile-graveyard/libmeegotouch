@@ -1,3 +1,10 @@
+libmeegotouch (0.23.63-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#282904, Arabic alignment is wrong with numerals and special characters
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 28 Sep 2011 13:51:47 +0200
+
 libmeegotouch (0.23.62-1) unstable; urgency=low
 
   * New version
