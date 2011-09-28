@@ -330,9 +330,13 @@ bool MWidget::isOnDisplay() const
         }
 
         widgetViewportRect = graphicsView->mapFromScene(sceneBoundingRect()).boundingRect();
+        // For intersection calculations, the size of the rectangle should be at least 1x1.
+        widgetViewportRect.setSize(widgetViewportRect.size().expandedTo(QSize(1,1)));
 
-        viewportRect.setWidth(graphicsView->viewport()->width());
-        viewportRect.setHeight(graphicsView->viewport()->height());
+        // We're setting the bottom right of the rectangle instead of its width and size in
+        // order to include the last pixel into intersection calculations.
+        viewportRect.setBottomRight(QPoint(graphicsView->viewport()->width(),
+                                           graphicsView->viewport()->height()));
 
         if (widgetViewportRect.intersects(viewportRect)) {
             result = true;
