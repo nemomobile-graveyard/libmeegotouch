@@ -48,9 +48,7 @@ void MSnapshotItem::updateSnapshot()
         graphicsView->installEventFilter(this);
 #endif
         const QRect rect = m_boundingRect.toRect();
-
-        framebufferObject = new QGLFramebufferObject(rect.size());
-
+        framebufferObject = new QGLFramebufferObject(rect.size(), QGLFramebufferObject::CombinedDepthStencil);
         if (framebufferObject->isValid()) {
             QPainter painter(framebufferObject);
             graphicsView->render(&painter, QRectF(), rect);
