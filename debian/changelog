@@ -1,8 +1,18 @@
-libmeegotouch (0.24.3~1) unstable; urgency=low
+libmeegotouch (0.24.3-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#274008 - Widgetsgallery: sample input of numeric field requires aligning.
+  * Fixes: NB#272016 - Image area in crop handler is getting dimmed while switching between portrait to landscape mode in set as avatar crop view.
+  * Fixes: NB#283450 - Progress indicator is not spinning while Updating/Creating the Albums/Sets/Category
+  * Fixes: NB#278837 - Calendar: Inconsistency of months name in the title of the month view.
+  * Fixes: NB#282904 - Arabic alignment is wrong with numerals and special characters
+  * Fixes: NB#274812 - Custom navigation bar with shifts downwards text field after certain rotation steps
+  * Fixes: NB#283178 - List index shortcuts in Auto or On mode are not updated on list model change
+  * Fixes: NB#281889 - [TASK] Transparent Overlay sheet header needed
+  * Fixes: NB#273168 -Copy/Paste/Cut option cannot be selected in document search field.
+  * Fixes: NB#282713 - H Language - 'Dtpickers' - Truncation for §qtn_dtpi_month_and_year§
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 20 Sep 2011 10:18:04 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 28 Sep 2011 13:49:13 +0200
 
 libmeegotouch (0.24.2-1) unstable; urgency=low
 
