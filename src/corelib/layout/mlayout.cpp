@@ -45,7 +45,9 @@ MLayout::~MLayout()
     Q_D(MLayout);
     d->current_policy = NULL;  //Make sure we have no policy before
 
-    qDeleteAll(d->policies);
+    while (!d->policies.isEmpty())
+        delete d->policies.takeFirst();
+
     delete d->animation;
     //Remove all the items from the layout and delete any layouts
     //(which are ownedByLayout) inside this layout
