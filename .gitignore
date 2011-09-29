@@ -44,3 +44,4 @@ build-armel
 .qmake.cache
 mmoc/mmoc
 *.pc
+*.pro.shared
