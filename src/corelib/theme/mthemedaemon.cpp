@@ -38,7 +38,10 @@
 #include "msystemdirectories.h"
 
 using namespace M::MThemeDaemonProtocol;
+
+#ifndef NOIMAGEDIRECTORIES
 bool MThemeDaemon::printGraphicalFiles(false);
+
 
 MThemeDaemon::MThemeDaemon(Type type) :
     mostUsedPixmaps(this, type),
@@ -65,6 +68,11 @@ MThemeDaemon::~MThemeDaemon()
     qDeleteAll(themeImageDirs);
     themeImageDirs.clear();
 }
+#else
+MThemeDaemon::MThemeDaemon( )
+{
+}
+#endif
 
 QString MThemeDaemon::systemThemeDirectory()
 {
@@ -84,6 +92,7 @@ QString MThemeDaemon::systemThemeCacheDirectory()
     return MSystemDirectories::cacheDirectory() + QLatin1String("themedaemon") + QDir::separator();
 }
 
+#ifndef NOIMAGEDIRECTORIES
 void MThemeDaemon::addClient(MThemeDaemonClient *client)
 {
     Q_UNUSED(client);
@@ -448,3 +457,5 @@ void MThemeDaemon::changeLocale(const QString &newLocale, const QList<MThemeDaem
         }
     }
 }
+#endif
+

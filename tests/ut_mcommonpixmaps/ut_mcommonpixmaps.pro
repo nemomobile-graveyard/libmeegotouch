@@ -21,6 +21,14 @@ SOURCES += \
     $$MSRCDIR/corelib/theme/mthemedaemonclient.cpp \
     $$MSRCDIR/corelib/theme/mthemedaemonprotocol.cpp \
 
+linux-g++-maemo {
+    SOURCES += \
+        $$MSRCDIR/corelib/theme/inotifywrapper/fstreenode.cpp \
+        $$MSRCDIR/corelib/theme/inotifywrapper/utils.cpp \
+        $$MSRCDIR/corelib/theme/inotifywrapper/inotify.cpp \
+        $$MSRCDIR/corelib/theme/inotifywrapper/inotify.watch.cpp
+}
+
 HEADERS += \
     ut_mcommonpixmaps.h \
     $$MSRCDIR/corelib/core/mcpumonitor.h \
@@ -31,6 +39,14 @@ HEADERS += \
     $$MSRCDIR/corelib/theme/mthemedaemon.h \
     $$MSRCDIR/corelib/theme/mthemedaemonprotocol.h \
     $$MSRCDIR/corelib/theme/mthemedaemonclient.h \
+
+linux-g++-maemo {
+    HEADERS += \
+        $$MSRCDIR/corelib/theme/inotifywrapper/fstreenode.h \
+        $$MSRCDIR/corelib/theme/inotifywrapper/utils.h \
+        $$MSRCDIR/corelib/theme/inotifywrapper/inotify.h \
+        $$MSRCDIR/corelib/theme/inotifywrapper/inotify.watch.h
+}
 
 support_files.files += svg
 

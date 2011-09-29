@@ -28,6 +28,8 @@
 
 class MThemeDaemonClient;
 
+class MThemeImagesDirectory;
+
 //! \internal
 class MThemeDaemon
 {
@@ -37,12 +39,15 @@ public:
         RemoteDaemon = 1
     };
 
+#ifndef NOIMAGEDIRECTORIES
     MThemeDaemon(Type type);
     virtual ~MThemeDaemon();
+#endif
 
     static QString systemThemeDirectory();
     static QString systemThemeCacheDirectory();
 
+#ifndef NOIMAGEDIRECTORIES
     void addClient(MThemeDaemonClient *client);
     void removeClient(MThemeDaemonClient *client);
 
@@ -73,6 +78,10 @@ private:
     QStringList themeLibraries;
     QList<MThemeImagesDirectory *> themeImageDirs;
     Type type;
+#else
+private:
+    MThemeDaemon( ); // just make sure nobody tries to construct broken class
+#endif
 
 #ifdef UNIT_TEST
     friend class Ut_MCommonPixmaps;

@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 
-#ifndef Q_OS_WIN
+#ifdef __linux__
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -40,6 +40,7 @@
 
 #include "mimagedirectory.h"
 #include "mthemedaemon.h"
+
 #include "mdebug.h"
 
 #include "mgraphicssystemhelper.h"
@@ -50,6 +51,9 @@
 #include <QPixmap>
 
 #include <QLinkedList>
+#include <QPair>
+
+#include <QTimer>
 
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
 #include <QtMeeGoGraphicsSystemHelper>
@@ -61,12 +65,22 @@
 #endif
 
 
+#ifdef __linux__
+#include <sys/inotify.h>  // flags are defined here
+
+  // TODO: figure where to put these
+#include "inotifywrapper/inotify.h"
+#include "inotifywrapper/inotify.watch.h"
+
+#include "inotifywrapper/utils.h"
+#endif
+
+
 namespace {
     const unsigned int ID_CACHE_VERSION = 1;
     const unsigned int IMAGE_CACHE_VERSION = 4;
 
-      // reimplementing these in order to delete (instead of free()ing) the return values
-    char *strDup(const char *src);
+      // Allocates char array containing basepath + '/' + subdir + '\0' .
     char *appendToPath(const char *basepath, const char *subdir);
 }
 
@@ -484,7 +498,7 @@ bool PixmapImageResource::shouldBeCached()
 
 QImage IconImageResource::createPixmap(const QSize &size)
 {
-   QSvgRenderer renderer(absoluteFilePath());
+    QSvgRenderer renderer(absoluteFilePath());
 
     QSize svgImageSize = size;
     if (size.isNull()) {
@@ -539,22 +553,37 @@ QString SvgImageResource::uniqueKey()
     return absoluteFilePath() + QLatin1String("$$") + imageId;
 }
 
+
+#ifndef NOIMAGEDIRECTORIES // omit from imgcachegen
+
 const QString MThemeImagesDirectory::pixmapsDir = "images";
 const QString MThemeImagesDirectory::iconsDir = "icons";
 const QString MThemeImagesDirectory::svgDir = "svg";
 
 MThemeImagesDirectory::MThemeImagesDirectory(const QString &path, const QString &locale) :
     m_path(path),
-    m_locale(locale)
+    m_locale(locale),
+    m_imageWatch(0),
+    m_iconWatch(0),
+    m_localizedImageWatch(0),
+    m_localizedIconWatch(0)
 {
     QList<QString> directories;
 
     // read images, icons and svgs
+#ifdef __linux__
+    m_imageWatch = readImageResources(m_path + QDir::separator() + pixmapsDir);
+    m_iconWatch = readImageResources(m_path + QDir::separator() + iconsDir);
+#else
     readImageResources(m_path + QDir::separator() + pixmapsDir);
     readImageResources(m_path + QDir::separator() + iconsDir);
+#endif
     readSvgResources(m_path + QDir::separator() + svgDir);
 
     reloadLocalizedResources(locale);
+
+    QObject::connect(INotify::instance(), SIGNAL(fileEvent(INotify::Watch *, const char *, unsigned)),
+                     this, SLOT(inEvent(INotify::Watch *, const char *, unsigned)));
 }
 
 MThemeImagesDirectory::~MThemeImagesDirectory()
@@ -677,9 +706,20 @@ void MThemeImagesDirectory::reloadLocalizedResources(const QString &locale)
     if( m_locale != locale )
         mWarning("MThemeImagesDirectory") << "Using" << m_locale << "as locale, because no localized resources was found for" << locale;
 
+#ifdef __linux__
+      // remove old watches if present
+    if(m_localizedImageWatch)
+        m_localizedImageWatch->recursiveDestruction( );
+    if(m_localizedIconWatch)
+        m_localizedIconWatch->recursiveDestruction( );
+
     // read localized images, icons and svgs
+    m_localizedImageWatch = readImageResources(localePath + pixmapsDir, true);
+    m_localizedIconWatch = readImageResources(localePath + iconsDir, true);
+#else
     readImageResources(localePath + pixmapsDir, true);
     readImageResources(localePath + iconsDir, true);
+#endif
     readSvgResources(localePath + svgDir, true);
 }
 
@@ -694,9 +734,14 @@ QString MThemeImagesDirectory::locale() const
 }
 
 
+#ifdef __linux__
+INotify::Watch *MThemeImagesDirectory::readImageResources(const QString& path, bool localized)
+{
+    return crawlImageDirectory(imageCrawlerHandler, path, localized);
+}
+#else
 void MThemeImagesDirectory::readImageResources(const QString& path, bool localized)
 {
-#ifdef Q_OS_WIN
     QList<QString> directories;
     directories.append(path);
     while (!directories.isEmpty()) {
@@ -718,14 +763,14 @@ void MThemeImagesDirectory::readImageResources(const QString& path, bool localiz
             }
         }
     }
-#else
-    crawlImageDirectory(imageCrawlerHandler, path, localized);
-#endif
 }
+#endif
 
 void MThemeImagesDirectory::readSvgResources(const QString& path, bool localized)
 {
-#ifdef Q_OS_WIN
+#ifdef __linux__
+    crawlImageDirectory(svgCrawlerHandler, path, localized);
+#else
     QList<QString> directories;
     directories.append(path);
     while (!directories.isEmpty()) {
@@ -747,13 +792,11 @@ void MThemeImagesDirectory::readSvgResources(const QString& path, bool localized
             }
         }
     }
-#else
-    crawlImageDirectory(svgCrawlerHandler, path, localized);
 #endif
 }
 
 
-#ifdef Q_OS_WIN
+#ifndef __linux__
 void MThemeImagesDirectory::addImageResource(const QFileInfo& fileInfo, bool localized)
 {
     if( !localized ) {
@@ -866,50 +909,50 @@ void MThemeImagesDirectory::saveIdsInCache(const QStringList& ids, const QFileIn
     file.close();
 }
 #else
-void MThemeImagesDirectory::addImageResource(const char *path, const char *filename, bool localized)
+  // purpose of basename and lastdot parameters is to avoid of allocating new
+  // array for basename in the case this function is being called by
+  // MThemeImagesDirectory::inEvent in which case it's already allocated
+void MThemeImagesDirectory::addImageResource(const char *path, const char *filename, bool localized, char *basename, const char *ldot)
 {
-    const char *a = 0;
-    char *basename;
+    const char *dot = ldot;
+    char *bn = basename;
 
-    for(const char *t = filename; t; t = strstr(t+1, "."))
-        a = t;
-    if(filename < a) {
-        int len = a - filename;
-        basename = new char[len + 1];
-        memcpy(basename, filename, len);
-        basename[len] = 0;
-    } else {
-        return;  // no suffix, we can return now - though this should be never triggered (checks in calling function)
-    }
+    if (!bn)
+        bn = util::basename(filename, dot);
+
+    if (!bn || !dot)
+        return;
+
 
     if( !localized ) {
         //only one image resource from the theme with a same name is allowed
-        if (imageResources.contains(basename)) {
-            mWarning("MThemeDaemon") << "Multiple reference of " << basename
-                                     << "Using " << imageResources.value(basename)->absoluteFilePath()
+        if (imageResources.contains(bn)) {
+            mWarning("MThemeDaemon") << "Multiple reference of " << bn
+                                     << "Using " << imageResources.value(bn)->absoluteFilePath()
                                      << "instead of" << path;
         } else {
             //if "svg" add IconImageResource, if "jpg" or "png" add PixmapImageResource
             ImageResource *res = 0;
-            if (!strcasecmp(a+1, "svg"))
+            if (!strcasecmp(dot+1, "svg"))
                 res = new IconImageResource(path);
             else
                 res = new PixmapImageResource(path);
 
-            imageResources.insert(basename, res);
+            imageResources.insert(bn, res);
         }
     }
     else {
         //add localized image resource only if same named resource was found from the original theme
-        if (!imageResources.contains(basename) && !idsInSvgImages.contains(basename)) {
+        if (!imageResources.contains(bn) && !idsInSvgImages.contains(bn)) {
             mWarning("MThemeDaemon") << "Ignoring localized image resource" << path << "because it was not found from the original theme!";
         } else {
             //if "svg" add IconImageResource, if "jpg" or "png" add PixmapImageResource
-            localizedImageResources.insert(basename, !strcasecmp(a+1, "svg") ? (ImageResource*) new IconImageResource(path) : (ImageResource*) new PixmapImageResource(path));
+            localizedImageResources.insert(bn, !strcasecmp(dot+1, "svg") ? (ImageResource*) new IconImageResource(path) : (ImageResource*) new PixmapImageResource(path));
         }
     }
 
-    delete[] basename;
+    if (!basename)
+        delete[] bn;
 }
 
 void MThemeImagesDirectory::addSvgResource(const char *path, bool localized)
@@ -938,17 +981,41 @@ void MThemeImagesDirectory::addSvgResource(const char *path, bool localized)
     }
 }
 
+  // FIXME: appropriate flags
+const unsigned MThemeImagesDirectory::inflags = IN_CLOSE_WRITE | IN_MOVED_TO | IN_CREATE;
 
-void MThemeImagesDirectory::crawlImageDirectory(MThemeImagesDirectory::FileCrawlerHandler handler, const QString& path, bool localized)
+INotify::Watch *MThemeImagesDirectory::crawlImageDirectory(MThemeImagesDirectory::FileCrawlerHandler handler, const QString& path, bool localized)
 {
-    QLinkedList<char *> dirs;
-    dirs.append(::strDup(qPrintable(path)));
+    INotify::Watch *root = 0;
+
+    QLinkedList<QPair<INotify::Watch *, char *> > dirs;
+    dirs.append(QPair<INotify::Watch *, char *>(0, util::dup(qPrintable(path))));
+
     while (!dirs.isEmpty()) {
-        char *s = dirs.takeFirst();
-        DIR *d = opendir(s);
-        if (!d) {
+        QPair<INotify::Watch *, char *> pair = dirs.takeFirst();
+        char *s = pair.second;
+        DIR *dir = opendir(s);
+        if (!dir) {
             delete[] s;
             continue;
+        }
+
+        INotify::Watch *nw = 0;
+
+          // only root node is allowed to be orphan - if there's a failure in
+          // the tree, skip the watching for the failed directorys children
+        if (pair.first || !root) {
+              // no data is interpreted as not localized - when not localized
+              // don't supply the data in order to save an allocation
+            nw = INotify::instance()->addWatch(s, inflags, localized ? new ImageDirectoryData(true) : 0);
+
+            if (nw) {
+                if (!pair.first) {
+                    root = nw;
+                } else {
+                    pair.first->addChild(nw);
+                }
+            } // TODO: warn/etc if INotify::Watch creation has failed
         }
 
           // allocate buffer for file names here in order to avoid allocating it
@@ -960,11 +1027,11 @@ void MThemeImagesDirectory::crawlImageDirectory(MThemeImagesDirectory::FileCrawl
         char *fnptr = fnbuf + strlen(s);
         *(fnptr++) = '/';
 
-        for (struct dirent *e = readdir(d); e; e = readdir(d)) { // FIXME: retarded . and .. detection
-            if (e->d_type == DT_DIR) {
+        for (struct dirent *e = readdir(dir); e; e = readdir(dir)) {
+            if (e->d_type == DT_DIR) {  // FIXME: retarded . and .. detection
                 bool ignoreMe = e->d_name[0] == '.' && (e->d_name[1] == 0 || (e->d_name[1] == '.' && e->d_name[2] == 0));
                 if (!ignoreMe)
-                    dirs.append(::appendToPath(s, e->d_name));
+                    dirs.append(QPair<INotify::Watch *, char *>(nw, ::appendToPath(s, e->d_name)));
             } else if (e->d_type == DT_REG) { // TODO: handle symlinks
                 unsigned l = strlen(e->d_name);
                 if(MAX_PATH_WITHOUT_ALLOC - 2 < l) { // avoid  hazardous buffer overflow by extra alloc/free round - slow path
@@ -981,8 +1048,10 @@ void MThemeImagesDirectory::crawlImageDirectory(MThemeImagesDirectory::FileCrawl
 
         delete[] s;
         delete[] fnbuf;
-        closedir(d);
+        closedir(dir);
     }
+
+    return root;
 }
 
 
@@ -1012,6 +1081,83 @@ void MThemeImagesDirectory::svgCrawlerHandler(MThemeImagesDirectory *self, const
         return;
 
     self->addSvgResource(path, localized);
+}
+
+
+void MThemeImagesDirectory::inEvent(INotify::Watch *w, const char *fn, unsigned evmask)
+{
+      // there is multiple theme directories for which this slot is invoked
+      // from same event - need to check that the watch belongs to this dir
+      // TODO: consider having some sort of "smart" lookup to avoid all dirs
+      // checking whether event "belongs" to them
+    if (w->isUnderPath(qPrintable(m_path))) {
+        if (evmask == IN_CLOSE_WRITE || evmask == IN_MOVED_TO) {
+            const char *lastdot = 0;
+            char *basename = util::basename(fn, lastdot);
+
+            if (!basename || !lastdot)
+                return;
+
+              // TODO: try to avoid extra alloc/free round
+            if (!imageResources.contains(basename)) {
+                const char *suffix = lastdot+1;
+
+                if (!strcasecmp(suffix, "png") || !strcasecmp(suffix, "jpg") ||
+                    !strcasecmp(suffix, "svg") || !strcasecmp(suffix, "jpeg")) {
+                    char *tmp = ::appendToPath(w->path(), fn);
+                    const ImageDirectoryData *data = qobject_cast<const ImageDirectoryData *>(w->data());
+
+                    addImageResource(tmp, tmp + strlen(w->path()) + 1, data ? data->localized() : false, basename, lastdot);
+
+                    delete[] tmp;
+                }
+            }
+
+            delete[] basename;
+        } else if (evmask == (IN_CREATE | IN_ISDIR) ||
+                   (IN_MOVED_TO | IN_ISDIR) == evmask) {
+            char *tmp = ::appendToPath(w->path(), fn);
+
+              // new dir has created, add it after a delay and give some time
+              // to extract files there without need to monitor it
+            if (evmask == (IN_CREATE | IN_ISDIR)) {
+                newDirQueue.push_back(QPair<INotify::Watch *, char *>(w, tmp));
+
+                  // TODO: consider appropriate delay
+                QTimer::singleShot(2000, this, SLOT(processNewDirQueue()));
+            } else {  // existing dir has moved in, add immediately
+                const ImageDirectoryData *data = qobject_cast<const ImageDirectoryData *>(w->data());
+                INotify::Watch *watch = MThemeImagesDirectory::crawlImageDirectory(imageCrawlerHandler, tmp,
+                                                                                   data ? data->localized() : false);
+                if (watch)
+                    w->addChild(watch);
+
+                delete[] tmp;
+            }
+        }
+
+        // TODO: only most trivial case of adding new images is supported,
+        // at least the cases of adding directories and removing images that
+        // are not used should be supported.
+    }
+}
+
+void MThemeImagesDirectory::processNewDirQueue()
+{
+    if (newDirQueue.size() < 1)
+        return;
+
+    QPair<INotify::Watch *, char *> data = newDirQueue.takeFirst();
+    const ImageDirectoryData *idata = qobject_cast<const ImageDirectoryData *>(data.first->data());
+
+    INotify::Watch *watch = MThemeImagesDirectory::crawlImageDirectory(imageCrawlerHandler,
+                                                                       data.second,
+                                                                       idata ? idata->localized() : false);
+
+    if (watch)
+        data.first->addChild(watch);
+
+    delete data.second;
 }
 
 
@@ -1080,7 +1226,7 @@ void MThemeImagesDirectory::saveIdsInCache(const QStringList& ids, const char *p
     stream << ids;
     file.close();
 }
-#endif
+#endif // __linux__
 
 QString MThemeImagesDirectory::createIdCacheFilename(const QString &filePath) const
 {
@@ -1168,22 +1314,23 @@ QStringList MImageDirectory::activeImageIds() const
     return imageResources.keys();
 }
 
+
+ImageDirectoryData::ImageDirectoryData(bool localized) : QObject(0),
+                                                         m_localized(localized)
+{
+}
+
+bool ImageDirectoryData::localized() const
+{
+    return m_localized;
+}
+
+
+#endif // NOIMAGEDIRECTORIES
+
   // the C string operations
 namespace
-{     // the only purpose of this function is using new (and avoiding using C free() )
-    char *strDup(const char *src)
-    {
-        unsigned l = 0;
-        for (const char *i = src; *i; i++)
-            l++;
-
-        char *ret = new char[l + 1];
-        memcpy(ret, src, l);
-        ret[l] = 0;
-
-        return ret;
-    }
-
+{
     char *appendToPath(const char *basepath, const char *subdir)
     {
         unsigned l = 0;

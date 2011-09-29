@@ -27,12 +27,14 @@
 #include <QSharedPointer>
 #include <QSvgRenderer>
 #include <QHash>
+#include <QLinkedList>
 #include <QSet>
 #include <QSize>
 #include <QImage>
 #include <QColor>
 #include <mnamespace.h>
 #include <QDebug>
+#include <QObject>
 
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
 #include <sys/mman.h>
@@ -42,6 +44,11 @@
 class QPixmap;
 class QFileInfo;
 class QFile;
+
+
+#ifndef NOIMAGEDIRECTORIES
+#include "inotifywrapper/inotify.h"
+#endif
 
 
 typedef QPixmap RenderSurface;
@@ -176,8 +183,26 @@ private:
     QString imageId;
 };
 
-class MThemeImagesDirectory
+
+#ifndef NOIMAGEDIRECTORIES // omit the class from imgcachegen
+
+
+  // a hack to cope with Qt moc failure - MThemeImagesDirectory slot needs to
+  // have INotify::Watch declared which is done in inotify.hh that's used only
+  // on linux
+#ifndef __linux__
+class INotify
 {
+public:
+    class Watch;
+};
+#endif
+
+
+class MThemeImagesDirectory : public QObject
+{
+    Q_OBJECT
+
     friend class Ut_MImageDirectory;
 public:
     static const QString pixmapsDir;
@@ -197,7 +222,7 @@ public:
     QString locale() const;
     
 private:
-#ifdef Q_OS_WIN  // stick with old Qt-based implementation
+#ifndef __linux__  // stick with old Qt-based implementation
     bool loadIdsFromCache(const QFileInfo& svgFileInfo, bool localized = false);
     void saveIdsInCache(const QStringList& ids, const QFileInfo& svgFileInfo) const;
 #else
@@ -207,22 +232,26 @@ private:
 
     QString createIdCacheFilename(const QString &filePath) const;
 
+#ifdef __linux__
+    INotify::Watch *readImageResources(const QString& path, bool localized = false);
+#else
     void readImageResources(const QString& path, bool localized = false);
+#endif
     void readSvgResources(const QString& path, bool localized = false);
 
-#ifdef Q_OS_WIN
-    void addImageResource(const QFileInfo& fileInfo, bool localized);
-    void addSvgResource(const QFileInfo& fileInfo, bool localized);
-#else
-    void addImageResource(const char *path, const char *filename, bool localized);
+#ifdef __linux__
+    void addImageResource(const char *path, const char *filename, bool localized, char *basename = 0, const char *ldot = 0);
     void addSvgResource(const char *path, bool localized);
 
       // params: self, path (filename with full path), filename (filename without path, in same buf as path), localized
     typedef void (*FileCrawlerHandler)(MThemeImagesDirectory *, const char *, const char *, bool);
-    void crawlImageDirectory(FileCrawlerHandler handler, const QString& path, bool localized);
+    INotify::Watch *crawlImageDirectory(FileCrawlerHandler handler, const QString& path, bool localized);
 
     static void imageCrawlerHandler(MThemeImagesDirectory *self, const char *path, const char *filename, bool localized);
     static void svgCrawlerHandler(MThemeImagesDirectory *self, const char *path, const char *filename, bool localized);
+#else
+    void addImageResource(const QFileInfo& fileInfo, bool localized);
+    void addSvgResource(const QFileInfo& fileInfo, bool localized);
 #endif
 
     // image id => image resource
@@ -235,6 +264,29 @@ private:
 
     QString m_path;
     QString m_locale;
+
+#ifdef __linux__
+    INotify::Watch *m_imageWatch;
+    INotify::Watch *m_iconWatch;
+
+    INotify::Watch *m_localizedImageWatch;
+    INotify::Watch *m_localizedIconWatch;
+
+    QLinkedList< QPair<INotify::Watch *, char *> > newDirQueue;
+
+    static const unsigned inflags;
+#endif
+
+    // We have to expose the slots for all platforms as moc is not processing
+    // anything inside #ifdef __linux__ blocks (unless someone adds
+    // DEFINES += __linux__ to any of project (include) files which is quite
+    // dirty hack). If this ever gets fixed on Qt side, move the private slots
+    // inside previous #ifdef __linux__ block and remove hack INotify::Watch
+    // declaration for non-__linux__ platforms.
+private slots:
+    void inEvent(INotify::Watch *w, const char *fn, unsigned evmask);
+
+    void processNewDirQueue();
 };
 
 class MImageDirectory
@@ -257,6 +309,23 @@ private:
 
     QSet<QString> notFoundIds;
 };
+
+
+class ImageDirectoryData : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(bool localized READ localized)
+
+public:
+    ImageDirectoryData(bool localized = false);
+
+    bool localized() const;
+
+private:
+    bool m_localized;
+};
 //! \internal_end
+
+#endif // NOIMAGEDIRECTORIES
 
 #endif

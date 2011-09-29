@@ -42,7 +42,14 @@ SOURCES += main.cpp \
            ../src/corelib/theme/mthemedaemonprotocol.cpp \
            ../src/corelib/core/mcpumonitor.cpp \
            ../src/corelib/core/mgraphicssystemhelper.cpp \
-           ../src/corelib/core/msystemdirectories.cpp \
+           ../src/corelib/core/msystemdirectories.cpp
+
+linux-g++-maemo {
+    SOURCES += ../src/corelib/theme/inotifywrapper/inotify.cpp \
+               ../src/corelib/theme/inotifywrapper/inotify.watch.cpp \
+               ../src/corelib/theme/inotifywrapper/fstreenode.cpp \
+               ../src/corelib/theme/inotifywrapper/utils.cpp
+}
 
 contains(DEFINES, HAVE_GCONF) {
     PKGCONFIG += gconf-2.0
@@ -63,7 +70,14 @@ HEADERS += \
            ../src/corelib/core/mcpumonitor.h \
            ../src/corelib/core/mgraphicssystemhelper.h \
            ../src/corelib/core/msystemdirectories.h \
-           keypresswaiter.h \
+           keypresswaiter.h
+
+linux-g++-maemo {
+    HEADERS += ../src/corelib/theme/inotifywrapper/inotify.h \
+               ../src/corelib/theme/inotifywrapper/inotify.watch.h \
+               ../src/corelib/theme/inotifywrapper/fstreenode.h \
+               ../src/corelib/theme/inotifywrapper/utils.h
+}
 
 QMAKE_EXTRA_TARGETS += check
 check.depends = $$TARGET
