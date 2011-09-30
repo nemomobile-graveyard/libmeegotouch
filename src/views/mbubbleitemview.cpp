@@ -63,7 +63,6 @@ MBubbleItemViewPrivate::MBubbleItemViewPrivate()
 
     messageComposition = new MLabel();
     messageComposition->setWordWrap(true);
-    messageComposition->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     messageComposition->setAlignment(Qt::AlignLeft);
     messageComposition->setTextFormat(Qt::RichText);
 }

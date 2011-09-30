@@ -62,7 +62,6 @@ MLabel *MMessageBoxViewPrivate::titleLabelWidget()
         titleLabel->setStyleName(q->style()->titleStyleName());
         titleLabel->setTextElide(false);
         titleLabel->setWordWrap(true);
-        titleLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         titleLabel->setAlignment(Qt::AlignCenter);
     }
     return titleLabel;
@@ -76,7 +75,6 @@ MLabel *MMessageBoxViewPrivate::textLabelWidget()
         textLabel = new MLabel(contents);
         textLabel->setStyleName(q->style()->textStyleName());
         textLabel->setWordWrap(true);
-        textLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         textLabel->setAlignment(Qt::AlignCenter);
     }
     return textLabel;

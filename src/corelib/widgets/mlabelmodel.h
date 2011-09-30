@@ -60,7 +60,7 @@ class M_CORE_EXPORT MLabelModel : public MWidgetModel
       \property MLabelModel::wrapMode
       \brief If 'wordwrap' is set, describes how text is wrapped in the label.
     */
-    M_MODEL_PROPERTY(QTextOption::WrapMode, wrapMode, WrapMode, true, QTextOption::WordWrap)
+    M_MODEL_PROPERTY(QTextOption::WrapMode, wrapMode, WrapMode, true, QTextOption::WrapAtWordBoundaryOrAnywhere)
 
     /*!
         \property MLabelModel::alignment

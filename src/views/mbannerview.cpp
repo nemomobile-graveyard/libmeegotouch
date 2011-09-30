@@ -72,7 +72,6 @@ MLabel *MBannerViewPrivate::subtitle()
         subtitleLabel = new MLabel(controller);
         //Banners can't have html
         subtitleLabel->setTextFormat(Qt::PlainText);
-        subtitleLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         subtitleLabel->setWordWrap(true);
         subtitleLabel->setTextElide(true);
     }
@@ -108,7 +107,6 @@ MLabel *MBannerViewPrivate::prefixTimeStamp()
         prefixTimeStampLabel = new MLabel(controller);
         //Banners can't have html
         prefixTimeStampLabel->setTextFormat(Qt::PlainText);
-        prefixTimeStampLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         prefixTimeStampLabel->setTextElide(true);
     }
 
@@ -337,7 +335,6 @@ void MBannerViewPrivate::layoutSystemBanner()
     if (!q->model()->title().isEmpty()) {
         title()->setStyleName("SystemBannerTitle");
         title()->setVisible(true);
-        title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         title()->setWordWrap(true);
         title()->setTextElide(true);
         landscapePolicy->addItem(title(), Qt::AlignTop);
@@ -427,7 +424,6 @@ void MBannerViewPrivate::layoutFullEventBanner()
     if (!q->model()->title().isEmpty()) {
         title()->setStyleName("FullEventBannerTitle");
         title()->setVisible(true);
-        title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         title()->setWordWrap(true);
         title()->setTextElide(true);
         gridBanner->addItem(title(), 0, 1);
@@ -502,7 +498,6 @@ void MBannerViewPrivate::layoutLockScreenEventBanner()
     if (!q->model()->title().isEmpty()) {
         title()->setStyleName("LockScreenEventBannerTitle");
         title()->setVisible(true);
-        title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         title()->setWordWrap(true);
         title()->setTextElide(true);
         gridBanner->addItem(title(), 0, 1);
@@ -578,7 +573,6 @@ void MBannerViewPrivate::layoutPrivateEventBanner()
 
     title()->setStyleName("PrivateEventBannerTitle");
     title()->setVisible(true);
-    title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     title()->setWordWrap(true);
     title()->setTextElide(true);
     gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
