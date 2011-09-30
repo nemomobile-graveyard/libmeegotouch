@@ -33,6 +33,8 @@
 #include <MScene>
 #include <MSceneManager>
 
+#include <QPaintEngine>
+
 #include <mtextedit.h>
 #include <mtexteditview.h>
 
@@ -86,6 +88,91 @@ void Ut_MTextEditView::cleanup()
     m_controller = 0;
 }
 
+namespace {
+
+class FakePaintEngine;
+
+class FakePaintDevice : public QPaintDevice
+{
+public:
+    FakePaintDevice();
+    virtual ~FakePaintDevice();
+
+    virtual QPaintEngine *paintEngine() const;
+
+    QScopedPointer<FakePaintEngine> engine;
+};
+
+class FakePaintEngine : public QPaintEngine
+{
+public:
+    FakePaintEngine()
+    : QPaintEngine()
+    , device(0)
+    , tracePaint(false)
+    {
+    }
+    virtual ~FakePaintEngine()
+    {
+    }
+
+    virtual bool begin(QPaintDevice *dev)
+    {
+        device = dev;
+        return true;
+    }
+
+    virtual bool end()
+    {
+        device = 0;
+        return true;
+    }
+
+    virtual void drawPixmap(const QRectF &r, const QPixmap &pm, const QRectF &sr)
+    {
+        if (tracePaint) {
+            qDebug() << Q_FUNC_INFO << "r:" << r << "sr:" << sr << "pm:" << pm.rect();
+        }
+    }
+
+    void drawTextItem(const QPointF &p, const QTextItem &textItem)
+    {
+        if (tracePaint) {
+            qDebug() << Q_FUNC_INFO << "p:" << p << "(mapped):" << transform.map(p) << "textItem:" << textItem.text() << textItem.font();
+        }
+    }
+
+    virtual void updateState(const QPaintEngineState &state)
+    {
+        if (tracePaint) {
+            qDebug() << Q_FUNC_INFO << "transform:" << state.transform();
+        }
+    }
+
+    virtual Type type() const
+    {
+        return User;
+    }
+
+    QPaintDevice *device;
+    bool tracePaint;
+};
+
+FakePaintDevice::FakePaintDevice()
+: engine(new FakePaintEngine)
+{
+}
+
+FakePaintDevice::~FakePaintDevice()
+{
+}
+
+QPaintEngine *FakePaintDevice::paintEngine() const
+{
+    return engine.data();
+}
+
+}
 
 void Ut_MTextEditView::testPaint()
 {
