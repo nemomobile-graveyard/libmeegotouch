@@ -436,6 +436,9 @@ void MTextEditPrivate::init()
     q->addAction(&copyAction);
     q->addAction(&pasteAction);
 
+    QObject::connect(q, SIGNAL(geometryChanged()),
+                     q, SLOT(_q_updateTextDirection()));
+
     q->retranslateUi();
 
     // to avoid too frequent calls of QInputContext::updateMicroFocus(),
