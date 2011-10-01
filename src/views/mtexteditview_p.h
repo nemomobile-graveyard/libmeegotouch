@@ -74,8 +74,6 @@ public:
     void showEditorToolbar();
     void hideEditorToolbar();
 
-    void setPromptText(const QString &prompt);
-
     qreal promptOpacity() const;
     void setPromptOpacity(qreal opacity);
 
@@ -131,7 +129,6 @@ protected:
     bool focused;
 
     QTextDocument *maskedTextDocument;
-    QTextDocument *promptTextDocument;
 
     int unmaskPosition; // position where unmask in masked mode starts
     int unmaskLength; // lenght of unmasked text

@@ -81,7 +81,6 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       controller(control),
       focused(false),
       maskedTextDocument(0),
-      promptTextDocument(new QTextDocument(this)),
       unmaskPosition(-1),
       unmaskLength(0),
       selectionThreshold(15),
@@ -108,11 +107,6 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       scrollSelectTimer(new QTimer(this)),
       focusingTap(true)
 {
-    // copy text options from actual document to prompt
-    QTextOption promptOption = document()->defaultTextOption();
-    promptOption.setWrapMode(QTextOption::NoWrap);
-    promptTextDocument->setDefaultTextOption(promptOption);
-
     selectionFormat.setForeground(Qt::white);
     selectionFormat.setBackground(Qt::black);
 
@@ -154,11 +148,6 @@ MTextEditViewPrivate::~MTextEditViewPrivate()
 QTextDocument *MTextEditViewPrivate::document() const
 {
     return controller->document();
-}
-
-QTextDocument *MTextEditViewPrivate::promptDocument() const
-{
-    return promptTextDocument;
 }
 
 /*!
@@ -584,12 +573,6 @@ void MTextEditViewPrivate::setPromptOpacity(qreal opacity)
     q->doUpdate();
 }
 
-void MTextEditViewPrivate::setPromptText(const QString &promptText)
-{
-    // Note: only using the first length variant now
-    promptTextDocument->setPlainText(promptText.left(promptText.indexOf(TextVariantSeparator)));
-}
-
 void MTextEditViewPrivate::showMagnifier()
 {
     Q_Q(MTextEditView);
@@ -726,7 +709,7 @@ void MTextEditViewPrivate::handleDocumentUpdate(int position, int charsRemoved, 
     }
 
     const bool hasText = !document()->isEmpty();
-    const bool hasPrompt = !promptTextDocument->isEmpty();
+    const bool hasPrompt = !q->model()->prompt().isEmpty();
 
     if (isPromptVisible && hasText && hasPrompt) {
         isPromptVisible = false;
@@ -1137,7 +1120,8 @@ QRect MTextEditViewPrivate::selectionLineRectangle(bool first)
 void MTextEditViewPrivate::playFocusAnimation(QAbstractAnimation::Direction direction,
                                               qreal endValue)
 {
-    if (promptTextDocument->isEmpty() || !document()->isEmpty()) {
+    Q_Q(MTextEditView);
+    if (q->model()->prompt().isEmpty() || !document()->isEmpty()) {
         promptFocusAnimation.stop();
         return;
     }
@@ -1316,11 +1300,8 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     bool clip = false;
 
     bool showPrompt = d->isPromptVisible || d->promptShowHideAnimation.state() == QAbstractAnimation::Running;
-    // If the prompt is visible than clip according to it, else according to activeDocument.
-    if (showPrompt)
-        clip = isGreater(clipping.size(), d->promptDocument()->size());
-    else
-        clip = isGreater(clipping.size(), d->activeDocument()->size());
+    // prompt box is now directly got from document, so no need to check its clipping explicitly
+    clip = isGreater(clipping.size(), d->activeDocument()->size());
 
 
     if (clip) {
@@ -1333,10 +1314,8 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     // draw actual text to the screen
     if (showPrompt) {
         // with no content we show the prompt text if there is prompt text
-        QAbstractTextDocumentLayout::PaintContext paintContext;
-        QColor promptColor = s->promptColor();
-        paintContext.palette.setColor(QPalette::Text, promptColor);
 
+        QTextOption promptOptions = d->document()->defaultTextOption();
         // KLUDGE: make sure here that prompt document has the same indentation as
         // main QTextDocument just to support cases when app developer has been
         // messing with indentation of it, e.g. to make first line indented a bit.
@@ -1354,7 +1333,13 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
 
         qreal opacity = painter->opacity();
         painter->setOpacity(d->currentPromptOpacity);
-        d->promptDocument()->documentLayout()->draw(painter, paintContext);
+        QPen savePen = painter->pen();
+        painter->setPen(s->promptColor());
+        QFont saveFont = painter->font();
+        painter->setFont(s->promptFont());
+        painter->drawText(clipping, model()->prompt(), promptOptions);
+        painter->setPen(savePen);
+        painter->setFont(saveFont);
         painter->setOpacity(opacity);
     }
 
@@ -1375,7 +1360,6 @@ void MTextEditView::resizeEvent(QGraphicsSceneResizeEvent *event)
     int textWidth = event->newSize().width() - style()->paddingLeft() - style()->paddingRight();
 
     d->document()->setTextWidth(textWidth);
-    d->promptTextDocument->setTextWidth(textWidth);
 
     if (d->maskedTextDocument != 0) {
         d->maskedTextDocument->setTextWidth(textWidth);
@@ -1791,7 +1775,6 @@ void MTextEditView::updateData(const QList<const char *> &modifications)
             }
 
         } else if (member == MTextEditModel::Prompt) {
-            d->setPromptText(model()->prompt());
             d->setPromptOpacity(d->focused ? style()->focusedPromptOpacity() : style()->unfocusedPromptOpacity());
             d->isPromptVisible = (d->activeDocument()->isEmpty() == true
                                   && model()->prompt().isEmpty() == false);
@@ -1880,7 +1863,6 @@ void MTextEditView::setupModel()
         d->initMaskedDocument();
     }
 
-    d->setPromptText(model()->prompt());
     d->setPromptOpacity(d->focused ? style()->focusedPromptOpacity() : style()->unfocusedPromptOpacity());
     d->isPromptVisible = (d->activeDocument()->isEmpty() == true
                           && model()->prompt().isEmpty() == false);
@@ -2019,17 +2001,13 @@ void MTextEditView::applyStyle()
 
     // Set document font
     d->document()->setDefaultFont(s->font());
-    d->promptTextDocument->setDefaultFont(s->promptFont());
 
     // Note: currently using fixed internal margin
     d->document()->setDocumentMargin(InternalMargin);
-    d->promptTextDocument->setDocumentMargin(InternalMargin);
 
     // Note: using non-documented property
     d->document()->documentLayout()->setProperty(CursorWidthProperty,
                                                  s->cursorWidth());
-    d->promptTextDocument->documentLayout()->setProperty(CursorWidthProperty,
-                                                         0);
 
     if (d->maskedTextDocument != 0) {
         d->maskedTextDocument->setDefaultFont(s->font());
