@@ -45,11 +45,13 @@ public:
     void init();
 
     void createHeader();
+    void layoutHeader();
     void removeHeader();
     void setupIcon(const QSize &size);
 
     void createProgressIndicator();
     void layoutProgressIndicator();
+    void destroyProgressIndicator();
 
     void setupTextLabel();
 

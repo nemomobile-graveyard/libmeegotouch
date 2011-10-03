@@ -126,11 +126,16 @@ void MContainerViewPrivate::createHeader()
             headerLayout->setAlignment(icon,  Qt::AlignVCenter | Qt::AlignLeft);
             icon->show();
         }
+    }
+}
 
-        QGraphicsLinearLayout* mainLayout = dynamic_cast<QGraphicsLinearLayout*>(controller->layout());
+void MContainerViewPrivate::layoutHeader()
+{
+    QGraphicsLinearLayout* mainLayout = dynamic_cast<QGraphicsLinearLayout*>(controller->layout());
 
-        if (mainLayout)
-            mainLayout->insertItem(0, header);
+    if (mainLayout) {
+        mainLayout->insertItem(0, header);
+        mainLayout->activate();
     }
 }
 
@@ -222,6 +227,12 @@ void MContainerViewPrivate::layoutProgressIndicator()
     }
 }
 
+void MContainerViewPrivate::destroyProgressIndicator()
+{
+    delete progressIndicator;
+    progressIndicator = 0;
+    headerLayout->activate();
+}
 MContainerView::MContainerView(MContainer *controller) :
     MWidgetView(*new MContainerViewPrivate, controller)
 {
@@ -321,6 +332,8 @@ void MContainerView::updateData(const QList<const char *>& modifications)
         if (!model->icon().isEmpty())
             d->setupIcon(style()->iconSize());
 
+        d->layoutHeader();
+
         // same for the progress indicator
         if (model->progressIndicatorVisible()) {
             d->createProgressIndicator();
@@ -355,8 +368,7 @@ void MContainerView::updateData(const QList<const char *>& modifications)
                 d->createProgressIndicator();
                 d->layoutProgressIndicator();
             } else {
-                delete d->progressIndicator;
-                d->progressIndicator = 0;
+                d->destroyProgressIndicator();
             }
         }
     }
@@ -387,6 +399,7 @@ void MContainerView::setupModel()
         if (!model()->icon().isEmpty())
             d->setupIcon(style()->iconSize());
 
+        d->layoutHeader();
     }
 
     int spacing = style()->internalItemSpacing();
