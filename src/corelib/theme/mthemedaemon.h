@@ -61,6 +61,8 @@ public:
     ImageResource *findImageResource(const QString &imageId);
 
     MCommonPixmaps mostUsedPixmaps;
+    /*! Print out requested graphics IDs and files which are used */
+    static bool printGraphicalFiles;
 
 private:
 

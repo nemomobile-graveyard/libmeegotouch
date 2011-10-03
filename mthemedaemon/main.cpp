@@ -133,6 +133,9 @@ int main(int argc, char **argv)
     if (app.arguments().indexOf("-quitimmediately") >= 0) {
         QTimer::singleShot(0, &app, SLOT(quit()));
     }
+    if (app.arguments().indexOf("-log-graphics-files") >= 0) {
+        MThemeDaemon::printGraphicalFiles = true;
+    }
 
     index = app.arguments().indexOf("-slowdown");
     if ((index >= 0) && (index + 1 < app.arguments().count())) {

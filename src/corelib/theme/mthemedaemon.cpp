@@ -38,6 +38,7 @@
 #include "msystemdirectories.h"
 
 using namespace M::MThemeDaemonProtocol;
+bool MThemeDaemon::printGraphicalFiles(false);
 
 MThemeDaemon::MThemeDaemon(Type type) :
     mostUsedPixmaps(this, type),
@@ -119,6 +120,9 @@ bool MThemeDaemon::pixmap(MThemeDaemonClient *client, const PixmapIdentifier &id
         } else if (type == RemoteDaemon) {
             mostUsedPixmaps.increaseRequestCount(id, resource);
         }
+    }
+    if (printGraphicalFiles) {
+        mWarning("MThemeDaemon") << qPrintable(QString("%1: ID: %2 file: %3").arg(client->name()).arg(id.imageId).arg(resource->absoluteFilePath()));
     }
 
     // save the information that this client has a reference of this pixmap

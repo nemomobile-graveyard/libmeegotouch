@@ -686,6 +686,8 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
             }
         } else if (s == "-performance-debug") {
             g_show_performance_messages = true;
+        } else if (s == "-log-graphics-files") {
+            MThemeDaemon::printGraphicalFiles = true;
         } else if (s == "-syslog-server") {
             if (i < (argc -1)) {
                 i++;
@@ -757,6 +759,7 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                                          << "  [-show-br] Show the bounding rectangle for all scene items\n"
                                          << "  [-show-fps] Show the FPS for the view (only with OpenGL rendering)\n"
                                          << "  [-log-fps] Log the FPS for the application\n"
+                                         << "  [-log-graphics-files] Log requested graphics IDs and used files\n"
                                          << "  [-show-size] Show widget sizes in the scene\n"
                                          << "  [-show-object-names] Show the names of the objects in the scene\n"
                                          << "  [-show-style-names] Show the names of the styles in the scene\n"
