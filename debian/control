@@ -300,7 +300,8 @@ Architecture: any
 Depends: ${shlibs:Depends},
  posix-locales,
  gstreamer0.10-plugins-base,
- gstreamer0.10-plugins-good
+ gstreamer0.10-plugins-good,
+ meegotouchtheme-graphics
 Description: libmeegotouch unit tests
  Unit testing binaries and shellscripts for testing libmeegotouch library
 
@@ -315,7 +316,8 @@ Package: libmeegotouch-benchmarks
 Section: devel
 Architecture: any
 Depends: ${shlibs:Depends},
- meegotouch-demos-widgetsgallery
+ meegotouch-demos-widgetsgallery,
+ meegotouchtheme-graphics
 Description: libmeegotouch benchmarks
  Benchmarking binaries for testing libmeegotouch library
 
