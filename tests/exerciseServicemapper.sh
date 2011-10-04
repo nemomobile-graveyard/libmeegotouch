@@ -1,3 +1,4 @@
+#!/bin/bash -x
 #/***************************************************************************
 #**
 #** Copyright (C) 2010, 2011 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,7 +17,6 @@
 #** of this file.
 #**
 #****************************************************************************/
-#! /bin/bash -x
 
 serviceFiles=( $(grep -l Interface /usr/share/dbus-1/services/*.service) )
 services=( $(awk -F= '/Name/ { print $2 }' ${serviceFiles[@]} ) )

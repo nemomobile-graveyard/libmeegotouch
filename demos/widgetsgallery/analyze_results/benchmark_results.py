@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #/***************************************************************************
 #**
 #** Copyright (C) 2010, 2011 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,7 +18,7 @@
 #** of this file.
 #**
 #****************************************************************************/
-# -*- coding: utf-8 -*-
+
 
 import xml.dom.minidom
 import numpy

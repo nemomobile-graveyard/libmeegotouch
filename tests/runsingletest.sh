@@ -1,3 +1,4 @@
+#!/bin/bash
 #/***************************************************************************
 #**
 #** Copyright (C) 2010, 2011 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,7 +17,6 @@
 #** of this file.
 #**
 #****************************************************************************/
-#!/bin/bash
 # this is just small wrapper to automate the unit testcases
 
 

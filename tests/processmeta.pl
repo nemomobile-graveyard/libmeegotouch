@@ -1,3 +1,4 @@
+#!/usr/bin/perl
 #/***************************************************************************
 #**
 #** Copyright (C) 2010, 2011 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,8 +17,6 @@
 #** of this file.
 #**
 #****************************************************************************/
-#!/usr/bin/perl
-#
 
 print "XB-Testing-metadata:\n";
 print " <testinfo>\n";

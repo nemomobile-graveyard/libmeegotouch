@@ -1,3 +1,4 @@
+#!/bin/sh
 #/***************************************************************************
 #**
 #** Copyright (C) 2010, 2011 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,7 +17,6 @@
 #** of this file.
 #**
 #****************************************************************************/
-#!/bin/sh
 # This script sets up the D-Bus environment variables to the same
 # value as used by mhomescreen
 #

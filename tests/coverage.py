@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #/***************************************************************************
 #**
 #** Copyright (C) 2010, 2011 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,7 +17,7 @@
 #** of this file.
 #**
 #****************************************************************************/
-#!/usr/bin/python2.5
+
 import sys,commands,re,os
 
 
