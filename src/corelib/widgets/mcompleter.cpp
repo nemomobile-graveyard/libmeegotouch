@@ -286,13 +286,7 @@ void MCompleterPrivate::setCompletionModel(QAbstractItemModel *m, bool own)
 
 void MCompleterPrivate::pollModel(bool isResetFocus)
 {
-    Q_Q(MCompleter);
-
-    // TODO #1: remove check for one of those signals once they have been merged.
-    // TODO #2: Change the "<= 1" back to "<= 0", because this is only needed for
-    //          the current signal forwarding!
-    if ((q->receivers(SIGNAL(startCompleting(QString))) <= 0) &&
-        (q->receivers(SIGNAL(startCompleting(QString, QModelIndex))) <= 1)) {
+    if (!isCompletionCustomized()) {
         //if no customized match slot, then use default match rule
         //limit the max hits to DefaultMaximumHits + 1 (+1 allow it to be larger than DefaultMaximumHits)
         match(DefaultMaximumHits + 1);
@@ -393,6 +387,16 @@ void MCompleterPrivate::resetFocus()
         q->widget()->scene()->setFocusItem(q->widget());
         MInputMethodState::requestSoftwareInputPanel();
     }
+}
+
+bool MCompleterPrivate::isCompletionCustomized() const
+{
+    Q_Q(const MCompleter);
+    // TODO #1: remove check for one of those signals once they have been merged.
+    // TODO #2: Change the "> 1" back to "> 0", because this is only needed for
+    //          the current signal forwarding!
+    return (q->receivers(SIGNAL(startCompleting(QString))) > 0) ||
+           (q->receivers(SIGNAL(startCompleting(QString, QModelIndex))) > 1);
 }
 
 MCompleter::MCompleter()
@@ -571,11 +575,7 @@ void MCompleter::queryAll()
         return;
     }
 
-    // TODO #1: remove check for one of those signals once they have been merged.
-    // TODO #2: Change the "> 1" back to "> 0", because this is only needed for
-    //          the current signal forwarding!
-    if ((receivers(SIGNAL(startCompleting(QString))) > 0) ||
-        (receivers(SIGNAL(startCompleting(QString, QModelIndex))) > 1)) {
+    if (d->isCompletionCustomized()) {
         return;
     }
 

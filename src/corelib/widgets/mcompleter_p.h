@@ -69,6 +69,8 @@ protected:
 
     void updateScene(bool isResetFocus);
 
+    bool isCompletionCustomized() const;
+
 private:
     QString delimiters;
     bool hasOwnModel;
