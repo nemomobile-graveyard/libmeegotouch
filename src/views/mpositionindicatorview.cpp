@@ -207,10 +207,10 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
 
         if (indicatorPositionY < 0) {
             indicatorHeight += indicatorPositionY;
-            if(minimumIndicatorSize > indicatorHeight)
-                indicatorHeight = minimumIndicatorSize;
             indicatorPositionY = 0;
         }
+        if (minimumIndicatorSize > indicatorHeight)
+            indicatorHeight = minimumIndicatorSize;
 
         if (rail) {
             int railPixmapSizeX = rail->pixmap()->width();
