@@ -297,6 +297,11 @@ void MCompleterPrivate::pollModel(bool isResetFocus)
         matchedModel->setMatchedList(matchedIndexList);
     }
     updateScene(isResetFocus);
+
+    bool canFetchMore = completionModel->canFetchMore(QModelIndex());
+    if (canFetchMore) {
+        completionModel->fetchMore(QModelIndex());
+    }
 }
 
 /*
