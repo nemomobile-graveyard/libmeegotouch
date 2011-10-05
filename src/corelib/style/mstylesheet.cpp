@@ -430,13 +430,19 @@ bool MStyleSheetPrivate::combine(MStyle *style, const SelectorInfoList &entry, c
                 } else {
                     propertyInitialized = true;
                 }
+
                 break;
             }
         }
         if (propertyInitialized == false) {
+            QString styleInheritanceInfo("");
+            for (int inhIndex(1); inhIndex < spec.classHierarchy.count(); ++inhIndex) {
+                styleInheritanceInfo += QString(" > ");
+                styleInheritanceInfo += spec.classHierarchy.at(inhIndex) ;
+            }
             mWarning("mstylesheet.cpp") << "Property" <<
                                            style->metaObject()->property(i).name() <<
-                                           "was left uninitialized in" << style->metaObject()->className();
+                                           "was left uninitialized in" << style->metaObject()->className() << qPrintable(styleInheritanceInfo);
         }
     }
 
