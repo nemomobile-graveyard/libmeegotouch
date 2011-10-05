@@ -27,7 +27,6 @@
 
 #include <QDebug>
 #include <QString>
-#include <QTimer>
 #include <QTextDocument>
 #include <QAbstractItemModel>
 #include <QStringListModel>
@@ -45,6 +44,8 @@ namespace
     const int DefaultMaximumHits = 10;
     //! time interval for completer
     const int CompleterTimeInterval = 500;
+    //! How long to show completer with no matched results.
+    const int EmptyCompleterHideTimeout = 700;
 }
 
 MCompleterPrivate::MCompleterPrivate()
@@ -81,6 +82,11 @@ void MCompleterPrivate::init()
     connected = q->connect(q, SIGNAL(startCompleting(QString,QModelIndex)),
                            q, SIGNAL(startCompleting(QString)),
                            Qt::UniqueConnection) && connected;
+
+    emptyHideTimer.setInterval(EmptyCompleterHideTimeout);
+    emptyHideTimer.setSingleShot(true);
+    connected &= q->connect(&emptyHideTimer, SIGNAL(timeout()),
+                            q, SLOT(hideCompleter()));
 
     if (!connected) {
         qWarning("MCompleterPrivate::init() - Failed to connect signals!");
@@ -284,6 +290,8 @@ void MCompleterPrivate::setCompletionModel(QAbstractItemModel *m, bool own)
 
 void MCompleterPrivate::pollModel(bool isResetFocus)
 {
+    emptyHideTimer.stop();
+
     if (!isCompletionCustomized()) {
         //if no customized match slot, then use default match rule
         //limit the max hits to DefaultMaximumHits + 1 (+1 allow it to be larger than DefaultMaximumHits)
@@ -296,9 +304,10 @@ void MCompleterPrivate::pollModel(bool isResetFocus)
             matchedIndexList << i;
         matchedModel->setMatchedList(matchedIndexList);
     }
-    updateScene(isResetFocus);
 
     bool canFetchMore = completionModel->canFetchMore(QModelIndex());
+    updateScene(canFetchMore, isResetFocus);
+
     if (canFetchMore) {
         completionModel->fetchMore(QModelIndex());
     }
@@ -307,7 +316,8 @@ void MCompleterPrivate::pollModel(bool isResetFocus)
 /*
  * \brief Update the completer visibility/content.
  */
-void MCompleterPrivate::updateScene(bool isResetFocus)
+void MCompleterPrivate::updateScene(bool moreDataExpected,
+                                    bool isResetFocus)
 {
     Q_Q(MCompleter);
 
@@ -325,10 +335,14 @@ void MCompleterPrivate::updateScene(bool isResetFocus)
         q->widget()->sceneManager()->appearSceneWindowNow(q);
         emit q->shown();
     } else if (q->model()->active()) {
-        reset();
-        q->hideCompleter();
-        if (isResetFocus)
-            resetFocus();
+        if (moreDataExpected) {
+            emptyHideTimer.start();
+        } else {
+            reset();
+            q->hideCompleter();
+            if (isResetFocus)
+                resetFocus();
+        }
     }
 }
 
@@ -367,7 +381,7 @@ void MCompleterPrivate::_q_rowsRemoved(const QModelIndex& parent, int start, int
     }
     matchedModel->setMatchedList(matchedIndexList);
     if (q->isActive())
-        updateScene(true);
+        updateScene(false, true);
 }
 
 void MCompleterPrivate::resetFocus()

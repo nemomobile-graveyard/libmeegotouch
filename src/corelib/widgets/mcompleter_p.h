@@ -25,13 +25,13 @@
 #include <QRect>
 #include <QList>
 #include <QAbstractProxyModel>
+#include <QTimer>
 #include "mcompleter.h"
 #include "mscenewindow_p.h"
 
 class QGraphicsItem;
 class QStringListModel;
 class MCompletionModel;
-class QTimer;
 
 class MCompleterPrivate : public MSceneWindowPrivate
 {
@@ -66,7 +66,7 @@ protected:
 
     void pollModel(bool isResetFocus);
 
-    void updateScene(bool isResetFocus);
+    void updateScene(bool moreDataExpected, bool isResetFocus);
 
     bool isCompletionCustomized() const;
 
@@ -77,6 +77,7 @@ private:
     MCompletionModel *matchedModel;
     QList<int> matchedIndexList;
     QTimer *completerTimer;
+    QTimer emptyHideTimer;
 #ifdef UNIT_TEST
     friend class Ut_MCompleter;
 #endif
