@@ -344,7 +344,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_modelUpdate())
     Q_PRIVATE_SLOT(d_func(), void _q_complete())
     Q_PRIVATE_SLOT(d_func(), void _q_pollModel())
-    Q_PRIVATE_SLOT(d_func(), void _q_modelAboutToBeReset())
     Q_PRIVATE_SLOT(d_func(), void _q_rowsRemoved(const QModelIndex &parent, int start, int end))
 
 #ifdef UNIT_TEST

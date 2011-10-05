@@ -47,7 +47,6 @@ public:
 
     void _q_complete();
     void _q_pollModel();
-    void _q_modelAboutToBeReset();
     void _q_rowsRemoved(const QModelIndex &parent, int start, int end);
 
 protected:

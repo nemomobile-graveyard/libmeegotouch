@@ -272,8 +272,6 @@ void MCompleterPrivate::setCompletionModel(QAbstractItemModel *m, bool own)
     q->model()->setValueColumnIndex(completionModel->columnCount() - 1);
     QObject::connect(completionModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
                      q, SLOT(_q_pollModel()));
-    QObject::connect(completionModel, SIGNAL(modelAboutToBeReset()),
-                     q, SLOT(_q_modelAboutToBeReset()));
     QObject::connect(completionModel, SIGNAL(modelReset()),
                      q, SLOT(_q_pollModel()));
     QObject::connect(completionModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
@@ -343,13 +341,6 @@ void MCompleterPrivate::_q_modelUpdate()
 void MCompleterPrivate::_q_pollModel()
 {
     pollModel(false);
-}
-
-void MCompleterPrivate::_q_modelAboutToBeReset()
-{
-    Q_Q(MCompleter);
-    reset();
-    q->hideCompleter();
 }
 
 void MCompleterPrivate::_q_rowsRemoved(const QModelIndex& parent, int start, int end)
