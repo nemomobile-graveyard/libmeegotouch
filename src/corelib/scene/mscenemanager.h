@@ -66,6 +66,7 @@ class M_CORE_EXPORT MSceneManager : public QObject
     friend class Ut_MApplicationWindow;
     friend class Ut_MComboBox;
     friend class Ut_MDialog;
+    friend class Ut_MSheet;
 #endif
 
 public:

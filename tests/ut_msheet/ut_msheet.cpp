@@ -30,6 +30,8 @@
 #include <MDismissEvent>
 #include <mscenemanager.h>
 #include <mwindow.h>
+#include <mstatusbar.h>
+#include <mscene.h>
 
 #include <msheet.h>
 
@@ -64,6 +66,7 @@ void Ut_MSheet::initTestCase()
     gContextPropertyStubMap->createStub("/maemo/InternalKeyboard/Present")->stubSetReturnValue("value", QVariant("false"));
     gContextPropertyStubMap->createStub("com.nokia.policy.video_route")->stubSetReturnValue("value", QVariant(""));
     gContextPropertyStubMap->createStub("Screen.IsCovered")->stubSetReturnValue("value", QVariant("false"));
+    gContextPropertyStubMap->createStub("Phone.Call")->stubSetReturnValue("value", QVariant("inactive"));
     gContextPropertyStubMap->findStub("/maemo/InternalKeyboard/Open")->stubSetReturnValue("value", QVariant("false"));
 
     if (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Landscape) {
@@ -367,6 +370,63 @@ void Ut_MSheet::testHeaderFloating()
     subject->dismiss();
 }
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void Ut_MSheet::testPhoneCallForcedStatusBarOnStandalone_data()
+{
+    QTest::addColumn<bool>("statusBarVisibleInSystemwide");
+
+    QTest::newRow("status bar hidden") << false;
+    QTest::newRow("status bar visible") << true;
+}
+
+void Ut_MSheet::testPhoneCallForcedStatusBarOnStandalone()
+{
+    QFETCH(bool, statusBarVisibleInSystemwide);
+    MStatusBar *statusBar = 0;
+    MWindow *standAloneWindow = 0;
+    subject->setStatusBarVisibleInSystemwide(statusBarVisibleInSystemwide);
+
+    subject->appearSystemwide(MSceneWindow::KeepWhenDone);
+    STATE_COMPARE(subject->sceneWindowState(), MSceneWindow::Appeared);
+    standAloneWindow = fetchStandAloneWindowOfSubject();
+    QVERIFY(standAloneWindow != 0);
+
+    QApplication::processEvents();
+    standAloneWindow->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
+    statusBar = fetchStatusBarForStandAloneWindow();
+    if (statusBarVisibleInSystemwide) {
+        QVERIFY(statusBar && statusBar->isVisible());
+    } else {
+        QVERIFY(!statusBar || !statusBar->isVisible());
+    }
+
+    gContextPropertyStubMap->findStub("Phone.Call")->stubReset();
+    gContextPropertyStubMap->findStub("Phone.Call")->stubSetReturnValue("value", QVariant("active"));
+    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("Phone.Call")->getProxy(), "valueChanged");
+
+    QApplication::processEvents();
+    standAloneWindow->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
+    statusBar = fetchStatusBarForStandAloneWindow();
+    QVERIFY(statusBar && statusBar->isVisible());
+
+    gContextPropertyStubMap->findStub("Phone.Call")->stubReset();
+    gContextPropertyStubMap->findStub("Phone.Call")->stubSetReturnValue("value", QVariant("inactive"));
+    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("Phone.Call")->getProxy(), "valueChanged");
+
+    QApplication::processEvents();
+    standAloneWindow->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
+    statusBar = fetchStatusBarForStandAloneWindow();
+    if (statusBarVisibleInSystemwide) {
+        QVERIFY(statusBar && statusBar->isVisible());
+    } else {
+        QVERIFY(!statusBar || !statusBar->isVisible());
+    }
+
+    subject->dismiss();
+    subject->setStatusBarVisibleInSystemwide(false); // restore the default value
+}
+#endif
+
 MWindow *Ut_MSheet::fetchStandAloneWindowOfSubject()
 {
     if (subject->scene()
@@ -375,6 +435,21 @@ MWindow *Ut_MSheet::fetchStandAloneWindowOfSubject()
     } else {
         return 0;
     }
+}
+
+MStatusBar *Ut_MSheet::fetchStatusBarForStandAloneWindow()
+{
+    MStatusBar *statusBar = 0;
+    MWindow *win = fetchStandAloneWindowOfSubject();
+    if (win) {
+        foreach(QGraphicsItem *item, win->scene()->items()) {
+            if (dynamic_cast<MStatusBar*>(item)) {
+                statusBar = dynamic_cast<MStatusBar*>(item);
+                break;
+            }
+        }
+    }
+    return statusBar;
 }
 
 bool EventSpy::eventFilter(QObject *watched, QEvent *event)

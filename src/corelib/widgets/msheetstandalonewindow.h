@@ -25,6 +25,10 @@
 
 #include <QPointer>
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+# include "contextproperty.h"
+#endif
+
 class MSheet;
 class MSceneWindow;
 
@@ -58,6 +62,13 @@ private:
     bool beingClosed;
     MSheet *sheet;
     QPointer<MSceneWindow> statusBar;
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    ContextProperty callStatusProperty;
+#endif
+    bool sheetAreaMaximized;
+
+private slots:
+    void _q_updateStatusBarVisibility();
 };
 
 //! \internal_end

@@ -29,6 +29,7 @@ class MApplication;
 class MSheet;
 class QGraphicsView;
 class MWindow;
+class MStatusBar;
 
 class Ut_MSheet : public QObject
 {
@@ -56,8 +57,14 @@ private slots:
 
     void testHeaderFloating();
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    void testPhoneCallForcedStatusBarOnStandalone_data();
+    void testPhoneCallForcedStatusBarOnStandalone();
+#endif
+
 private:
     MWindow *fetchStandAloneWindowOfSubject();
+    MStatusBar *fetchStatusBarForStandAloneWindow();
 
     MSheet *subject;
     MApplication *app;

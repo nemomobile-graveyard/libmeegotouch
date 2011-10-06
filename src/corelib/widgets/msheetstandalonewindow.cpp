@@ -34,20 +34,36 @@
 # include <X11/Xlib.h>
 #endif
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+# include "contextproperty.h"
+#endif
+
 MSheetStandAloneWindow::MSheetStandAloneWindow()
     : MWindow(new MSceneManager, 0)
     , beingClosed(false)
     , sheet(0)
     , statusBar(0)
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    , callStatusProperty("Phone.Call")
+#endif
+    , sheetAreaMaximized(false)
 {
     setRoundedCornersEnabled(true);
 #ifdef Q_WS_X11
     appendMSheetTypeProperty();
 #endif //Q_WS_X11
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    connect(&callStatusProperty, SIGNAL(valueChanged()), this, SLOT(_q_updateStatusBarVisibility()));
+#endif
 }
 
 MSheetStandAloneWindow::~MSheetStandAloneWindow()
 {
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    disconnect(&callStatusProperty, SIGNAL(valueChanged()), this, SLOT(_q_updateStatusBarVisibility()));
+#endif
+
     delete statusBar;
     statusBar = 0;
 }
@@ -55,10 +71,16 @@ MSheetStandAloneWindow::~MSheetStandAloneWindow()
 void MSheetStandAloneWindow::setSheet(MSheet *sheet)
 {
     this->sheet = sheet;
+    _q_updateStatusBarVisibility();
 }
 
 void MSheetStandAloneWindow::setStatusBarVisible(bool statusBarVisible)
 {
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    if (callStatusProperty.value().toString() == "active")
+        statusBarVisible = true;
+#endif
+
     if (!statusBar && MDeviceProfile::instance()->showStatusbar()
             && statusBarVisible)
         statusBar = new MStatusBar;
@@ -158,13 +180,21 @@ void MSheetStandAloneWindow::updateChainTaskData()
 
 void MSheetStandAloneWindow::maximizeSheetArea()
 {
+    sheetAreaMaximized = true;
     setStatusBarVisible(false);
 }
 
 void MSheetStandAloneWindow::restoreSheetArea()
 {
+    sheetAreaMaximized = false;
     if (sheet) {
         setStatusBarVisible(sheet->isStatusBarVisibleInSystemwide());
     }
 }
 
+void MSheetStandAloneWindow::_q_updateStatusBarVisibility()
+{
+    if (sheet) {
+        setStatusBarVisible(sheet->isStatusBarVisibleInSystemwide() && !sheetAreaMaximized);
+    }
+}
