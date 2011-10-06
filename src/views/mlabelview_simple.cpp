@@ -382,13 +382,13 @@ QString MLabelViewSimple::textToRender(const QSizeF &renderSize, bool *isMultipl
             if (height <= renderSize.height()) {
                 line.setLineWidth(renderSize.width());
                 height += line.height();
-                if (line.naturalTextWidth() > renderSize.width()) {
-                    // We've exceeded the maximum available width, so we need to elide this line
+                if (line.naturalTextWidth() > renderSize.width() &&
+                        (viewPrivate->model()->textElide() || i < stringVariants.count() - 1) ) {
                     elideAtLineNumber = lineCount -1;
-                    // If we can elide, elide this string.  If we have an alternative variant
+                    // We've exceeded the maximum available width, so if we can elide, elide this string.
+                    // If we have an alternative variant
                     // string, use that.  Else we have to just put up with the line being too long
-                    if (viewPrivate->model()->textElide() || i < stringVariants.count() - 1)
-                        break;
+                    break;
                 }
             }
             if (height > renderSize.height() && lineCount > 1) {
