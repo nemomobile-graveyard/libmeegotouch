@@ -32,6 +32,8 @@
 #include <MDebug>
 #include <MPannableViewport>
 #include <MApplication>
+#include <MTextEdit>
+#include <MButton>
 
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
@@ -47,6 +49,8 @@ ImagePage::ImagePage() :
     visual(NULL),
     image(NULL),
     slider(NULL),
+    changeImageTextEdit(NULL),
+    defaultImage(NULL),
     originalScaleFactor(10)
 {
     // Initial values for image property sliders
@@ -57,6 +61,7 @@ ImagePage::ImagePage() :
 
 ImagePage::~ImagePage()
 {
+    delete defaultImage;
 }
 
 QString ImagePage::timedemoTitle()
@@ -109,25 +114,31 @@ void ImagePage::createContent()
     gridLayout->setContentsMargins(0, 0, 0, 0);
     visual->setLayout(gridLayout);
 
-    QString imagesDir = Utils::imagesDir();
-
     // Image
-    QString fname = imagesDir + '/' + QString("grape.jpg");
-    QImage img(fname);
-    image = new MImageWidget(&img);
+    QString fname = Utils::imagesDir() + '/' + QString("grape.jpg");
+    defaultImage = new QImage(fname);
+    image = new MImageWidget(defaultImage);
     image->setObjectName("image");
     image->setVisible(true);
     gridLayout->addItem(image, 0, 0);
 
+    changeImageTextEdit = new MTextEdit(MTextEditModel::SingleLine, "");
+    changeImageTextEdit->setStyleName(inv("CommonSingleInputField"));
+    MButton* changeImageButton = new MButton("Load image ID");
+    changeImageButton->setStyleName(inv("CommonSingleButton"));
+
     propertiesLayout->addItem(propertiesComboBox);
     propertiesLayout->addItem(visual);
     propertiesLayout->addItem(slider);
+    propertiesLayout->addItem(changeImageTextEdit);
+    propertiesLayout->addItem(changeImageButton);
 
     containerPolicy->addItem(propertiesContainer);
 
     // Connect signals
     connect(propertiesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(operationChanged(int)));
     connect(slider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
+    connect(changeImageButton, SIGNAL(clicked()), this, SLOT(changeImage()));
 
     retranslateUi();
 }
@@ -165,7 +176,6 @@ void ImagePage::retranslateUi()
     //% "Image component if desired. As an example, pinch gesture can be "
     //% "used in this page to zoom the image."
     infoLabel->setText("<a></a>" + qtTrId("xx_image_page_info"));
-
 }
 
 void ImagePage::operationChanged(int index)
@@ -200,7 +210,6 @@ void ImagePage::sliderValueChanged(int value)
     default:
         break;
     }
-
 }
 
 void ImagePage::setImageZoom(float zoom)
@@ -238,5 +247,14 @@ void ImagePage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
     slider->setValue(originalScaleFactor * gesture->totalScaleFactor());
 
     event->accept(gesture);
+}
 
+void ImagePage::changeImage()
+{
+   QSizeF originalSize = image->size();
+   if (changeImageTextEdit->text().isEmpty())
+       image->setImage(*defaultImage);
+   else
+       image->setImage(changeImageTextEdit->text());
+   image->setPreferredSize(originalSize);
 }

@@ -27,6 +27,7 @@ class MContainer;
 class MImageWidget;
 class MComboBox;
 class MSlider;
+class MTextEdit;
 
 class ImagePage : public TemplatePage
 {
@@ -52,6 +53,7 @@ public:
 public slots:
     void operationChanged(int index);
     void sliderValueChanged(int value);
+    void changeImage();
 
 protected:
     virtual void retranslateUi();
@@ -63,6 +65,8 @@ private:
     MWidget *visual;
     MImageWidget *image;
     MSlider *slider;
+    MTextEdit *changeImageTextEdit;
+    QImage *defaultImage;
 
     int sliderValues[ImageLastItem];
     qreal originalScaleFactor;
