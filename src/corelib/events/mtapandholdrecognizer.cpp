@@ -48,6 +48,8 @@ MTapAndHoldRecognizer::MTapAndHoldRecognizer() :
     Q_D(MTapAndHoldRecognizer);
 
     d->style = static_cast<const MTapAndHoldRecognizerStyle *>(MTheme::style("MTapAndHoldRecognizerStyle", ""));
+
+    QTapAndHoldGesture::setTimeout(-1);
 }
 
 MTapAndHoldRecognizer::~MTapAndHoldRecognizer()
@@ -99,13 +101,21 @@ QGestureRecognizer::Result MTapAndHoldRecognizer::recognize(QGesture *state, QOb
         break;
 
     case QEvent::MouseButtonPress:
+        {
         tapAndHoldState->setPosition(ev->pos());
         tapAndHoldState->setHotSpot(ev->globalPos());
 
         if (tapAndHoldState->timerId)
             tapAndHoldState->killTimer(tapAndHoldState->timerId);
-        tapAndHoldState->timerId = tapAndHoldState->startTimer(d->style->timeout());
+
+        int tapAndHoldTimeout = QTapAndHoldGesture::timeout();
+        if (tapAndHoldTimeout < 0) {
+            // If QTapAndHoldGesture::timeout() is not set, use timeout from style
+            tapAndHoldTimeout = d->style->timeout();
+        }
+        tapAndHoldState->timerId = tapAndHoldState->startTimer(tapAndHoldTimeout);
         result = QGestureRecognizer::TriggerGesture;
+        }
         break;
 
     case QEvent::MouseButtonRelease:

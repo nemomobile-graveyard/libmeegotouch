@@ -43,6 +43,9 @@ private slots:
     void testFastTap();
     void testMovePointerInsideThreshold();
     void testMovePointerBeyondThreshold();
+    void testUsingStyleTimeout();
+    void testSetTimeout();
+    void testResetTimeout();
 };
 
 #endif // UT_MTAPANDHOLDRECOGNIZER_H
