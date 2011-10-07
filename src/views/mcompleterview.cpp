@@ -223,6 +223,10 @@ void MCompleterViewPrivate::createContents()
             else
                 completionsButton->setText(QString("<qt>%1+").arg(MLocale().formatNumber(DefaultMaximumHits)));
             showCompletionsButton();
+
+            // For some reason the widget does not activate properly. Do it now.
+            // The use case for this is when button label is changing between "١٠+" and "٢", for example.
+            layout->activate();
         } else {
             hideCompletionsButton();
         }
@@ -354,6 +358,8 @@ void MCompleterViewPrivate::showCompletionsButton()
     }
 
     completionsButton->setFocusProxy(controller->widget());
+    // Prevent text eliding by using Fixed width.
+    completionsButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
     layout->addItem(completionsButton);
     layout->setAlignment(completionsButton, Qt::AlignCenter);
     completionsButton->show();
