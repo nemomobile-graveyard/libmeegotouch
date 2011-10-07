@@ -1735,10 +1735,17 @@ void MTextEdit::setSelection(int anchorPosition, int length, bool useBoundaries)
 
     if (useBoundaries) {
         MBreakIterator breakIterator(text);
-        anchorPosition = breakIterator.previousInclusive(anchorPosition);
-
-        if (breakIterator.isBoundary(newCursorPosition) == false) {
-            newCursorPosition = breakIterator.next(newCursorPosition);
+        const bool forward = newCursorPosition >= anchorPosition;
+        if (forward) {
+            anchorPosition = breakIterator.previousInclusive(anchorPosition);
+            if (!breakIterator.isBoundary(newCursorPosition)) {
+                newCursorPosition = breakIterator.next(newCursorPosition);
+            }
+        } else {
+            if (!breakIterator.isBoundary(anchorPosition)) {
+                anchorPosition = breakIterator.next(anchorPosition);
+            }
+            newCursorPosition = breakIterator.previousInclusive(newCursorPosition);
         }
     }
 
