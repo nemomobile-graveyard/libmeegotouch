@@ -155,6 +155,9 @@ private slots:
 
     void testSizeHintIncreasingWithFixedConstraint_data();
     void testSizeHintIncreasingWithFixedConstraint();
+
+    void testLabelShrinkingAndRegrowing_data();
+    void testLabelShrinkingAndRegrowing();
 private:
     /**
      * Helper method for testSizeHint().

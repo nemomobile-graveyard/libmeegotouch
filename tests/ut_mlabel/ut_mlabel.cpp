@@ -1928,4 +1928,43 @@ void Ut_MLabel::testSizeHintIncreasingWithFixedConstraint()
     QCOMPARE(longerPreferredSize, label->sizeHint(Qt::PreferredSize, QSizeF(width,-1)));
     QVERIFY(label->size().height() < label->sizeHint(Qt::PreferredSize, QSizeF(width,-1)).height());
 }
+
+void Ut_MLabel::testLabelShrinkingAndRegrowing_data()
+{
+    QTest::addColumn<bool>("richText");
+    QTest::newRow("Plain text") << false;
+    QTest::newRow("Rich text") << true;
+}
+void Ut_MLabel::testLabelShrinkingAndRegrowing()
+{
+    QFETCH(bool, richText);
+
+    const MLabelView* view = qobject_cast<const MLabelView*>(label->view());
+    label->setTextElide(true);
+    label->setTextFormat(richText?Qt::RichText:Qt::PlainText);
+    QString text = "Hello there how are you?";
+    label->setText(text);
+    qreal width = label->preferredWidth();
+    QSizeF preferredSize = label->sizeHint(Qt::PreferredSize, QSizeF(width,-1));
+    label->resize(preferredSize);
+
+    QImage image = captureImage(label);
+    QString renderedText = removeHtml(view->renderedText());
+    QCOMPARE(renderedText, text);
+    
+    //Now resize to a smaller size
+    label->resize(preferredSize.width()/2, preferredSize.height());
+    
+    QImage imageShorter = captureImage(label);
+    QString renderedTextShorter = removeHtml(view->renderedText());
+    
+    QVERIFY(imageShorter != image);
+    QVERIFY(renderedTextShorter != renderedText);
+
+    //And resize back again
+    label->resize(preferredSize);
+    QVERIFY(image == captureImage(label));
+    QCOMPARE(text, removeHtml(view->renderedText()));
+}
+
 QTEST_APPLESS_MAIN(Ut_MLabel);

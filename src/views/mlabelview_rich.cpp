@@ -140,9 +140,9 @@ bool MLabelViewRich::resizeEvent(QGraphicsSceneResizeEvent *event)
     // behavior, getting a tight bounding box.
 
     tileHeight = -1;
+    textDocumentDirty = true;
 
     if (viewPrivate->controller->sizePolicy().hasHeightForWidth()) {
-        //We just need to resize the document, and nothing more needed
         textDocument.setPageSize(event->newSize());
         return false; //No invalidate ever needed
     } else {
