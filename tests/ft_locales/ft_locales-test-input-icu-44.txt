@@ -7663,7 +7663,7 @@ he_IL	Currency value	‪1,234.56 ₪‬
 he_IL	Negative Currency value	‪-1,234.56 ₪‬
 he_IL	Name of month 01 (Gregorian calendar), stand-alone, wide	ינואר
 he_IL	Name of month 02 (Gregorian calendar), stand-alone, wide	פברואר
-he_IL	Name of month 03 (Gregorian calendar), stand-alone, wide	מרס
+he_IL	Name of month 03 (Gregorian calendar), stand-alone, wide	מרץ
 he_IL	Name of month 04 (Gregorian calendar), stand-alone, wide	אפריל
 he_IL	Name of month 05 (Gregorian calendar), stand-alone, wide	מאי
 he_IL	Name of month 06 (Gregorian calendar), stand-alone, wide	יוני
@@ -7675,7 +7675,7 @@ he_IL	Name of month 11 (Gregorian calendar), stand-alone, wide	נובמבר
 he_IL	Name of month 12 (Gregorian calendar), stand-alone, wide	דצמבר
 he_IL	Name of month 01 (Gregorian calendar), stand-alone, abbreviated	ינו׳
 he_IL	Name of month 02 (Gregorian calendar), stand-alone, abbreviated	פבר׳
-he_IL	Name of month 03 (Gregorian calendar), stand-alone, abbreviated	מרס
+he_IL	Name of month 03 (Gregorian calendar), stand-alone, abbreviated	מרץ
 he_IL	Name of month 04 (Gregorian calendar), stand-alone, abbreviated	אפר׳
 he_IL	Name of month 05 (Gregorian calendar), stand-alone, abbreviated	מאי
 he_IL	Name of month 06 (Gregorian calendar), stand-alone, abbreviated	יונ׳
@@ -7699,7 +7699,7 @@ he_IL	Name of month 11 (Gregorian calendar), stand-alone, narrow	11
 he_IL	Name of month 12 (Gregorian calendar), stand-alone, narrow	12
 he_IL	Name of month 01 (Gregorian calendar), format, wide	ינואר
 he_IL	Name of month 02 (Gregorian calendar), format, wide	פברואר
-he_IL	Name of month 03 (Gregorian calendar), format, wide	מרס
+he_IL	Name of month 03 (Gregorian calendar), format, wide	מרץ
 he_IL	Name of month 04 (Gregorian calendar), format, wide	אפריל
 he_IL	Name of month 05 (Gregorian calendar), format, wide	מאי
 he_IL	Name of month 06 (Gregorian calendar), format, wide	יוני
@@ -7709,18 +7709,18 @@ he_IL	Name of month 09 (Gregorian calendar), format, wide	ספטמבר
 he_IL	Name of month 10 (Gregorian calendar), format, wide	אוקטובר
 he_IL	Name of month 11 (Gregorian calendar), format, wide	נובמבר
 he_IL	Name of month 12 (Gregorian calendar), format, wide	דצמבר
-he_IL	Name of month 01 (Gregorian calendar), format, abbreviated	ינו
-he_IL	Name of month 02 (Gregorian calendar), format, abbreviated	פבר
-he_IL	Name of month 03 (Gregorian calendar), format, abbreviated	מרס
-he_IL	Name of month 04 (Gregorian calendar), format, abbreviated	אפר
+he_IL	Name of month 01 (Gregorian calendar), format, abbreviated	ינו׳
+he_IL	Name of month 02 (Gregorian calendar), format, abbreviated	פבר׳
+he_IL	Name of month 03 (Gregorian calendar), format, abbreviated	מרץ
+he_IL	Name of month 04 (Gregorian calendar), format, abbreviated	אפר׳
 he_IL	Name of month 05 (Gregorian calendar), format, abbreviated	מאי
-he_IL	Name of month 06 (Gregorian calendar), format, abbreviated	יונ
-he_IL	Name of month 07 (Gregorian calendar), format, abbreviated	יול
-he_IL	Name of month 08 (Gregorian calendar), format, abbreviated	אוג
-he_IL	Name of month 09 (Gregorian calendar), format, abbreviated	ספט
-he_IL	Name of month 10 (Gregorian calendar), format, abbreviated	אוק
-he_IL	Name of month 11 (Gregorian calendar), format, abbreviated	נוב
-he_IL	Name of month 12 (Gregorian calendar), format, abbreviated	דצמ
+he_IL	Name of month 06 (Gregorian calendar), format, abbreviated	יונ׳
+he_IL	Name of month 07 (Gregorian calendar), format, abbreviated	יול׳
+he_IL	Name of month 08 (Gregorian calendar), format, abbreviated	אוג׳
+he_IL	Name of month 09 (Gregorian calendar), format, abbreviated	ספט׳
+he_IL	Name of month 10 (Gregorian calendar), format, abbreviated	אוק׳
+he_IL	Name of month 11 (Gregorian calendar), format, abbreviated	נוב׳
+he_IL	Name of month 12 (Gregorian calendar), format, abbreviated	דצמ׳
 he_IL	Name of month 01 (Gregorian calendar), format, narrow	1
 he_IL	Name of month 02 (Gregorian calendar), format, narrow	2
 he_IL	Name of month 03 (Gregorian calendar), format, narrow	3
@@ -7912,16 +7912,16 @@ he_IL	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	dd/
 he_IL	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm:ss z -> 21/07/08 14:31:00 GMT+00:00
 he_IL	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm:ss a zzzz -> 21/07/08 02:31:00 PM GMT+00:00
 he_IL	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm:ss zzzz -> 21/07/08 14:31:00 GMT+00:00
-he_IL	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d בMMM yyyy -> 21 ביול 2008
-he_IL	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d בMMM yyyy -> 21 ביול 2008
-he_IL	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d בMMM yyyy hh:mm a -> 21 ביול 2008 02:31 PM
-he_IL	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d בMMM yyyy HH:mm -> 21 ביול 2008 14:31
-he_IL	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d בMMM yyyy hh:mm:ss a -> 21 ביול 2008 02:31:00 PM
-he_IL	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d בMMM yyyy HH:mm:ss -> 21 ביול 2008 14:31:00
-he_IL	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d בMMM yyyy hh:mm:ss a z -> 21 ביול 2008 02:31:00 PM GMT+00:00
-he_IL	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d בMMM yyyy HH:mm:ss z -> 21 ביול 2008 14:31:00 GMT+00:00
-he_IL	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d בMMM yyyy hh:mm:ss a zzzz -> 21 ביול 2008 02:31:00 PM GMT+00:00
-he_IL	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d בMMM yyyy HH:mm:ss zzzz -> 21 ביול 2008 14:31:00 GMT+00:00
+he_IL	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d בMMM yyyy -> 21 ביול׳ 2008
+he_IL	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d בMMM yyyy -> 21 ביול׳ 2008
+he_IL	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d בMMM yyyy hh:mm a -> 21 ביול׳ 2008 02:31 PM
+he_IL	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d בMMM yyyy HH:mm -> 21 ביול׳ 2008 14:31
+he_IL	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d בMMM yyyy hh:mm:ss a -> 21 ביול׳ 2008 02:31:00 PM
+he_IL	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d בMMM yyyy HH:mm:ss -> 21 ביול׳ 2008 14:31:00
+he_IL	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d בMMM yyyy hh:mm:ss a z -> 21 ביול׳ 2008 02:31:00 PM GMT+00:00
+he_IL	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d בMMM yyyy HH:mm:ss z -> 21 ביול׳ 2008 14:31:00 GMT+00:00
+he_IL	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d בMMM yyyy hh:mm:ss a zzzz -> 21 ביול׳ 2008 02:31:00 PM GMT+00:00
+he_IL	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d בMMM yyyy HH:mm:ss zzzz -> 21 ביול׳ 2008 14:31:00 GMT+00:00
 he_IL	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d בMMMM y -> 21 ביולי 2008
 he_IL	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d בMMMM y -> 21 ביולי 2008
 he_IL	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d בMMMM y hh:mm a -> 21 ביולי 2008 02:31 PM
