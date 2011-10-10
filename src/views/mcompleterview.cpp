@@ -64,6 +64,7 @@ MCompleterViewPrivate::MCompleterViewPrivate(MCompleter *controller, MCompleterV
     completionLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     completionsButton = new MButton(controller);
     completionsButton->setObjectName(CompleterTotalButtonObjectName);
+    completionsButton->hide();
 
     layout = new QGraphicsLinearLayout(Qt::Horizontal, controller);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -221,15 +222,9 @@ void MCompleterViewPrivate::createContents()
                 completionsButton->setText(QString("<qt>%1").arg(MLocale().formatNumber(total)));
             else
                 completionsButton->setText(QString("<qt>%1+").arg(MLocale().formatNumber(DefaultMaximumHits)));
-            completionsButton->setFocusProxy(controller->widget());
-            completionsButton->setVisible(true);
-            layout->addItem(completionsButton);
-            layout->setAlignment(completionsButton, Qt::AlignCenter);
+            showCompletionsButton();
         } else {
-            completionsButton->setText("");
-            completionsButton->setFocusProxy(0);
-            completionsButton->setVisible(false);
-            layout->removeItem(completionsButton);
+            hideCompletionsButton();
         }
 
         completionLabel->setFocusProxy(controller->widget());
@@ -350,6 +345,35 @@ void MCompleterViewPrivate::handleCompleterHidden()
                SIGNAL(scenePositionChanged()),
                this,
                0);
+}
+
+void MCompleterViewPrivate::showCompletionsButton()
+{
+    if (completionsButton->isVisible()) {
+        return;
+    }
+
+    completionsButton->setFocusProxy(controller->widget());
+    layout->addItem(completionsButton);
+    layout->setAlignment(completionsButton, Qt::AlignCenter);
+    completionsButton->show();
+}
+
+void MCompleterViewPrivate::hideCompletionsButton()
+{
+    if (!completionsButton->isVisible()) {
+        return;
+    }
+
+    // When hiding, the button is removed from layout in order to give
+    // more space for completionLabel item.
+
+    // First clear focus proxy so hiding won't cause focus out there.
+    completionsButton->setFocusProxy(0);
+
+    completionsButton->hide();
+    completionsButton->setText("");
+    layout->removeItem(completionsButton);
 }
 
 MCompleterView::MCompleterView(MCompleter *controller)

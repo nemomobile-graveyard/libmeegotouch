@@ -62,6 +62,9 @@ protected slots:
 
     void handleCompleterHidden();
 
+    void showCompletionsButton();
+    void hideCompletionsButton();
+
 protected:
     void init();
 
