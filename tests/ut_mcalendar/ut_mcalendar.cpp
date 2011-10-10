@@ -1395,7 +1395,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "15/06/04"
-        << "15 ביונ 2004"
+        << "15 ביונ׳ 2004"
         << "15 ביוני 2004"
         << "יום שלישי, 15 ביוני 2004"
         << "14:31"
