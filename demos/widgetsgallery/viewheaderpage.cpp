@@ -38,9 +38,14 @@ namespace {
     public:
         MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const
         {
-            MWidget *cell = recycler.take(MBasicListItem::staticMetaObject.className());
+            MBasicListItem *cell = static_cast<MBasicListItem *>(recycler.take(MBasicListItem::staticMetaObject.className()));
             if (!cell) {
                 cell = new MBasicListItem;
+                if (MApplication::instance()->objectName() == "widgetsgallery") {
+                    cell->setStyleName("CommonBasicListItem");
+                } else {
+                    cell->setStyleName("CommonBasicListItemInverted");
+                }
             }
             updateCell(index, cell);
             return cell;
@@ -68,7 +73,7 @@ namespace {
             linearLayout = new QGraphicsLinearLayout(Qt::Horizontal, this);
             titleWidget = new MLabel(this);
             titleWidget->setTextElide(true);
-            titleWidget->setStyleName("CommonHeader");
+            titleWidget->setStyleName(inv("CommonHeader"));
 
             linearLayout->addItem(titleWidget);
         }
