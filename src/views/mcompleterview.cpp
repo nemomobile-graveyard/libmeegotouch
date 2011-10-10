@@ -70,8 +70,6 @@ MCompleterViewPrivate::MCompleterViewPrivate(MCompleter *controller, MCompleterV
     layout->setSpacing(0);
     layout->addItem(completionLabel);
     layout->setAlignment(completionLabel, Qt::AlignCenter);
-    layout->addItem(completionsButton);
-    layout->setAlignment(completionsButton, Qt::AlignCenter);
 
     controller->setLayout(layout);
 
