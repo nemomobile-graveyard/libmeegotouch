@@ -110,17 +110,17 @@ MWidgetController::~MWidgetController()
 {
     Q_D(MWidgetController);
 
-    // let the model know that we're not attached to it anymore.
-    if (d->model) {
-        d->model->decreaseReferenceCount();
-        d->model = 0;
-    }
-
     // let the view know that it can now animate away.
     if (d->view) {
         // TODO: later this should probably be done by MSceneManager.
         d->view->destroy();
         d->view = 0;
+    }
+
+    // let the model know that we're not attached to it anymore.
+    if (d->model) {
+        d->model->decreaseReferenceCount();
+        d->model = 0;
     }
 
     MWidgetControllerPrivate::allSystemWidgets.remove(this);
