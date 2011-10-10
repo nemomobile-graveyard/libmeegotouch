@@ -1,0 +1,7 @@
+sr{
+    collations{
+        standard{
+            Sequence { "[suppressContractions [АаӘәГгЕеЖжЗзИиІіОоӨөКкУуЧчЫыЭэѴѵ] ]&C<č<<<Č<ć<<<Ć&D<dž<<<Dž<<<DŽ&L<lj<<<Lj<<<LJ&N<nj<<<Nj<<<NJ&S<š<<<Š&Z<ž<<<Ž" }
+        }
+    }
+}
