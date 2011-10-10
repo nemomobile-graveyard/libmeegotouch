@@ -928,30 +928,11 @@ void MTextEditPrivate::setPreeditText(const QString &text,
         removePreedit();
     }
 
-    // The cursor mimics the behaviour of the cursor movement
-    // and the movement will skip the diacritics and only
-    // happening on the main character.
-    //
-    // If the diacritics are not skipped then the start
-    // of prediction (=selection) is wrong which cause
-    // the previously committed text gets deleted.
-    //
-    // Here we count the number of diacritics on the preedit
-    // and make sure that the preedit length is already
-    // substracted with the number of diacritics found,
-    // so the selection made later in this function will
-    // correctly take place on the preedit and not touching
-    // the previously written text.
-    int markCharacterCount = 0;
-    for (int i = 0; i < text.length(); i ++) {
-        if (text[i].isMark())
-            markCharacterCount ++;
-    }
-    const int preeditTextLength(text.length() - markCharacterCount);
+    const int preeditTextLength(text.length());
     const int oldPreeditLength(append ? textCursor.selectedText().length() : 0);
 
     QTextCursor preeditStartCursor(textCursor);
-    preeditStartCursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::MoveAnchor, oldPreeditLength);
+    preeditStartCursor.setPosition(preeditStartCursor.position() - oldPreeditLength, QTextCursor::MoveAnchor);
 
     if (isPreediting()) {
         // destroys character format even if there is no selection, so only do this when pre-editing
@@ -971,7 +952,7 @@ void MTextEditPrivate::setPreeditText(const QString &text,
 
             if (format.isValid()) {
                 MTextEditFormatRange formatRange;
-                formatRange.start = attribute.start + preeditStartCursor.position() + markCharacterCount;
+                formatRange.start = attribute.start + preeditStartCursor.position();
                 formatRange.length = attribute.length;
                 formatRange.format = format;
                 additionalFormats.append(formatRange);
@@ -999,8 +980,7 @@ void MTextEditPrivate::setPreeditText(const QString &text,
 
     // mark preedit as selection
     int position = textCursor.position();
-    textCursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::MoveAnchor,
-                             preeditTextLength);
+    textCursor.setPosition(position - preeditTextLength, QTextCursor::MoveAnchor);
     textCursor.setPosition(position, QTextCursor::KeepAnchor);
 }
 
