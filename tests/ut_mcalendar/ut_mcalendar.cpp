@@ -5197,6 +5197,15 @@ void Ut_MCalendar::testDateYearAndMonth_data()
         << "ru_RU"
         << "LLLL yyyy"
         << "Июнь 2011";
+    QTest::newRow("vi_VI")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,24),QTime(18,42,5))
+        << "vi_VI"
+        << "vi_VI"
+        << "vi_VI"
+        << "vi_VI"
+        << "LLLL - yyyy"
+        << "Tháng 12 - 2011";
 }
 
 void Ut_MCalendar::testDateYearAndMonth()

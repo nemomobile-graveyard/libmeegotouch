@@ -504,6 +504,8 @@ void MLocalePrivate::dateFormatToYearAndMonth(icu::DateFormat *df) const
                 icuFormatQString = QString::fromUtf8("yyyy년 M월");
             else
                 icuFormatQString = QString::fromUtf8("yyyy LLLL");
+        else if(categoryNameTime.startsWith("vi"))
+            icuFormatQString = QString::fromUtf8("LLLL - yyyy");
         else if(categoryNameTime.startsWith("eu")
                 || categoryNameTime.startsWith("hu")
                 || categoryNameTime.startsWith("ms"))
