@@ -498,6 +498,7 @@ void MLabelViewRich::updateRichTextEliding()
 
         QTextLayout *layout = cursor.block().layout();
         QTextLine line = layout->lineForTextPosition(cursor.positionInBlock());
+        Q_UNUSED(line);
         while (shouldElide()) {
             if (cursor.atStart()) {
                 textDocument.clear();
