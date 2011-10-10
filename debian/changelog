@@ -1,8 +1,18 @@
-libmeegotouch (0.24.4~1) unstable; urgency=low
+libmeegotouch (0.24.4-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#282713 - H Language - 'Dtpickers' - Truncation for §qtn_dtpi_month_and_year§
+  * Fixes: NB#270266 word selection backwards doesn't select starting word
+  * Fixes: NB#285265 - MLabel - Fix when we have a long line that needs eliding but we don't have eliding on
+  * Fixes: NB#269770 - MLabel does not reset correct when the width increases
+  * Fixes: NB#279531 Recipient tooltip is shown on two lines in Finnish and not fully shown, regression from 1.0
+  * Fixes: NB#275612, Bold functionality doesn't work in Recipient Editor widget
+  * Fixes: NB#280501 - Inconsistent placement of information banners and system banners when status area is not visible
+  * Fixes: NB#283881 - Libmeegotouch is missing the LGPL license' header in 150 files
+  * Fixes: NB#281256 - Actions menu in gallerypage accepts more than 1 click before being closed
+  * Fixes: MLayout - crashes in its destructor.
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 28 Sep 2011 14:01:07 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 10 Oct 2011 15:55:13 +0300
 
 libmeegotouch (0.24.3-1) unstable; urgency=low
 
