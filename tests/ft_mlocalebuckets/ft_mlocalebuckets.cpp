@@ -715,6 +715,57 @@ void Ft_MLocaleBuckets::sortTestFiles_data()
     QTest::newRow("kab_DZ")
         << "kab_DZ"
         << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_Cyrl")
+        << "sr_Cyrl"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_Latn")
+        << "sr_Latn"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_BA")
+        << "sr_BA"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_Latn_BA")
+        << "sr_Latn_BA"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_Cyrl_BA")
+        << "sr_Cyrl_BA"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_CS")
+        << "sr_CS"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_Latn_CS")
+        << "sr_Latn_CS"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_Cyrl_CS")
+        << "sr_Cyrl_CS"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_ME")
+        << "sr_ME"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_Latn_ME")
+        << "sr_Latn_ME"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_Cyrl_ME")
+        << "sr_Cyrl_ME"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_RS")
+        << "sr_RS"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_Cyrl_RS")
+        << "sr_Cyrl_RS"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_Latn_RS")
+        << "sr_Latn_RS"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_YU")
+        << "sr_YU"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_Cyrl_YU")
+        << "sr_Cyrl_YU"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sr_Latn_YU")
+        << "sr_Latn_YU"
+        << "ft_mlocalebuckets_test-input.txt";
 }
 
 void Ft_MLocaleBuckets::sortTestFiles()
@@ -749,6 +800,9 @@ void Ft_MLocaleBuckets::sortTestFiles()
         + QChar('\n')
         + QLatin1String("sort locale = ")
         + localeName
+        + QChar('\n')
+        + QLatin1String("exemplarCharactersIndex = ")
+        + locale.exemplarCharactersIndex().join(QLatin1String(" "))
         + QChar('\n');
     for (int b = 0; b < buckets.bucketCount(); ++b) {
         prettyResult

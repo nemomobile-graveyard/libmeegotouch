@@ -1097,6 +1097,21 @@ void Ft_Locales::testMLocaleLocaleScripts_data()
     QTest::newRow("fi_FI")
             << QString("fi_FI")
             << (QStringList () << "Latn");
+    QTest::newRow("sr_BA")
+            << QString("sr_BA")
+            << (QStringList () << "Cyrl");
+    QTest::newRow("sr_CS")
+            << QString("sr_CS")
+            << (QStringList () << "Cyrl");
+    QTest::newRow("sr_ME")
+            << QString("sr_ME")
+            << (QStringList () << "Latn");
+    QTest::newRow("sr_ME")
+            << QString("sr_Cyrl_ME")
+            << (QStringList () << "Cyrl");
+    QTest::newRow("sr_Latn_ME")
+            << QString("sr_Latn_ME")
+            << (QStringList () << "Latn");
     QTest::newRow("sr_RS")
             << QString("sr_RS")
             << (QStringList () << "Cyrl");
@@ -1106,6 +1121,9 @@ void Ft_Locales::testMLocaleLocaleScripts_data()
     QTest::newRow("sr_Latn_RS")
             << QString("sr_Latn_RS")
             << (QStringList () << "Latn");
+    QTest::newRow("sr_YU")
+            << QString("sr_YU")
+            << (QStringList () << "Cyrl");
     QTest::newRow("zh_TW")
             << QString("zh_TW")
             << (QStringList () << "Hani" << "Bopo");
@@ -4252,6 +4270,11 @@ void Ft_Locales::checkAvailableLocales()
     requiredLocaleNames << "ru";          // "Russian"
     requiredLocaleNames << "ru_RU";       // "Russian (Russia)"
     requiredLocaleNames << "ru_UA";       // "Russian (Ukraine)"
+    requiredLocaleNames << "sr";          // "Serbian"
+    requiredLocaleNames << "sr_Latn_ME";  // "Serbian Latn (Montenegro)"
+    requiredLocaleNames << "sr_Cyrl_ME";  // "Serbian Cyrl (Montenegro)"
+    requiredLocaleNames << "sr_Latn_RS";  // "Serbian Latn (Serbia)"
+    requiredLocaleNames << "sr_Cyrl_RS";  // "Serbian Cyrl (Serbia)"
     requiredLocaleNames << "sk";          // "Slovak"
     requiredLocaleNames << "sk_SK";       // "Slovak (Slovakia)"
     requiredLocaleNames << "sv";          // "Swedish"

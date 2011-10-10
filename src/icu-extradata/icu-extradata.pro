@@ -47,6 +47,8 @@ greaterThan(ICUVERSION, 4.4) {
                  data/nn.txt \
                  data/pl.txt \
                  data/sk.txt \
+                 data/sr.txt \
+                 data/sr_Latn.txt \
                  data/sv.txt \
                  data/th.txt \
                  data/uk.txt \
@@ -104,7 +106,9 @@ greaterThan(ICUVERSION, 4.4) {
                  data/lang/zh_Hant.txt
     COLLTXT    = data/coll/zh.txt \
                  data/coll/ru.txt \
-                 data/coll/sk.txt
+                 data/coll/sk.txt \
+                 data/coll/sr.txt \
+                 data/coll/sr_Latn.txt
     CURRTXT    = data/curr/en_HK.txt \
                  data/curr/zh_HK.txt \
                  data/curr/zh_Hans_HK.txt \
