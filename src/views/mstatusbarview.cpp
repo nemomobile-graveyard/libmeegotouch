@@ -516,16 +516,12 @@ void MStatusBarView::showStatusIndicatorMenu()
 
 void MStatusBarView::playHapticsFeedback()
 {
-    if (style()->enableStatusIndicatorMenu()) {
-        style()->pressFeedback().play();
-    }
+    style()->pressFeedback().play();
 }
 
 void MStatusBarView::playHapticsReleaseFeedback()
 {
-    if (style()->enableStatusIndicatorMenu()) {
-        style()->releaseFeedback().play();
-    }
+    style()->releaseFeedback().play();
 }
 
 M_REGISTER_VIEW_NEW(MStatusBarView, MStatusBar)
