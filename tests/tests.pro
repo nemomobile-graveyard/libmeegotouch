@@ -1,3 +1,4 @@
+
 TEMPLATE    = subdirs
 #SUBDIRS     = $$system(ls -1d ut_*/)
 
@@ -230,6 +231,7 @@ SUBDIRS += \
     ft_numbers \
     ft_sorting \
     ft_mcharsetdetector \
+    ft_mstringsearch \
     ut_mcalendar \
     ut_mappletinstantiator \
     ft_mmoc

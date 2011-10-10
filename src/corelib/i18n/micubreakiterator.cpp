@@ -65,9 +65,17 @@ void MIcuBreakIteratorPrivate::init(const MLocale &locale, const QString &text,
     case MBreakIterator::LineIterator:
         icuIterator = icu::BreakIterator::createLineInstance(msgLocale, status);
         break;
-
     case MBreakIterator::WordIterator:
         icuIterator = icu::BreakIterator::createWordInstance(msgLocale, status);
+        break;
+    case MBreakIterator::CharacterIterator:
+        icuIterator = icu::BreakIterator::createCharacterInstance(msgLocale, status);
+        break;
+    case MBreakIterator::SentenceIterator:
+        icuIterator = icu::BreakIterator::createSentenceInstance(msgLocale, status);
+        break;
+    case MBreakIterator::TitleIterator:
+        icuIterator = icu::BreakIterator::createTitleInstance(msgLocale, status);
         break;
     }
 

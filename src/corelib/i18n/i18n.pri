@@ -46,6 +46,7 @@ contains(DEFINES, HAVE_ICU) {
         $$I18N_SRC_DIR/mcollator.h \
         $$I18N_SRC_DIR/mcharsetdetector.h \
         $$I18N_SRC_DIR/mcharsetmatch.h \
+        $$I18N_SRC_DIR/mstringsearch.h \
 
     contains(DEFINES, HAVE_LIBMLOCALE) {
         SOURCES += \
@@ -67,6 +68,7 @@ contains(DEFINES, HAVE_ICU) {
             $$I18N_SRC_DIR/micuconversions.cpp \
             $$I18N_SRC_DIR/mcharsetdetector.cpp \
             $$I18N_SRC_DIR/mcharsetmatch.cpp \
+            $$I18N_SRC_DIR/mstringsearch.cpp \
 
     }
 } else {
