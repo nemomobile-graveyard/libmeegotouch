@@ -250,6 +250,9 @@ void MListIndexViewPrivate::_q_dettachFromViewport()
 
 void MListIndexViewPrivate::scrollToGroupHeader(int y)
 {
+    if (!list)
+        return;
+
     Q_Q(MListIndexView);
     int groupCount = list->itemModel()->rowCount();
     int fastScrollRow = groupCount * ((qreal)y / q->size().height());
@@ -310,7 +313,7 @@ void MListIndexViewPrivate::_q_hideIfNeeded()
 {
     Q_Q(MListIndexView);
 
-    if (q->model()->displayMode() != MList::Show &&
+    if (list && q->model()->displayMode() != MList::Show &&
             !isFastScrolling &&
             !list->model()->listIsMoving()) {
         appearanceAnimation->stop();
@@ -388,7 +391,7 @@ void MListIndexViewPrivate::_q_updateTitles()
 
 void MListIndexViewPrivate::_q_scrollToLastRow()
 {
-    if (lastFastScrollRow >= 0) {
+    if (list && lastFastScrollRow >= 0) {
         QModelIndex index = list->itemModel()->index(lastFastScrollRow, 0);
         list->scrollTo(index, MList::PositionAtTopHint);
         tooltip()->setTitle(index.data(list->indexMagnifierDataRole()).toString());
