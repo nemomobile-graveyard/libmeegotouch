@@ -2083,24 +2083,6 @@ void Ft_Locales::testMLocaleIndexBucket_data()
         << czechExpectedBuckets;
     QStringList russianStringsSorted =
         (QStringList()
-         <<"c"
-         <<"č"
-         <<"č"
-         <<"Č"
-         <<"Cc"
-         <<"CC"
-         <<"ch"
-         <<"cH"
-         <<"Ch"
-         <<"CH"
-         <<"h"
-         <<"H"
-         <<"i"
-         <<"I"
-         <<"ů"
-         <<"Ů"
-         <<"α"
-         <<"Α"
          <<"дерево"
          <<"Дерево"
          <<"е"
@@ -2130,28 +2112,28 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"Ъ"
          <<"Ы"
          <<"Ь"
+         <<"c"
+         <<"č"
+         <<"č"
+         <<"Č"
+         <<"Cc"
+         <<"CC"
+         <<"ch"
+         <<"cH"
+         <<"Ch"
+         <<"CH"
+         <<"h"
+         <<"H"
+         <<"i"
+         <<"I"
+         <<"ů"
+         <<"Ů"
+         <<"α"
+         <<"Α"
          <<"ワタシ"
          <<"沙紀");
     QStringList russianExpectedBuckets =
         (QStringList()
-         <<"C"
-         <<"C"
-         <<"C"
-         <<"C"
-         <<"C"
-         <<"C"
-         <<"C"
-         <<"C"
-         <<"C"
-         <<"C"
-         <<"H"
-         <<"H"
-         <<"I"
-         <<"I"
-         <<"U"
-         <<"U"
-         <<"Α"
-         <<"Α"
          <<"Д"
          <<"Д"
          <<"Е"
@@ -2181,13 +2163,38 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"Щ"
          <<"Ы"
          <<"Ы"
+         <<"C"
+         <<"C"
+         <<"C"
+         <<"C"
+         <<"C"
+         <<"C"
+         <<"C"
+         <<"C"
+         <<"C"
+         <<"C"
+         <<"H"
+         <<"H"
+         <<"I"
+         <<"I"
+         <<"U"
+         <<"U"
+         <<"Α"
+         <<"Α"
          <<"ワ"
          <<"沙");
-    QTest::newRow("ru_RU")
-        <<"ja_JP"
-        <<"ru_RU"
-        << russianStringsSorted
-        << russianExpectedBuckets;
+    QStringList macedonianStringsSorted =
+        (QStringList()
+         <<"Ј"
+         <<"к"
+         <<"л"
+            );
+    QStringList macedonianExpectedBuckets =
+        (QStringList()
+         <<"Ј"
+         <<"К"
+         <<"Л"
+            );
     QTest::newRow("ar_SA")
         <<"ja_JP"
         <<"ar_SA"
@@ -4067,6 +4074,16 @@ void Ft_Locales::testMLocaleIndexBucket_data()
         <<"ja_JP@collation=standard" // collation=standard is default for ja_JP
         << japaneseStringsSorted
         << japaneseExpectedBuckets;
+    QTest::newRow("ru_RU")
+        <<"ja_JP"
+        <<"ru_RU"
+        << russianStringsSorted
+        << russianExpectedBuckets;
+    QTest::newRow("mk_MK")
+        <<"ja_JP"
+        <<"mk_MK"
+        << macedonianStringsSorted
+        << macedonianExpectedBuckets;
 }
 
 void Ft_Locales::testMLocaleIndexBucket()

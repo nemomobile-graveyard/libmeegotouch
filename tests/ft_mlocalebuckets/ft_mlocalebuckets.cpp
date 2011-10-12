@@ -667,8 +667,23 @@ void Ft_MLocaleBuckets::sortTestFiles_data()
     QTest::newRow("en_US")
         << "en_US"
         << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("be_BY")
+        << "be_BY"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("bg_BG")
+        << "bg_BG"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("kk_KZ")
+        << "kk_KZ"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("mk_MK")
+        << "mk_MK"
+        << "ft_mlocalebuckets_test-input.txt";
     QTest::newRow("ru_RU")
         << "ru_RU"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("uk_UA")
+        << "uk_UA"
         << "ft_mlocalebuckets_test-input.txt";
     QTest::newRow("ar_EG@numbers=arab")
         << "ar_EG@numbers=arab"
