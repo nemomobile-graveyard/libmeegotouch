@@ -150,6 +150,7 @@ public:
     void _q_handlePositionChanged();
     void _q_checkPositionChanges();
     void _q_updateTextDirection();
+    void _q_updateModelData(const QList<const char *> &modifications);
 
     //! \brief Direction based on first character that has strong directionality.
     //! \returns Qt::LayoutDirectionAuto in case of no strong directional characters.

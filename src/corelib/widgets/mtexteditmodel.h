@@ -107,6 +107,8 @@ private:
     M_MODEL_PROPERTY(bool, isAutoSipEnabled, AutoSipEnabled, true, true)
     M_MODEL_PROPERTY(int, preeditCursor, PreeditCursor, true, -1)
     M_MODEL_PROPERTY(QList<MTextEditFormatRange>, additionalFormats, AdditionalFormats, true, QList<MTextEditFormatRange>())
+    M_MODEL_PROPERTY(bool, isInputContextUpdateEnabled, InputContextUpdateEnabled, true, true)
+
 public:
     void updateCursor()   {
         memberModified(MTextEditModel::Cursor);

@@ -452,6 +452,9 @@ void MTextEditPrivate::init()
     QObject::connect(positionChangeTimeout, SIGNAL(timeout()), q, SLOT(_q_checkPositionChanges()));
 
     QObject::connect(q, SIGNAL(pasteFailed()), q, SLOT(_q_onPasteFailed()));
+
+    QObject::connect(q->model(), SIGNAL(modified(const QList<const char *>)),
+                     q, SLOT(_q_updateModelData(const QList<const char *>)));
 }
 
 void MTextEditPrivate::_q_updatePasteActionState()
@@ -545,6 +548,22 @@ Qt::LayoutDirection MTextEditPrivate::strongDirectionForText(const QString &text
     // Return Qt::LayoutDirectionAuto to indicate that the text
     // contains no strong directional characters.
     return Qt::LayoutDirectionAuto;
+}
+
+void MTextEditPrivate::_q_updateModelData(const QList<const char *> &modifications)
+{
+    Q_Q(const MTextEdit);
+
+    foreach (const char *member, modifications) {
+        if (member == MTextEditModel::InputContextUpdateEnabled) {
+            if (q->model()->isInputContextUpdateEnabled()) {
+                enableUpdateMicroFocus(true);
+            } else {
+                disableUpdateMicroFocus();
+            }
+            break;
+        }
+    }
 }
 
 Qt::LayoutDirection MTextEditPrivate::inputMethodBasedTextDirection() const
