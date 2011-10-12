@@ -78,7 +78,13 @@ bool saveToFsCache(const QString &filename, const QSize &size)
     }
 
     if (resource) {
-        resource->saveToFsCache(image, size);
+        if (size != QSize(0,0) && size != image.size()) {
+            QImage scaled = image.scaled(size, Qt::IgnoreAspectRatio,
+                                         Qt::SmoothTransformation);
+            resource->saveToFsCache(scaled, size);
+        } else
+            resource->saveToFsCache(image, size);
+
         delete resource;
 
         return true;
