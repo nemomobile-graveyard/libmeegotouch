@@ -26,6 +26,8 @@
 #include <mbuttonview.h>
 #include <mbuttoniconview.h>
 #include <views/mbuttonview_p.h>
+#include <views/mbuttonswitchview.h>
+#include <views/mbuttonswitchview_p.h>
 
 #include <mbutton.h>
 #include <mbutton_p.h>
@@ -291,6 +293,24 @@ void Ut_MButtonView::testSwitchView()
     QVERIFY(img0 != img2);
     
     QVERIFY(img1 != img2);
+}
+
+void Ut_MButtonView::testLabelInSwitchView()
+{
+    QVERIFY(m_subject->d_func()->label == 0); //No text -> no label
+    m_button->setText("Text for the button");
+    QVERIFY(m_subject->d_func()->label != 0); //Icon view and text set -> label is created
+
+    MButtonSwitchView *switchView = new MButtonSwitchView(m_button);
+    m_button->setView(switchView);
+    QVERIFY(switchView->d_func()->label == 0); //Text exists but in switch view label is not created
+
+    m_button->setText("Text for the switch");
+    QVERIFY(switchView->d_func()->label == 0); //Text set again -> label is still not created
+
+    MButtonView *buttonView = new MButtonView(m_button);
+    m_button->setView(buttonView);
+    QVERIFY(buttonView->d_func()->label != 0); //Button view and text exists -> label is created
 }
 
 void Ut_MButtonView::testCheckboxView()

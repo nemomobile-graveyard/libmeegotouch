@@ -163,6 +163,11 @@ void MButtonSwitchViewPrivate::_q_toggleCheck()
     toggleOnAnimationFinish = false;
 }
 
+void MButtonSwitchViewPrivate::setText(const QString &text)
+{
+    Q_UNUSED(text);
+}
+
 MButtonSwitchView::MButtonSwitchView(MButton *controller) :
     MButtonView(* new MButtonSwitchViewPrivate, controller)
 {

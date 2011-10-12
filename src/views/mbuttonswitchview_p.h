@@ -43,6 +43,8 @@ public:
 
     void _q_toggleCheck();
 
+    virtual void setText(const QString &text);
+
     int mouseOffset;
 
     bool m_thumbDown;

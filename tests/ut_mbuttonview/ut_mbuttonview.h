@@ -49,6 +49,7 @@ private slots:
     void testMouseEvents();
 
     void testSwitchView();
+    void testLabelInSwitchView();
     void testCheckboxView();
 
     //regression test for NB#220043

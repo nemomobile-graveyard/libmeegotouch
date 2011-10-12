@@ -123,7 +123,7 @@ private:
     Q_DECLARE_PRIVATE(MButtonSwitchView)
     
 #ifdef UNIT_TEST
-    friend class Ut_MButtonSwitchView;
+    friend class Ut_MButtonView;
 #endif
 };
 
