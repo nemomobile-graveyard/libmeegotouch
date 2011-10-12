@@ -1754,7 +1754,10 @@ QVariant MTextEditView::inputMethodQuery(Qt::InputMethodQuery query) const
         result = QVariant(d->preeditRectangle());
         break;
 
-    case Qt::ImFont: // FIXME: return currently used font
+    case Qt::ImFont:
+        result = QVariant(style()->font());
+        break;
+
     default:
         break;
     }
