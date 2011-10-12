@@ -172,10 +172,3 @@ MApplicationWindowStyle#LabelTabsTop {
     tab-bar-style-name: "TabsTopWithLabel";
 }
 
-MSheetStyle#PhotoViewer {
-    header-slot-style-name: "CommonSheetHeaderPanelInverted";
-    central-slot-style-name: "MSheetCentralSlotIverted";
-    background-color: black;
-    appearance-animation: "MWidgetFadeAnimation";
-    disappearance-animation: "MWidgetFadeAnimation";
-}

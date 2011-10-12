@@ -39,6 +39,12 @@ void SystemwideSheetPage::createContent()
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical,
                                                                   centralWidget());
 
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        setStyleName("CommonApplicationPage");
+    } else {
+        setStyleName("CommonApplicationPageInverted");
+    }
+
     statusBarCheckbox = new LabeledCheckbox(this);
     //% "Status bar"
     statusBarCheckbox->label->setText(qtTrId("xx_statusbar"));

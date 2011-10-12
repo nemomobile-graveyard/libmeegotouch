@@ -227,7 +227,7 @@ void SheetsPage::openTransparentHeaderSheet()
 {
     MSheet *transparentHeaderSheet = new TransparentHeaderSheet;
     transparentHeaderSheet->setObjectName("transparentHeaderSheet");
-    transparentHeaderSheet->setStyleName("PhotoViewer");
+    transparentHeaderSheet->setStyleName("Overlay");
     transparentHeaderSheet->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
