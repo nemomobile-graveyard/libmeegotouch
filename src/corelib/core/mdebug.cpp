@@ -204,6 +204,18 @@ MDebug &MDebug::operator <<(const MWidgetController *controller)
     stream->ts << ") ";
     return *this;
 }
+// A helper function to check if an item is in the layout, or any layout children
+static bool itemInLayout(QGraphicsLayout *layout, QGraphicsWidget *widgetToFind) {
+    for (int i = 0; i < layout->count(); i++) {
+        if (layout->itemAt(i)->isLayout())
+            if (itemInLayout(static_cast<QGraphicsLayout*>(layout->itemAt(i)), widgetToFind))
+                return true;
+        QGraphicsItem *layoutItem = layout->itemAt(i)->graphicsItem();
+        if (layoutItem && layoutItem->isWidget() && static_cast<QGraphicsWidget*>(layoutItem) == widgetToFind)
+            return true;
+    }
+    return false;
+}
 
 /* Static */
 void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialIndentationDepth)
@@ -239,7 +251,7 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
     s << sizeToString(widget->minimumSize().toSize());
     s << QString::fromUtf8("≤ ") << sizeToString( preferredSize.toSize());
     if (preferredSize.height() != hfwPreferredSize.height())
-        s << "(hfw:" << sizeToString( hfwPreferredSize.toSize() ) << ')';
+        s << "(hfw:" << sizeToString( hfwPreferredSize.toSize() ).trimmed() << ") ";
     if (widget->effectiveSizeHint( Qt::MaximumSize) != QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX))
         s << QString::fromUtf8("≤ ") << sizeToString(widget->maximumSize().toSize());
 
@@ -257,6 +269,8 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
                 notes << "wordwrap";
             if (label->textElide())
                 notes << "elide";
+            if (label->preferredLineCount() >= 0)
+                notes << QString("preferredLineCount=%1").arg(label->preferredLineCount());
 
             QString text = label->text();
             text.replace('\r', "\\r");
@@ -277,14 +291,40 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
     if (!notes.isEmpty())
         s << "(" << notes.join(", ") << ')';
     s << '\n';
+    s << normal();
+    s.flush();
+
     QGraphicsLayout *layout = widget->layout();
+
+    /* Print out any items that are not in the layout */
+    foreach (QGraphicsItem *item, widget->childItems()) {
+        if (item && item->isWidget()) {
+            /* Check it's not in the layout */
+            if (!layout || !itemInLayout(layout, static_cast<QGraphicsWidget *>(item)))
+                printDebugChildInformation(static_cast<QGraphicsWidget*>(item), initialIndentationDepth + 1);
+        }
+    }
+
+    if (layout)
+        printDebugChildInformation(layout, widget, initialIndentationDepth + 1);
+}
+
+void MDebug::printDebugChildInformation(QGraphicsLayout *layout, QGraphicsWidget *widget, int initialIndentationDepth)
+{
+    QTextStream s(stderr);
+    s.setCodec("UTF-8");
+
+    QString indentation;
+    for (int i = 0; i < initialIndentationDepth *4 -1; i++)
+        indentation += ' ';
     MLayout *mLayout = dynamic_cast<MLayout*>(layout);
+
     if (layout) {
         QSizeF preferredSize = layout->effectiveSizeHint(Qt::PreferredSize, QSizeF(layout->preferredWidth(), -1));
         QSizeF hfwPreferredSize = layout->effectiveSizeHint(Qt::PreferredSize, QSizeF(layout->geometry().width(), -1));
 
         QGraphicsLinearLayout *linearLayout = dynamic_cast<QGraphicsLinearLayout*>(layout);
-        s << indentation << " *"  << rectToString(layout->geometry().toRect(), preferredSize);
+        s << indentation << "*"  << rectToString(layout->geometry().toRect(), preferredSize);
 
         s << normal();
         if (widget->isVisible())
@@ -323,11 +363,11 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
         s << ' ' << normal();
         if (!widget->isVisible())
             s << deemphasize();
- 
+
         s << sizeToString(layout->minimumSize().toSize());
         s << QString::fromUtf8("≤ ") << sizeToString( preferredSize.toSize());
         if (preferredSize.height() != hfwPreferredSize.height())
-            s << "(hfw:" << sizeToString(hfwPreferredSize.toSize()) << ')';
+            s << "(hfw:" << sizeToString(hfwPreferredSize.toSize()).trimmed() << ") ";
         if (layout->effectiveSizeHint( Qt::MaximumSize) != QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX))
             s << QString::fromUtf8("≤ ") << sizeToString(layout->maximumSize().toSize());
 
@@ -338,11 +378,17 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
     s << normal();
     s.flush();
 
-    foreach (QGraphicsItem *item, widget->childItems()) {
-        if (item && item->isWidget()) {
-            printDebugChildInformation(static_cast<QGraphicsWidget*>(item), initialIndentationDepth + 1);
+    for (int i = 0; i < layout->count(); i++) {
+        QGraphicsLayoutItem *item = layout->itemAt(i);
+        if (item->isLayout()) {
+            printDebugChildInformation(static_cast<QGraphicsLayout*>(item), widget, initialIndentationDepth + 1);
+        } else {
+            QGraphicsItem *graphicsItem = item->graphicsItem();
+            if (graphicsItem && graphicsItem->isWidget())
+                printDebugChildInformation(static_cast<QGraphicsWidget*>(graphicsItem), initialIndentationDepth + 1);
         }
     }
+
 }
 
 void MDebug::printDebugSceneInformation(QGraphicsView *window)
