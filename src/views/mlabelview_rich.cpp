@@ -492,6 +492,7 @@ void MLabelViewRich::updateRichTextEliding()
         //default font
         QTextCharFormat format;
         format.setFont(textDocument.defaultFont());
+        format.setForeground(viewPrivate->controller->color());
         cursor.insertText(ellipsisString, format);
         cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, ellipsisString.size());
         textDocument.setPageSize(viewPrivate->boundingRect().size());
