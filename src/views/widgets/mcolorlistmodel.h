@@ -26,7 +26,7 @@
 
 typedef QList<QColor> ColorListType;
 
-class M_CORE_EXPORT MColorListModel : public MWidgetModel
+class M_VIEWS_EXPORT MColorListModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL(MColorListModel)

@@ -28,7 +28,7 @@ class M_VIEWS_EXPORT MColorListStyle : public MWidgetStyle
     M_STYLE(MColorListStyle)
 };
 
-class M_EXPORT MColorListStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MColorListStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MColorListStyle)
 };

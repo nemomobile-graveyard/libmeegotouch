@@ -32,7 +32,7 @@ class M_VIEWS_EXPORT MColorComboBoxStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString, colorStyleName, ColorStyleName)
 };
 
-class M_EXPORT MColorComboBoxStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MColorComboBoxStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MColorComboBoxStyle)
 };

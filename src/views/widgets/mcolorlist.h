@@ -31,7 +31,7 @@ class MColorListPrivate;
 /**
  * \brief A widget for picking colors from a list of predefined colors.
  */
-class M_CORE_EXPORT MColorList : public MWidgetController
+class M_VIEWS_EXPORT MColorList : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MColorList)
