@@ -49,6 +49,9 @@ private slots:
     void testPositiveButtonTextUsesActionText();
     void testNegativeButtonTextUsesActionText();
 
+    void testSettingMultipleActionOnPositiveButton();
+    void testSettingMultipleActionOnNegativeButton();
+
 private:
     // helpers
     void testClickingButtonTriggersAction(MButton *button, QAction *action);

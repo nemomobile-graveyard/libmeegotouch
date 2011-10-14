@@ -103,6 +103,58 @@ void Ut_MBasicSheetHeaderView::testNegativeButtonTextUsesActionText()
     QCOMPARE(subject->d_func()->negativeButton->text(), action->text());
 }
 
+void Ut_MBasicSheetHeaderView::testSettingMultipleActionOnPositiveButton()
+{
+    QString actionString1("Action 1");
+    QString actionString2("Action 2");
+    QAction *dummyAction1 = new QAction(actionString1, NULL);
+    QAction *dummyAction2 = new QAction(actionString2, NULL);
+
+    controller->setPositiveAction(dummyAction1);
+    QVERIFY(subject->d_func()->positiveButton != 0);
+    QCOMPARE(subject->d_func()->positiveButton->text(), actionString1);
+
+    controller->setPositiveAction(dummyAction2);
+    QVERIFY(subject->d_func()->positiveButton != 0);
+    QCOMPARE(subject->d_func()->positiveButton->text(), actionString2);
+
+    QSignalSpy spy1(dummyAction1, SIGNAL(triggered()));
+    QSignalSpy spy2(dummyAction2, SIGNAL(triggered()));
+
+    subject->d_func()->positiveButton->click();
+    QCOMPARE(spy1.count(), 0);
+    QCOMPARE(spy2.count(), 1);
+
+    delete dummyAction1;
+    delete dummyAction2;
+}
+
+void Ut_MBasicSheetHeaderView::testSettingMultipleActionOnNegativeButton()
+{
+    QString actionString1("Action 1");
+    QString actionString2("Action 2");
+    QAction *dummyAction1 = new QAction(actionString1, NULL);
+    QAction *dummyAction2 = new QAction(actionString2, NULL);
+
+    controller->setNegativeAction(dummyAction1);
+    QVERIFY(subject->d_func()->negativeButton != 0);
+    QCOMPARE(subject->d_func()->negativeButton->text(), actionString1);
+
+    controller->setNegativeAction(dummyAction2);
+    QVERIFY(subject->d_func()->negativeButton != 0);
+    QCOMPARE(subject->d_func()->negativeButton->text(), actionString2);
+
+    QSignalSpy spy1(dummyAction1, SIGNAL(triggered()));
+    QSignalSpy spy2(dummyAction2, SIGNAL(triggered()));
+
+    subject->d_func()->negativeButton->click();
+    QCOMPARE(spy1.count(), 0);
+    QCOMPARE(spy2.count(), 1);
+
+    delete dummyAction1;
+    delete dummyAction2;
+}
+
 /////
 // Helpers
 
