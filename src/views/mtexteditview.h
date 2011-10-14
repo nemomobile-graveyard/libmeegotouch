@@ -35,7 +35,7 @@ class M_VIEWS_EXPORT MTextEditView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MTextEditModel, MTextEditStyle)
-
+    Q_PROPERTY(QVariant inputMethodFont READ inputMethodFont)
 public:
     /*!
      * \brief Constructor
@@ -126,6 +126,8 @@ protected Q_SLOTS:
 private:
     Q_DISABLE_COPY(MTextEditView)
     Q_DECLARE_PRIVATE(MTextEditView)
+
+    QVariant inputMethodFont();
 
     MTextEditViewPrivate *const d_ptr;
 

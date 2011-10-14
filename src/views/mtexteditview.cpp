@@ -2054,4 +2054,9 @@ void MTextEditView::applyStyle()
     MWidgetView::applyStyle();
 }
 
+QVariant MTextEditView::inputMethodFont()
+{
+    return inputMethodQuery(Qt::ImFont);
+}
+
 M_REGISTER_VIEW_NEW(MTextEditView, MTextEdit)
