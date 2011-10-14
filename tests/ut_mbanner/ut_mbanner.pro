@@ -21,4 +21,7 @@ HEADERS += \
 #     $$STUBSDIR/mstyle_stub.h \
 #     $$STUBSDIR/mtheme_stub.h \
 
+support_files.files += \
+    ut_mbanner_pixmap.png
+
 include(../common_bot.pri)

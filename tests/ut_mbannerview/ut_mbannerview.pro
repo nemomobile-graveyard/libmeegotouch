@@ -18,4 +18,7 @@ HEADERS += \
     $$MSRCDIR/views/mbannerview_p.h \
     $$MSRCDIR/views/mscenewindowview.h \
 
+support_files.files += \
+    ut_mbannerview_pixmap.png
+
 include(../common_bot.pri)

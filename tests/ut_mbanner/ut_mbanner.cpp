@@ -168,7 +168,7 @@ void Ut_MBanner::testBannerClicking()
 
 void Ut_MBanner::testPixmap()
 {
-    QPixmap pixmapTest("bannerpixmap.png");
+    QPixmap pixmapTest("ut_mbanner_pixmap.png");
     m_subject->setPixmap(pixmapTest);
     QCOMPARE(pixmapTest, m_subject->pixmap());
 }

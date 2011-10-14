@@ -104,7 +104,7 @@ void Ut_MBannerView::testBannerModelDatainViews()
 
 void Ut_MBannerView::testBannerPixmapAndIcon()
 {
-    const QPixmap pixmap("bannerpixmap.png");
+    const QPixmap pixmap("ut_mbannerview_pixmap.png");
     m_banner->setPixmap(pixmap);
     QCOMPARE(pixmap.toImage(), m_subject->d_func()->pixmap()->pixmap()->toImage());
 }
