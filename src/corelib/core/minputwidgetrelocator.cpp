@@ -219,16 +219,25 @@ const QRect &MInputWidgetRelocator::exposedContentRect()
         QGraphicsWidget *inputWidget = focusedWidget();
         QGraphicsWidget *parentWidget = inputWidget ? inputWidget->parentWidget() : 0;
         QGraphicsWidget *sheetCentralViewport = 0;
+        MSceneWindow *sceneWindow = 0;
 
         // Take last pannable viewport found and assume it is occupying central slot.
         while (parentWidget) {
             if (parentWidget->inherits("MPannableViewport")) {
                 sheetCentralViewport = parentWidget;
             }
+
+            // If inputWidget is inside sheet we must have a scene window.
+            if (!sceneWindow && qobject_cast<MSceneWindow *>(parentWidget)) {
+                sceneWindow = static_cast<MSceneWindow *>(parentWidget);
+            }
+
             parentWidget = parentWidget->parentWidget();
         }
 
-        if (sheetCentralViewport) {
+        if (sheetCentralViewport
+            && sceneWindow
+            && sceneWindow->windowType() == MSceneWindow::Sheet) {
             cachedExposedRect &= rootElement->mapRectFromItem(sheetCentralViewport,
                                                               sheetCentralViewport->rect()).toRect();
         }
