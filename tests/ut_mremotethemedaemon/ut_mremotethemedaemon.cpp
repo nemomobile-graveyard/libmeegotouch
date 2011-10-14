@@ -27,7 +27,7 @@
 #include <QSignalSpy>
 
 namespace {
-    const char *KnownIconId = "icon-m_framework-close";
+    const char *KnownIconId = "icon-m-common-dialog-close";
 }
 
 void Ut_MRemoteThemeDaemon::initTestCase()

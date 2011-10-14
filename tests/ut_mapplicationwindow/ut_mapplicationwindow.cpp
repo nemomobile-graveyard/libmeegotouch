@@ -47,6 +47,10 @@
 // to a known type
 #define STATE_COMPARE(s1, s2) QCOMPARE(static_cast<int>(s1), static_cast<int>(s2));
 
+namespace {
+    const char *ExistingIconId = "icon-m-common-dialog-close";
+};
+
 // Test class implementation
 
 void Ut_MApplicationWindow::initTestCase()
@@ -179,7 +183,7 @@ void Ut_MApplicationWindow::testPageChanged()
 
 void Ut_MApplicationWindow::testSetWindowIconID()
 {
-    QString iconId("icon-id");
+    QString iconId(ExistingIconId);
 
     m_subject->setWindowIconID(iconId);
     QCOMPARE(m_subject->d_func()->navigationBar->viewMenuIconID(), iconId);

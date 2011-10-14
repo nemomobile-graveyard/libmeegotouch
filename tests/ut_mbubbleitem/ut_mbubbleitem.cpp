@@ -27,6 +27,10 @@
 #include "ut_mbubbleitem.h"
 #include "mapplication.h"
 
+namespace {
+    const char *ExistingIconId = "icon-m-common-dialog-close";
+};
+
 void Ut_MBubbleItem::init()
 {
     m_bubble = new MBubbleItem();
@@ -153,7 +157,7 @@ void Ut_MBubbleItem::testAvatar()
     QSizeF size = m_bubble->preferredSize();
     QPointer<MImageWidget> avatar1 = new MImageWidget;
     QPointer<MImageWidget> avatar2 = new MImageWidget;
-    QPixmap pixmap("icon-m-home");
+    QPixmap pixmap(ExistingIconId);
     QVERIFY(!m_bubble->avatar());
     m_bubble->setAvatar(avatar1);
     QVERIFY(m_bubble->avatar() == avatar1);

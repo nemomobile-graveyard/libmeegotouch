@@ -26,7 +26,9 @@
 #include "mbanner.h"
 #include "ut_mbanner.h"
 
-
+namespace {
+    const char *ExistingIconId = "icon-m-common-dialog-close";
+};
 
 MApplication *app;
 
@@ -72,7 +74,7 @@ void Ut_MBanner::testSubTitle()
 
 void Ut_MBanner::testIcon()
 {
-    QString icon("icon-image");
+    QString icon(ExistingIconId);
     m_subject->setIconID(icon);;
     QCOMPARE(m_subject->iconID(), icon);
 }
@@ -122,11 +124,11 @@ void Ut_MBanner::testBannerCreation()
 
     bannerEvent->setTitle("MBanner the new title");
     bannerEvent->setSubtitle("New subtitle");
-    bannerEvent->setIconID("icon-1");
+    bannerEvent->setIconID(ExistingIconId);
 
     QCOMPARE(bannerEvent->title(),  QString("MBanner the new title"));
     QCOMPARE(bannerEvent->subtitle(),  QString("New subtitle"));
-    QCOMPARE(bannerEvent->iconID(),  QString("icon-1"));
+    QCOMPARE(bannerEvent->iconID(),  QString(ExistingIconId));
 
     /* Style configured as Information Banner */
 
@@ -141,9 +143,9 @@ void Ut_MBanner::testBannerCreation()
     MBanner *bannerSystem = new MBanner();
 
     bannerSystem->setSubtitle("New subtitle");
-    bannerSystem->setIconID("icon-1");
+    bannerSystem->setIconID(ExistingIconId);
 
-    QCOMPARE(bannerSystem->iconID(),  QString("icon-1"));
+    QCOMPARE(bannerSystem->iconID(),  QString(ExistingIconId));
     QCOMPARE(bannerSystem->subtitle(),  QString("New subtitle"));
 
     delete bannerEvent;

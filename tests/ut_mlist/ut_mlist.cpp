@@ -29,6 +29,9 @@
 
 #include "ut_mlist.h"
 
+namespace {
+    const char *ExistingIconId = "icon-m-common-dialog-close";
+};
 
 MApplication *app;
 
@@ -62,7 +65,7 @@ public:
         }
 
         if ( contentItem->pixmap().isNull() ) {
-            contentItem->setPixmap( QPixmap("icon-home"));
+            contentItem->setPixmap( QPixmap(ExistingIconId));
         }
     }
     static bool destroyed;

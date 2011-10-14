@@ -31,6 +31,12 @@
 #include <MWidgetAction>
 #include "mtoolbar_p.h"
 
+namespace {
+    const char *ExistingIconId1 = "icon-m-common-dialog-close";
+    const char *ExistingIconId2 = "icon-m-common-backspace";
+};
+
+
 MApplication *app(NULL);
 
 void Ut_MToolBar::init()
@@ -103,12 +109,12 @@ void Ut_MToolBar::testAddAction()
     QVERIFY(action->text() == "TEXTONLY");
 
     // test addAction(const QString &icon, const QString &text)
-    MAction *action1 = new MAction("Icon-list-view-on", "TEXT", m_subject);
+    MAction *action1 = new MAction(ExistingIconId1, "TEXT", m_subject);
     m_subject->addAction(action1);
     QVERIFY(m_subject->actions().count() == 2);
     action = qobject_cast<MAction *>(m_subject->actions().at(1));
     QVERIFY(action == action1);
-    QVERIFY(action->iconID() == "Icon-list-view-on");
+    QVERIFY(action->iconID() == ExistingIconId1);
     QVERIFY(action->text() == "TEXT");
 
     testValue = false;
@@ -119,7 +125,7 @@ void Ut_MToolBar::testAddAction()
     QVERIFY(senderAction == action1);
 
     // test addAction(MAction* action)
-    MAction *action2 = new MAction("Icon-time-line-on", "TEXT4", NULL);
+    MAction *action2 = new MAction(ExistingIconId2, "TEXT4", NULL);
     m_subject->addAction(action2);
     QVERIFY(m_subject->actions().count() == 3);
 

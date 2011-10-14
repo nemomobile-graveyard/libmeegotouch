@@ -41,6 +41,10 @@
 // to a known type
 #define STATE_COMPARE(s1, s2) QCOMPARE(static_cast<int>(s1), static_cast<int>(s2));
 
+namespace {
+    const char *ExistingIconId = "icon-m-common-dialog-close";
+};
+
 MWindow *appWin;
 void Ut_MDialog::initTestCase()
 {
@@ -283,7 +287,7 @@ void Ut_MDialog::addStandardButtons()
 
 void Ut_MDialog::addNonStandardButtonModel()
 {
-    const QIcon icon("icon-m-home");
+    const QIcon icon(ExistingIconId);
     MButtonModel *mbm1 = new MButtonModel();
     MButtonModel *mbm2 = new MButtonModel();
     mbm1->setIcon( icon );

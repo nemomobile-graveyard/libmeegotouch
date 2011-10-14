@@ -34,6 +34,12 @@
 #include "mapplicationmenuview_p.h"
 #include "mlist.h"
 
+namespace {
+    const char *ExistingIconId1 = "icon-m-common-dialog-close";
+    const char *ExistingIconId2 = "icon-m-common-backspace";
+    const char *ExistingIconId3 = "icon-m-common-done";
+};
+
 MApplication *app;
 MApplicationWindow *appWin;
 
@@ -111,12 +117,12 @@ void Ut_MApplicationMenu::testAddAction()
     QVERIFY(action->text() == "TEXTONLY");
 
     // test addAction(const QString &icon, const QString &text)
-    MAction *action1 = new MAction("Icon-list-view-on", "TEXT", m_subject);
+    MAction *action1 = new MAction(ExistingIconId3, "TEXT", m_subject);
     m_subject->addAction(action1);
     QVERIFY(m_subject->actions().count() == 2);
     action = qobject_cast<MAction *>(m_subject->actions().at(1));
     QVERIFY(action == action1);
-    QVERIFY(action->iconID() == "Icon-list-view-on");
+    QVERIFY(action->iconID() == ExistingIconId3);
     QVERIFY(action->text() == "TEXT");
 
     testValue = false;
@@ -127,7 +133,7 @@ void Ut_MApplicationMenu::testAddAction()
     QVERIFY(senderAction == action1);
 
     // test addAction(MAction* action)
-    MAction *action2 = new MAction("Icon-time-line-on", "TEXT4", NULL);
+    MAction *action2 = new MAction(ExistingIconId2, "TEXT4", NULL);
     m_subject->addAction(action2);
     QVERIFY(m_subject->actions().count() == 3);
 
@@ -404,7 +410,7 @@ void Ut_MApplicationMenu::testRotation()
     action->setLocation(MAction::ApplicationMenuLocation);
     m_subject->addAction(action);
 
-    action = new MAction("icon-m-grid", "", NULL);
+    action = new MAction(ExistingIconId1, "", NULL);
     action->setLocation(MAction::ApplicationMenuLocation);
     action->setStyleAction(true);
     m_subject->addAction(action);

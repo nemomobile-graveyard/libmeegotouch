@@ -28,6 +28,10 @@
 
 #include "ut_mcontentitem.h"
 
+namespace {
+    const char *ExistingIconId = "icon-m-common-dialog-close";
+};
+
 MApplication *app(NULL);
 
 void Ut_MContentItem::init()
@@ -88,7 +92,7 @@ void Ut_MContentItem::testSetImage()
 
 void Ut_MContentItem::testSetImageID()
 {
-    QString iconId ("icon-m-home");
+    QString iconId (ExistingIconId);
     m_subject->setImageID(iconId);
     QCOMPARE( m_subject->imageID(), iconId );
 }
@@ -126,7 +130,7 @@ void Ut_MContentItem::testSetOptionalImage()
 
 void Ut_MContentItem::testSetOptionalImageID()
 {
-    QString iconId ("icon-m-home");
+    QString iconId (ExistingIconId);
     m_subject->setOptionalImageID(iconId);
     QCOMPARE( m_subject->optionalImageID(), iconId );
 }
