@@ -88,6 +88,7 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       selectionThreshold(15),
       maskCharacter(DefaultMaskCharacter),
       hscroll(0.0),
+      hscrollSnapRight(false),
       vscroll(0.0),
       scrollSpeedVertical(0),
       longPressTimer(new QTimer(this)),
@@ -323,41 +324,49 @@ void MTextEditViewPrivate::checkScroll()
     qreal currentX = cursorX();
     int cWidth = cursorWidth();
     bool scrolled = false;
+    // 1. size().width is in fact not less than availableWidth, even when actual text is smaller
+    // I do not know why, but this allows to align RTL text
+    // 2. if cursor is in the very end of the text, it takes more space to be drawn than size().width()
+    // we consider it and now are sure that whole cursor always is inside of (0, contentsWidth)
+    int contentsWidth = qMax<qreal>(activeDocument()->size().width(), currentX + cWidth);
+    int availableWidth = activeDocument()->textWidth();
 
-    // check that cursor isn't before the widget
-    if (hscroll > currentX) {
-        hscroll = currentX;
-        scrolled = true;
-
-    } else if (activeDocument()->textWidth() != -1) {
-        // checking scrolling with respect to size only if the size is set
-
-        qreal rightBorder = activeDocument()->textWidth() - 2 * activeDocument()->documentMargin()
-                            + hscroll;
-
-        if (currentX > (rightBorder - cWidth)) {
-            // check cursor being after the widget (if the widget size is set)
-            // FIXME: margins seem to be a bit funny. this avoids having cursor outside
-            // visible area.
-            hscroll = currentX - activeDocument()->textWidth()
-                      + 2 * activeDocument()->documentMargin()
-                      + cWidth;
+    if (controller->lineMode() != MTextEditModel::MultiLine // multiline text is not scrolled as it always wraps
+        && availableWidth > 0 // just safety, inherited from older code
+        && contentsWidth > availableWidth // text is longer than the edit field, so it may need scrolling
+        ) {
+        // the first 2 possible violations are mutually exclusive
+        if (currentX < hscroll) {
+            // cursor went too far to left
+            hscroll = currentX;
+            hscrollSnapRight = false;
             scrolled = true;
-        } else if (hscroll > 0) {
-            // scroll text to the right if
-            // 1) there is text before widget and
-            // 2) there is free space between end of text and right widget's border
-            qreal endX = activeDocument()->idealWidth() + cWidth;
-
-            if (endX < rightBorder) {
-                hscroll -= rightBorder - endX;
-
-                if (hscroll < 0) {
-                    hscroll = 0;
-                }
-                scrolled = true;
-            }
+        } else if (currentX + cWidth > availableWidth + hscroll) {
+            // cursor went too far to right (considering its width)
+            hscroll = currentX + cWidth - availableWidth;
+            hscrollSnapRight = true;
+            scrolled = true;
         }
+        // now cursor is visible
+        if (contentsWidth < availableWidth + hscroll) {
+            // there is a gap on right
+            // nothing of contents is hidden by this move, including the cursor
+            hscroll = contentsWidth - availableWidth;
+            hscrollSnapRight = true;
+            scrolled = true;
+        }
+        if (!scrolled
+            && hscrollSnapRight
+            && contentsWidth > availableWidth + hscroll // right end of text became hidden
+            && currentX >= contentsWidth - availableWidth) { // the cursor is close enough to the right end not to be hidden
+            // scrolling is snapped to right and it is possible to keep it locked
+            hscroll = contentsWidth - availableWidth;
+            scrolled = true;
+        }
+    } else if (hscroll != 0) {
+        hscroll = 0;
+        hscrollSnapRight = false;
+        scrolled = true;
     }
 
     if (scrolled) {

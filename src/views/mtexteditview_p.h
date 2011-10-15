@@ -158,6 +158,7 @@ protected:
     QTextCharFormat selectionFormat;
 
     qreal hscroll; // horizontal offset of text
+    bool hscrollSnapRight;
     qreal vscroll; // vertical offset
 
     int scrollSpeedVertical;
