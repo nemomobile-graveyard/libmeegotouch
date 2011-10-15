@@ -448,22 +448,19 @@ qreal MTextEditViewPrivate::cursorX() const
     QTextCursor activeCursor(activeDocument());
     activeCursor.setPosition(controller->textCursor().position());
 
-    if (activeCursor.atStart() == false && activeCursor.atBlockStart() == false) {
-
-        QTextBlock currentBlock = activeCursor.block();
-        if (!currentBlock.isValid()) {
-            return currentX;
-        }
-
-        QTextLayout *layout = currentBlock.layout();
-        int relativePos = activeCursor.position() - currentBlock.position();
-        QTextLine line = layout->lineForTextPosition(relativePos);
-
-        if (!line.isValid())
-            line = layout->lineAt(0);
-
-        currentX = line.cursorToX(relativePos);
+    QTextBlock currentBlock = activeCursor.block();
+    if (!currentBlock.isValid()) {
+        return currentX;
     }
+
+    QTextLayout *layout = currentBlock.layout();
+    int relativePos = activeCursor.position() - currentBlock.position();
+    QTextLine line = layout->lineForTextPosition(relativePos);
+
+    if (!line.isValid())
+        line = layout->lineAt(0);
+
+    currentX = line.cursorToX(relativePos);
 
     return currentX;
 }
