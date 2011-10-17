@@ -1868,6 +1868,72 @@ void Ft_MCharsetDetector::testDetection_data()
         << "UTF-8"
         << "UTF-8"
         << "";
+    QString longUkrainian("Українська мова Матеріал з Вікіпедії — вільної енциклопедії. Цей термін має також інші значення. Докладніше — у статті Українська мова (журнал).");
+    QTest::newRow("Long Ukrainian UTF-8")
+        << longUkrainian
+        << ""
+        << ""
+        << false
+        << "UTF-8"
+        << "UTF-8"
+        << "";
+    QTest::newRow("Long Ukrainian windows-1251")
+        << longUkrainian
+        << ""
+        << "windows-1251"
+        << false
+        << "windows-1251"
+        << "windows-1251"
+        << "";
+    QTest::newRow("Long Ukrainian windows-1251")
+        << longUkrainian
+        << "uk"
+        << ""
+        << false
+        << "windows-1251"
+        << "windows-1251"
+        << "uk";
+    QTest::newRow("Long Ukrainian KOI8-U")
+        << longUkrainian
+        << ""
+        << "KOI8-U"
+        << false
+        << "KOI8-U"
+        << "KOI8-U"
+        << "";
+    QString shortUkrainian("Українська абетка Матеріал з Вікіпедії — вільної енциклопедії");
+    QTest::newRow("Short Ukrainian UTF-8")
+        << shortUkrainian
+        << ""
+        << ""
+        << false
+        << "UTF-8"
+        << "UTF-8"
+        << "";
+    QTest::newRow("Short Ukrainian windows-1251")
+        << shortUkrainian
+        << ""
+        << "windows-1251"
+        << false
+        << "windows-1251"
+        << "windows-1251"
+        << "";
+    QTest::newRow("Short Ukrainian windows-1251")
+        << shortUkrainian
+        << "uk"
+        << ""
+        << false
+        << "windows-1251"
+        << "windows-1251"
+        << "uk";
+    QTest::newRow("Short Ukrainian KOI8-U")
+        << shortUkrainian
+        << ""
+        << "KOI8-U"
+        << false
+        << "KOI8-U"
+        << "KOI8-U"
+        << "";
 }
 
 void Ft_MCharsetDetector::testDetection()

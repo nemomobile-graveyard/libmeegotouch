@@ -246,6 +246,12 @@ QList<MCharsetMatch> MCharsetDetector::detectAll()
             mCharsetMatchList << MCharsetMatch("windows-1251", language, 10);
             mCharsetMatchList << MCharsetMatch("ISO-8859-5", language, 10);
         }
+        else if(language ==  QLatin1String("uk")) {
+            mCharsetMatchList << MCharsetMatch("KOI8-U", language, 10);
+            mCharsetMatchList << MCharsetMatch("windows-1251", language, 10);
+            // ISO 8859-5 encoding is missing the letter ґ needed for
+            // Ukrainian, i.e. ISO 8859-5 should not occur for Ukrainian
+        }
         else if(language == QLatin1String("tr"))
             mCharsetMatchList << MCharsetMatch("ISO-8859-9", language, 10);
         else if(language == QLatin1String("el"))
@@ -279,12 +285,15 @@ QList<MCharsetMatch> MCharsetDetector::detectAll()
     // iterate over the detected matches and do some fine tuning:
     bool sortNeeded = false;
     qint32 koi8rConfidence = 0;
+    qint32 koi8uConfidence = 0;
     qint32 iso88595Confidence = 0;
     qint32 windows1251Confidence = 0;
     QList<MCharsetMatch>::iterator it = mCharsetMatchList.begin();
     while(it != mCharsetMatchList.end()) {
         if((*it).name() == QLatin1String("KOI8-R"))
             koi8rConfidence += (*it).confidence();
+        if((*it).name() == QLatin1String("KOI8-U"))
+            koi8uConfidence += (*it).confidence();
         if((*it).name() == QLatin1String("ISO-8859-5"))
             iso88595Confidence += (*it).confidence();
         if((*it).name() == QLatin1String("windows-1251"))
@@ -392,6 +401,36 @@ QList<MCharsetMatch> MCharsetDetector::detectAll()
                 else if((*it).name() == QLatin1String("windows-1251")
                    && windows1251Confidence > 10 && windows1251Confidence < 30)
                     (*it).setConfidence(21 + windows1251Confidence);
+            }
+            else if(d->_declaredLocale.startsWith("uk")) {
+                // Treat the Ukrainian setDeclaredLocale("uk") case a
+                // bit different than the single byte encodings for
+                // Russian.
+                //
+                // If the setDeclareLocale("uk") has been used, the
+                // accumulated confidence for the Ukrainian single byte
+                // encoding is 10 (because of setDeclaredLocale("uk"))
+                // plus whatever libicu has detected. If libicu has
+                // not detected anything, the accumulated confidence
+                // is exactly 10 here and there is no way to
+                // distinguish between the Ukrainian legacy
+                // encodings. Therefore, don’t increase the confidence
+                // if the accumulated confidence is not > 10.
+                //
+                // But if libicu has detected something with small
+                // confidence, the accumulated confidence is 10 plus
+                // something small. In that case, adding something
+                // around 20 seems to work reasonably well.
+                //
+                // I add 20 to the confidence for KOI8-U but 25 to the
+                // confidence for windows-1251 to prefer windows-1251
+                // over KOI8-U.
+                if((*it).name() == QLatin1String("KOI8-U")
+                   && koi8uConfidence > 10 && koi8uConfidence < 30)
+                    (*it).setConfidence(20 + koi8uConfidence);
+                else if((*it).name() == QLatin1String("windows-1251")
+                   && windows1251Confidence > 10 && windows1251Confidence < 30)
+                    (*it).setConfidence(25 + windows1251Confidence);
             }
             else if((d->_declaredLocale.contains("TW")
                 || d->_declaredLocale.contains("HK")
@@ -558,6 +597,7 @@ QStringList MCharsetDetector::getAllDetectableCharsets()
     << "ISO-8859-8"
     << "ISO-8859-9"
     << "KOI8-R"
+    << "KOI8-U"
     << "Shift_JIS"
     << "GB18030"
     << "EUC-JP"
@@ -616,7 +656,7 @@ QStringList MCharsetDetector::getAllDetectableCharsets()
     // ucsdet_getAllDetectableCharsets() can possibly return
     // for all states of the detector above.
     //
-    // Therefore, the following code should not any extra charsets
+    // Therefore, the following code should not add any extra charsets
     // anymore, at least not for libicu 4.4.2:
     clearError();
     UEnumeration *en =
