@@ -231,7 +231,8 @@ void MContainerViewPrivate::destroyProgressIndicator()
 {
     delete progressIndicator;
     progressIndicator = 0;
-    headerLayout->activate();
+    if (header)
+        headerLayout->activate();
 }
 MContainerView::MContainerView(MContainer *controller) :
     MWidgetView(*new MContainerViewPrivate, controller)
