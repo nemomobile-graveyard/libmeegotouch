@@ -30,6 +30,7 @@ PUBLIC_HEADERS += \
     msliderview.h \
     mspinnerview.h \
     mtexteditview.h \
+    meditortoolbar.h \
     mtoolbartabview.h \
     mtoolbarview.h \
     mseparatorview.h \
@@ -60,7 +61,7 @@ PRIVATE_HEADERS += \
     mtexteditview_p.h \
     mtextmagnifier.h \
     mtopleveloverlay.h \
-    meditortoolbar.h \
+    meditortoolbar_p.h \
     meditortoolbararrow.h \
     mapplicationmenuview_p.h \
     mapplicationmenubuttonview.h \

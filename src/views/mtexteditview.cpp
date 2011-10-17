@@ -1417,7 +1417,7 @@ void MTextEditViewPrivate::updateEditorToolbarPosition()
 
     QRect targetRect(firstRect);
     int targetY(firstRect.top());
-    MEditorToolbarArrow::ArrowDirection arrowDirection(MEditorToolbarArrow::ArrowDown);
+    MEditorToolbar::ToolbarPlacement placement(MEditorToolbar::AbovePointOfInterest);
 
     const QRect visibleRect = visibleArea();
 
@@ -1430,7 +1430,7 @@ void MTextEditViewPrivate::updateEditorToolbarPosition()
         if (secondRect.bottom() + editorToolbar->size().height() <= visibleRect.bottom()) {
             targetY = secondRect.bottom();
             targetRect = secondRect;
-            arrowDirection = MEditorToolbarArrow::ArrowUp;
+            placement = MEditorToolbar::BelowPointOfInterest;
         } else {
             targetY = topLimit + editorToolbar->size().height();
         }
@@ -1439,7 +1439,7 @@ void MTextEditViewPrivate::updateEditorToolbarPosition()
     targetRect.moveTop(visibleRect.top());
     const int targetX(visibleRect.intersected(targetRect).center().x());
 
-    editorToolbar->setPosition(QPointF(targetX, targetY), arrowDirection);
+    editorToolbar->setPosition(QPointF(targetX, targetY), placement);
 }
 
 void MTextEditViewPrivate::startFocusAnimation()

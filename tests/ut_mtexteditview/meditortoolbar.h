@@ -6,25 +6,21 @@ class QPointF;
 class MButton;
 class MWidget;
 
-class MEditorToolbarArrow
-{
-public:
-    enum ArrowDirection {
-        ArrowUp,
-        ArrowDown
-    };
-};
-
 class MEditorToolbar : public QGraphicsWidget
 {
     Q_OBJECT
 public:
+    enum ToolbarPlacement {
+        BelowPointOfInterest,
+        AbovePointOfInterest
+    };
+
     explicit MEditorToolbar(const MWidget &)
         : appeared(false) {}
     virtual ~MEditorToolbar() {}
 
     void setPosition(const QPointF &,
-                     MEditorToolbarArrow::ArrowDirection) {}
+                     MEditorToolbar::ToolbarPlacement) {}
     void setSelectionPresent(bool) {}
     bool isAppeared() const
     {

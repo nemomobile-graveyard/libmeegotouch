@@ -127,7 +127,7 @@ void Ut_MEditorToolbar::testPositionMapping()
     QFETCH(QPointF, position);
 
     fakeParent->setPos(fakeParentPos);
-    subject->setPosition(position, MEditorToolbarArrow::ArrowUp);
+    subject->setPosition(position, MEditorToolbar::BelowPointOfInterest);
 
     QPointF mappedActualPos = subject->parentItem()->mapToItem(fakeParent,
                                                                subject->pos());
@@ -143,25 +143,25 @@ void Ut_MEditorToolbar::testVerticalPositioning()
 
     QVERIFY(subject->rect().isValid());
 
-    subject->setPosition(QPointF(), MEditorToolbarArrow::ArrowUp);
+    subject->setPosition(QPointF(), MEditorToolbar::BelowPointOfInterest);
 
     // In parent coordinates
     QPointF subjectCenter = fakeParent->mapFromItem(subject,
                                                     subject->rect().center());
 
-    // Arrow points up, so widget should be below parent's origin.
+    // Widget is below 0, arrow pointing up.
     QVERIFY(subjectCenter.y() > 0.0f);
 
 
     // Test other way around.
 
-    subject->setPosition(QPointF(), MEditorToolbarArrow::ArrowDown);
+    subject->setPosition(QPointF(), MEditorToolbar::AbovePointOfInterest);
 
     // In parent coordinates
     subjectCenter = fakeParent->mapFromItem(subject,
                                             subject->rect().center());
 
-    // Arrow points down, so widget should be above parent's origin.
+    // Widget is above 0, arrow pointing down.
     QVERIFY(subjectCenter.y() < 0.0f);
 }
 

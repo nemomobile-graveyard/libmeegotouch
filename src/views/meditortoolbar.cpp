@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 #include "meditortoolbar.h"
+#include "meditortoolbar_p.h"
 #include "mtopleveloverlay.h"
 #include <mtexteditstyle.h>
 
@@ -32,250 +33,58 @@
 #include <QGraphicsLinearLayout>
 
 MEditorToolbar::MEditorToolbar(const MWidget &followWidget)
-    : overlay(new MTopLevelOverlay(followWidget.sceneManager())),
-      followWidget(followWidget),
-      buttonLayoutPolicy(new MLinearLayoutPolicy(new MLayout(this),
-                                                 Qt::Horizontal)),
-      arrow(new MEditorToolbarArrow(this)),
-      buttonUpdateQueued(false),
-      hideAnimation(this, "opacity")
+    : d_ptr(new MEditorToolbarPrivate(this, followWidget))
 {
-    setFlag(QGraphicsItem::ItemHasNoContents, true);
-    overlay->hide();
-    hide();
-    followWidget.scene()->addItem(overlay);
-    setParentItem(overlay);
-
-    // Set z value for arrow higher than default since
-    // it needs to float on top of buttons.
-    arrow->setZValue(1.0f);
-
-    // The policy notifies the widgets of their relative position inside the layout,
-    // this causes the buttons to be rendered with different backgrounds for each position
-    buttonLayoutPolicy->setNotifyWidgetsOfLayoutPositionEnabled(true);
-
-    // Don't add extra margins or spacings for buttons.
-    buttonLayoutPolicy->setContentsMargins(0.0f, 0.0f, 0.0f, 0.0f);
-    buttonLayoutPolicy->setSpacing(0.0f);
-
-    QObject::connect(sceneManager(), SIGNAL(orientationChanged(M::Orientation)),
-                     this, SLOT(updateGeometry()));
-
-    QObject::connect(&autohideTimer, SIGNAL(timeout()), this, SLOT(startAnimatedHide()));
-    autohideTimer.setSingleShot(true);
-
-    hideAnimation.setStartValue(1.0);
-    hideAnimation.setEndValue(0.0);
-    QObject::connect(&hideAnimation, SIGNAL(finished()), this, SLOT(disappear()));
-
-    eatMButtonGestureFilter = new EatMButtonGestureFilter(this);
+    Q_D(MEditorToolbar);
+    d->init();
 }
 
 MEditorToolbar::~MEditorToolbar()
 {
-    hideEditorItem();
-    // Before destroying parent, detach so it doesn't try to destroy us.
-    setParentItem(0);
-    if (overlay) {
-        overlay->deleteLater();
-    }
-    qDeleteAll(buttons);
+    delete d_ptr;
 }
 
 void MEditorToolbar::setPosition(const QPointF &pos,
-                                 MEditorToolbarArrow::ArrowDirection direction)
+                                 ToolbarPlacement placement)
 {
-    setPos(followWidget.mapToItem(overlay, pos));
-    updateArrow(direction);
+    Q_D(MEditorToolbar);
+    setPos(d->followWidget.mapToItem(d->overlay, pos));
+    d->updateArrow(placement == BelowPointOfInterest
+                   ? MEditorToolbarArrow::ArrowUp : MEditorToolbarArrow::ArrowDown);
 }
 
 void MEditorToolbar::appear(bool autohide)
 {
-    overlay->show();
-    updateEditorItemVisibility();
-
-    // then cancel currently pending actions and set new ones is necessary
-    // (this function is called only by controller directly)
-    hideAnimation.stop();
-    setOpacity(1.0);
-    if (autohide) {
-        int interval = style()->hideTimeout();
-        if (interval > 0) {
-            autohideTimer.setInterval(interval);
-            autohideTimer.start();
-        }
-    } else {
-        autohideTimer.stop();
-    }
+    Q_D(MEditorToolbar);
+    d->appear(autohide);
 }
 
 void MEditorToolbar::disappear()
 {
-    hideEditorItem();
-    overlay->hide();
-
-    // Hide animation is only used on auto-hide.
-    autohideTimer.stop();
-    hideAnimation.stop();
-    setOpacity(1.0);
+    Q_D(MEditorToolbar);
+    d->disappear();
 }
 
 bool MEditorToolbar::isAppeared() const
 {
-    return overlay->isVisible();
-}
-
-void MEditorToolbar::updateArrow(MEditorToolbarArrow::ArrowDirection direction)
-{
-    // Clear local transforms.
-    setTransform(QTransform());
-
-    // Style mode is different with regarding to top and bottom margins.
-    if (direction == MEditorToolbarArrow::ArrowUp) {
-        style().setModeEditorUnderCursor();
-    } else {
-        style().setModeDefault();
-    }
-    MStylableWidget::applyStyle();
-
-    const QRectF contentsRectangle = contentsRect();
-
-    // Update horizontally, make sure widget is inside screen.
-    qreal center = contentsRectangle.center().x();
-    QRectF mappedSceneRect = mapRectFromScene(
-        QRectF(QPointF(), sceneManager()->visibleSceneSize(M::Landscape)));
-    mappedSceneRect.translate(center, 0.0f);
-
-    qreal offscreenLeft = qMax<qreal>(0.0f, mappedSceneRect.left());
-    qreal offscreenRight = qMax<qreal>(0.0f, (effectiveSizeHint(Qt::PreferredSize).width()
-                                              - mappedSceneRect.right()));
-    // Screen rectangle in overlay coordinate system, just like we are
-    const QRectF screenRectInOverlay(
-        overlay->mapRectFromScene(QRectF(QPointF(), sceneManager()->visibleSceneSize(M::Landscape))));
-    qreal x;
-
-    if (size().width() < screenRectInOverlay.width()) {
-        // The widget won't be off the screen from both ends at the same time.
-        // Width is restricted to screen width.
-        x = center - arrow->size().width() / 2.0f
-            - offscreenLeft + offscreenRight;
-        x = qBound<qreal>(contentsRectangle.left(),
-                          x,
-                          contentsRectangle.right() - arrow->size().width());
-    } else {
-        x = geometry().center().x() - screenRectInOverlay.center().x() - arrow->size().width() / 2.0f;
-    }
-
-    // Update vertically. Arrow graphics are designed to be aligned to either
-    // top or bottom of buttons, completely overlapping them.
-    arrow->setDirection(direction);
-
-    switch (arrow->direction()) {
-    case MEditorToolbarArrow::ArrowUp:
-        arrow->setPos(x, contentsRectangle.top());
-        break;
-    case MEditorToolbarArrow::ArrowDown:
-        arrow->setPos(x, contentsRectangle.bottom() - arrow->size().height());
-        break;
-    }
-
-    // Arrow has changed position, update widget origin.
-    updateWidgetOrigin();
-}
-
-void MEditorToolbar::updateWidgetOrigin()
-{
-    // We include margin to arrow tip position.
-    QPointF arrowTip(arrow->size().width() / 2.0f, 0);
-    arrowTip = mapFromItem(arrow, arrowTip);
-
-    qreal translateX = arrowTip.x();
-
-    const QRectF screenRectInOverlay(
-        overlay->mapRectFromScene(QRectF(QPointF(), sceneManager()->visibleSceneSize(M::Landscape))));
-
-    // Avoid editor toolbar clipping when possible
-    if (size().width() < screenRectInOverlay.width()) {
-        if (pos().x() < (screenRectInOverlay.width() - size().width())) {
-            // Don't allow editor toolbar to go over the left edge of the screen
-            translateX = qMin(translateX, pos().x());
-        } else {
-            // Don't allow editor toolbar to go over the right edge of the screen
-            translateX = qMax(translateX, size().width() + pos().x() - screenRectInOverlay.width());
-        }
-    }
-
-    // We need to round to an integer coordinate to avoid graphics glitches; if
-    // widgetOrigin.x() is for example 75.5, in portrait mode with German language with
-    // Cut, Copy & Paste buttons visible the one pixel thick button separator lines cannot
-    // be seen.
-    const QPoint widgetOrigin(QPointF(translateX,
-                                      arrow->direction() == MEditorToolbarArrow::ArrowUp
-                                      ? 0.0f : size().height()).toPoint());
-
-    setTransform(QTransform::fromTranslate(-widgetOrigin.x(),
-                                           -widgetOrigin.y()));
+    Q_D(const MEditorToolbar);
+    return d->isAppeared();
 }
 
 bool MEditorToolbar::event(QEvent *event)
 {
+    Q_D(MEditorToolbar);
+
     switch (event->type()) {
     case QEvent::ActionAdded:
-    {
-        QActionEvent *actionEvent(static_cast<QActionEvent *>(event));
-        Q_ASSERT(actionEvent);
-        Q_ASSERT(!actionEvent->before()); // we support appending only
-        QAction *action(qobject_cast<QAction *>(actionEvent->action()));
-        Q_ASSERT(action);
-
-        MButton *newButton = new MButton(action->text());
-        newButton->grabGesture(Qt::TapGesture);
-        newButton->grabGesture(Qt::TapAndHoldGesture);
-        newButton->installEventFilter(eatMButtonGestureFilter);
-        newButton->setStyleName(action->objectName());
-        QObject::connect(newButton, SIGNAL(clicked(bool)), action, SLOT(trigger()));
-
-        buttons << newButton;
-
-        if (action->isVisible()) {
-            visibilityUpdated();
-        }
+        d->handleActionAdded(static_cast<QActionEvent *>(event));
         break;
-    }
     case QEvent::ActionRemoved:
-    {
-        QActionEvent *actionEvent(static_cast<QActionEvent *>(event));
-        const int actionIndex = actions().indexOf(actionEvent->action());
-        if (actionIndex >= 0) {
-            // Actions list is in sync with buttons list so we can
-            // use the same index to delete the corresponding button.
-            Q_ASSERT(actionIndex < buttons.count());
-            delete buttons.at(actionIndex);
-            buttons.removeAt(actionIndex);
-        }
-
-        if (actionEvent->action()->isVisible()) {
-            // Action was visible before removal, need to update widget.
-            visibilityUpdated();
-        }
+        d->handleActionRemoved(static_cast<QActionEvent *>(event));
         break;
-    }
     case QEvent::ActionChanged:
-    {
-        QActionEvent *actionEvent(static_cast<QActionEvent *>(event));
-
-        // Name of action might have been changed.
-        const int actionIndex = actions().indexOf(actionEvent->action());
-        Q_ASSERT(actionIndex >= 0 && actionIndex < buttons.count());
-        MButton *button(buttons.at(actionIndex));
-        if (button->text() != actionEvent->action()->text()) {
-            button->setText(actionEvent->action()->text());
-        }
-
-        // Update visibility of buttons to match visibility of actions.
-        visibilityUpdated();
+        d->handleActionChanged(static_cast<QActionEvent *>(event));
         break;
-    }
     default:
         return MStylableWidget::event(event);
         break;
@@ -290,52 +99,15 @@ void MEditorToolbar::mousePressEvent(QGraphicsSceneMouseEvent *)
     // Stop mouse event propagation.
 }
 
-void MEditorToolbar::startAnimatedHide()
+QSizeF MEditorToolbar::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
-    hideAnimation.setDuration(style()->hideAnimationDuration());
-    hideAnimation.start(QAbstractAnimation::KeepWhenStopped);
+    Q_D(const MEditorToolbar);
+    return d->sizeHint(which, constraint);
 }
 
-void MEditorToolbar::updateAvailableButtons()
+void MEditorToolbar::resizeEvent(QGraphicsSceneResizeEvent *)
 {
-    buttonUpdateQueued = false;
-
-    while (buttonLayoutPolicy->count() > 0) {
-        buttonLayoutPolicy->removeAt(buttonLayoutPolicy->count() - 1);
-    }
-
-    QList<QAction *> actionList(actions());
-    Q_ASSERT(actionList.count() == buttons.count());
-
-    for (int i = 0; i < buttons.count(); ++i) {
-        MButton *button = buttons.at(i);
-
-        if (actionList.at(i)->isCheckable()) {
-            button->setCheckable(true);
-            button->setChecked(actionList.at(i)->isChecked());
-        }
-
-        if (actionList.at(i)->isVisible()) {
-            buttonLayoutPolicy->addItem(button);
-            button->show();
-        } else {
-            button->hide();
-        }
-    }
-
-    // Resize manually since this widget is not managed by layout.
-    resize(preferredSize());
-
-    // Hide if there is no buttons.
-    updateEditorItemVisibility();
-}
-
-void MEditorToolbar::visibilityUpdated()
-{
-    if (!buttonUpdateQueued) {
-        buttonUpdateQueued = true;
-        QMetaObject::invokeMethod(this, "updateAvailableButtons", Qt::QueuedConnection);
-    }
+    emit sizeChanged();
 }
 
 void MEditorToolbar::updateGeometry()
@@ -343,8 +115,166 @@ void MEditorToolbar::updateGeometry()
     MStylableWidget::updateGeometry();
 }
 
-QSizeF MEditorToolbar::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
+// Private class implementation
+
+MEditorToolbarPrivate::MEditorToolbarPrivate(MEditorToolbar *qq, const MWidget &followWidget)
+    : q_ptr(qq),
+      overlay(new MTopLevelOverlay(followWidget.sceneManager())),
+      followWidget(followWidget),
+      buttonLayoutPolicy(new MLinearLayoutPolicy(new MLayout(qq),
+                                                 Qt::Horizontal)),
+      arrow(new MEditorToolbarArrow(qq)),
+      buttonUpdateQueued(false),
+      hideAnimation(qq, "opacity")
 {
+}
+
+MEditorToolbarPrivate::~MEditorToolbarPrivate()
+{
+    Q_Q(MEditorToolbar);
+
+    hideEditorItem();
+    // Before destroying parent, detach so it doesn't try to destroy us.
+    q->setParentItem(0);
+    if (overlay) {
+        overlay->deleteLater();
+    }
+    qDeleteAll(buttons);
+}
+
+void MEditorToolbarPrivate::init()
+{
+    Q_Q(MEditorToolbar);
+
+    q->setFlag(QGraphicsItem::ItemHasNoContents, true);
+    overlay->hide();
+    q->hide();
+    followWidget.scene()->addItem(overlay);
+    q->setParentItem(overlay);
+
+    // Set z value for arrow higher than default since
+    // it needs to float on top of buttons.
+    arrow->setZValue(1.0f);
+
+    // The policy notifies the widgets of their relative position inside the layout,
+    // this causes the buttons to be rendered with different backgrounds for each position
+    buttonLayoutPolicy->setNotifyWidgetsOfLayoutPositionEnabled(true);
+
+    // Don't add extra margins or spacings for buttons.
+    buttonLayoutPolicy->setContentsMargins(0.0f, 0.0f, 0.0f, 0.0f);
+    buttonLayoutPolicy->setSpacing(0.0f);
+
+    QObject::connect(q->sceneManager(), SIGNAL(orientationChanged(M::Orientation)),
+                     q, SLOT(updateGeometry()));
+
+    QObject::connect(&autohideTimer, SIGNAL(timeout()), q, SLOT(_q_startAnimatedHide()));
+    autohideTimer.setSingleShot(true);
+
+    hideAnimation.setStartValue(1.0);
+    hideAnimation.setEndValue(0.0);
+    QObject::connect(&hideAnimation, SIGNAL(finished()), q, SLOT(disappear()));
+
+    eatMButtonGestureFilter = new EatMButtonGestureFilter(q);
+}
+
+void MEditorToolbarPrivate::appear(bool autohide)
+{
+    Q_Q(MEditorToolbar);
+
+    overlay->show();
+    updateEditorItemVisibility();
+
+    // then cancel currently pending actions and set new ones is necessary
+    // (this function is called only by controller directly)
+    hideAnimation.stop();
+    q->setOpacity(1.0);
+    if (autohide) {
+        int interval = q->style()->hideTimeout();
+        if (interval > 0) {
+            autohideTimer.setInterval(interval);
+            autohideTimer.start();
+        }
+    } else {
+        autohideTimer.stop();
+    }
+}
+
+void MEditorToolbarPrivate::disappear()
+{
+    Q_Q(MEditorToolbar);
+
+    hideEditorItem();
+    overlay->hide();
+
+    // Hide animation is only used on auto-hide.
+    autohideTimer.stop();
+    hideAnimation.stop();
+    q->setOpacity(1.0);
+}
+
+bool MEditorToolbarPrivate::isAppeared() const
+{
+    return overlay->isVisible();
+}
+
+
+void MEditorToolbarPrivate::handleActionAdded(QActionEvent *actionEvent)
+{
+    Q_ASSERT(actionEvent);
+    Q_ASSERT(!actionEvent->before()); // we support appending only
+    QAction *action(qobject_cast<QAction *>(actionEvent->action()));
+    Q_ASSERT(action);
+
+    MButton *newButton = new MButton(action->text());
+    newButton->grabGesture(Qt::TapGesture);
+    newButton->grabGesture(Qt::TapAndHoldGesture);
+    newButton->installEventFilter(eatMButtonGestureFilter);
+    newButton->setStyleName(action->objectName());
+    QObject::connect(newButton, SIGNAL(clicked(bool)), action, SLOT(trigger()));
+
+    buttons << newButton;
+
+    if (action->isVisible()) {
+        visibilityUpdated();
+    }
+}
+
+void MEditorToolbarPrivate::handleActionRemoved(QActionEvent *actionEvent)
+{
+    Q_Q(MEditorToolbar);
+    const int actionIndex = q->actions().indexOf(actionEvent->action());
+    if (actionIndex >= 0) {
+        // Actions list is in sync with buttons list so we can
+        // use the same index to delete the corresponding button.
+        Q_ASSERT(actionIndex < buttons.count());
+        delete buttons.at(actionIndex);
+        buttons.removeAt(actionIndex);
+    }
+
+    if (actionEvent->action()->isVisible()) {
+        // Action was visible before removal, need to update widget.
+        visibilityUpdated();
+    }
+}
+
+void MEditorToolbarPrivate::handleActionChanged(QActionEvent *actionEvent)
+{
+    Q_Q(MEditorToolbar);
+    // Name of action might have been changed.
+    const int actionIndex = q->actions().indexOf(actionEvent->action());
+    Q_ASSERT(actionIndex >= 0 && actionIndex < buttons.count());
+    MButton *button(buttons.at(actionIndex));
+    if (button->text() != actionEvent->action()->text()) {
+        button->setText(actionEvent->action()->text());
+    }
+
+    // Update visibility of buttons to match visibility of actions.
+    visibilityUpdated();
+}
+
+QSizeF MEditorToolbarPrivate::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
+{
+    Q_Q(const MEditorToolbar);
     QSizeF hint;
     switch (which) {
     case Qt::MinimumSize:
@@ -356,14 +286,14 @@ QSizeF MEditorToolbar::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
                 width += buttonHint.width();
                 height = qMax<qreal>(height, buttonHint.height());
             }
-            width += style()->marginLeft() + style()->marginRight();
-            height += style()->marginTop() + style()->marginBottom();
+            width += q->style()->marginLeft() + q->style()->marginRight();
+            height += q->style()->marginTop() + q->style()->marginBottom();
             hint.setWidth(width);
             hint.setHeight(height);
         }
         break;
     case Qt::MaximumSize:
-        hint = QSizeF(sceneManager() ? sceneManager()->visibleSceneSize().width() : QWIDGETSIZE_MAX,
+        hint = QSizeF(q->sceneManager() ? q->sceneManager()->visibleSceneSize().width() : QWIDGETSIZE_MAX,
                       QWIDGETSIZE_MAX);
         if (constraint.width() > 0.0f) {
             hint.setWidth(constraint.width());
@@ -383,12 +313,158 @@ QSizeF MEditorToolbar::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
     return hint;
 }
 
-void MEditorToolbar::resizeEvent(QGraphicsSceneResizeEvent *)
+void MEditorToolbarPrivate::updateArrow(MEditorToolbarArrow::ArrowDirection direction)
 {
-    emit sizeChanged();
+    Q_Q(MEditorToolbar);
+
+    // Clear local transforms.
+    q->setTransform(QTransform());
+
+    // Style mode is different with regarding to top and bottom margins.
+    if (direction == MEditorToolbarArrow::ArrowUp) {
+        q->style().setModeEditorUnderCursor();
+    } else {
+        q->style().setModeDefault();
+    }
+    q->applyStyle();
+
+    const QRectF contentsRectangle = q->contentsRect();
+
+    // Update horizontally, make sure widget is inside screen.
+    qreal center = contentsRectangle.center().x();
+    QRectF mappedSceneRect = q->mapRectFromScene(QRectF(QPointF(),
+                                                        q->sceneManager()->visibleSceneSize(M::Landscape)));
+    mappedSceneRect.translate(center, 0.0f);
+
+    qreal offscreenLeft = qMax<qreal>(0.0f, mappedSceneRect.left());
+    qreal offscreenRight = qMax<qreal>(0.0f, (q->effectiveSizeHint(Qt::PreferredSize).width()
+                                              - mappedSceneRect.right()));
+    // Screen rectangle in overlay coordinate system, just like we are
+    const QRectF screenRectInOverlay(
+        overlay->mapRectFromScene(QRectF(QPointF(), q->sceneManager()->visibleSceneSize(M::Landscape))));
+    qreal x;
+
+    if (q->size().width() < screenRectInOverlay.width()) {
+        // The widget won't be off the screen from both ends at the same time.
+        // Width is restricted to screen width.
+        x = center - arrow->size().width() / 2.0f
+            - offscreenLeft + offscreenRight;
+        x = qBound<qreal>(contentsRectangle.left(),
+                          x,
+                          contentsRectangle.right() - arrow->size().width());
+    } else {
+        x = q->geometry().center().x() - screenRectInOverlay.center().x() - arrow->size().width() / 2.0f;
+    }
+
+    // Update vertically. Arrow graphics are designed to be aligned to either
+    // top or bottom of buttons, completely overlapping them.
+    arrow->setDirection(direction);
+
+    switch (arrow->direction()) {
+    case MEditorToolbarArrow::ArrowUp:
+        arrow->setPos(x, contentsRectangle.top());
+        break;
+    case MEditorToolbarArrow::ArrowDown:
+        arrow->setPos(x, contentsRectangle.bottom() - arrow->size().height());
+        break;
+    }
+
+    // Arrow has changed position, update widget origin.
+    updateWidgetOrigin();
 }
 
-void MEditorToolbar::updateEditorItemVisibility()
+void MEditorToolbarPrivate::updateWidgetOrigin()
+{
+    Q_Q(MEditorToolbar);
+
+    // We include margin to arrow tip position.
+    QPointF arrowTip(arrow->size().width() / 2.0f, 0);
+    arrowTip = q->mapFromItem(arrow, arrowTip);
+
+    qreal translateX = arrowTip.x();
+
+    const QRectF screenRectInOverlay(
+        overlay->mapRectFromScene(QRectF(QPointF(), q->sceneManager()->visibleSceneSize(M::Landscape))));
+
+    QSizeF size(q->size());
+    QPointF pos(q->pos());
+
+    // Avoid editor toolbar clipping when possible
+    if (size.width() < screenRectInOverlay.width()) {
+        if (pos.x() < (screenRectInOverlay.width() - size.width())) {
+            // Don't allow editor toolbar to go over the left edge of the screen
+            translateX = qMin(translateX, pos.x());
+        } else {
+            // Don't allow editor toolbar to go over the right edge of the screen
+            translateX = qMax(translateX, size.width() + pos.x() - screenRectInOverlay.width());
+        }
+    }
+
+    // We need to round to an integer coordinate to avoid graphics glitches; if
+    // widgetOrigin.x() is for example 75.5, in portrait mode with German language with
+    // Cut, Copy & Paste buttons visible the one pixel thick button separator lines cannot
+    // be seen.
+    const QPoint widgetOrigin(QPointF(translateX,
+                                      arrow->direction() == MEditorToolbarArrow::ArrowUp
+                                      ? 0.0f : size.height()).toPoint());
+
+    q->setTransform(QTransform::fromTranslate(-widgetOrigin.x(),
+                                              -widgetOrigin.y()));
+}
+
+void MEditorToolbarPrivate::_q_startAnimatedHide()
+{
+    Q_Q(MEditorToolbar);
+    hideAnimation.setDuration(q->style()->hideAnimationDuration());
+    hideAnimation.start(QAbstractAnimation::KeepWhenStopped);
+}
+
+void MEditorToolbarPrivate::_q_updateAvailableButtons()
+{
+    Q_Q(MEditorToolbar);
+
+    buttonUpdateQueued = false;
+
+    while (buttonLayoutPolicy->count() > 0) {
+        buttonLayoutPolicy->removeAt(buttonLayoutPolicy->count() - 1);
+    }
+
+    QList<QAction *> actionList(q->actions());
+    Q_ASSERT(actionList.count() == buttons.count());
+
+    for (int i = 0; i < buttons.count(); ++i) {
+        MButton *button = buttons.at(i);
+
+        if (actionList.at(i)->isCheckable()) {
+            button->setCheckable(true);
+            button->setChecked(actionList.at(i)->isChecked());
+        }
+
+        if (actionList.at(i)->isVisible()) {
+            buttonLayoutPolicy->addItem(button);
+            button->show();
+        } else {
+            button->hide();
+        }
+    }
+
+    // Resize manually since this widget is not managed by layout.
+    q->resize(q->preferredSize());
+
+    // Hide if there is no buttons.
+    updateEditorItemVisibility();
+}
+
+void MEditorToolbarPrivate::visibilityUpdated()
+{
+    Q_Q(MEditorToolbar);
+    if (!buttonUpdateQueued) {
+        buttonUpdateQueued = true;
+        QMetaObject::invokeMethod(q, "_q_updateAvailableButtons", Qt::QueuedConnection);
+    }
+}
+
+void MEditorToolbarPrivate::updateEditorItemVisibility()
 {
     // Visibility of editor item is determined solely by existence of buttons.
     if (buttonLayoutPolicy->count() > 0) {
@@ -398,19 +474,21 @@ void MEditorToolbar::updateEditorItemVisibility()
     }
 }
 
-void MEditorToolbar::showEditorItem()
+void MEditorToolbarPrivate::showEditorItem()
 {
+    Q_Q(MEditorToolbar);
     // Set focus proxy so that input widget doesn't lose focus.
-    setFocusPolicy(Qt::ClickFocus);
-    setFocusProxy(&const_cast<MWidget &>(followWidget));
-    show();
+    q->setFocusPolicy(Qt::ClickFocus);
+    q->setFocusProxy(&const_cast<MWidget &>(followWidget));
+    q->show();
 }
 
-void MEditorToolbar::hideEditorItem()
+void MEditorToolbarPrivate::hideEditorItem()
 {
-    setFocusProxy(0);
-    setFocusPolicy(Qt::NoFocus);
-    hide();
+    Q_Q(MEditorToolbar);
+    q->setFocusProxy(0);
+    q->setFocusPolicy(Qt::NoFocus);
+    q->hide();
 }
 
 EatMButtonGestureFilter::EatMButtonGestureFilter(QObject *parent)
@@ -427,3 +505,5 @@ bool EatMButtonGestureFilter::eventFilter(QObject *watched, QEvent *event)
         return QObject::eventFilter(watched, event);
     }
 }
+
+#include "moc_meditortoolbar.cpp"

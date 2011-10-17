@@ -13,6 +13,7 @@ HEADERS += \
     ut_meditortoolbar.h \
     meditortoolbarstyle.h \
     $$MSRCDIR/views/meditortoolbar.h \
+    $$MSRCDIR/views/meditortoolbar_p.h \
     $$MSRCDIR/views/meditortoolbararrow.h \
     $$MSRCDIR/views/mtopleveloverlay.h
 

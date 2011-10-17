@@ -19,21 +19,10 @@
 #ifndef MEDITORTOOLBAR_H
 #define MEDITORTOOLBAR_H
 
-#include <QPointer>
-#include <QTimer>
-#include <QPropertyAnimation>
-
 #include <MStylableWidget>
-#include "meditortoolbararrow.h"
 #include "meditortoolbarstyle.h"
 
-class MTopLevelOverlay;
-class MButton;
-class MLinearLayoutPolicy;
-class MWidget;
-class EatMButtonGestureFilter;
-
-//! \internal
+class MEditorToolbarPrivate;
 
 /*! \brief Cut/Copy/Paste etc. popup-toolbar for MTextEdit[View]
  *
@@ -59,6 +48,12 @@ class MEditorToolbar : public MStylableWidget
     Q_OBJECT
 
 public:
+    //! \brief Configure placement of the toolbar with respect to its position.
+    enum ToolbarPlacement {
+        BelowPointOfInterest, //!< Below origin, arrow pointing upwards
+        AbovePointOfInterest  //!< Above origin, arrow pointing downwards
+    };
+
     //! \brief Construct MEditorToolbar and make it follow \a followWidget
     explicit MEditorToolbar(const MWidget &followWidget);
     virtual ~MEditorToolbar();
@@ -67,14 +62,10 @@ public:
      *
      *  \param pos position in the local coordinate system of \a followWidget given to the
      *  constructor.  Position should be the point MEditorToolbar actions apply to,
-     *  such as cursor top/bottom or selection top/bottom horizontal center point.
-     *  \param direction direction the arrow that points to \a pos points to.  This
-     *  determines on which side of \a pos the editor toolbar is on.  That is, if
-     *  direction is \a ArrowUp, arrow points upwards and the editor toolbar is below the \a
-     *  pos point and the opposite for \a ArrowDown.
+     *  such as cursor or selection.
+     *  \param placement Placement of the toolbar with respect to the point of interest \a pos.
      */
-    void setPosition(const QPointF &pos,
-                     MEditorToolbarArrow::ArrowDirection direction);
+    void setPosition(const QPointF &pos, ToolbarPlacement placement);
 
     /*! \return whether the widget is appeared or not.
      *
@@ -115,48 +106,16 @@ protected slots:
     virtual void updateGeometry();
 
 private:
+    Q_DECLARE_PRIVATE(MEditorToolbar)
+    MEditorToolbarPrivate * const d_ptr;
+
+    Q_PRIVATE_SLOT(d_func(), void _q_updateAvailableButtons())
+    Q_PRIVATE_SLOT(d_func(), void _q_startAnimatedHide())
+
     //! Prevent default construction.
     MEditorToolbar();
 
-    void updateArrow(MEditorToolbarArrow::ArrowDirection direction);
-    void updateWidgetOrigin();
-    void visibilityUpdated();
-    void updateEditorItemVisibility();
-    void showEditorItem();
-    void hideEditorItem();
-
-private slots:
-    void updateAvailableButtons();
-    void startAnimatedHide();
-
-private:
-    QList<MButton *> buttons;
-
-    QPointer<MTopLevelOverlay> overlay;
-    const MWidget &followWidget;
-
-    MLinearLayoutPolicy *buttonLayoutPolicy;
-    MEditorToolbarArrow *arrow;
-
-    bool buttonUpdateQueued;
-    QTimer autohideTimer;
-    QPropertyAnimation hideAnimation;
-
-    EatMButtonGestureFilter *eatMButtonGestureFilter;
-
     M_STYLABLE_WIDGET(MEditorToolbarStyle)
 };
-
-class EatMButtonGestureFilter : public QObject
-{
-    Q_OBJECT
-
-public:
-    EatMButtonGestureFilter(QObject *parent = 0);
-protected:
-    bool eventFilter(QObject *watched, QEvent *event);
-};
-
-//! \internal_end
 
 #endif // MEDITORTOOLBAR_H
