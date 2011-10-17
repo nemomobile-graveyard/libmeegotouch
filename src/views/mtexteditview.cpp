@@ -526,7 +526,6 @@ QTextDocument *MTextEditViewPrivate::activeDocument() const
     }
 }
 
-
 void MTextEditViewPrivate::showEditorToolbar()
 {
     Q_Q(const MTextEditView);
@@ -549,7 +548,7 @@ void MTextEditViewPrivate::showEditorToolbar()
                          this, SLOT(updateEditorToolbarPosition()));
         QObject::connect(controller->sceneManager(),
                          SIGNAL(orientationChanged(const M::Orientation &)),
-                         editorToolbar.data(), SLOT(disappearTemporarily()));
+                         this, SLOT(hideEditorToolbarTemporarily()));
         QObject::connect(controller->sceneManager(),
                          SIGNAL(orientationChangeFinished(const M::Orientation &)),
                          this, SLOT(restoreEditorToolbar()));
@@ -574,9 +573,30 @@ void MTextEditViewPrivate::hideEditorToolbar()
     disconnect(&controllerD.signalEmitter, SIGNAL(scenePositionChanged()),
                this, SLOT(updateEditorToolbarPosition()));
     disconnect(controller->sceneManager(),
+               SIGNAL(orientationChanged(const M::Orientation &)),
+               this, SLOT(hideEditorToolbarTemporarily()));
+    disconnect(controller->sceneManager(),
                SIGNAL(orientationChangeFinished(const M::Orientation &)),
                this, SLOT(restoreEditorToolbar()));
     editorToolbar.reset();
+    // The logic for temporarily showing and hiding editorToolbar relies on
+    // the widget getting destroyed here.
+}
+
+void MTextEditViewPrivate::hideEditorToolbarTemporarily()
+{
+    if (editorToolbar) {
+        editorToolbar->disappear();
+    }
+}
+
+void MTextEditViewPrivate::restoreEditorToolbar()
+{
+    // If editorToolbar is created, then restore it.
+    if (editorToolbar) {
+        editorToolbar->appear(!controller->hasSelectedText());
+        updateEditorToolbarPosition();
+    }
 }
 
 qreal MTextEditViewPrivate::promptOpacity() const
@@ -1037,9 +1057,7 @@ void MTextEditViewPrivate::onSelectionHandlePressed(const QPointF &position)
 {
     Q_Q(MTextEditView);
     selectionHandleIsPressed = true;
-    if (editorToolbar) {
-        editorToolbar->disappearTemporarily();
-    }
+    hideEditorToolbarTemporarily();
     q->model()->setInputContextUpdateEnabled(false);
     controller->setCacheMode(QGraphicsItem::ItemCoordinateCache);
 
@@ -1075,9 +1093,7 @@ void MTextEditViewPrivate::onSelectionHandleReleased()
     Q_Q(MTextEditView);
     selectionHandleIsPressed = false;
     scrollTimer->stop();
-    if (editorToolbar) {
-        restoreEditorToolbar();
-    }
+    restoreEditorToolbar();
     controller->setCacheMode(QGraphicsItem::NoCache);
     q->model()->setInputContextUpdateEnabled(true);
     hideMagnifier();
@@ -1306,15 +1322,6 @@ void MTextEditViewPrivate::makeMagnifierAppear()
 {
     if (magnifier) {
         magnifier->appear();
-    }
-}
-
-void MTextEditViewPrivate::restoreEditorToolbar()
-{
-    // restore editor toolbar if it was temporarily hidden
-    if (editorToolbar) {
-        editorToolbar->removeTemporaryDisappearance();
-        updateEditorToolbarPosition();
     }
 }
 
@@ -2246,7 +2253,7 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
             && reason != Qt::PopupFocusReason) {
             d->hideEditorToolbar();
         } else {
-            d->editorToolbar->disappearTemporarily();
+            d->hideEditorToolbarTemporarily();
         }
     }
 

@@ -95,6 +95,7 @@ protected slots:
     void updateMagnifierPosition();
     void makeMagnifierDisappear();
     void makeMagnifierAppear();
+    void hideEditorToolbarTemporarily();
     void restoreEditorToolbar();
     void updateEditorToolbarPosition();
     void startFocusAnimation();

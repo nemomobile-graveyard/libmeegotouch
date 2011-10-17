@@ -38,7 +38,6 @@ MEditorToolbar::MEditorToolbar(const MWidget &followWidget)
                                                  Qt::Horizontal)),
       arrow(new MEditorToolbarArrow(this)),
       buttonUpdateQueued(false),
-      temporarilyDisappeared(false),
       hideAnimation(this, "opacity")
 {
     setFlag(QGraphicsItem::ItemHasNoContents, true);
@@ -92,7 +91,8 @@ void MEditorToolbar::setPosition(const QPointF &pos,
 
 void MEditorToolbar::appear(bool autohide)
 {
-    appearRaw();
+    overlay->show();
+    updateEditorItemVisibility();
 
     // then cancel currently pending actions and set new ones is necessary
     // (this function is called only by controller directly)
@@ -107,54 +107,17 @@ void MEditorToolbar::appear(bool autohide)
     } else {
         autohideTimer.stop();
     }
-    temporarilyDisappeared = false;
-}
-
-void MEditorToolbar::startAnimatedHide()
-{
-    hideAnimation.setDuration(style()->hideAnimationDuration());
-    hideAnimation.start(QAbstractAnimation::KeepWhenStopped);
-}
-
-void MEditorToolbar::appearRaw()
-{
-    overlay->show();
-    updateEditorItemVisibility();
-}
-
-void MEditorToolbar::doDisappear(bool temporarily)
-{
-    if (temporarily && !isAppeared()) {
-        return;
-    }
-    hideEditorItem();
-    overlay->hide();
-    if (temporarily) {
-        temporarilyDisappeared = true;
-    } else {
-        temporarilyDisappeared = false;
-        autohideTimer.stop();
-        hideAnimation.stop();
-        setOpacity(1.0);
-    }
 }
 
 void MEditorToolbar::disappear()
 {
-    doDisappear(false);
-}
+    hideEditorItem();
+    overlay->hide();
 
-void MEditorToolbar::disappearTemporarily()
-{
-    doDisappear(true);
-}
-
-void MEditorToolbar::removeTemporaryDisappearance()
-{
-    if (temporarilyDisappeared) {
-        appearRaw();
-        temporarilyDisappeared = false;
-    }
+    // Hide animation is only used on auto-hide.
+    autohideTimer.stop();
+    hideAnimation.stop();
+    setOpacity(1.0);
 }
 
 bool MEditorToolbar::isAppeared() const
@@ -325,6 +288,12 @@ bool MEditorToolbar::event(QEvent *event)
 void MEditorToolbar::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
     // Stop mouse event propagation.
+}
+
+void MEditorToolbar::startAnimatedHide()
+{
+    hideAnimation.setDuration(style()->hideAnimationDuration());
+    hideAnimation.start(QAbstractAnimation::KeepWhenStopped);
 }
 
 void MEditorToolbar::updateAvailableButtons()

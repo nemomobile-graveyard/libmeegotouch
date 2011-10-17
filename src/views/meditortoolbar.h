@@ -104,12 +104,6 @@ public slots:
     //! \brief Hide the toolbar.
     void disappear();
 
-    //! \brief Make toolbar hide temporarily if visible
-    void disappearTemporarily();
-
-    //! \brief Show the toolbar again if it was only temporarily hidden
-    void removeTemporaryDisappearance();
-
 protected:
     //! \reimp
     virtual QSizeF sizeHint(Qt::SizeHint which,
@@ -133,8 +127,6 @@ private:
     void updateEditorItemVisibility();
     void showEditorItem();
     void hideEditorItem();
-    void doDisappear(bool temporarily);
-    void appearRaw();
 
 private slots:
     void updateAvailableButtons();
@@ -150,7 +142,6 @@ private:
     MEditorToolbarArrow *arrow;
 
     bool buttonUpdateQueued;
-    bool temporarilyDisappeared;
     QTimer autohideTimer;
     QPropertyAnimation hideAnimation;
 
