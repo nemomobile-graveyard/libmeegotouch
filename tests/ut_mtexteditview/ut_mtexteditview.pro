@@ -3,27 +3,25 @@ TARGET = ut_mtexteditview
 
 SOURCES += \
     ut_mtexteditview.cpp \
-    $$MSRCDIR/views/mtexteditview.cpp \
-    $$MSRCDIR/views/meditortoolbar.cpp \
-    $$MSRCDIR/views/meditortoolbararrow.cpp \
-    $$MSRCDIR/views/mtopleveloverlay.cpp
+    $$MSRCDIR/views/mtexteditview.cpp
 
 HEADERS += \
     ut_mtexteditview.h \
     mtextmagnifier.h \
+    meditortoolbar.h \
     $$MSRCDIR/views/mtexteditview.h \
     $$MSRCDIR/views/mtexteditview_p.h \
-    $$MSRCDIR/views/meditortoolbar.h \
-    $$MSRCDIR/views/meditortoolbararrow.h \
-    $$MSRCDIR/views/mtopleveloverlay.h \
     mtextselectionoverlay.h
+
+OTHER_FILES += ut_mtexteditview.css
 
 INCLUDEPATH += \
     $$MSRCDIR/corelib/widgets/ \
 
-# Use stubbed versions of mtextmagnifier.h
+# Use stubbed versions of mtextmagnifier.h and meditortoolbar.h
 # when compiling mtexteditview.cpp.
 QMAKE_CXXFLAGS += -include mtextmagnifier.h \
+                  -include meditortoolbar.h \
                   -include mtextselectionoverlay.h
 
 support_files.files += \

@@ -27,10 +27,6 @@
 
 class MApplication;
 class MApplicationWindow;
-class MApplicationPage;
-class MScene;
-class MSceneManager;
-class MWidget;
 class MTextEdit;
 class MTextEditView;
 
@@ -49,7 +45,6 @@ private slots:
     void testPaintPrompt();
     void testBoundingRect();
     void testStyleUpdated();
-    void testAutohideTimes();
     void testResizeEvent();
     void testGrowing();
     void testMultilineGrowsOnWordWrap();
@@ -72,12 +67,6 @@ private:
     MTextEditView *m_subject;
     MApplication *m_app;
     MApplicationWindow *m_appWindow;
-
-    // for toolbar to work properly, MTextEdit must be instantiated
-    // with non-zero parent attached to managed scene
-    MScene *m_scene;
-    MSceneManager *m_sceneManager;
-    MWidget *m_parent;
 };
 
 #endif
