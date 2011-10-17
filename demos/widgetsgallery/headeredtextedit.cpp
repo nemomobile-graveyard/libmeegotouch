@@ -78,12 +78,21 @@ void HeaderedTextEdit::_q_updateTextLeftMargin()
 
 void HeaderedTextEdit::_q_updateLabelPosition()
 {
+    // The header imitates beginning of text for the user.
+    // So, we need to place header where the beginning is.
     if (layoutDirection() == Qt::RightToLeft) {
+        // put header to right side of text entry
         QRectF geometry;
         QSizeF labelSize = headerLabel->sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
         geometry.setSize(labelSize);
         QSizeF textSize = sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
         geometry.setX(textSize.width() - labelSize.width());
+        headerLabel->setGeometry(geometry);
+    } else {
+        // put header to left side of text entry
+        QRectF geometry;
+        QSizeF labelSize = headerLabel->sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
+        geometry.setSize(labelSize);
         headerLabel->setGeometry(geometry);
     }
 }
