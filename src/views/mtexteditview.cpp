@@ -1299,6 +1299,7 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
 
     bool clip = false;
 
+    // with no content we show the prompt text
     bool showPrompt = d->isPromptVisible || d->promptShowHideAnimation.state() == QAbstractAnimation::Running;
     // prompt box is now directly got from document, so no need to check its clipping explicitly
     clip = isGreater(clipping.size(), d->activeDocument()->size());
@@ -1312,24 +1313,19 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     painter->translate(dx, dy);
 
     // draw actual text to the screen
-    if (showPrompt) {
-        // with no content we show the prompt text if there is prompt text
-
+    if (showPrompt
+        && d->activeDocument()->blockCount() > 0 // this is in fact always so, even if text is empty
+                                                 // checking just to prevent segfault by activeDocument()->begin()
+        ) {
         QTextOption promptOptions = d->document()->defaultTextOption();
-        // KLUDGE: make sure here that prompt document has the same indentation as
-        // main QTextDocument just to support cases when app developer has been
-        // messing with indentation of it, e.g. to make first line indented a bit.
-        QTextCursor startCursor(d->document());
-        startCursor.setPosition(0);
-        QTextBlockFormat tbf = startCursor.blockFormat();
-        // Do not override layout direction. Prompt always has direction based on contents.
-        tbf.setLayoutDirection(Qt::LayoutDirectionAuto);
-        QTextCursor promptCursor(d->promptDocument());
-        promptCursor.setPosition(0);
-        QTextBlockFormat promptFormat = promptCursor.blockFormat();
-        promptFormat.setIndent(tbf.indent());
-        promptFormat.setTextIndent(tbf.textIndent());
-        promptCursor.setBlockFormat(promptFormat);
+        
+        // The document layout is the most proper box for drawing the prompt
+        QRectF promptClipping = d->activeDocument()->documentLayout()->blockBoundingRect(d->activeDocument()->begin());
+        // there is a issue in Qt, most probably a bug, that is does not consider indentation of the first block
+        // for counting the boundingRect position
+        // the following is a workaround for this. It must produce correct result always
+        QTextLayout *layout = d->activeDocument()->begin().layout();
+        promptClipping.translate(layout->boundingRect().topLeft() - layout->position());
 
         qreal opacity = painter->opacity();
         painter->setOpacity(d->currentPromptOpacity);
@@ -1337,7 +1333,7 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         painter->setPen(s->promptColor());
         QFont saveFont = painter->font();
         painter->setFont(s->promptFont());
-        painter->drawText(clipping, model()->prompt(), promptOptions);
+        painter->drawText(promptClipping, model()->prompt(), promptOptions);
         painter->setPen(savePen);
         painter->setFont(saveFont);
         painter->setOpacity(opacity);
