@@ -109,6 +109,24 @@ class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
      * \sa MTextEditStyle::selectionDelay
      */
     M_STYLE_ATTRIBUTE(qreal, selectionSpeedThreshold, SelectionSpeedThreshold)
+
+    /*!
+     * \property MTextEditStyle::scrollCursorMarginTop
+     * \brief Top margin which extends cursor rect to trigger automatic
+     * scrolling when cursor rect is obscured.
+     *
+     * This property is applied when magnifier is visible.
+     */
+    M_STYLE_ATTRIBUTE(int, scrollCursorMarginTop, ScrollCursorMarginTop)
+
+    /*!
+     * \property MTextEditStyle::scrollCursorMarginBottom
+     * \brief Bottom margin which extends cursor rect to trigger automatic
+     * scrolling when cursor rect is obscured.
+     *
+     * This property is applied when magnifier is visible.
+     */
+    M_STYLE_ATTRIBUTE(int, scrollCursorMarginBottom, ScrollCursorMarginBottom)
 };
 
 class M_VIEWS_EXPORT MTextEditStyleContainer : public MWidgetStyleContainer

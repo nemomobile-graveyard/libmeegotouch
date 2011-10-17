@@ -1258,29 +1258,32 @@ void MTextEditViewPrivate::updateMagnifierPosition()
             documentLayoutPos.setX(q->style()->paddingRight());
         }
 
-        QFontMetrics fm(q->style()->font());
-        QRectF documentGeometry(documentLayoutPos,
-                                document()->documentLayout()->documentSize());
-        QPointF magnifierPos(qBound<qreal>(documentGeometry.left(),
-                                           mouseTarget.x(),
-                                           documentGeometry.right()),
-                             qBound<qreal>(documentGeometry.top() + fm.height() / 2.0f,
-                                           mouseTarget.y(),
-                                           documentGeometry.bottom() - fm.height() / 2.0f));
+        const QFontMetrics fm(q->style()->font());
+        const QRectF documentGeometry(documentLayoutPos,
+                                      document()->documentLayout()->documentSize());
+        const QPointF magnifierPos(qBound<qreal>(documentGeometry.left(),
+                                                 mouseTarget.x(),
+                                                 documentGeometry.right()),
+                                   qBound<qreal>(documentGeometry.top() + fm.height() / 2.0f,
+                                                 mouseTarget.y(),
+                                                 documentGeometry.bottom() - fm.height() / 2.0f));
 
         magnifier->setMagnifiedPosition(magnifierPos);
 
 
-        bool isMagnifierObscured = false;
-        if (magnifier.data()->isAppeared()) {
-            const QRectF screenRect
-                = QRectF(QPointF(0,0),
-                         MApplication::activeWindow()->visibleSceneSize());
-            if (!screenRect.contains(magnifier.data()->sceneBoundingRect())) {
-                isMagnifierObscured = true;
+        bool toRelocate = false;
+        if (magnifier->isAppeared()) {
+            // extend cursor rectangle to trigger automatic scrolling earlier
+            const QRectF rect = cursorRect().adjusted(0,
+                                                       -q->style()->scrollCursorMarginTop(),
+                                                       0,
+                                                       q->style()->scrollCursorMarginBottom());
+
+            if (!visibleArea().contains(rect.toRect())) {
+                toRelocate = true;
             }
         }
-        if (isMagnifierObscured) {
+        if (toRelocate) {
             controller->sceneManager()->ensureCursorVisible();
         }
     }
