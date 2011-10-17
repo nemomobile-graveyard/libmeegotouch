@@ -1,9 +1,24 @@
-libmeegotouch (0.24.5~1) unstable; urgency=low
+libmeegotouch (0.24.5-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#286768 - MBanner's layouts require adaption to the new typography
+  * Fixes: NB#285189 - Status area forced to be visible (due to ongoing call) is not shown with system sheets
+  * Fixes: NB#285768 - <coverity> defects for libmeegotouch/0.24.3-1_0m7
+  * Fixes: NB#283306 - MContainer and instantaneous bad position of progress indicator, text and icon after using toggleHeaderVisible()
+  * Fixes: NB#285464 Ellipsis in mlabel should inherit label color
+  * Fixes: NB#285045
+  * Fixes: NB#284456 - MLabel - change default wordwrap mode from WordWrap to WrapAtWordBoundaryOrAnywhere
+  * Fixes: NB#284232- Switch Button on toolbar have additional 3 dots.
+  * Fixes: NB#286096 - [TASK] Cyrillic contact names should appear first in Contacts list in Cyrillic languages
+  * Fixes: NB#284732 - On changing device orientation,exposure compensation slider
+  * Fixes: NB#268483 - [TASK] status menu feedbacks for PR1.2.
+  * Fixes: NB#283786 - COREWEB: MWidgetModel::styleName MTheme::style MStyleContainer::updateCurrentStyle MStyleContainer::currentStyle operator->
+  * Fixes: NB#282458 - Preedit underlining starts to wander when typing combining symbols in Vietnamese or Thai
+  * Fixes: NB#285595 - duicontrolpanel-brief crashing on changing the region from cestina default to some thing else.
+  * Fixes: NB#285591 - Punctuation mark missing from abbreviated months name
   * Fixes: NB#285513 - Unable to set QTapAndHoldGesture timeout dynamically
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 10 Oct 2011 15:56:46 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 17 Oct 2011 17:07:59 +0300
 
 libmeegotouch (0.24.4-1) unstable; urgency=low
 
