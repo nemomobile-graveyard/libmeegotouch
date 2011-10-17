@@ -489,6 +489,40 @@ void Ut_MOrientationTracker::testFollowsCurrentAppWindowWhenDynamicPropertySet_d
     QTest::newRow("Angle270 -> 0") << M::Angle270 << M::Angle0;
 }
 
+void Ut_MOrientationTracker::testInitialAngleFollowsTopmostWindowWhileFlat_data()
+{
+    QTest::addColumn<M::OrientationAngle>("currentWindowAngle");
+
+    QTest::newRow("Angle0") << M::Angle0;
+    QTest::newRow("Angle90") << M::Angle90;
+    QTest::newRow("Angle180") << M::Angle180;
+    QTest::newRow("Angle270") << M::Angle270;
+}
+
+void Ut_MOrientationTracker::testInitialAngleFollowsTopmostWindowWhileFlat()
+{
+    QFETCH(M::OrientationAngle, currentWindowAngle);
+
+    setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
+    setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
+
+    setDeviceIsLyingFlat(false);
+    setKeyboardIsOpen(false);
+    setTVOutIsConnected(false);
+    setDeviceOrientationAngle(M::Angle270);
+    setCurrentWindowOrientationAngle(currentWindowAngle);
+
+    // not flat, should return the device orientation
+    QCOMPARE((int)mTracker->orientationAngle(), (int)M::Angle270);
+
+    setDeviceIsLyingFlat(true);
+
+    // flat, should return current window orientation
+    QCOMPARE((int)mTracker->orientationAngle(), (int)currentWindowAngle);
+
+    setDeviceIsLyingFlat(false);
+}
+
 void Ut_MOrientationTracker::testFollowsCurrentAppWindowWhenDynamicPropertySet()
 {
     QFETCH(M::OrientationAngle, firstAngle);
@@ -943,6 +977,22 @@ void Ut_MOrientationTracker::setDesktopOrientationAngle(M::OrientationAngle angl
 
     desktopAnglePropStub->stubReset();
     desktopAnglePropStub->stubSetReturnValue("value", QVariant(value));
+}
+
+void Ut_MOrientationTracker::setCurrentWindowOrientationAngle(M::OrientationAngle angle)
+{
+    gContextPropertyStubMap->findStub("/Screen/CurrentWindow/OrientationAngle")->
+            stubReset();
+
+    gContextPropertyStubMap->findStub("/Screen/CurrentWindow/OrientationAngle")->
+            stubSetReturnValue("value", QVariant(angle));
+}
+
+void Ut_MOrientationTracker::emitCurrentWindowOrientationAngleChanged()
+{
+    QMetaObject::invokeMethod(
+        gContextPropertyStubMap->findStub("/Screen/CurrentWindow/OrientationAngle")->getProxy(),
+        "valueChanged");
 }
 
 QTEST_MAIN(Ut_MOrientationTracker);

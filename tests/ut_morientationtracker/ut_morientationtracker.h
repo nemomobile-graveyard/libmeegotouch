@@ -58,6 +58,9 @@ private slots:
 
     void testUpdatesPostponedUntilRotationsAreEnabled();
 
+    void testInitialAngleFollowsTopmostWindowWhileFlat_data();
+    void testInitialAngleFollowsTopmostWindowWhileFlat();
+
     void testFollowsCurrentAppWindowWhenDynamicPropertySet_data();
     void testFollowsCurrentAppWindowWhenDynamicPropertySet();
     void testFollowsCurrentAppWindowWhenOnStackButNotTopmost_data();
@@ -94,6 +97,8 @@ private:
     static void setDeviceIsLyingFlat(bool enable);
     static void disableRemoteScreen();
     static void setDesktopOrientationAngle(M::OrientationAngle angle);
+    static void setCurrentWindowOrientationAngle(M::OrientationAngle angle);
+    static void emitCurrentWindowOrientationAngleChanged();
 
     MOrientationTracker *mTracker;
     MComponentData* m_componentData;
