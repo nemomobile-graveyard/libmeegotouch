@@ -1318,6 +1318,24 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
                                                  // checking just to prevent segfault by activeDocument()->begin()
         ) {
         QTextOption promptOptions = d->document()->defaultTextOption();
+        // direction of document is used for internal purposes after fix of
+        // NB#282904 - Arabic text starts from the left side of the text field when using only special characters or numerals
+        // take the intended direction from the controller's property
+        promptOptions.setTextDirection(d->controller->layoutDirection());
+        if (promptOptions.textDirection() == Qt::LayoutDirectionAuto) {
+            // QPainter::drawText() does not consider LayoutDirectionAuto properly
+            // so we take the direction from contents ourself
+            foreach (QChar c, model()->prompt()) {
+                QChar::Direction d = c.direction();
+                if (d == QChar::DirL) {
+                    promptOptions.setTextDirection(Qt::LeftToRight);
+                    break;
+                } else if (d == QChar::DirR || d == QChar::DirAL) {
+                    promptOptions.setTextDirection(Qt::RightToLeft);
+                    break;
+                }
+            }
+        }
         
         // The document layout is the most proper box for drawing the prompt
         QRectF promptClipping = d->activeDocument()->documentLayout()->blockBoundingRect(d->activeDocument()->begin());
