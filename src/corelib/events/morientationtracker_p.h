@@ -66,7 +66,6 @@ public:
     ~MOrientationTrackerPrivate();
     static MOrientationTracker *tracker;
 
-    bool currentIsCovered;
     bool currentIsTvConnected;
     bool currentIsKeyboardOpen;
     // Returns the closest orientation angle to the given one that is allowed
@@ -90,7 +89,6 @@ public:
     ContextProperty *videoRouteProperty;
     ContextProperty *topEdgeProperty;
     ContextProperty *remoteTopEdgeProperty;
-    ContextProperty *isCoveredProperty;
     ContextProperty *isFlatProperty;
     MServiceListener *remoteTopEdgeListener;
     //Properties set by window manager
@@ -121,7 +119,6 @@ public:
     QList<QPointer<MWindow> > windowsFollowingDesktop;
 
 public slots:
-    void isCoveredChanged();
     void videoRouteChanged();
     void updateOrientationAngleOfWindows();
     void disableRotations();

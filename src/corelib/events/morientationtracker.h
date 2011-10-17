@@ -45,7 +45,10 @@ public:
     M::OrientationAngle orientationAngle() const;
 
 Q_SIGNALS:
+    //! \deprecated do not use
     void faceFlippedDown();
+
+    //! \deprecated do not use
     void faceUp();
 
 protected:
