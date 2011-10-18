@@ -643,7 +643,7 @@ void MWindowPrivate::ensureOrientationAngleIsUpToDateBeforeShowing()
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
         // We are about to be shown but our orientation angle is outdated.
-        MOrientationTracker::instance()->d_ptr->updateOrientationAngle();
+        MOrientationTracker::instance()->d_ptr->updateOrientationAngleOfWindows();
 #endif
 
         q->setUpdatesEnabled(true);

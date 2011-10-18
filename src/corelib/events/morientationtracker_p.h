@@ -66,22 +66,18 @@ public:
     ~MOrientationTrackerPrivate();
     static MOrientationTracker *tracker;
 
-    // Angle returned by MOrientationTracker::orientationAngle()
-    // will be null if there's no current angle yet, like during startup.
-    M::OrientationAngle *currentAngle;
-
     bool currentIsCovered;
     bool currentIsTvConnected;
     bool currentIsKeyboardOpen;
     // Returns the closest orientation angle to the given one that is allowed
     // according to current profile.
-    M::OrientationAngle findClosestAllowedAngle(M::OrientationAngle angle, bool isKeyboardOpen);
+    M::OrientationAngle findClosestAllowedAngle(M::OrientationAngle angle, bool isKeyboardOpen) const;
     void reevaluateSubscriptionToSensorProperties();
     void rotateToAngleIfAllowed(M::OrientationAngle angle, MWindow* window);
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    void updateTrackerOrientationAngle();
+    M::OrientationAngle computeTrackerOrientationAngle() const;
     void updateWindowOrientationAngle(MWindow *window);
-    M::OrientationAngle updateOrientationAngle(M::OrientationAngle *currentAngle);
+    M::OrientationAngle updateOrientationAngle(M::OrientationAngle *currentAngle) const;
     bool windowIsFollowingDeviceOrientation(MWindow *window);
     bool checkIfOrientationUpdatesRequired();
     M::OrientationAngle angleForTopEdge(const QString topEdge) const;
@@ -125,7 +121,7 @@ public:
 public slots:
     void isCoveredChanged();
     void videoRouteChanged();
-    void updateOrientationAngle();
+    void updateOrientationAngleOfWindows();
     void disableRotations();
     void enableRotations();
 #ifdef HAVE_CONTEXTSUBSCRIBER

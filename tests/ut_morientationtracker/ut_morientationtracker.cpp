@@ -703,11 +703,6 @@ void Ut_MOrientationTracker::testClosestAngleUsedWhenCurrentOneNotValid()
     delete window2;
     window2 = 0;
 
-    // invalidate current angle
-    // That simulates an application start-up situation, where currentAngle is 0
-    delete mTracker->d_func()->currentAngle;
-    mTracker->d_func()->currentAngle = 0;
-
     // and now finally create a window. It will fetch the current
     // orientation angle during its construction, which will be invalid.
     // That will make orientation tracker check if the device orientation

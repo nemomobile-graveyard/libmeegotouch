@@ -90,7 +90,6 @@ QVariant MContextProperty::value(const QVariant &def) const
 #endif
 
 MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *controller) :
-    currentAngle(0),
     currentIsCovered(false),
     currentIsTvConnected(false),
     currentIsKeyboardOpen(MKeyboardStateTracker::instance()->isOpen())
@@ -117,13 +116,12 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 #endif
 
     if (MComponentData::isOrientationForced()) {
-        currentAngle = new M::OrientationAngle;
-        *currentAngle = MComponentData::forcedOrientationAngle();
-        M::Orientation orientation = MDeviceProfile::instance()->orientationFromAngle(*currentAngle);
+        M::OrientationAngle currentAngle = MComponentData::forcedOrientationAngle();
+        M::Orientation orientation = MDeviceProfile::instance()->orientationFromAngle(currentAngle);
 
         foreach(MWindow * window, MApplication::windows()) {
             if (window->orientation() == orientation)
-                window->setOrientationAngle(*currentAngle);
+                window->setOrientationAngle(currentAngle);
         }
         //orientation is fixed so we do not need to register for any signals
         return;
@@ -139,21 +137,21 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     Q_ASSERT(!desktopAngleProperty->isSubscribed());
 
     connect(topEdgeProperty, SIGNAL(valueChanged()),
-            this, SLOT(updateOrientationAngle()));
+            this, SLOT(updateOrientationAngleOfWindows()));
     connect(remoteTopEdgeProperty, SIGNAL(valueChanged()),
-            this, SLOT(updateOrientationAngle()));
+            this, SLOT(updateOrientationAngleOfWindows()));
     connect(isCoveredProperty, SIGNAL(valueChanged()),
             this, SLOT(isCoveredChanged()));
     connect(videoRouteProperty, SIGNAL(valueChanged()),
             this, SLOT(videoRouteChanged()));
     connect(isFlatProperty, SIGNAL(valueChanged()),
-            this, SLOT(updateOrientationAngle()));
+            this, SLOT(updateOrientationAngleOfWindows()));
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
-            this, SLOT(updateOrientationAngle()));
+            this, SLOT(updateOrientationAngleOfWindows()));
     connect(remoteTopEdgeListener, SIGNAL(nameAppeared()),
-            this, SLOT(updateOrientationAngle()));
+            this, SLOT(updateOrientationAngleOfWindows()));
     connect(remoteTopEdgeListener, SIGNAL(nameDisappeared()),
-            this, SLOT(updateOrientationAngle()));
+            this, SLOT(updateOrientationAngleOfWindows()));
     connect(currentWindowAngleProperty, SIGNAL(valueChanged()),
             this, SLOT(handleCurrentAppWindowOrientationAngleChange()));
     connect(desktopAngleProperty, SIGNAL(valueChanged()),
@@ -175,7 +173,6 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 
 MOrientationTrackerPrivate::~MOrientationTrackerPrivate()
 {
-    delete currentAngle;
 #ifdef HAVE_CONTEXTSUBSCRIBER
     delete videoRouteProperty;
     delete topEdgeProperty;
@@ -195,7 +192,7 @@ void MOrientationTrackerPrivate::videoRouteChanged()
 
     currentIsTvConnected = (value == "tvout" ||
                             value == "builtinandtvout");
-    updateOrientationAngle();
+    updateOrientationAngleOfWindows();
 #endif
 }
 
@@ -258,13 +255,13 @@ void MOrientationTrackerPrivate::reevaluateSubscriptionToSensorProperties()
 
     if (updatesRequired && !isSubscribedToSensorProperties) {
         subscribeToSensorProperties();
-        updateOrientationAngle();
+        updateOrientationAngleOfWindows();
     } else if (!updatesRequired && isSubscribedToSensorProperties)
         unsubscribeFromSensorProperties();
 #endif
 }
 
-void MOrientationTrackerPrivate::updateOrientationAngle()
+void MOrientationTrackerPrivate::updateOrientationAngleOfWindows()
 {
     if (rotationsDisabled) {
         pendingOrientationAngleUpdate = true;
@@ -279,8 +276,6 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
     QString remoteTopEdge = remoteTopEdgeProperty->value().toString();
 
     if ((remoteTopEdgeListener->isServicePresent() != MServiceListener::Present) || remoteTopEdge.isEmpty()) {
-
-        updateTrackerOrientationAngle();
 
         foreach(MWindow * window, MApplication::windows()) {
             updateWindowOrientationAngle(window);
@@ -298,7 +293,7 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
 }
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
-M::OrientationAngle MOrientationTrackerPrivate::updateOrientationAngle(M::OrientationAngle *currentAngle)
+M::OrientationAngle MOrientationTrackerPrivate::updateOrientationAngle(M::OrientationAngle *currentAngle) const
 {
     M::OrientationAngle targetAngle = (M::OrientationAngle)-1;
     M::OrientationAngle deviceAngle = angleForTopEdge(topEdgeProperty->value().toString());
@@ -341,19 +336,15 @@ M::OrientationAngle MOrientationTrackerPrivate::updateOrientationAngle(M::Orient
 #endif
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
-void MOrientationTrackerPrivate::updateTrackerOrientationAngle()
+M::OrientationAngle MOrientationTrackerPrivate::computeTrackerOrientationAngle() const
 {
     // This angle is always the closest valid one to the device orientation.
     // Unlike the angle of regular windows, which keep their current orientation
     // if the device in an unsupported orientation. That's why we do not
-    // pass currentAngle as a parameter here. MOrientationTracker doesn't have
-    // a current orientation to preserve, it just caches the value to be returned
-    // by MOrientationTracker::orientationAngle()
+    // pass currentAngle as a parameter here.
     M::OrientationAngle targetAngle = updateOrientationAngle(0);
 
-    if (!currentAngle)
-        currentAngle = new M::OrientationAngle;
-    *currentAngle = targetAngle;
+    return targetAngle;
 }
 #endif //HAVE_CONTEXTSUBSCRIBER
 
@@ -388,7 +379,7 @@ void MOrientationTrackerPrivate::updateWindowOrientationAngle(MWindow *window)
 }
 #endif //HAVE_CONTEXTSUBSCRIBER
 
-M::OrientationAngle MOrientationTrackerPrivate::findClosestAllowedAngle(M::OrientationAngle angle, bool isKeyboardOpen)
+M::OrientationAngle MOrientationTrackerPrivate::findClosestAllowedAngle(M::OrientationAngle angle, bool isKeyboardOpen) const
 {
     // try angle+90 degrees
     int candidateAngle = (angle + 90) % 360;
@@ -468,25 +459,21 @@ MOrientationTracker::~MOrientationTracker()
 M::OrientationAngle MOrientationTracker::orientationAngle() const
 {
     Q_D(const MOrientationTracker);
+    M::OrientationAngle result = M::Angle0;
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
     if (!d->isSubscribedToSensorProperties) {
         MOrientationTrackerPrivate *priv = const_cast<MOrientationTracker*>(this)->d_ptr;
-        // Momentarily subscribe to sensor properties to ensure we have an up to date
-        // currentAngle value.
+        // Momentarily subscribe to sensor properties.
         priv->subscribeToSensorProperties();
-        priv->updateOrientationAngle();
+        result = d->computeTrackerOrientationAngle();
         priv->unsubscribeFromSensorProperties();
-    }
-#else
-    // If there's no context subscriber currentAngle is never initialized.
-    if (!d->currentAngle) {
-        const_cast<MOrientationTrackerPrivate*>(d)->currentAngle = new M::OrientationAngle;
-        *(const_cast<MOrientationTrackerPrivate*>(d)->currentAngle) = M::Angle0;
+    } else {
+        result = d->computeTrackerOrientationAngle();
     }
 #endif
-    Q_ASSERT(d->currentAngle);
-    return *(d->currentAngle);
+
+    return result;
 }
 
 void MOrientationTracker::childEvent(QChildEvent *event)
@@ -653,7 +640,7 @@ void MOrientationTrackerPrivate::enableRotations()
         rotationsDisabled = false;
 
         if (pendingOrientationAngleUpdate) {
-            updateOrientationAngle();
+            updateOrientationAngleOfWindows();
             pendingOrientationAngleUpdate = false;
         }
 
