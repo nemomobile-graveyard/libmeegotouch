@@ -2134,6 +2134,9 @@ while (<CLDR>) {
         next;
     }
     if ($ARG =~ /<\/rules>/) {
+        if($currentCollType eq "stroke") {
+            $collTypeCollationOutput{$currentCollType} .= "&[before 1]劃<1劃<2劃<3劃<4劃<5劃<6劃<7劃<8劃<9劃<10劃<11劃<12劃<13劃<14劃<15劃<16劃<17劃<18劃<19劃<20劃<21劃<22劃<23劃<24劃<25劃<26劃<27劃<28劃<29劃<30劃<31劃<32劃<33劃<34劃<35劃<36劃<37劃<38劃<39劃<40劃<41劃<42劃<43劃<44劃<45劃<46劃<47劃<48劃<49劃<50劃<51劃<52劃<53劃<54劃<55劃<56劃<57劃<58劃<59劃<60劃<61劃<62劃<63劃<64劃";
+        }
         $collTypeCollationOutput{$currentCollType} .= "\" }\n";
         if($currentCollType eq "pinyin") {
             $collTypeCollationOutput{"pinyinsearch"} .= "\" }\n";
