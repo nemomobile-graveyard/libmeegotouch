@@ -417,9 +417,6 @@ void MWindowPrivate::resolveOrientationRules() {
     //follow desktop if visible in switcher
     if ((isInSwitcher && q->isOnDisplay())) {
         privateTracker->startFollowingDesktop(q);
-    //follow current app window if window is not on top but over home window
-    } else if (q->isVisible() && !q->isMinimized() && !q->isOnDisplay()) {
-        privateTracker->startFollowingCurrentAppWindow(q, true);
     //in other cases do not follow other windows.
     //MOrientationTracker will resolve if following sensors is required
     } else {
