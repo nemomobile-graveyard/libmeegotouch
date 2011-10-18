@@ -32,7 +32,7 @@
 #include <QApplication>
 #include <QGraphicsLinearLayout>
 
-MEditorToolbar::MEditorToolbar(const MWidget &followWidget)
+MEditorToolbar::MEditorToolbar(MWidget *followWidget)
     : d_ptr(new MEditorToolbarPrivate(this, followWidget))
 {
     Q_D(MEditorToolbar);
@@ -48,7 +48,7 @@ void MEditorToolbar::setPosition(const QPointF &pos,
                                  ToolbarPlacement placement)
 {
     Q_D(MEditorToolbar);
-    setPos(d->followWidget.mapToItem(d->overlay, pos));
+    setPos(d->followWidget->mapToItem(d->overlay, pos));
     d->updateArrow(placement == BelowPointOfInterest
                    ? MEditorToolbarArrow::ArrowUp : MEditorToolbarArrow::ArrowDown);
 }
@@ -117,9 +117,9 @@ void MEditorToolbar::updateGeometry()
 
 // Private class implementation
 
-MEditorToolbarPrivate::MEditorToolbarPrivate(MEditorToolbar *qq, const MWidget &followWidget)
+MEditorToolbarPrivate::MEditorToolbarPrivate(MEditorToolbar *qq, MWidget *followWidget)
     : q_ptr(qq),
-      overlay(new MTopLevelOverlay(followWidget.sceneManager())),
+      overlay(new MTopLevelOverlay(followWidget->sceneManager())),
       followWidget(followWidget),
       buttonLayoutPolicy(new MLinearLayoutPolicy(new MLayout(qq),
                                                  Qt::Horizontal)),
@@ -149,7 +149,7 @@ void MEditorToolbarPrivate::init()
     q->setFlag(QGraphicsItem::ItemHasNoContents, true);
     overlay->hide();
     q->hide();
-    followWidget.scene()->addItem(overlay);
+    followWidget->scene()->addItem(overlay);
     q->setParentItem(overlay);
 
     // Set z value for arrow higher than default since
@@ -479,7 +479,7 @@ void MEditorToolbarPrivate::showEditorItem()
     Q_Q(MEditorToolbar);
     // Set focus proxy so that input widget doesn't lose focus.
     q->setFocusPolicy(Qt::ClickFocus);
-    q->setFocusProxy(&const_cast<MWidget &>(followWidget));
+    q->setFocusProxy(followWidget);
     q->show();
 }
 

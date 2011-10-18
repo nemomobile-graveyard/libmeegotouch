@@ -41,7 +41,7 @@ class MEditorToolbarPrivate
     Q_DECLARE_PUBLIC(MEditorToolbar)
 
 public:
-    explicit MEditorToolbarPrivate(MEditorToolbar *qq, const MWidget &followWidget);
+    explicit MEditorToolbarPrivate(MEditorToolbar *qq, MWidget *followWidget);
     virtual ~MEditorToolbarPrivate();
 
     void init();
@@ -68,7 +68,7 @@ private:
     QList<MButton *> buttons;
 
     QPointer<MTopLevelOverlay> overlay;
-    const MWidget &followWidget;
+    MWidget *followWidget;
 
     MLinearLayoutPolicy *buttonLayoutPolicy;
     MEditorToolbarArrow *arrow;

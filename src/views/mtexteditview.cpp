@@ -530,7 +530,7 @@ void MTextEditViewPrivate::showEditorToolbar()
 {
     Q_Q(const MTextEditView);
     if (!editorToolbar) {
-        editorToolbar.reset(new MEditorToolbar(*controller));
+        editorToolbar.reset(new MEditorToolbar(controller));
         const MTextEditStyle *textEditStyle = static_cast<const MTextEditStyle *>(q->style().operator ->());
         if (textEditStyle) {
             editorToolbar->setStyleName(textEditStyle->toolbarStyleName());

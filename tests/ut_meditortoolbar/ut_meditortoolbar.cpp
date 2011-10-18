@@ -54,7 +54,7 @@ void Ut_MEditorToolbar::cleanupTestCase()
 void Ut_MEditorToolbar::init()
 {
     fakeParent->setPos(QPointF());
-    subject = new MEditorToolbar(*fakeParent);
+    subject = new MEditorToolbar(fakeParent);
 
     // fakeParent must be in the orientation of the scene.
     fakeParent->setRotation(static_cast<qreal>(subject->sceneManager()->orientationAngle()));

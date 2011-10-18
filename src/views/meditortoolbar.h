@@ -54,13 +54,18 @@ public:
         AbovePointOfInterest  //!< Above origin, arrow pointing downwards
     };
 
-    //! \brief Construct MEditorToolbar and make it follow \a followWidget
-    explicit MEditorToolbar(const MWidget &followWidget);
+    /*! \brief Construct MEditorToolbar to follow actions of \a actionSource.
+     *  \param actionSource An MWidget whose actions are to be shown in toolbar.
+     *  Also the widget is positioned as if \a actionSource was its parent item,
+     *  with \a setPosition. This parameter must point to MWidget that has been
+     *  added to MScene.
+     */
+    explicit MEditorToolbar(MWidget *actionSource);
     virtual ~MEditorToolbar();
 
     /*! \brief Set position of the toolbar
      *
-     *  \param pos position in the local coordinate system of \a followWidget given to the
+     *  \param pos position in the local coordinate system of \a actionSource given to the
      *  constructor.  Position should be the point MEditorToolbar actions apply to,
      *  such as cursor or selection.
      *  \param placement Placement of the toolbar with respect to the point of interest \a pos.
