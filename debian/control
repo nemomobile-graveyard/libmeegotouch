@@ -436,6 +436,13 @@ Architecture: any
 Depends: ${shlibs:Depends}
 Description: Example applications
 
+Package: meegotouch-examples-dev
+Section: devel
+Architecture: any
+Depends: libmeegotouch-dev (= ${Source-Version}),
+         meegotouch-examples (= ${Source-Version})
+Description: Development files for example applications
+
 Package: meegotouch-examples-dbg
 Section: devel
 Architecture: any

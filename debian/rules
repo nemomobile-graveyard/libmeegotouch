@@ -13,6 +13,7 @@ space := $(empty) $(empty)
 
 MAKEDOCS = 1
 MAKEDEMOS = 1
+MAKEEXAMPLES = 1
 
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
     INSTALL_PROGRAM += -s
@@ -89,7 +90,9 @@ ifeq (,$(findstring minimal,$(DEB_BUILD_OPTIONS)))
 else
      OPTIONS += -minimal
      EXCLUSIONS += --no-package=meegotouch-examples
+     EXCLUSIONS += --no-package=meegotouch-examples-dev
      EXCLUSIONS += --no-package=meegotouch-examples-dbg
+     MAKEEXAMPLES = 0
      MAKEDOCS = 0
 endif
 
@@ -193,6 +196,9 @@ ifneq (0,$(MAKEDEMOS))
 	dh_strip -p meegotouch-demos-widgetsgallery --dbg-package=meegotouch-demos-widgetsgallery
 	dh_strip -p meegotouch-demos-appletinstallationsource --dbg-package=meegotouch-demos-appletinstallationsource
 	dh_strip -p meegotouch-demos-applicationextension --dbg-package=meegotouch-demos-applicationextension
+endif
+ifneq (0,$(MAKEEXAMPLES))
+	dh_strip -p meegotouch-examples --dbg-package=meegotouch-examples
 endif
 	dh_compress $(EXCLUSIONS)
 	dh_fixperms $(EXCLUSIONS)
