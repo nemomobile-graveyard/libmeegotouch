@@ -123,29 +123,25 @@ void MSpinnerViewPrivate::_q_pauseOrResumeAnimation()
 {
     Q_Q(MSpinnerView);
 
-    if (controller->isVisible() && controller->isOnDisplay() && q->model()->unknownDuration()) {
+    bool resumeAnimation = false;
+    if (controller->isVisible() && q->model()->unknownDuration()) {
         const MWindow *mWindow = getMWindow();
         if (mWindow) {
-            q->connect(mWindow, SIGNAL(switcherEntered()), SLOT(_q_switcherEntered()), Qt::UniqueConnection);
-            q->connect(mWindow, SIGNAL(switcherExited()), SLOT(_q_switcherExited()), Qt::UniqueConnection);
-            if (mWindow->isInSwitcher()) {
-                _q_switcherEntered();
+            q->connect(mWindow, SIGNAL(switcherEntered()), SLOT(_q_pauseAnimation()), Qt::UniqueConnection);
+            q->connect(mWindow, SIGNAL(switcherExited()), SLOT(_q_pauseOrResumeAnimation()), Qt::UniqueConnection);
+            if (mWindow->isOnDisplay() && !mWindow->isInSwitcher()) {
+                resumeAnimation = true;
             }
+        } else {
+            resumeAnimation = true;
         }
+    }
+
+    if (resumeAnimation) {
         _q_resumeAnimation();
     } else {
         _q_pauseAnimation();
     }
-}
-
-void MSpinnerViewPrivate::_q_switcherEntered()
-{
-    _q_pauseAnimation();
-}
-
-void MSpinnerViewPrivate::_q_switcherExited()
-{
-    _q_resumeAnimation();
 }
 
 MSpinnerView::MSpinnerView(MProgressIndicator *controller) :
@@ -159,7 +155,7 @@ MSpinnerView::MSpinnerView(MProgressIndicator *controller) :
 
     connect(controller, SIGNAL(visibleChanged()), this, SLOT(_q_pauseOrResumeAnimation()));
 
-    connect(controller, SIGNAL(displayEntered()), this, SLOT(_q_resumeAnimation()));
+    connect(controller, SIGNAL(displayEntered()), this, SLOT(_q_pauseOrResumeAnimation()));
     connect(controller, SIGNAL(displayExited()), this, SLOT(_q_pauseAnimation()));
 }
 

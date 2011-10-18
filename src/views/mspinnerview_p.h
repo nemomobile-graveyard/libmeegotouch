@@ -54,9 +54,6 @@ public:
     void _q_resumeAnimation();
     void _q_pauseOrResumeAnimation();
 
-    void _q_switcherEntered();
-    void _q_switcherExited();
-
     MProgressIndicator *controller;
 
     QPropertyAnimation* positionAnimation;

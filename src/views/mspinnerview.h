@@ -118,8 +118,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_pauseAnimation())
     Q_PRIVATE_SLOT(d_func(), void _q_resumeAnimation())
     Q_PRIVATE_SLOT(d_func(), void _q_pauseOrResumeAnimation())
-    Q_PRIVATE_SLOT(d_func(), void _q_switcherEntered())
-    Q_PRIVATE_SLOT(d_func(), void _q_switcherExited())
 
 #ifdef UNIT_TEST
     friend class Ut_MProgressIndicatorSpinnerView;
