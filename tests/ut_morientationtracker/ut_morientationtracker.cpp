@@ -544,38 +544,35 @@ void Ut_MOrientationTracker::testFollowsCurrentAppWindowWhenDynamicPropertySet()
     QCOMPARE(window1->orientationAngle(), secondAngle);
 }
 
-void Ut_MOrientationTracker::testFollowsCurrentAppWindowWhenOnStackButNotTopmost_data()
+void Ut_MOrientationTracker::testDontRotateWhenOnStackButNotTopmost()
 {
-    QTest::addColumn<M::OrientationAngle>("firstAngle");
-    QTest::addColumn<M::OrientationAngle>("secondAngle");
-
-    QTest::newRow("Angle0 -> 90") << M::Angle0 << M::Angle90;
-    QTest::newRow("Angle90 -> 180") << M::Angle90 << M::Angle180;
-    QTest::newRow("Angle180 -> 270") << M::Angle180 << M::Angle270;
-    QTest::newRow("Angle270 -> 0") << M::Angle270 << M::Angle0;
-}
-
-void Ut_MOrientationTracker::testFollowsCurrentAppWindowWhenOnStackButNotTopmost()
-{
-    QFETCH(M::OrientationAngle, firstAngle);
-    QFETCH(M::OrientationAngle, secondAngle);
+    MOnDisplayChangeEvent eventOnDisplay(true, QRectF(QPointF(0,0), window1->visibleSceneSize()));
+    MOnDisplayChangeEvent eventOffDisplay(false, QRectF(QPointF(0,0), window1->visibleSceneSize()));
 
     setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
     setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
 
-    gContextPropertyStubMap->findStub("/Screen/CurrentWindow/OrientationAngle")->stubReset();
-    gContextPropertyStubMap->findStub("/Screen/CurrentWindow/OrientationAngle")->stubSetReturnValue("value", QVariant(firstAngle));
+    setDesktopOrientationAngle(M::Angle270);
+    setDeviceOrientationAngle(M::Angle90);
+    emitDeviceOrientationAngleChanged();
+
+    setCurrentWindowOrientationAngle(M::Angle180);
+    emitCurrentWindowOrientationAngleChanged();
 
     window1->setVisible(true);
-    MOnDisplayChangeEvent displayEvent(false, QRectF(QPointF(0,0), window1->visibleSceneSize()));
-    qApp->sendEvent(window1, &displayEvent);
+    qApp->sendEvent(window1, &eventOnDisplay);
 
-    QCOMPARE(window1->orientationAngle(), firstAngle);
+    // window1 follows device orientation
+    QCOMPARE(window1->orientationAngle(), M::Angle90);
 
-    gContextPropertyStubMap->findStub("/Screen/CurrentWindow/OrientationAngle")->stubSetReturnValue("value", QVariant(secondAngle));
-    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("/Screen/CurrentWindow/OrientationAngle")->getProxy(), "valueChanged");
+    // window1 is now being covered by another window.
+    qApp->sendEvent(window1, &eventOffDisplay);
 
-    QCOMPARE(window1->orientationAngle(), secondAngle);
+    setDeviceOrientationAngle(M::Angle0);
+    emitDeviceOrientationAngleChanged();
+
+    // window1 maintains its orientation
+    QCOMPARE(window1->orientationAngle(), M::Angle90);
 }
 
 void Ut_MOrientationTracker::testRotatesFreelyIfCurrentAppWindowContextPorpertyIsInvalid_data()
