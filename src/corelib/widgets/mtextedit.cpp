@@ -3057,6 +3057,9 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
     case M::InputMethodAttributeExtensionQuery:
         return QVariant(attachedToolbar());
 
+    case M::WesternNumericInputEnforcedQuery:
+        return QVariant(isWesternNumericInputEnforced());
+
     case Qt::ImMicroFocus:
         // Only check whether this text edit *has* a completer, not whether the completer is
         // visible. Otherwise, it would cause further window relocations once the completer hides
@@ -3482,4 +3485,15 @@ void MTextEdit::setLayoutDirection(Qt::LayoutDirection dir)
     Q_D(MTextEdit);
     d->layoutDirection = dir;
 }
+
+void MTextEdit::setWesternNumericInputEnforced(bool enforce)
+{
+    model()->setWesternNumericInputEnforced(enforce);
+}
+
+bool MTextEdit::isWesternNumericInputEnforced() const
+{
+    return model()->isWesternNumericInputEnforced();
+}
+
 #include "moc_mtextedit.cpp"

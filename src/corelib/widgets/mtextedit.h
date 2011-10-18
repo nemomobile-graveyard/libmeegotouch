@@ -78,6 +78,7 @@ class M_CORE_EXPORT MTextEdit : public MWidgetController
     Q_PROPERTY(bool autoSipEnabled READ isAutoSipEnabled WRITE setAutoSipEnabled)
     Q_PROPERTY(bool errorHighlight READ errorHighlight WRITE setErrorHighlight)
     Q_PROPERTY(Qt::LayoutDirection layoutDirection READ layoutDirection WRITE setLayoutDirection)
+    Q_PROPERTY(bool westernNumericInputEnforced READ isWesternNumericInputEnforced WRITE setWesternNumericInputEnforced)
 
 public:
     typedef M::TextContentType TextContentType; // workaround for moc bug
@@ -476,6 +477,18 @@ public:
      * and other visual features
      */
     void setLayoutDirection(Qt::LayoutDirection alignment);
+
+    /*!
+     * \brief enforces western numeric input
+     * \param enforce whether western numeric input should be enforced
+     */
+    void setWesternNumericInputEnforced(bool enforce);
+
+    /*!
+     * \return whether western numeric input is enforced
+     */
+    bool isWesternNumericInputEnforced() const;
+
 public Q_SLOTS:
     /**
      * \brief Set text for this widget. This replaces the existing text.

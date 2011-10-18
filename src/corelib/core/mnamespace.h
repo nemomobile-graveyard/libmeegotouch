@@ -138,7 +138,8 @@ namespace M
         InputMethodToolbarIdQuery,  //!< custom toolbar identifier for text entry. \deprecated use InputMethodAttributeExtensionIdQuery instead.
         InputMethodAttributeExtensionIdQuery = InputMethodToolbarIdQuery, //!< attribute extension identifier for text entry
         InputMethodToolbarQuery,     //!< custom toolbar file name for text entry. \deprecated use InputMethodAttributeExtensionQuery instead.
-        InputMethodAttributeExtensionQuery = InputMethodToolbarQuery //!< attribute extension file name for text entry
+        InputMethodAttributeExtensionQuery = InputMethodToolbarQuery, //!< attribute extension file name for text entry
+        WesternNumericInputEnforcedQuery //!< Overrides localized numeric input with western numeric input.
     };
 
     //! \deprecated do not use

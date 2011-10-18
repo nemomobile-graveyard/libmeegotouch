@@ -108,6 +108,7 @@ private:
     M_MODEL_PROPERTY(int, preeditCursor, PreeditCursor, true, -1)
     M_MODEL_PROPERTY(QList<MTextEditFormatRange>, additionalFormats, AdditionalFormats, true, QList<MTextEditFormatRange>())
     M_MODEL_PROPERTY(bool, isInputContextUpdateEnabled, InputContextUpdateEnabled, true, true)
+    M_MODEL_PROPERTY(bool, isWesternNumericInputEnforced, WesternNumericInputEnforced, true, false)
 
 public:
     void updateCursor()   {
