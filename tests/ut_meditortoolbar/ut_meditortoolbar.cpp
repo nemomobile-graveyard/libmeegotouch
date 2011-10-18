@@ -27,6 +27,7 @@
 #include <MApplicationWindow>
 #include <MButton>
 #include <MScene>
+#include <MSceneManager>
 
 void Ut_MEditorToolbar::initTestCase()
 {
@@ -54,6 +55,9 @@ void Ut_MEditorToolbar::init()
 {
     fakeParent->setPos(QPointF());
     subject = new MEditorToolbar(*fakeParent);
+
+    // fakeParent must be in the orientation of the scene.
+    fakeParent->setRotation(static_cast<qreal>(subject->sceneManager()->orientationAngle()));
 }
 
 void Ut_MEditorToolbar::cleanup()
