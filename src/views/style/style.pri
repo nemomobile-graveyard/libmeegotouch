@@ -4,7 +4,8 @@ INCLUDEPATH+=./style
 PRIVATE_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mcolorwidgetstyle.h \
     $$STYLE_SRC_DIR/mcolorliststyle.h \
-    $$STYLE_SRC_DIR/mcolorcomboboxstyle.h
+    $$STYLE_SRC_DIR/mcolorcomboboxstyle.h \
+    $$STYLE_SRC_DIR/mtextselectionhandlestyle.h \
 
 PUBLIC_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mapplicationpagestyle.h \
