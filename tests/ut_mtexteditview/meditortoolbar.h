@@ -16,7 +16,8 @@ public:
     };
 
     explicit MEditorToolbar(const MWidget &)
-        : appeared(false) {}
+        : appeared(false),
+          autohide(false) {}
     virtual ~MEditorToolbar() {}
 
     void setPosition(const QPointF &,
@@ -31,13 +32,18 @@ signals:
     void sizeChanged();
 
 public slots:
-    void appear(bool) { appeared = true; }
+    void appear(bool autohide)
+    {
+        this->autohide = autohide;
+        appeared = true;
+    }
     void disappear() { appeared = false; }
     void setStyleName(const QString &name) { styleName = name; }
 
 public:
     QString styleName;
     bool appeared;
+    bool autohide;
 };
 
 #endif // MEDITORTOOLBAR_H

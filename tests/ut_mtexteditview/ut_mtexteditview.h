@@ -58,6 +58,7 @@ private slots:
     void testFirstTapOnAlreadyFocused();
     void testEditorToolbarReappearanceAfterFocusLost_data();
     void testEditorToolbarReappearanceAfterFocusLost();
+    void testEditorToolbarAutoHide();
 
 private:
     bool editorAppeared() const;

@@ -617,6 +617,19 @@ void Ut_MTextEditView::testEditorToolbarReappearanceAfterFocusLost()
     QCOMPARE(editorAppeared(), expectedToReappear);
 }
 
+void Ut_MTextEditView::testEditorToolbarAutoHide()
+{
+    // Toolbar is to set to autohide on show without selection.
+    m_controller->setText("");
+    m_subject->d_func()->showEditorToolbar();
+    QCOMPARE(m_subject->d_func()->editorToolbar->autohide, true);
+
+    m_controller->setText("test text");
+    m_controller->setSelection(0, 5, false);
+    m_subject->d_func()->showEditorToolbar();
+    QCOMPARE(m_subject->d_func()->editorToolbar->autohide, false);
+}
+
 bool Ut_MTextEditView::editorAppeared() const
 {
     return m_subject->d_func()->editorToolbar
