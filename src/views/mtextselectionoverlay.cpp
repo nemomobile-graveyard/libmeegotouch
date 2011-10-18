@@ -61,8 +61,8 @@ MTextSelectionOverlay::MTextSelectionOverlay(MWidgetController *newController,
 
     connect(view, SIGNAL(selectionChanged(int, QRectF, bool, int, QRectF, bool)),
             this, SLOT(onSelectionChange(int, QRectF, bool, int, QRectF, bool)));
-    connect(view, SIGNAL(contentMoved()),
-            this, SLOT(onTextMoved()));
+    connect(view, SIGNAL(contentScrolled()),
+            this, SLOT(onTextScrolled()));
 
     connect(&handleA, SIGNAL(disappeared()),
             this, SLOT(onHandleDisappeared()));
@@ -167,7 +167,7 @@ void MTextSelectionOverlay::onHandleReleased()
     emit selectionHandleReleased();
 }
 
-void MTextSelectionOverlay::onTextMoved()
+void MTextSelectionOverlay::onTextScrolled()
 {
     MTextSelectionHandle *pressedHandle = 0;
 

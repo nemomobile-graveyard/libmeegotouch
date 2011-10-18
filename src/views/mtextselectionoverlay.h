@@ -113,9 +113,9 @@ private Q_SLOTS:
     void onHandleReleased();
 
     /*!
-     * \brief Moves selection handles according when selected text is moved across the screen.
+     * \brief Moves selection handles when selected text is moved across the screen.
      */
-    void onTextMoved();
+    void onTextScrolled();
 
 private:
     //! \brief Shows or hides selection handles depending on selection status.

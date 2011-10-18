@@ -91,6 +91,24 @@ class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
      * \brief Style to use for this control's toolbar.
      */
     M_STYLE_ATTRIBUTE(QString, toolbarStyleName, ToolbarStyleName)
+
+    /*!
+     * \property MTextEditStyle::selectionDelay
+     * \brief Delay for text selection update.
+     *
+     * Text selection update is postponed if mouse is moved too fast.
+     * \sa MTextEditStyle::selectionSpeedThreshold
+     */
+    M_STYLE_ATTRIBUTE(int, selectionDelay, SelectionDelay)
+
+    /*!
+     * \property MTextEditStyle::selectionSpeedThreshold
+     * \brief Text selection is postponed if mouse speed
+     * is bigger than this value.
+     *
+     * \sa MTextEditStyle::selectionDelay
+     */
+    M_STYLE_ATTRIBUTE(qreal, selectionSpeedThreshold, SelectionSpeedThreshold)
 };
 
 class M_VIEWS_EXPORT MTextEditStyleContainer : public MWidgetStyleContainer

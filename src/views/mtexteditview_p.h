@@ -25,6 +25,8 @@
 #include <QAbstractTextDocumentLayout>
 #include <QPointer>
 #include <QPropertyAnimation>
+#include <QTime>
+#include <QTimer>
 
 #include "mtexteditview.h"
 
@@ -35,6 +37,7 @@ class QGraphicsSceneMouseEvent;
 class QTextDocument;
 class QTimer;
 class MBanner;
+class MTextSelectionOverlay;
 
 //! \internal
 class MTextEditViewPrivate : public QObject
@@ -77,6 +80,10 @@ public:
     qreal promptOpacity() const;
     void setPromptOpacity(qreal opacity);
 
+    QRectF clippingRect();
+
+    void showSelectionOverlay();
+
 protected slots:
     void scrolling();
     void hideUnmaskedText();
@@ -93,8 +100,18 @@ protected slots:
     void startFocusAnimation();
     void scrollSelectSlot();
 
+    void mapSelectionChange();
+    void onSelectionHandleMoved(const QPointF &position);
+    void onSelectionHandlePressed(const QPointF &position);
+    void onSelectionHandleReleased();
+    void onSelectionOverlayVisibleChanged();
+    void hideSelectionOverlayTemporarily();
+    void restoreSelectionOverlay();
+    void setSelection();
+
 private:
     void scrollingTestAndStart(QGraphicsSceneMouseEvent *event);
+    void scrollingTestAndStart(const QPointF &pos);
     void checkStartOfSelection(QGraphicsSceneMouseEvent *event);
     void startSelection(QGraphicsSceneMouseEvent *event);
     void updateSelection(const QPointF &pos);
@@ -105,6 +122,8 @@ private:
 
     //! Returns width of the cursor
     int cursorWidth() const;
+
+    QRect cursorRect(int position, int cursorWidth) const;
 
     //! Returns a rectangle of the cursor
     QRect cursorRect() const;
@@ -174,6 +193,14 @@ protected:
     QPointF scrollSelectScenePosition;
 
     bool focusingTap;
+
+    QScopedPointer<MTextSelectionOverlay> selectionOverlay;
+    bool selectionHandleIsPressed;
+    QPointF lastHandlePos;
+    QTime handleTime;
+    QTimer delaySelection;
+    int anchorPos;
+    int cursorPos;
 
 #ifdef UNIT_TEST
     friend class Ut_MTextEditView;

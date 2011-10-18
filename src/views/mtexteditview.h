@@ -54,6 +54,27 @@ public:
     virtual QVariant inputMethodQuery(Qt::InputMethodQuery query) const;
     //! \reimp_end
 
+Q_SIGNALS:
+    /*!
+     * \brief This signal is emitted when text selection is changed.
+     *
+     * \param anchor Logical position of one selection end.
+     * \param anchorRect Graphical position of anchor in controller's coordinates.
+     * \param anchorVisible Contains true if anchor is visible on the screen.
+     * \param cursor Logical position of another selection end.
+     * \param cursorRect Graphical position of cursor in controller's coordinates.
+     * \param cursorVisible Contains true if cursor is visible on the screen.
+     *
+     * Note: anchor is equal to cursor if there is no selection.
+     *
+     * \sa QTextCursor::anchor(), QTextCursor::position()
+     */
+    void selectionChanged(int anchor, const QRectF anchorRect, bool anchorVisible,
+                          int cursor, const QRectF cursorRect, bool cursorVisible);
+
+    //! \brief Emitted when content is scrolled inside text entry.
+    void contentScrolled();
+
 protected:
     //! \reimp
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;

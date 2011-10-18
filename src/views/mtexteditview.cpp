@@ -44,6 +44,8 @@
 #include "mbanner.h"
 #include "mtimestamp.h"
 #include "minputmethodstate.h"
+#include "mdebug.h"
+#include "mtextselectionoverlay.h"
 
 namespace
 {
@@ -105,7 +107,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       isPromptVisible(false),
       focusAnimationDelay(new QTimer(this)),
       scrollSelectTimer(new QTimer(this)),
-      focusingTap(true)
+      focusingTap(true),
+      selectionHandleIsPressed(false)
 {
     selectionFormat.setForeground(Qt::white);
     selectionFormat.setBackground(Qt::black);
@@ -134,6 +137,10 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
                      this, SLOT(startFocusAnimation()));
     QObject::connect(scrollSelectTimer, SIGNAL(timeout()),
                      this, SLOT(scrollSelectSlot()));
+
+    delaySelection.setSingleShot(true);
+    QObject::connect(&delaySelection, SIGNAL(timeout()),
+                     this, SLOT(setSelection()));
 }
 
 
@@ -238,22 +245,28 @@ void MTextEditViewPrivate::scrolling()
     if (q->model()->edit() == MTextEditModel::EditModeBasic) {
         controller->setCursorPosition(cursorIndex);
 
-    } else if (q->model()->edit() == MTextEditModel::EditModeSelect) {
+    } else if (q->model()->edit() == MTextEditModel::EditModeSelect
+               && !selectionHandleIsPressed) {
         controller->setSelection(startCursorPos, cursorIndex - startCursorPos, true);
     }
 
     q->doUpdate(); // need to redraw, widget supposedly changed.
+    emit q->contentScrolled();
 }
 
+//! \brief Overloaded method introduced for convenience.
+void MTextEditViewPrivate::scrollingTestAndStart(QGraphicsSceneMouseEvent *event)
+{
+    scrollingTestAndStart(event->pos());
+}
 
 /*!
  * \brief checks if event is on text entry edge and sets scrolling speed accordingly.
  * actual scrolling happens in scrolling()
  */
-void MTextEditViewPrivate::scrollingTestAndStart(QGraphicsSceneMouseEvent *event)
+void MTextEditViewPrivate::scrollingTestAndStart(const QPointF &pos)
 {
     Q_Q(MTextEditView);
-
     QRectF rect = q->geometry();
     int paddingLeft, paddingRight;
 
@@ -271,9 +284,9 @@ void MTextEditViewPrivate::scrollingTestAndStart(QGraphicsSceneMouseEvent *event
     // this could be changed to determine some scrolling speed depending on the position.
     if (q->model()->textInteractionFlags() == Qt::NoTextInteraction) {
         scrollSpeedVertical = 0;
-    } else if (event->pos().x() < (ScrollMargin + paddingLeft) && hscroll > 0) {
+    } else if (pos.x() < (ScrollMargin + paddingLeft) && hscroll > 0) {
         scrollSpeedVertical = -ScrollStep;
-    } else if (event->pos().x() > (rect.width() - (ScrollMargin + paddingRight))
+    } else if (pos.x() > (rect.width() - (ScrollMargin + paddingRight))
                && hscroll < (activeDocument()->size().width() - activeDocument()->textWidth())) {
         scrollSpeedVertical = ScrollStep;
     } else {
@@ -573,6 +586,42 @@ void MTextEditViewPrivate::setPromptOpacity(qreal opacity)
     q->doUpdate();
 }
 
+QRectF MTextEditViewPrivate::clippingRect()
+{
+    Q_Q(MTextEditView);
+
+    qreal paddingLeft, paddingRight, marginLeft, marginRight;
+
+    if (isLayoutLeftToRight()) {
+        paddingLeft = q->style()->paddingLeft();
+        marginLeft = q->marginLeft();
+        paddingRight = q->style()->paddingRight();
+        marginRight = q->marginRight();
+    } else {
+        paddingLeft = q->style()->paddingRight();
+        marginLeft = q->marginRight();
+        paddingRight = q->style()->paddingLeft();
+        marginRight = q->marginLeft();
+    }
+    // as sanity check use style clipping only if it's smaller than real padding
+    const int leftClipping = qMin<int>(q->style()->textClippingLeft(), paddingLeft)
+                             + marginLeft;
+    const int rightClipping = qMin<int>(q->style()->textClippingRight(), paddingRight)
+                              + marginRight;
+    const int topClipping = qMin<int>(q->style()->textClippingTop(), q->style()->paddingTop())
+                            + q->marginTop();
+    const int bottomClipping = qMin<int>(q->style()->textClippingBottom(), q->style()->paddingBottom())
+                               + q->marginBottom();
+
+    // rectangle which could be used for text drawing
+    const QRectF clipping(controller->boundingRect().adjusted(leftClipping,
+                                                              topClipping,
+                                                              -rightClipping,
+                                                              -bottomClipping));
+
+    return clipping;
+}
+
 void MTextEditViewPrivate::showMagnifier()
 {
     Q_Q(MTextEditView);
@@ -634,6 +683,52 @@ void MTextEditViewPrivate::hideMagnifier()
 
         magnifier->disappear(MTextMagnifier::DestroyWhenDone);
         (void)magnifier.take(); // Set pointer to null without destroying.
+    }
+}
+
+void MTextEditViewPrivate::showSelectionOverlay()
+{
+    Q_Q(MTextEditView);
+    if (selectionOverlay.isNull() && controller->sceneManager()) {
+        selectionOverlay.reset(new MTextSelectionOverlay(controller, q));
+
+
+        QObject::connect(selectionOverlay.data(), SIGNAL(visibleChanged()),
+                         this, SLOT(onSelectionOverlayVisibleChanged()));
+        QObject::connect(selectionOverlay.data(), SIGNAL(selectionHandleMoved(QPointF)),
+                         this, SLOT(onSelectionHandleMoved(QPointF)));
+
+        QObject::connect(selectionOverlay.data(), SIGNAL(selectionHandlePressed(const QPointF)),
+                         this, SLOT(onSelectionHandlePressed(const QPointF)));
+        QObject::connect(selectionOverlay.data(), SIGNAL(selectionHandleReleased()),
+                         this, SLOT(onSelectionHandleReleased()));
+
+        QObject::connect(controller->sceneManager(),
+                         SIGNAL(orientationChanged(const M::Orientation &)),
+                         this, SLOT(hideSelectionOverlayTemporarily()));
+        QObject::connect(controller->sceneManager(),
+                         SIGNAL(orientationChangeFinished(const M::Orientation &)),
+                         this, SLOT(restoreSelectionOverlay()));
+    }
+
+    if (!selectionOverlay.isNull()) {
+        MTextEditPrivate *textWidgetPtr
+            = static_cast<MTextEditPrivate *>(controller->d_func());
+        if (textWidgetPtr) {
+            QObject::connect(&textWidgetPtr->signalEmitter,
+                             SIGNAL(scenePositionChanged()),
+                             this,
+                             SLOT(mapSelectionChange()),
+                             Qt::UniqueConnection);
+        }
+
+        QObject::connect(controller, SIGNAL(textChanged()),
+                         this, SLOT(mapSelectionChange()),
+                         Qt::UniqueConnection);
+        QObject::connect(controller, SIGNAL(selectionChanged()),
+                         this, SLOT(mapSelectionChange()),
+                         Qt::UniqueConnection);
+        mapSelectionChange();
     }
 }
 
@@ -883,6 +978,124 @@ void MTextEditViewPrivate::scrollSelectSlot()
     }
 }
 
+void MTextEditViewPrivate::mapSelectionChange()
+{
+    Q_Q(MTextEditView);
+
+    if (!controller->hasSelectedText()) {
+        emit q->selectionChanged(0, QRect(), false, 0, QRect(), false);
+        return;
+    }
+
+    QTextCursor cursor = controller->textCursor();
+    const int anchor = cursor.anchor();
+    const QRectF anchorRect = cursorRect(anchor, 1);
+    const int position = cursor.position();
+    const QRectF rect = cursorRect(position, 1);
+    const QRectF clipping = clippingRect().intersected(visibleArea());
+    const bool anchorVisible = clipping.contains(anchorRect);
+    const bool cursorVisible = clipping.contains(rect);
+    emit q->selectionChanged(anchor, anchorRect, anchorVisible, position, rect, cursorVisible);
+}
+
+void MTextEditViewPrivate::onSelectionHandleMoved(const QPointF &position)
+{
+    Q_Q(MTextEditView);
+
+    QTextCursor cursor = controller->textCursor();
+    QPointF localPos = position;
+    qreal margin = isLayoutLeftToRight() ? q->marginLeft() : q->marginRight();
+    localPos.rx() -= margin;
+    anchorPos = cursor.anchor();
+    cursorPos = cursorPosition(localPos);
+
+    qreal speed = 0;
+    const qreal elapsed = handleTime.restart();
+
+    if (!lastHandlePos.isNull()) {
+        speed = (position - lastHandlePos).manhattanLength() / elapsed;
+    }
+    lastHandlePos = position;
+    if (speed < q->style()->selectionSpeedThreshold()) {
+        setSelection();
+        delaySelection.stop();
+    } else {
+        delaySelection.start();
+    }
+
+    setMouseTarget(position);
+    updateMagnifierPosition();
+}
+
+void MTextEditViewPrivate::onSelectionHandlePressed(const QPointF &position)
+{
+    Q_Q(MTextEditView);
+    selectionHandleIsPressed = true;
+    if (editorToolbar) {
+        editorToolbar->disappearTemporarily();
+    }
+    q->model()->setInputContextUpdateEnabled(false);
+    controller->setCacheMode(QGraphicsItem::ItemCoordinateCache);
+
+    if (!magnifier) {
+        magnifier.reset(new MTextMagnifier(*controller,
+                                           cursorRect().size()));
+    }
+    setMouseTarget(position);
+    updateMagnifierPosition();
+    makeMagnifierAppear();
+    lastHandlePos = QPointF();
+    handleTime.start();
+
+    QTextCursor cursor = controller->textCursor();
+    QPointF localPos = position;
+    qreal margin = isLayoutLeftToRight() ? q->marginLeft() : q->marginRight();
+    localPos.rx() -= margin;
+
+    int pressedHandlePos = cursorPosition(localPos);
+    anchorPos = cursor.anchor();
+    cursorPos = cursor.position();
+
+    // make the active handle is always combined with cursor
+    if (pressedHandlePos == anchorPos) {
+        controller->setSelection(cursorPos, anchorPos - cursorPos, false);
+        mapSelectionChange();
+    }
+
+}
+
+void MTextEditViewPrivate::onSelectionHandleReleased()
+{
+    Q_Q(MTextEditView);
+    selectionHandleIsPressed = false;
+    scrollTimer->stop();
+    if (editorToolbar) {
+        restoreEditorToolbar();
+    }
+    controller->setCacheMode(QGraphicsItem::NoCache);
+    q->model()->setInputContextUpdateEnabled(true);
+    hideMagnifier();
+    mapSelectionChange();
+}
+
+void MTextEditViewPrivate::onSelectionOverlayVisibleChanged()
+{
+    if (!selectionOverlay.isNull() && !selectionOverlay.data()->isVisible()) {
+        QObject::disconnect(controller, SIGNAL(textChanged()),
+                            this, SLOT(mapSelectionChange()));
+        QObject::disconnect(controller, SIGNAL(selectionChanged()),
+                            this, SLOT(mapSelectionChange()));
+
+        MTextEditPrivate *textWidgetPtr
+            = static_cast<MTextEditPrivate *>(controller->d_func());
+        if (textWidgetPtr) {
+            QObject::disconnect(&textWidgetPtr->signalEmitter,
+                                SIGNAL(scenePositionChanged()),
+                                this,
+                                SLOT(mapSelectionChange()));
+        }
+    }
+}
 
 /*!
  * \brief Method to handle mouse movement
@@ -963,15 +1176,10 @@ int MTextEditViewPrivate::cursorWidth() const
 }
 
 
-QRect MTextEditViewPrivate::cursorRect() const
+QRect MTextEditViewPrivate::cursorRect(int position, int cursorWidth) const
 {
     Q_Q(const MTextEditView);
     QRect rect;
-    int position = controller->cursorPosition();
-    if (q->model()->edit() == MTextEditModel::EditModeActive
-        && q->model()->preeditCursor() >= 0) {
-        position = controller->textCursor().selectionStart() + q->model()->preeditCursor();
-    }
 
     const QTextBlock currentBlock = document()->findBlock(position);
     if (!currentBlock.isValid())
@@ -987,15 +1195,8 @@ QRect MTextEditViewPrivate::cursorRect() const
     if (!currentLine.isValid())
         return rect;
 
-    int cursorWidth, cursorHeight;
-    bool ok = false;
+    int cursorHeight;
     const MTextEditStyle *s = static_cast<const MTextEditStyle *>(q->style().operator ->());
-
-    cursorWidth = document()->documentLayout()->property(CursorWidthProperty).toInt(&ok);
-    if (!ok)
-        cursorWidth = 1;
-    //cursor occupies one space
-    cursorWidth += QFontMetrics(currentBlock.layout()->font()).width(QLatin1Char(' '));
 
     cursorHeight = currentLine.height();
     qreal x = currentLine.cursorToX(relativePos);
@@ -1008,6 +1209,33 @@ QRect MTextEditViewPrivate::cursorRect() const
                  cursorWidth, cursorHeight);
 
     return rect;
+}
+
+QRect MTextEditViewPrivate::cursorRect() const
+{
+    Q_Q(const MTextEditView);
+    QRect rect;
+
+    int position = controller->cursorPosition();
+    if (q->model()->edit() == MTextEditModel::EditModeActive
+        && q->model()->preeditCursor() >= 0) {
+        position = controller->textCursor().selectionStart() + q->model()->preeditCursor();
+    }
+
+    const QTextBlock currentBlock = document()->findBlock(position);
+    if (!currentBlock.isValid())
+        return rect;
+
+    int cursorWidth;
+    bool ok = false;
+
+    cursorWidth = document()->documentLayout()->property(CursorWidthProperty).toInt(&ok);
+    if (!ok)
+        cursorWidth = 1;
+    //cursor occupies one space
+    cursorWidth += QFontMetrics(currentBlock.layout()->font()).width(QLatin1Char(' '));
+
+    return cursorRect(position, cursorWidth);
 }
 
 void MTextEditViewPrivate::updateMagnifierPosition()
@@ -1041,6 +1269,20 @@ void MTextEditViewPrivate::updateMagnifierPosition()
                                            documentGeometry.bottom() - fm.height() / 2.0f));
 
         magnifier->setMagnifiedPosition(magnifierPos);
+
+
+        bool isMagnifierObscured = false;
+        if (magnifier.data()->isAppeared()) {
+            const QRectF screenRect
+                = QRectF(QPointF(0,0),
+                         MApplication::activeWindow()->visibleSceneSize());
+            if (!screenRect.contains(magnifier.data()->sceneBoundingRect())) {
+                isMagnifierObscured = true;
+            }
+        }
+        if (isMagnifierObscured) {
+            controller->sceneManager()->ensureCursorVisible();
+        }
     }
 }
 
@@ -1241,6 +1483,30 @@ QRect MTextEditViewPrivate::visibleArea() const
     return visibleRect;
 }
 
+void MTextEditViewPrivate::hideSelectionOverlayTemporarily()
+{
+    // hide text selection overlay temporarily
+    if (controller->hasSelectedText()) {
+        selectionOverlay->disappear();
+    }
+}
+
+void MTextEditViewPrivate::restoreSelectionOverlay()
+{
+    // restore text selection overlay if it was temporarily hidden
+    if (controller->hasSelectedText()
+        && !selectionOverlay.isNull()) {
+        showSelectionOverlay();
+        selectionOverlay->skipTransitions();
+    }
+}
+
+void MTextEditViewPrivate::setSelection()
+{
+    controller->setSelection(anchorPos, cursorPos - anchorPos, false);
+    scrollingTestAndStart(lastHandlePos);
+}
+
 //////////////////////
 //// Actual class ////
 //////////////////////
@@ -1389,6 +1655,12 @@ void MTextEditView::resizeEvent(QGraphicsSceneResizeEvent *event)
     }
 
     d->checkScroll();
+
+    if (d->controller->hasSelectedText()
+        && !d->selectionOverlay.isNull()
+        && d->selectionOverlay.data()->isVisible()) {
+        d->mapSelectionChange();
+    }
 }
 
 
@@ -1449,7 +1721,6 @@ void MTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MTextEditView);
-
     d->scrollSelectTimer->stop();
 
     // Make sure cursor is visible. This is done here on release so
@@ -1516,6 +1787,10 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     QObject::disconnect(d->controller, SIGNAL(selectionChanged()),
                         d, SLOT(playTextFieldSelectionFeedback()));
+
+    if (d->controller->hasSelectedText()) {
+        d->showSelectionOverlay();
+    }
 }
 
 
@@ -1955,7 +2230,6 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
 {
     Q_D(MTextEditView);
     Q_UNUSED(reason);
-
     d->focusingTap = true;
 
     if (d->editorToolbar && d->editorToolbar->isAppeared()) {
@@ -1965,6 +2239,10 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
         } else {
             d->editorToolbar->disappearTemporarily();
         }
+    }
+
+    if (!d->selectionOverlay.isNull() && d->selectionOverlay.data()->isVisible()) {
+        emit selectionChanged(0, QRect(), false, 0, QRect(), false);
     }
 
     if (d->controller->sceneManager()) {
@@ -2050,6 +2328,8 @@ void MTextEditView::applyStyle()
     if (d->editorToolbar) {
         d->editorToolbar->setStyleName(s->toolbarStyleName());
     }
+
+    d->delaySelection.setInterval(s->selectionDelay());
 
     MWidgetView::applyStyle();
 }
