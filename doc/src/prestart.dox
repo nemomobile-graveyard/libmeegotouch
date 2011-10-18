@@ -378,7 +378,7 @@ class MyApplication : public MApplication
     Q_OBJECT
 
 public:
-    MyApplication(int argc, char ** argv);
+    MyApplication(int & argc, char ** argv);
     ~MyApplication();
 
     // Re-implementation
@@ -396,7 +396,7 @@ private:
     MainPage * m_page;
 };
 
-MyApplication::MyApplication(int argc, char ** argv) :
+MyApplication::MyApplication(int & argc, char ** argv) :
     MApplication(argc, argv)
 {
     // Use the LazyShutdown mode
