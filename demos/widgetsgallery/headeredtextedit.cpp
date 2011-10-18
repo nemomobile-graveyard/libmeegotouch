@@ -52,9 +52,9 @@ void HeaderedTextEdit::setHeaderText(const QString &text)
 QString HeaderedTextEdit::staticHeaderText() const
 {
     if(headerLabel) {
-    	return headerLabel->text();
+        return headerLabel->text();
     } else {
-	return QString();
+        return QString();
     }
 }
 
@@ -79,12 +79,12 @@ void HeaderedTextEdit::_q_updateTextLeftMargin()
 void HeaderedTextEdit::_q_updateLabelPosition()
 {
     if (layoutDirection() == Qt::RightToLeft) {
-	QRectF geometry;
-	QSizeF labelSize = headerLabel->sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
-	geometry.setSize(labelSize);
-	QSizeF textSize = sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
-	geometry.setX(textSize.width() - labelSize.width());
-	headerLabel->setGeometry(geometry);
+        QRectF geometry;
+        QSizeF labelSize = headerLabel->sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
+        geometry.setSize(labelSize);
+        QSizeF textSize = sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
+        geometry.setX(textSize.width() - labelSize.width());
+        headerLabel->setGeometry(geometry);
     }
 }
 
