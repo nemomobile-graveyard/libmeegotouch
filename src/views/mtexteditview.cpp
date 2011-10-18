@@ -558,7 +558,8 @@ void MTextEditViewPrivate::showEditorToolbar()
                 this, SLOT(updateEditorToolbarPosition()), Qt::UniqueConnection);
     }
 
-    editorToolbar->appear(!controller->hasSelectedText());
+    editorToolbar->setAutoHideEnabled(!controller->hasSelectedText());
+    editorToolbar->appear();
     updateEditorToolbarPosition();
 }
 
@@ -594,7 +595,8 @@ void MTextEditViewPrivate::restoreEditorToolbar()
 {
     // If editorToolbar is created, then restore it.
     if (editorToolbar) {
-        editorToolbar->appear(!controller->hasSelectedText());
+        editorToolbar->setAutoHideEnabled(!controller->hasSelectedText());
+        editorToolbar->appear();
         updateEditorToolbarPosition();
     }
 }

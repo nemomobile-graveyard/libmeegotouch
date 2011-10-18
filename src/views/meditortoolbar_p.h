@@ -45,7 +45,7 @@ public:
     virtual ~MEditorToolbarPrivate();
 
     void init();
-    void appear(bool autohide);
+    void appear();
     void disappear();
     bool isAppeared() const;
     void handleActionAdded(QActionEvent *actionEvent);
@@ -58,6 +58,8 @@ public:
     void updateEditorItemVisibility();
     void showEditorItem();
     void hideEditorItem();
+    void startAutoHideTimer();
+    void stopAutoHideTimer();
 
 private:
     void _q_updateAvailableButtons();
@@ -78,6 +80,8 @@ private:
     QPropertyAnimation hideAnimation;
 
     EatMButtonGestureFilter *eatMButtonGestureFilter;
+
+    bool autoHideEnabled;
 };
 
 class EatMButtonGestureFilter : public QObject

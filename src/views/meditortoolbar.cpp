@@ -53,10 +53,10 @@ void MEditorToolbar::setPosition(const QPointF &pos,
                    ? MEditorToolbarArrow::ArrowUp : MEditorToolbarArrow::ArrowDown);
 }
 
-void MEditorToolbar::appear(bool autohide)
+void MEditorToolbar::appear()
 {
     Q_D(MEditorToolbar);
-    d->appear(autohide);
+    d->appear();
 }
 
 void MEditorToolbar::disappear()
@@ -69,6 +69,28 @@ bool MEditorToolbar::isAppeared() const
 {
     Q_D(const MEditorToolbar);
     return d->isAppeared();
+}
+
+bool MEditorToolbar::isAutoHideEnabled() const
+{
+    Q_D(const MEditorToolbar);
+    return d->autoHideEnabled;
+}
+
+void MEditorToolbar::setAutoHideEnabled(bool enable)
+{
+    Q_D(MEditorToolbar);
+    if (d->autoHideEnabled == enable) {
+        return;
+    }
+
+    d->autoHideEnabled = enable;
+
+    if (enable && isAppeared()) {
+        d->startAutoHideTimer();
+    } else if (!enable) {
+        d->stopAutoHideTimer();
+    }
 }
 
 bool MEditorToolbar::event(QEvent *event)
@@ -125,7 +147,8 @@ MEditorToolbarPrivate::MEditorToolbarPrivate(MEditorToolbar *qq, MWidget *follow
                                                  Qt::Horizontal)),
       arrow(new MEditorToolbarArrow(qq)),
       buttonUpdateQueued(false),
-      hideAnimation(qq, "opacity")
+      hideAnimation(qq, "opacity"),
+      autoHideEnabled(false)
 {
 }
 
@@ -167,7 +190,6 @@ void MEditorToolbarPrivate::init()
     QObject::connect(q->sceneManager(), SIGNAL(orientationChanged(M::Orientation)),
                      q, SLOT(updateGeometry()));
 
-    QObject::connect(&autohideTimer, SIGNAL(timeout()), q, SLOT(_q_startAnimatedHide()));
     autohideTimer.setSingleShot(true);
 
     hideAnimation.setStartValue(1.0);
@@ -177,7 +199,7 @@ void MEditorToolbarPrivate::init()
     eatMButtonGestureFilter = new EatMButtonGestureFilter(q);
 }
 
-void MEditorToolbarPrivate::appear(bool autohide)
+void MEditorToolbarPrivate::appear()
 {
     Q_Q(MEditorToolbar);
 
@@ -186,16 +208,12 @@ void MEditorToolbarPrivate::appear(bool autohide)
 
     // then cancel currently pending actions and set new ones is necessary
     // (this function is called only by controller directly)
+    stopAutoHideTimer();
     hideAnimation.stop();
     q->setOpacity(1.0);
-    if (autohide) {
-        int interval = q->style()->hideTimeout();
-        if (interval > 0) {
-            autohideTimer.setInterval(interval);
-            autohideTimer.start();
-        }
-    } else {
-        autohideTimer.stop();
+
+    if (autoHideEnabled) {
+        startAutoHideTimer();
     }
 }
 
@@ -207,7 +225,7 @@ void MEditorToolbarPrivate::disappear()
     overlay->hide();
 
     // Hide animation is only used on auto-hide.
-    autohideTimer.stop();
+    stopAutoHideTimer();
     hideAnimation.stop();
     q->setOpacity(1.0);
 }
@@ -216,7 +234,6 @@ bool MEditorToolbarPrivate::isAppeared() const
 {
     return overlay->isVisible();
 }
-
 
 void MEditorToolbarPrivate::handleActionAdded(QActionEvent *actionEvent)
 {
@@ -489,6 +506,26 @@ void MEditorToolbarPrivate::hideEditorItem()
     q->setFocusProxy(0);
     q->setFocusPolicy(Qt::NoFocus);
     q->hide();
+}
+
+void MEditorToolbarPrivate::startAutoHideTimer()
+{
+    Q_Q(MEditorToolbar);
+    int interval = q->style()->hideTimeout();
+    if (interval > 0) {
+        QObject::connect(&autohideTimer, SIGNAL(timeout()), q, SLOT(_q_startAnimatedHide()));
+        autohideTimer.setInterval(interval);
+        autohideTimer.start();
+    } else if (interval == 0) {
+        disappear();
+    }
+}
+
+void MEditorToolbarPrivate::stopAutoHideTimer()
+{
+    Q_Q(MEditorToolbar);
+    autohideTimer.disconnect(q);
+    autohideTimer.stop();
 }
 
 EatMButtonGestureFilter::EatMButtonGestureFilter(QObject *parent)

@@ -622,12 +622,12 @@ void Ut_MTextEditView::testEditorToolbarAutoHide()
     // Toolbar is to set to autohide on show without selection.
     m_controller->setText("");
     m_subject->d_func()->showEditorToolbar();
-    QCOMPARE(m_subject->d_func()->editorToolbar->autohide, true);
+    QCOMPARE(m_subject->d_func()->editorToolbar->isAutoHideEnabled(), true);
 
     m_controller->setText("test text");
     m_controller->setSelection(0, 5, false);
     m_subject->d_func()->showEditorToolbar();
-    QCOMPARE(m_subject->d_func()->editorToolbar->autohide, false);
+    QCOMPARE(m_subject->d_func()->editorToolbar->isAutoHideEnabled(), false);
 }
 
 bool Ut_MTextEditView::editorAppeared() const

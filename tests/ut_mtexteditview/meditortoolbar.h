@@ -28,13 +28,15 @@ public:
         return appeared;
     }
 
+    bool isAutoHideEnabled() const { return autohide; }
+    void setAutoHideEnabled(bool enable) { autohide = enable; }
+
 signals:
     void sizeChanged();
 
 public slots:
-    void appear(bool autohide)
+    void appear()
     {
-        this->autohide = autohide;
         appeared = true;
     }
     void disappear() { appeared = false; }

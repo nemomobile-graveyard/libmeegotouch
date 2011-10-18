@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QtTest/QtTest>
+#include <QList>
 
 class MApplication;
 class MApplicationWindow;
@@ -32,6 +33,16 @@ class MWidget;
 class Ut_MEditorToolbar : public QObject
 {
     Q_OBJECT
+
+public:
+    enum Operation {
+        Appear,
+        Disappear,
+        AutoHideEnable,
+        AutoHideDisable
+    };
+
+    typedef QList<Operation> Operations;
 
 private slots:
     void init();
@@ -45,6 +56,8 @@ private slots:
     void testPositionMapping();
     void testVerticalPositioning();
     void testActionTextChange();
+    void testAutoHide_data();
+    void testAutoHide();
 
 private:
     QList<MButton *> subjectButtons() const;

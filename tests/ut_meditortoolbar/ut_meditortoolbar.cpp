@@ -29,6 +29,8 @@
 #include <MScene>
 #include <MSceneManager>
 
+Q_DECLARE_METATYPE(Ut_MEditorToolbar::Operations)
+
 void Ut_MEditorToolbar::initTestCase()
 {
     qRegisterMetaType<M::OrientationAngle>("M::OrientationAngle");
@@ -72,7 +74,7 @@ void Ut_MEditorToolbar::testAppear()
     QCOMPARE(subject->isAppeared(), false);
 
     // Show the widget.
-    subject->appear(false);
+    subject->appear();
     QCOMPARE(subject->isAppeared(), true);
 
     subject->disappear();
@@ -92,7 +94,7 @@ void Ut_MEditorToolbar::testItemVisibility()
 
     QCOMPARE(subject->isVisible(), false);
 
-    subject->appear(false);
+    subject->appear();
 
     // There are no visible actions in it, so the item is hidden.
     QCOMPARE(subject->isVisible(), false);
@@ -182,6 +184,55 @@ void Ut_MEditorToolbar::testActionTextChange()
     QCOMPARE(subjectButtons().first()->text(), oldText);
     action.setText(newText);
     QCOMPARE(subjectButtons().first()->text(), newText);
+}
+
+void Ut_MEditorToolbar::testAutoHide_data()
+{
+    QTest::addColumn<Operations>("ops");
+    QTest::addColumn<bool>("isAppearedImmediately");
+    QTest::addColumn<bool>("isAppearedAfterTimeout");
+
+    QTest::newRow("1") << (Operations() << Appear) << true << true;
+    QTest::newRow("2") << (Operations() << Appear << AutoHideEnable) << true << false;
+    QTest::newRow("3") << (Operations() << Appear << AutoHideEnable << AutoHideDisable) << true << true;
+    QTest::newRow("4") << (Operations() << Appear << AutoHideEnable << AutoHideDisable << AutoHideEnable) << true << false;
+    QTest::newRow("5") << (Operations() << AutoHideEnable << Appear) << true << false;
+    QTest::newRow("6") << (Operations() << AutoHideEnable << Appear << Disappear) << false << false;
+    QTest::newRow("7") << (Operations() << AutoHideEnable << Appear << Disappear << Appear) << true << false;
+}
+
+void Ut_MEditorToolbar::testAutoHide()
+{
+    QFETCH(Operations, ops);
+    QFETCH(bool, isAppearedImmediately);
+    QFETCH(bool, isAppearedAfterTimeout);
+
+    MEditorToolbarStyle *style = const_cast<MEditorToolbarStyle *>(subject->style().operator ->());
+    style->setHideTimeout(1);
+    style->setHideAnimationDuration(1);
+
+    foreach (Operation op, ops) {
+        switch (op) {
+        case Appear:
+            subject->appear();
+            break;
+        case Disappear:
+            subject->disappear();
+            break;
+        case AutoHideEnable:
+            subject->setAutoHideEnabled(true);
+            break;
+        case AutoHideDisable:
+            subject->setAutoHideEnabled(false);
+            break;
+        default:
+            break;
+        }
+    }
+
+    QCOMPARE(subject->isAppeared(), isAppearedImmediately);
+    QTest::qWait(100);
+    QCOMPARE(subject->isAppeared(), isAppearedAfterTimeout);
 }
 
 QList<MButton *> Ut_MEditorToolbar::subjectButtons() const

@@ -47,6 +47,12 @@ class MEditorToolbar : public MStylableWidget
 {
     Q_OBJECT
 
+    /*! \property MEditorToolbar::autoHide
+     *  \brief Controls auto-hiding of MEditorToolbar after a timeout
+     *  \sa isAutoHideEnabled, setAutoHideEnabled
+     */
+    Q_PROPERTY(bool autoHide READ isAutoHideEnabled WRITE setAutoHideEnabled)
+
 public:
     //! \brief Configure placement of the toolbar with respect to its position.
     enum ToolbarPlacement {
@@ -80,6 +86,24 @@ public:
      */
     bool isAppeared() const;
 
+    /*! \brief Query whether auto-hiding is enabled.
+     *
+     *  Auto-hiding will hide the toolbar after a timeout, defined in style
+     *  by the attribute \a hide-timeout.
+     *  \sa setAutoHideEnabled
+     */
+    bool isAutoHideEnabled() const;
+
+    /*! \brief Enables or disables auto-hiding.
+     *
+     *  When auto-hiding is enabled the toolbar will disappear after a period of time.
+     *  If toolbar is initially disappeared the countdown for disappearance
+     *  will not start until \a appear() is called.
+     *
+     *  \sa isAutoHideEnabled
+     */
+    void setAutoHideEnabled(bool enable);
+
 signals:
     //! \brief Emitted when the size of the toolbar is changed.
     void sizeChanged();
@@ -87,12 +111,9 @@ signals:
 public slots:
     /*! \brief Show the toolbar.
      *
-     *  \param autohide if set, toolbar will be hidden after timeout.
-     *  The timeout value is taken from hideTimeout attribute from style.
-     *
      *  Nothing is shown unless/until at least one action is in visible state.
      */
-    void appear(bool autohide);
+    void appear();
 
     //! \brief Hide the toolbar.
     void disappear();
@@ -121,6 +142,10 @@ private:
     MEditorToolbar();
 
     M_STYLABLE_WIDGET(MEditorToolbarStyle)
+
+#ifdef UNIT_TEST
+    friend class Ut_MEditorToolbar; // for overriding style
+#endif
 };
 
 #endif // MEDITORTOOLBAR_H
