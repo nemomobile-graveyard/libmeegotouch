@@ -82,7 +82,7 @@ signals:
 public slots:
     /*! \brief Show the toolbar.
      *
-     *  /param autohide if set, toolbar will be hidden after timeout.
+     *  \param autohide if set, toolbar will be hidden after timeout.
      *  The timeout value is taken from hideTimeout attribute from style.
      *
      *  Nothing is shown unless/until at least one action is in visible state.
