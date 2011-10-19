@@ -293,10 +293,37 @@ void MOrientationTrackerPrivate::updateOrientationAngleOfWindows()
 }
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
-M::OrientationAngle MOrientationTrackerPrivate::updateOrientationAngle(M::OrientationAngle *currentAngle) const
+
+M::OrientationAngle MOrientationTrackerPrivate::updateOrientationAngleWithDeviceAngle(
+        M::OrientationAngle *currentAngle) const
 {
     M::OrientationAngle targetAngle = (M::OrientationAngle)-1;
     M::OrientationAngle deviceAngle = angleForTopEdge(topEdgeProperty->value().toString());
+    bool isKeyboardOpen = MKeyboardStateTracker::instance()->isOpen();
+
+    if (MDeviceProfile::instance()->orientationAngleIsSupported(deviceAngle, isKeyboardOpen)) {
+        // simple case. there's nothing stopping us from following the device orientation.
+        targetAngle = deviceAngle;
+    } else {
+        //it seems that orientation does not match allowed for current kybrd state.
+        //check if the previous one was ok:
+        if (currentAngle
+                && MDeviceProfile::instance()->orientationAngleIsSupported(*currentAngle, isKeyboardOpen)) {
+            //it was: let's just use an old angle
+            targetAngle = *currentAngle;
+        } else {
+            //it was not: let's use the closest allowed angle
+            targetAngle = findClosestAllowedAngle(deviceAngle, isKeyboardOpen);
+        }
+    }
+
+    Q_ASSERT((int)targetAngle != -1);
+    return targetAngle;
+}
+
+M::OrientationAngle MOrientationTrackerPrivate::updateOrientationAngle(M::OrientationAngle *currentAngle) const
+{
+    M::OrientationAngle targetAngle = (M::OrientationAngle)-1;
     bool isDeviceFlat = isFlatProperty->value().toBool();
     bool isKeyboardOpen = MKeyboardStateTracker::instance()->isOpen();
 
@@ -314,20 +341,23 @@ M::OrientationAngle MOrientationTrackerPrivate::updateOrientationAngle(M::Orient
         } else {
             targetAngle = M::Angle270;
         }
-    } else if (!MDeviceProfile::instance()->orientationAngleIsSupported(deviceAngle, isKeyboardOpen)) {
-        //it seems that orientation does not match allowed for current kybrd state.
-        //check if the previous one was ok:
-        if (currentAngle
-            && MDeviceProfile::instance()->orientationAngleIsSupported(*currentAngle, isKeyboardOpen)) {
-            //it was: let's just use an old angle
-            targetAngle = *currentAngle;
-        } else {
-            //it was not: let's use the closest allowed angle
-            targetAngle = findClosestAllowedAngle(deviceAngle, isKeyboardOpen);
-        }
     } else {
-        // simple case. there's nothing stopping us from following the device orientation.
-        targetAngle = deviceAngle;
+        if (isDeviceFlat) {
+            // device orientation angle information is meaningless in this situation.
+            if (currentAngle) {
+                // therefore stay where we are.
+                targetAngle = *currentAngle;
+            } else {
+                // since we don't have a currentAngle, let's try to use the angle of the current
+                // application window
+                if (!fetchCurrentWindowAngle(targetAngle)) {
+                    // current window angle is invalid (or not present). Fallback to device angle.
+                    targetAngle = updateOrientationAngleWithDeviceAngle(currentAngle);
+                }
+            }
+        } else {
+            targetAngle = updateOrientationAngleWithDeviceAngle(currentAngle);
+        }
     }
 
     Q_ASSERT((int)targetAngle != -1);
@@ -336,6 +366,34 @@ M::OrientationAngle MOrientationTrackerPrivate::updateOrientationAngle(M::Orient
 #endif
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
+bool MOrientationTrackerPrivate::fetchCurrentWindowAngle(M::OrientationAngle &angle) const
+{
+    QVariant angleVariant;
+
+    if (!currentWindowAngleProperty->isSubscribed()) {
+        currentWindowAngleProperty->subscribeAndWaitForSubscription();
+        angleVariant = currentWindowAngleProperty->value();
+        currentWindowAngleProperty->unsubscribe();
+    } else {
+        angleVariant = currentWindowAngleProperty->value();
+    }
+
+    // We won't take it if the property is not there.
+    if (angleVariant.isNull() || !angleVariant.isValid())
+        return false;
+
+    int angleInt = angleVariant.toInt();
+    if (angleInt != 0 && angleInt != 90 && angleInt != 180 && angleInt != 270) {
+        // We won't take it if the property is holding an unsupported/invalid angle.
+        // I.e., an angle that doesn't correspond to any value in M::OrientationAngle
+        // enumeration.
+        return false;
+    }
+
+    angle = static_cast<M::OrientationAngle>(angleInt);
+    return true;
+}
+
 M::OrientationAngle MOrientationTrackerPrivate::computeTrackerOrientationAngle() const
 {
     // This angle is always the closest valid one to the device orientation.
@@ -554,21 +612,10 @@ void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
         return;
     }
 
-    QVariant angleVariant = currentWindowAngleProperty->value();
-
-    // We won't do anything if the property is not there.
-    if (angleVariant.isNull() || !angleVariant.isValid())
+    M::OrientationAngle angle;
+    if (!fetchCurrentWindowAngle(angle))
         return;
 
-    int angleInt = angleVariant.toInt();
-    if (angleInt != 0 && angleInt != 90 && angleInt != 180 && angleInt != 270) {
-        // We won't do anything if the property is holding an unsupported/invalid angle.
-        // I.e., an angle that doesn't correspond to any value in M::OrientationAngle
-        // enumeration.
-        return;
-    }
-
-    M::OrientationAngle angle = static_cast<M::OrientationAngle>(angleInt);
     //windows like system dialog will follow current window to any orientation
     foreach(MWindow * win, windowsFollowingCurrentAppWindow) {
         win->setOrientationAngle(angle);

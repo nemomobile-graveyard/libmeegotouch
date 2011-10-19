@@ -75,8 +75,10 @@ public:
     void reevaluateSubscriptionToSensorProperties();
     void rotateToAngleIfAllowed(M::OrientationAngle angle, MWindow* window);
 #ifdef HAVE_CONTEXTSUBSCRIBER
+    bool fetchCurrentWindowAngle(M::OrientationAngle &angle) const;
     M::OrientationAngle computeTrackerOrientationAngle() const;
     void updateWindowOrientationAngle(MWindow *window);
+    M::OrientationAngle updateOrientationAngleWithDeviceAngle(M::OrientationAngle *currentAngle) const;
     M::OrientationAngle updateOrientationAngle(M::OrientationAngle *currentAngle) const;
     bool windowIsFollowingDeviceOrientation(MWindow *window);
     bool checkIfOrientationUpdatesRequired();
