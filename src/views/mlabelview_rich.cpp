@@ -461,7 +461,7 @@ int MLabelViewRich::cursorPositionOfLastVisibleCharacter()
 void MLabelViewRich::updateRichTextEliding()
 {
     if (shouldElide()) {
-
+        isElided = true;
         textDocument.setPageSize(viewPrivate->boundingRect().size());
         QFontMetrics fm(textDocument.defaultFont());
         QSizeF ellipsisSize = fm.boundingRect(ellipsisString).size();
@@ -514,7 +514,6 @@ void MLabelViewRich::updateRichTextEliding()
             textDocument.setPageSize(viewPrivate->boundingRect().size());
         }
         cursor.endEditBlock();
-        isElided = true;
     }
 }
 
