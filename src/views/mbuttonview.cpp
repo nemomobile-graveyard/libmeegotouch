@@ -154,7 +154,7 @@ void MButtonViewPrivate::calcIconTextRects()
 
     QSizeF textSize(0,0);
     if (label)
-        textSize = label->sizeHint(Qt::PreferredSize);
+        textSize = label->preferredSize();
 
     //icon visible and valid?
     if (q->model()->iconVisible() && (icon || toggledIcon)) {
@@ -682,7 +682,7 @@ QSizeF MButtonView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 
     QSizeF textSize(0, 0);
     if (model()->textVisible() && !model()->text().isEmpty() && d->label) {
-        textSize = d->label->sizeHint(which, constraint);
+        textSize = d->label->preferredSize();
         textSize += QSizeF(s->textMarginLeft() + s->textMarginRight(), s->textMarginTop() + s->textMarginBottom());
     }
 

@@ -269,7 +269,7 @@ void MDialogAnimationPrivate::setupTitleBarAnimation()
         titleBarPositionAnimation->setEndValue(QPointF(0,q->style()->titleBarAnimationDistance()));
     }
 
-    origin.ry() += titleBar->sizeHint(Qt::PreferredSize).height();
+    origin.ry() += titleBar->preferredHeight();
 
     q->addAnimation(delayedTitleBarAnimation);
 }

@@ -308,22 +308,22 @@ void MSliderIndicator::setText(const QString &text)
             sizeHintChanged = true;
         }
     } else {
-        if (label->sizeHint(Qt::PreferredSize) != label->minimumSize()) {
-            label->setMinimumSize(label->sizeHint(Qt::PreferredSize));
+        if (label->preferredSize() != label->minimumSize()) {
+            label->setMinimumSize(label->preferredSize());
             sizeHintChanged = true;
         }
-        if (label->sizeHint(Qt::PreferredSize) != label->preferredSize()) {
-            label->setPreferredSize(label->sizeHint(Qt::PreferredSize));
+        if (label->preferredSize() != label->preferredSize()) {
+            label->setPreferredSize(label->preferredSize());
             sizeHintChanged = true;
         }
-        if (label->sizeHint(Qt::PreferredSize) != label->maximumSize()) {
-            label->setMaximumSize(label->sizeHint(Qt::PreferredSize));
+        if (label->preferredSize() != label->maximumSize()) {
+            label->setMaximumSize(label->preferredSize());
             sizeHintChanged = true;
         }
     }
 
-    if (label->sizeHint(Qt::PreferredSize) != label->size())
-        label->resize(label->sizeHint(Qt::PreferredSize));
+    if (label->preferredSize() != label->size())
+        label->resize(label->preferredSize());
 
     if (sizeHintChanged)
         updateGeometry();
@@ -363,22 +363,22 @@ void MSliderIndicator::setImage(const QString &id)
             sizeHintChanged = true;
         }
     } else {
-        if (image->sizeHint(Qt::PreferredSize) != image->minimumSize()) {
-            image->setMinimumSize(image->sizeHint(Qt::PreferredSize));
+        if (image->preferredSize() != image->minimumSize()) {
+            image->setMinimumSize(image->preferredSize());
             sizeHintChanged = true;
         }
-        if (image->sizeHint(Qt::PreferredSize) != image->preferredSize()) {
-            image->setPreferredSize(image->sizeHint(Qt::PreferredSize));
+        if (image->preferredSize() != image->preferredSize()) {
+            image->setPreferredSize(image->preferredSize());
             sizeHintChanged = true;
         }
-        if (image->sizeHint(Qt::PreferredSize) != image->maximumSize()) {
-            image->setMaximumSize(image->sizeHint(Qt::PreferredSize));
+        if (image->preferredSize() != image->maximumSize()) {
+            image->setMaximumSize(image->preferredSize());
             sizeHintChanged = true;
         }
     }
 
-    if (image->sizeHint(Qt::PreferredSize) != label->size())
-        image->resize(image->sizeHint(Qt::PreferredSize));
+    if (image->preferredSize() != label->size())
+        image->resize(image->preferredSize());
 
     if (sizeHintChanged)
         updateGeometry();
@@ -401,17 +401,17 @@ QSizeF MSliderIndicator::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
     qreal height = 0;
 
     if (image && !imageName.isEmpty()) {
-        width = qMax(width, image->sizeHint(Qt::PreferredSize).width());
-        height = qMax(height, image->sizeHint(Qt::PreferredSize).height());
+        width = qMax(width, image->preferredWidth());
+        height = qMax(height, image->preferredHeight());
     }
 
     if (label && !label->text().isEmpty()) {
         if (fixedWidth) {
             width = fixedWidth;
         } else {
-            width = qMax(width, label->sizeHint(Qt::PreferredSize).width());
+            width = qMax(width, label->preferredWidth());
         }
-        height = qMax(height, label->sizeHint(Qt::PreferredSize).height());
+        height = qMax(height, label->preferredHeight());
     }
 
     return QSizeF(width, height);
@@ -1046,33 +1046,33 @@ QSizeF MSliderGroove::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
     switch (which) {
     case Qt::MinimumSize: {
         if (orientation == Qt::Horizontal) {
-            preferredHeight = qMax(sliderHandle->sizeHint(Qt::PreferredSize).height(), grooveThickness);
+            preferredHeight = qMax(sliderHandle->preferredHeight(), grooveThickness);
             return QSizeF(minimumLength, preferredHeight);
         }
         if (orientation == Qt::Vertical) {
-            preferredWidth = qMax(sliderHandle->sizeHint(Qt::PreferredSize).width(), grooveThickness);
+            preferredWidth = qMax(sliderHandle->preferredWidth(), grooveThickness);
             return QSizeF(preferredWidth, minimumLength);
         }
         break;
     }
     case Qt::PreferredSize: {
         if (orientation == Qt::Horizontal) {
-            preferredHeight = qMax(sliderHandle->sizeHint(Qt::PreferredSize).height(), grooveThickness);
+            preferredHeight = qMax(sliderHandle->preferredHeight(), grooveThickness);
             return QSizeF(preferredLength, preferredHeight);
         }
         if (orientation == Qt::Vertical) {
-            preferredWidth = qMax(sliderHandle->sizeHint(Qt::PreferredSize).width(), grooveThickness);
+            preferredWidth = qMax(sliderHandle->preferredWidth(), grooveThickness);
             return QSizeF(preferredWidth, preferredLength);
         }
         break;
     }
     case Qt::MaximumSize: {
         if (orientation == Qt::Horizontal) {
-            preferredHeight = qMax(sliderHandle->sizeHint(Qt::PreferredSize).height(), grooveThickness);
+            preferredHeight = qMax(sliderHandle->preferredHeight(), grooveThickness);
             return QSizeF(maximumLength, preferredHeight);
         }
         if (orientation == Qt::Vertical) {
-            preferredWidth = qMax(sliderHandle->sizeHint(Qt::PreferredSize).width(), grooveThickness);
+            preferredWidth = qMax(sliderHandle->preferredWidth(), grooveThickness);
             return QSizeF(preferredWidth, maximumLength);
         }
         break;

@@ -489,7 +489,7 @@ void MListIndexViewPrivate::endFastScrolling()
 void MListIndexViewPrivate::updateGroupTitleHeight()
 {
     MLabel *label = createGroupTitleLabel();
-    groupTitleHeight = label->sizeHint(Qt::MinimumSize).height();
+    groupTitleHeight = label->minimumHeight();
     delete label;
 }
 

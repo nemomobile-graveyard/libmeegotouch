@@ -110,7 +110,7 @@ QSizeF MInfoBannerInformationView::sizeHint(Qt::SizeHint which, const QSizeF &co
 
     QSizeF buttonSize(0, 0);
     if (!model()->buttonText().isEmpty())
-        buttonSize = d->button->sizeHint(which, constraint);
+        buttonSize = d->button->effectiveSizeHint(which);
 
     base.setHeight(base.height() + buttonSize.height());
 
