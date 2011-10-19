@@ -81,6 +81,8 @@ private slots:
 
     void testOrientationAngleIsClosestAllowedAngle();
 
+    void testNewWindowShowsInCurrentWindowOrientationIfDeviceIsFlat();
+
 private:
     /*  Helper members   */
 
@@ -95,6 +97,7 @@ private:
     static void emitDeviceOrientationAngleChanged();
     static void showWindowAndSendDisplayEvent(MWindow *window);
     static void setDeviceIsLyingFlat(bool enable);
+    static void emitDeviceIsLyingFlatChanged();
     static void disableRemoteScreen();
     static void setDesktopOrientationAngle(M::OrientationAngle angle);
     static void setCurrentWindowOrientationAngle(M::OrientationAngle angle);

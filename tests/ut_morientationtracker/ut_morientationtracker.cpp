@@ -833,6 +833,39 @@ void Ut_MOrientationTracker::testOrientationAngleIsClosestAllowedAngle()
     QCOMPARE((int)mTracker->orientationAngle(), (int)M::Angle270);
 }
 
+void Ut_MOrientationTracker::testNewWindowShowsInCurrentWindowOrientationIfDeviceIsFlat()
+{
+    delete window1;
+    window1 = 0;
+    delete window2;
+    window2 = 0;
+
+    supportedAnglesStubLists[KeyboardClosed].clear();
+    supportedAnglesStubLists[KeyboardClosed] << M::Angle0;
+    supportedAnglesStubLists[KeyboardClosed] << M::Angle270;
+
+    setTVOutIsConnected(false);
+    setKeyboardIsOpen(false);
+    setDeviceIsLyingFlat(true);
+    setDeviceOrientationAngle(M::Angle0);
+    setCurrentWindowOrientationAngle(M::Angle270);
+
+    MWindow *window = new MWindow;
+
+    showWindowAndSendDisplayEvent(window);
+
+    // Cause MOrientationTracker to update orientation angles according to the
+    // new values of all context properties
+    emitDeviceOrientationAngleChanged();
+
+    QCOMPARE((int)window->orientationAngle(), (int)M::Angle270);
+
+    setDeviceIsLyingFlat(false);
+    emitDeviceIsLyingFlatChanged();
+
+    QCOMPARE((int)window->orientationAngle(), (int)M::Angle0);
+}
+
 ///////////////////////////////////////////////////////
 //////////////////HELPER FUNCTIONS/////////////////////
 ///////////////////////////////////////////////////////
@@ -942,6 +975,13 @@ void Ut_MOrientationTracker::setDeviceIsLyingFlat(bool enable)
 
     deviceIsFlatPropStub->stubReset();
     deviceIsFlatPropStub->stubSetReturnValue("value", QVariant(value));
+}
+
+void Ut_MOrientationTracker::emitDeviceIsLyingFlatChanged()
+{
+    QMetaObject::invokeMethod(
+        gContextPropertyStubMap->findStub("Position.IsFlat")->getProxy(),
+        "valueChanged");
 }
 
 void Ut_MOrientationTracker::disableRemoteScreen()
