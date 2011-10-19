@@ -407,10 +407,7 @@ MButtonView::~MButtonView()
 
 void MButtonView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
-    Q_D(MButtonView);
-
     MWidgetView::resizeEvent(event);
-    d->calcIconTextRects();
 }
 
 void MButtonView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
@@ -583,7 +580,10 @@ void MButtonView::cancelEvent(MCancelEvent *event)
 
 void MButtonView::setGeometry(const QRectF &rect)
 {
+    Q_D(MButtonView);
+
     MWidgetView::setGeometry(rect);
+    d->calcIconTextRects();
 }
 
 void MButtonView::updateData(const QList<const char *>& modifications)
@@ -596,30 +596,24 @@ void MButtonView::updateData(const QList<const char *>& modifications)
     bool mustUpdateGeometry = false;
     bool mustUpdateIcon = false;
     bool mustUpdateToggledIcon = false;
-    bool mustRelocateIconText = false;
     bool mustUpdateButtonText = false;
 
     foreach(member, modifications) {
         if (member == MButtonModel::Text || member == MButtonModel::TextVisible) {
             mustUpdateButtonText = true;
             mustUpdateGeometry = true;
-            mustRelocateIconText = true;
         } else if (member == MButtonModel::IconID) {
             mustUpdateIcon = true;
             mustUpdateGeometry = true;
-            mustRelocateIconText = true;
         } else if (member == MButtonModel::ToggledIconID) {
             mustUpdateToggledIcon = true;
             mustUpdateGeometry = true;
-            mustRelocateIconText = true;
         } else if (member == MButtonModel::Icon) {
             mustUpdateIcon = true;
             mustUpdateToggledIcon = true;
             mustUpdateGeometry = true;
-            mustRelocateIconText = true;
         } else if (member == MButtonModel::IconVisible) {
             mustUpdateGeometry = true;
-            mustRelocateIconText = true;
         } else if (member == MButtonModel::Checked ||
                    member == MButtonModel::Checkable) {
             d->transition->refreshStyle();
@@ -638,10 +632,6 @@ void MButtonView::updateData(const QList<const char *>& modifications)
 
     if (mustUpdateToggledIcon) {
         d->updateToggledIcon();
-    }
-
-    if (mustRelocateIconText) {
-        d->calcIconTextRects();
     }
 
     if (mustUpdateGeometry) {
