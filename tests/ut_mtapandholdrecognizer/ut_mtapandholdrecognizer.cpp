@@ -182,6 +182,7 @@ void Ut_MTapAndHoldRecognizer::testUsingStyleTimeout()
 {
     QMouseEvent pressEvent(QEvent::MouseButtonPress, QPoint(0,0), QPoint(0,0), Qt::LeftButton, Qt::LeftButton, 0);
     QGestureRecognizer::Result currentState = recognizer->recognize(tapAndHoldGesture, 0, &pressEvent);
+    Q_UNUSED(currentState);
 
     // Verify that timeout from style is used when no timeout is set
     QCOMPARE(startTimerInterval, MTapAndHoldStyleTimeout);
@@ -193,6 +194,7 @@ void Ut_MTapAndHoldRecognizer::testSetTimeout()
 
     QMouseEvent pressEvent(QEvent::MouseButtonPress, QPoint(0,0), QPoint(0,0), Qt::LeftButton, Qt::LeftButton, 0);
     QGestureRecognizer::Result currentState = recognizer->recognize(tapAndHoldGesture, 0, &pressEvent);
+    Q_UNUSED(currentState);
 
     // Verify that timeout that was set is used
     QCOMPARE(startTimerInterval, MTapAndHoldSetTimeout);
@@ -207,6 +209,7 @@ void Ut_MTapAndHoldRecognizer::testResetTimeout()
 
     QMouseEvent pressEvent(QEvent::MouseButtonPress, QPoint(0,0), QPoint(0,0), Qt::LeftButton, Qt::LeftButton, 0);
     QGestureRecognizer::Result currentState = recognizer->recognize(tapAndHoldGesture, 0, &pressEvent);
+    Q_UNUSED(currentState);
 
     // Verify that as timeout was resetted then timeout from style is used
     QCOMPARE(startTimerInterval, MTapAndHoldStyleTimeout);
