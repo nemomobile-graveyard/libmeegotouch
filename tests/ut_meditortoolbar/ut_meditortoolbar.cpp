@@ -133,6 +133,7 @@ void Ut_MEditorToolbar::testPositionMapping()
     QFETCH(QPointF, position);
 
     fakeParent->setPos(fakeParentPos);
+    subject->appear();
     subject->setPosition(position, MEditorToolbar::BelowPointOfInterest);
 
     QPointF mappedActualPos = subject->parentItem()->mapToItem(fakeParent,
@@ -149,6 +150,7 @@ void Ut_MEditorToolbar::testVerticalPositioning()
 
     QVERIFY(subject->rect().isValid());
 
+    subject->appear();
     subject->setPosition(QPointF(), MEditorToolbar::BelowPointOfInterest);
 
     // In parent coordinates

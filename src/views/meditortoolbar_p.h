@@ -45,6 +45,8 @@ public:
     virtual ~MEditorToolbarPrivate();
 
     void init();
+    void setPosition(const QPointF &pos,
+                     MEditorToolbarArrow::ArrowDirection arrowDirection);
     void appear();
     void disappear();
     bool isAppeared() const;
@@ -64,6 +66,8 @@ public:
 private:
     void _q_updateAvailableButtons();
     void _q_startAnimatedHide();
+    void _q_disappearForOrientationChange();
+    void _q_reappearAfterOrientationChange();
 
     MEditorToolbar * const q_ptr;
 
@@ -82,6 +86,11 @@ private:
     EatMButtonGestureFilter *eatMButtonGestureFilter;
 
     bool autoHideEnabled;
+    bool disappearedForOrientationChange;
+
+    bool positionUpdatePending;
+    QPointF pendingPosition;
+    MEditorToolbarArrow::ArrowDirection pendingArrowDirection;
 };
 
 class EatMButtonGestureFilter : public QObject

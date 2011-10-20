@@ -137,6 +137,8 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void _q_updateAvailableButtons())
     Q_PRIVATE_SLOT(d_func(), void _q_startAnimatedHide())
+    Q_PRIVATE_SLOT(d_func(), void _q_disappearForOrientationChange())
+    Q_PRIVATE_SLOT(d_func(), void _q_reappearAfterOrientationChange())
 
     //! Prevent default construction.
     MEditorToolbar();

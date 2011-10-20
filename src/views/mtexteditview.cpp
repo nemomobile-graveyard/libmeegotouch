@@ -546,12 +546,6 @@ void MTextEditViewPrivate::showEditorToolbar()
                          editorToolbar.data(), SLOT(disappear()));
         QObject::connect(editorToolbar.data(), SIGNAL(sizeChanged()),
                          this, SLOT(updateEditorToolbarPosition()));
-        QObject::connect(controller->sceneManager(),
-                         SIGNAL(orientationChanged(const M::Orientation &)),
-                         this, SLOT(hideEditorToolbarTemporarily()));
-        QObject::connect(controller->sceneManager(),
-                         SIGNAL(orientationChangeFinished(const M::Orientation &)),
-                         this, SLOT(restoreEditorToolbar()));
 
         MTextEditPrivate &controllerD(*static_cast<MTextEditPrivate *>(controller->d_func()));
         connect(&controllerD.signalEmitter, SIGNAL(scenePositionChanged()),
@@ -573,15 +567,7 @@ void MTextEditViewPrivate::hideEditorToolbar()
     MTextEditPrivate &controllerD(*static_cast<MTextEditPrivate *>(controller->d_func()));
     disconnect(&controllerD.signalEmitter, SIGNAL(scenePositionChanged()),
                this, SLOT(updateEditorToolbarPosition()));
-    disconnect(controller->sceneManager(),
-               SIGNAL(orientationChanged(const M::Orientation &)),
-               this, SLOT(hideEditorToolbarTemporarily()));
-    disconnect(controller->sceneManager(),
-               SIGNAL(orientationChangeFinished(const M::Orientation &)),
-               this, SLOT(restoreEditorToolbar()));
     editorToolbar.reset();
-    // The logic for temporarily showing and hiding editorToolbar relies on
-    // the widget getting destroyed here.
 }
 
 void MTextEditViewPrivate::hideEditorToolbarTemporarily()

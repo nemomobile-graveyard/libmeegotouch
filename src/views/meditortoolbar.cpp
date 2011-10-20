@@ -47,9 +47,8 @@ void MEditorToolbar::setPosition(const QPointF &pos,
                                  ToolbarPlacement placement)
 {
     Q_D(MEditorToolbar);
-    setPos(d->followWidget->mapToItem(d->overlay, pos));
-    d->updateArrow(placement == BelowPointOfInterest
-                   ? MEditorToolbarArrow::ArrowUp : MEditorToolbarArrow::ArrowDown);
+    d->setPosition(pos, placement == BelowPointOfInterest ? MEditorToolbarArrow::ArrowUp
+                                                          : MEditorToolbarArrow::ArrowDown);
 }
 
 void MEditorToolbar::appear()
@@ -147,7 +146,9 @@ MEditorToolbarPrivate::MEditorToolbarPrivate(MEditorToolbar *qq, MWidget *follow
       arrow(new MEditorToolbarArrow(qq)),
       buttonUpdateQueued(false),
       hideAnimation(qq, "opacity"),
-      autoHideEnabled(false)
+      autoHideEnabled(false),
+      positionUpdatePending(false),
+      pendingArrowDirection(MEditorToolbarArrow::ArrowDown) // Initial value doesn't matter.
 {
 }
 
@@ -196,6 +197,38 @@ void MEditorToolbarPrivate::init()
     QObject::connect(&hideAnimation, SIGNAL(finished()), q, SLOT(disappear()));
 
     eatMButtonGestureFilter = new EatMButtonGestureFilter(q);
+
+    // Setup toolbar to hide during scene orientation change.
+    // Don't need to hide during 180 degree angle changes.
+    QObject::connect(followWidget->sceneManager(),
+                     SIGNAL(orientationAboutToChange(M::Orientation)),
+                     q, SLOT(_q_disappearForOrientationChange()));
+    // Reappearance must be connected to orientationChangeFinished rather than
+    // orientationChanged because this doesn't share the orientation animation
+    // with followWidget.
+    QObject::connect(followWidget->sceneManager(),
+                     SIGNAL(orientationChangeFinished(M::Orientation)),
+                     q, SLOT(_q_reappearAfterOrientationChange()));
+}
+
+void MEditorToolbarPrivate::setPosition(const QPointF &pos,
+                                        MEditorToolbarArrow::ArrowDirection arrowDirection)
+{
+    Q_Q(MEditorToolbar);
+
+    // Position should not be set unless overlay's orientation is the same
+    // as followWidget's. Because of this, always post-pone setting the
+    // position in case we are disappeared. Which we are during orientation
+    // change.
+
+    if (isAppeared()) {
+        q->setPos(followWidget->mapToItem(overlay, pos));
+        updateArrow(arrowDirection);
+    } else {
+        positionUpdatePending = true;
+        pendingPosition = pos;
+        pendingArrowDirection = arrowDirection;
+    }
 }
 
 void MEditorToolbarPrivate::appear()
@@ -214,6 +247,11 @@ void MEditorToolbarPrivate::appear()
     if (autoHideEnabled) {
         startAutoHideTimer();
     }
+
+    if (positionUpdatePending) {
+        positionUpdatePending = false;
+        setPosition(pendingPosition, pendingArrowDirection);
+    }
 }
 
 void MEditorToolbarPrivate::disappear()
@@ -227,6 +265,8 @@ void MEditorToolbarPrivate::disappear()
     stopAutoHideTimer();
     hideAnimation.stop();
     q->setOpacity(1.0);
+
+    disappearedForOrientationChange = false;
 }
 
 bool MEditorToolbarPrivate::isAppeared() const
@@ -469,6 +509,21 @@ void MEditorToolbarPrivate::_q_updateAvailableButtons()
 
     // Hide if there is no buttons.
     updateEditorItemVisibility();
+}
+
+void MEditorToolbarPrivate::_q_disappearForOrientationChange()
+{
+    if (isAppeared()) {
+        disappear();
+        disappearedForOrientationChange = true;
+    }
+}
+
+void MEditorToolbarPrivate::_q_reappearAfterOrientationChange()
+{
+    if (!isAppeared() && disappearedForOrientationChange) {
+        appear();
+    }
 }
 
 void MEditorToolbarPrivate::visibilityUpdated()
