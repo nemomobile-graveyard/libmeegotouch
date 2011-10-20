@@ -17,15 +17,10 @@
 **
 ****************************************************************************/
 
-#include <MApplication>
-
 #include "ut_mdebug.h"
-#include "mdebug.h"
-
-#define MODULE_NAME "SomeModuleName"
-#define MESSAGE     "The quick brown fox jumps over the lazy dog"
 
 static QtMsgType expectedMsgType;
+static QString expectedMsg;
 
 void Ut_MDebug::initTestCase()
 {
@@ -41,44 +36,80 @@ void Ut_MDebug::cleanupTestCase()
 
 void messageHandler(QtMsgType type, const char *msg)
 {
-    const char *expectedMsg = MODULE_NAME ": " MESSAGE " ";
-
-    QVERIFY(type == expectedMsgType);
-
-    QVERIFY(strlen(expectedMsg) == strlen(msg));
-    QVERIFY(QString(msg) == expectedMsg);
+    QCOMPARE(type, expectedMsgType);
+    QVERIFY(strlen(msg) == (unsigned int)expectedMsg.length());
+    QCOMPARE(QString(msg), expectedMsg);
 }
 
-void Ut_MDebug::testMessage (QtMsgType type)
+void Ut_MDebug::init()
 {
-    QtMsgHandler oldMsgHandler;
-
-    expectedMsgType = type;
-
     oldMsgHandler = qInstallMsgHandler(messageHandler);
+}
 
-    switch (type) {
-    case QtDebugMsg:
-        mDebug(MODULE_NAME) << MESSAGE;
-        break;
-    case QtWarningMsg:
-        mWarning(MODULE_NAME) << MESSAGE;
-        break;
-    default:
-      break;
-    }
-
+void Ut_MDebug::cleanup()
+{
     qInstallMsgHandler(oldMsgHandler);
 }
 
-void Ut_MDebug::testDebug()
+void Ut_MDebug::testInlineFunctions_data()
 {
-    testMessage (QtDebugMsg);
+    QTest::addColumn<QtMsgType>("type");
+    QTest::addColumn<QString>("module");
+    QTest::addColumn<QString>("message");
+
+    QTest::newRow("debug") << QtDebugMsg << "Ut_MDebug debug" << "Test mDebugStream()";
+    QTest::newRow("warning") << QtWarningMsg << "Ut_MDebug warning" << "Test mWarningStream()";
+    QTest::newRow("critical") << QtCriticalMsg << "Ut_MDebug critical" << "Test mCriticalStream()";
 }
 
-void Ut_MDebug::testWarning()
+void Ut_MDebug::testInlineFunctions()
 {
-    testMessage(QtWarningMsg);
+    QFETCH(QtMsgType, type);
+    QFETCH(QString, module);
+    QFETCH(QString, message);
+
+    expectedMsgType = type;
+    expectedMsg = QString("%1: \"%2\" ").arg(module).arg(message);
+
+    switch (type) {
+    case QtDebugMsg:
+        mDebug(module) << message;
+        break;
+    case QtWarningMsg:
+        mWarning(module) << message;
+        break;
+    case QtCriticalMsg:
+        mCritical(module) << message;
+        break;
+    default:
+        break;
+    }
+}
+
+void Ut_MDebug::testDebugTypes_data()
+{
+    QTest::addColumn<MDebug::Type>("type");
+    QTest::addColumn<QtMsgType>("qtMsgType");
+    QTest::addColumn<QString>("message");
+
+    QTest::newRow("debug") << MDebug::Debug << QtDebugMsg << "Ut_MDebug test debug type";
+    QTest::newRow("warning") << MDebug::Warning << QtWarningMsg << "Ut_MDebug test warning type";
+    QTest::newRow("critical") << MDebug::Critical << QtCriticalMsg << "Ut_MDebug test critical type";
+    QTest::newRow("system") << MDebug::System << QtSystemMsg << "Ut_MDebug test system type";
+    QTest::newRow("performance") << MDebug::Performance << QtDebugMsg << "Ut_MDebug test performance type";
+    QTest::newRow("user") << MDebug::User << QtDebugMsg << "Ut_MDebug test user type";
+}
+
+void Ut_MDebug::testDebugTypes()
+{
+    QFETCH(MDebug::Type, type);
+    QFETCH(QtMsgType, qtMsgType);
+    QFETCH(QString, message);
+
+    expectedMsgType = qtMsgType;
+    expectedMsg = QString("%1 ").arg(message);
+
+    MDebug(type) << message;
 }
 
 QTEST_APPLESS_MAIN(Ut_MDebug)

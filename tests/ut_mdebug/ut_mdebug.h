@@ -22,8 +22,7 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
-
-class MApplication;
+#include <MDebug>
 
 class Ut_MDebug : public QObject
 {
@@ -32,13 +31,20 @@ class Ut_MDebug : public QObject
 private slots:
     void initTestCase();
     void cleanupTestCase();
+    void init();
+    void cleanup();
 
-    void testDebug();
-    void testWarning();
+    void testInlineFunctions_data();
+    void testInlineFunctions();
+    void testDebugTypes_data();
+    void testDebugTypes();
+
 private:
-    void testMessage (QtMsgType type);
-
     QApplication *app;
+    QtMsgHandler oldMsgHandler;
 };
+
+Q_DECLARE_METATYPE(QtMsgType)
+Q_DECLARE_METATYPE(MDebug::Type)
 
 #endif

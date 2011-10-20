@@ -53,6 +53,25 @@ void Ut_MSyslogClient::testInvalidServer()
     // invalid url
     result = socket->connectToServer(QUrl("invalidurl"));
     QVERIFY(result == false);
+
+    // empty upd
+    result = socket->connectToServer(QUrl("udp://"));
+    QVERIFY(result == false);
+
+    // invalid udp
+    result = socket->connectToServer(QUrl("udp://invalid"));
+
+    // empty file
+    result = socket->connectToServer(QUrl("file:///"));
+    QVERIFY(result == false);
+
+    // invalid file
+    result = socket->connectToServer(QUrl("file:///invalid"));
+    QVERIFY(result == false);
+
+    // unsupported scheme
+    result = socket->connectToServer(QUrl("ftp://localhost"));
+    QVERIFY(result == false);
 }
 
 void Ut_MSyslogClient::testSendLocalMessages()
@@ -65,7 +84,6 @@ void Ut_MSyslogClient::testSendLocalMessages()
 
     // create custom log server
     MyLocalServer server;
-    QSignalSpy spy(&server, SIGNAL(newConnection()));
     socketFileName = server.fullServerName();
 
     // connect to server
