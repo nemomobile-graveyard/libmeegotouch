@@ -220,9 +220,9 @@ void MCompleterViewPrivate::createContents()
             // Workaround for NB#177781: MButton has different alignments for rich text and normal text in its label.
             // Both completionLabel and completionsButton use rich text label to get same alignment
             if (total <= DefaultMaximumHits)
-                completionsButton->setText(QString("<b></b>%1").arg(MLocale().formatNumber(total)));
+                completionsButton->setText(QString("<qt>%1").arg(MLocale().formatNumber(total)));
             else
-                completionsButton->setText(QString("<b></b>%1+").arg(MLocale().formatNumber(DefaultMaximumHits)));
+                completionsButton->setText(QString("<qt>%1+").arg(MLocale().formatNumber(DefaultMaximumHits)));
             completionsButton->setFocusProxy(controller->widget());
             completionsButton->setVisible(true);
             layout->addItem(completionsButton);
@@ -272,7 +272,7 @@ void MCompleterViewPrivate::showPopup()
         popup->setCurrentIndex(popup->itemModel()->index(0, 0));
 
     //if the label of the button is "10+", should query all before showing popup
-    if (completionsButton->text() == QString("<b></b>%1+").arg(MLocale().formatNumber(DefaultMaximumHits)))
+    if (completionsButton->text() == QString("<qt>%1+").arg(MLocale().formatNumber(DefaultMaximumHits)))
         controller->queryAll();
     q->model()->setPopupActive(true);
 
