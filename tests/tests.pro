@@ -161,6 +161,7 @@ SUBDIRS     =  \
     ut_msettingslanguagetext \
     ut_msettingslanguageoption \
     ut_msettingslanguageinteger \
+    ut_msystemdirectories \
     ut_mextendingbackgroundview \
     ut_mgconfdatastore \
     ut_mshareddata \
