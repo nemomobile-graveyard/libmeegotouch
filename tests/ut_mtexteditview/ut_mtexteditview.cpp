@@ -75,6 +75,7 @@ void Ut_MTextEditView::cleanupTestCase()
 void Ut_MTextEditView::init()
 {
     m_controller = new MTextEdit(MTextEditModel::MultiLine, "", m_parent);
+    m_controller->setStyleName("Ut_MTextEditView_MTextEdit");
     m_subject = new MTextEditView(m_controller);
     m_controller->setView(m_subject);
 }
@@ -140,6 +141,10 @@ public:
         if (tracePaint) {
             qDebug() << Q_FUNC_INFO << "p:" << p << "(mapped):" << transform.map(p) << "textItem:" << textItem.text() << textItem.font();
         }
+        // store the topleft point of the item
+        // (must exactly match the in-widget padding as set in the style)
+        // (transformation is applied _after_ shifting)
+        texts.insert(textItem.text(), transform.map(p - QPointF(0, textItem.font().pixelSize())));
     }
 
     virtual void updateState(const QPaintEngineState &state)
@@ -147,6 +152,7 @@ public:
         if (tracePaint) {
             qDebug() << Q_FUNC_INFO << "transform:" << state.transform();
         }
+        transform = state.transform();
     }
 
     virtual Type type() const
@@ -154,7 +160,9 @@ public:
         return User;
     }
 
+    QMap<QString, QPointF> texts;
     QPaintDevice *device;
+    QTransform transform;
     bool tracePaint;
 };
 
@@ -174,18 +182,31 @@ QPaintEngine *FakePaintDevice::paintEngine() const
 
 }
 
-void Ut_MTextEditView::testPaint()
+void Ut_MTextEditView::testPaintPrompt()
 {
-    qDebug() << "Nothing to test now for paint";
-    /*QPixmap* empty = new QPixmap(200, 200);
-    empty->fill(QColor(0, 0, 0, 0));
-    QPainter *myPainter = new QPainter(empty);*/
+    m_controller->setGeometry(QRect(0, 0, 200, 30));
 
-    //QStyleOptionGraphicsItem* option = new QStyleOptionGraphicsItem();
-    //m_subject->paint(myPainter, option);
+    QStyleOptionGraphicsItem* option = new QStyleOptionGraphicsItem();
+    m_controller->setPrompt("Prompt");
+    FakePaintDevice fakePaintDevice;
+    QPainter painter;
+    painter.begin(&fakePaintDevice);
+    m_subject->drawContents(&painter, option);
+    QPoint englishPromptPoint = fakePaintDevice.engine->texts["Prompt"].toPoint();
+    painter.end();
+    QCOMPARE(englishPromptPoint, QPoint(27, 37));
 
-    /*delete myPainter;
-    delete empty;*/
+    QString arabicPrompt;
+    arabicPrompt.append(QChar(1604));
+    arabicPrompt.append(QChar(1610));
+    arabicPrompt.append(QChar(1587));
+    arabicPrompt.append(QChar(1578));
+    m_controller->setPrompt(arabicPrompt);
+    painter.begin(&fakePaintDevice);
+    m_subject->drawContents(&painter, option);
+    QPointF arabicPromptPoint = fakePaintDevice.engine->texts[arabicPrompt];
+    painter.end();
+    QVERIFY2(arabicPromptPoint.x() > 100, "Arabic prompt must be aligned to right");
 }
 
 

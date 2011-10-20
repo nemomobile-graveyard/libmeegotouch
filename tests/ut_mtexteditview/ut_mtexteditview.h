@@ -46,7 +46,7 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testPaint();
+    void testPaintPrompt();
     void testBoundingRect();
     void testStyleUpdated();
     void testAutohideTimes();

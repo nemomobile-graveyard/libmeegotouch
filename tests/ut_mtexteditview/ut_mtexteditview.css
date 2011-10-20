@@ -6,3 +6,8 @@ MEditorToolbarStyle {
     hide-timeout: 3125;
     hide-animation-duration: 2193;
 }
+
+MTextEditStyle#Ut_MTextEditView_MTextEdit {
+    padding-left: 27px;
+    padding-top: 37px;
+}
