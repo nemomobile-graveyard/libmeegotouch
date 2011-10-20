@@ -239,7 +239,7 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
 
     MWidgetController *mwidget = dynamic_cast<MWidgetController*>(widget);
     if (mwidget && !widget->objectName().isEmpty() && !mwidget->styleName().isEmpty() ) {
-        if (widget->objectName() == QString(mwidget->styleName()))
+        if (widget->objectName() != QString(mwidget->styleName()))
             s << QString("(o:\"%1\", s:\"%2\") ").arg(widget->objectName(), mwidget->styleName());
         else
             s << QString("(o&s: \"%1\") ").arg(widget->objectName());
