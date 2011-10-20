@@ -133,7 +133,7 @@ protected slots:
 
 private:
     Q_DECLARE_PRIVATE(MEditorToolbar)
-    MEditorToolbarPrivate * const d_ptr;
+    QScopedPointer<MEditorToolbarPrivate> d_ptr;
 
     Q_PRIVATE_SLOT(d_func(), void _q_updateAvailableButtons())
     Q_PRIVATE_SLOT(d_func(), void _q_startAnimatedHide())

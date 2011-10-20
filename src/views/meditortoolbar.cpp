@@ -41,7 +41,6 @@ MEditorToolbar::MEditorToolbar(MWidget *followWidget)
 
 MEditorToolbar::~MEditorToolbar()
 {
-    delete d_ptr;
 }
 
 void MEditorToolbar::setPosition(const QPointF &pos,
