@@ -1,3 +1,9 @@
+libmeegotouch (0.23.21-1) unstable; urgency=low
+
+  * Fixes: NB#287243 - [PR1.1] Region format change to Uzbekistan freeze the format settings
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 21 Oct 2011 11:46:03 +0300
+
 libmeegotouch (0.23.20-1) unstable; urgency=low
 
   * Fixes: NB#276811 - m_pHost->hasSelection(valid); is returning false if though there is a selection in place
