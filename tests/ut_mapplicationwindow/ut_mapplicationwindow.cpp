@@ -1044,6 +1044,11 @@ void Ut_MApplicationWindow::testPageExposedContentRectWhenStatusBarAppearsImmedi
     MApplicationPage *page = new MApplicationPage;
     MSceneWindow *statusBar = m_subject->d_func()->statusBar;
 
+    // We don't want MOrientationTracker to mess up with
+    // the orientation angle of our subject.
+    m_subject->setOrientationAngleLocked(true);
+    m_subject->setLandscapeOrientation();
+
     page->appear(m_subject);
 
     // Unlike in real usage, showing the window here will cause
