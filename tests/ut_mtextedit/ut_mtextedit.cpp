@@ -967,6 +967,8 @@ void Ut_MTextEdit::testConstraints()
     QCOMPARE(mode, MTextEditModel::SingleLine);
 
     QString testInput("abcdABCD1234*/+-#[]{}()");
+    QString arabicNumber(QString::fromUtf8("\u0661\u0662\u0663\u0664"));
+    QString persianNumber(QString::fromUtf8("\u06F1\u06F2\u06F3\u06F4"));
 
     // Test free text (input should remain unchanged)
     singleLine.setContentType(M::FreeTextContentType);
@@ -990,10 +992,55 @@ void Ut_MTextEdit::testConstraints()
     QCOMPARE(singleLine.contentType(), M::NumberContentType);
     constraintTest(&singleLine, "+-1234", "+1234");
 
+    singleLine.setContentType(M::NumberContentType);
+    QCOMPARE(singleLine.contentType(), M::NumberContentType);
+    constraintTest(&singleLine, arabicNumber, arabicNumber);
+
+    singleLine.setContentType(M::NumberContentType);
+    QCOMPARE(singleLine.contentType(), M::NumberContentType);
+    constraintTest(&singleLine, "+" + arabicNumber, "+" + arabicNumber);
+
+    singleLine.setContentType(M::NumberContentType);
+    QCOMPARE(singleLine.contentType(), M::NumberContentType);
+    constraintTest(&singleLine, "-" + arabicNumber, "-" + arabicNumber);
+
+    singleLine.setContentType(M::NumberContentType);
+    QCOMPARE(singleLine.contentType(), M::NumberContentType);
+    constraintTest(&singleLine, "+-" + arabicNumber, "+" + arabicNumber);
+
+    singleLine.setContentType(M::NumberContentType);
+    QCOMPARE(singleLine.contentType(), M::NumberContentType);
+    constraintTest(&singleLine, persianNumber, persianNumber);
+
+    singleLine.setContentType(M::NumberContentType);
+    QCOMPARE(singleLine.contentType(), M::NumberContentType);
+    constraintTest(&singleLine, "+" + persianNumber, "+" + persianNumber);
+
+    singleLine.setContentType(M::NumberContentType);
+    QCOMPARE(singleLine.contentType(), M::NumberContentType);
+    constraintTest(&singleLine, "-" + persianNumber, "-" + persianNumber);
+
+    singleLine.setContentType(M::NumberContentType);
+    QCOMPARE(singleLine.contentType(), M::NumberContentType);
+    constraintTest(&singleLine, "+-" + persianNumber, "+" + persianNumber);
+
+
     // Test phone number
+
+    QString arabicPhoneNumber(QString::fromUtf8("\u0661\u0662\u0663\u0664*+-#()"));
+    QString persianPhoneNumber(QString::fromUtf8("\u06F1\u06F2\u06F3\u06F4*+-#()"));
+
     singleLine.setContentType(M::PhoneNumberContentType);
     QCOMPARE(singleLine.contentType(), M::PhoneNumberContentType);
     constraintTest(&singleLine, testInput, "1234*+-#()");
+
+    singleLine.setContentType(M::PhoneNumberContentType);
+    QCOMPARE(singleLine.contentType(), M::PhoneNumberContentType);
+    constraintTest(&singleLine, arabicPhoneNumber + "ABCDabcd{}", arabicPhoneNumber);
+
+    singleLine.setContentType(M::PhoneNumberContentType);
+    QCOMPARE(singleLine.contentType(), M::PhoneNumberContentType);
+    constraintTest(&singleLine, persianPhoneNumber + "ABCDabcd{}", persianPhoneNumber);
 
     // Test email address
     singleLine.setContentType(M::EmailContentType);
