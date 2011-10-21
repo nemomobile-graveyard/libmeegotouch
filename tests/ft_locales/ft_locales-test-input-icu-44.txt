@@ -5585,13 +5585,13 @@ fa_IR	Name of month 09 (Gregorian calendar), stand-alone, wide	سپتامبر
 fa_IR	Name of month 10 (Gregorian calendar), stand-alone, wide	اکتبر
 fa_IR	Name of month 11 (Gregorian calendar), stand-alone, wide	نوامبر
 fa_IR	Name of month 12 (Gregorian calendar), stand-alone, wide	دسامبر
-fa_IR	Name of month 01 (Gregorian calendar), stand-alone, abbreviated	ژانویهٔ
-fa_IR	Name of month 02 (Gregorian calendar), stand-alone, abbreviated	فوریهٔ
+fa_IR	Name of month 01 (Gregorian calendar), stand-alone, abbreviated	ژانویه
+fa_IR	Name of month 02 (Gregorian calendar), stand-alone, abbreviated	فوریه
 fa_IR	Name of month 03 (Gregorian calendar), stand-alone, abbreviated	مارس
 fa_IR	Name of month 04 (Gregorian calendar), stand-alone, abbreviated	آوریل
-fa_IR	Name of month 05 (Gregorian calendar), stand-alone, abbreviated	می
-fa_IR	Name of month 06 (Gregorian calendar), stand-alone, abbreviated	جون
-fa_IR	Name of month 07 (Gregorian calendar), stand-alone, abbreviated	جولای
+fa_IR	Name of month 05 (Gregorian calendar), stand-alone, abbreviated	مه
+fa_IR	Name of month 06 (Gregorian calendar), stand-alone, abbreviated	ژوئن
+fa_IR	Name of month 07 (Gregorian calendar), stand-alone, abbreviated	ژوئیه
 fa_IR	Name of month 08 (Gregorian calendar), stand-alone, abbreviated	اوت
 fa_IR	Name of month 09 (Gregorian calendar), stand-alone, abbreviated	سپتامبر
 fa_IR	Name of month 10 (Gregorian calendar), stand-alone, abbreviated	اکتبر
@@ -5601,7 +5601,7 @@ fa_IR	Name of month 01 (Gregorian calendar), stand-alone, narrow	ژ
 fa_IR	Name of month 02 (Gregorian calendar), stand-alone, narrow	ف
 fa_IR	Name of month 03 (Gregorian calendar), stand-alone, narrow	م
 fa_IR	Name of month 04 (Gregorian calendar), stand-alone, narrow	آ
-fa_IR	Name of month 05 (Gregorian calendar), stand-alone, narrow	می
+fa_IR	Name of month 05 (Gregorian calendar), stand-alone, narrow	م
 fa_IR	Name of month 06 (Gregorian calendar), stand-alone, narrow	ژ
 fa_IR	Name of month 07 (Gregorian calendar), stand-alone, narrow	ژ
 fa_IR	Name of month 08 (Gregorian calendar), stand-alone, narrow	ا
@@ -5613,10 +5613,10 @@ fa_IR	Name of month 01 (Gregorian calendar), format, wide	ژانویهٔ
 fa_IR	Name of month 02 (Gregorian calendar), format, wide	فوریهٔ
 fa_IR	Name of month 03 (Gregorian calendar), format, wide	مارس
 fa_IR	Name of month 04 (Gregorian calendar), format, wide	آوریل
-fa_IR	Name of month 05 (Gregorian calendar), format, wide	می
-fa_IR	Name of month 06 (Gregorian calendar), format, wide	جون
-fa_IR	Name of month 07 (Gregorian calendar), format, wide	جولای
-fa_IR	Name of month 08 (Gregorian calendar), format, wide	آگوست
+fa_IR	Name of month 05 (Gregorian calendar), format, wide	مهٔ
+fa_IR	Name of month 06 (Gregorian calendar), format, wide	ژوئن
+fa_IR	Name of month 07 (Gregorian calendar), format, wide	ژوئیهٔ
+fa_IR	Name of month 08 (Gregorian calendar), format, wide	اوت
 fa_IR	Name of month 09 (Gregorian calendar), format, wide	سپتامبر
 fa_IR	Name of month 10 (Gregorian calendar), format, wide	اکتبر
 fa_IR	Name of month 11 (Gregorian calendar), format, wide	نوامبر
@@ -5625,9 +5625,9 @@ fa_IR	Name of month 01 (Gregorian calendar), format, abbreviated	ژانویهٔ
 fa_IR	Name of month 02 (Gregorian calendar), format, abbreviated	فوریهٔ
 fa_IR	Name of month 03 (Gregorian calendar), format, abbreviated	مارس
 fa_IR	Name of month 04 (Gregorian calendar), format, abbreviated	آوریل
-fa_IR	Name of month 05 (Gregorian calendar), format, abbreviated	می
-fa_IR	Name of month 06 (Gregorian calendar), format, abbreviated	جون
-fa_IR	Name of month 07 (Gregorian calendar), format, abbreviated	جولای
+fa_IR	Name of month 05 (Gregorian calendar), format, abbreviated	مهٔ
+fa_IR	Name of month 06 (Gregorian calendar), format, abbreviated	ژوئن
+fa_IR	Name of month 07 (Gregorian calendar), format, abbreviated	ژوئیهٔ
 fa_IR	Name of month 08 (Gregorian calendar), format, abbreviated	اوت
 fa_IR	Name of month 09 (Gregorian calendar), format, abbreviated	سپتامبر
 fa_IR	Name of month 10 (Gregorian calendar), format, abbreviated	اکتبر
@@ -5637,7 +5637,7 @@ fa_IR	Name of month 01 (Gregorian calendar), format, narrow	ژ
 fa_IR	Name of month 02 (Gregorian calendar), format, narrow	ف
 fa_IR	Name of month 03 (Gregorian calendar), format, narrow	م
 fa_IR	Name of month 04 (Gregorian calendar), format, narrow	آ
-fa_IR	Name of month 05 (Gregorian calendar), format, narrow	می
+fa_IR	Name of month 05 (Gregorian calendar), format, narrow	م
 fa_IR	Name of month 06 (Gregorian calendar), format, narrow	ژ
 fa_IR	Name of month 07 (Gregorian calendar), format, narrow	ژ
 fa_IR	Name of month 08 (Gregorian calendar), format, narrow	ا
@@ -5814,52 +5814,52 @@ fa_IR	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫h
 fa_IR	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫H:mm:ss (z)‬ -> ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬
 fa_IR	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫h:mm:ss ( a zzzz)‬ -> ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬
 fa_IR	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫H:mm:ss (zzzz)‬ -> ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬
-fa_IR	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d‏/M‏/y‬ -> ‫۲۱‏/۷‏/۲۰۰۸‬
-fa_IR	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d‏/M‏/y‬ -> ‫۲۱‏/۷‏/۲۰۰۸‬
-fa_IR	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/M‏/y‬،‏ ‫h:mm‬‬ a -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱‬‬ ب.ظ
-fa_IR	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/M‏/y‬،‏ ‫H:mm‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱‬‬
-fa_IR	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/M‏/y‬،‏ ‫h:mm:ss‬‬ a -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱:۰۰‬‬ ب.ظ
-fa_IR	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/M‏/y‬،‏ ‫H:mm:ss‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰‬‬
-fa_IR	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/M‏/y‬،‏ ‫h:mm:ss ( a z)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/M‏/y‬،‏ ‫H:mm:ss (z)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/M‏/y‬،‏ ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/M‏/y‬،‏ ‫H:mm:ss (zzzz)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d MMM y‬ -> ‫۲۱ جولای ۲۰۰۸‬
-fa_IR	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d MMM y‬ -> ‫۲۱ جولای ۲۰۰۸‬
-fa_IR	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMM y‬،‏ ‫h:mm‬‬ a -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۲:۳۱‬‬ ب.ظ
-fa_IR	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMM y‬،‏ ‫H:mm‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۱۴:۳۱‬‬
-fa_IR	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMM y‬،‏ ‫h:mm:ss‬‬ a -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۲:۳۱:۰۰‬‬ ب.ظ
-fa_IR	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMM y‬،‏ ‫H:mm:ss‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰‬‬
-fa_IR	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMM y‬،‏ ‫h:mm:ss ( a z)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMM y‬،‏ ‫H:mm:ss (z)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMM y‬،‏ ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMM y‬،‏ ‫H:mm:ss (zzzz)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d MMMM y‬ -> ‫۲۱ جولای ۲۰۰۸‬
-fa_IR	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d MMMM y‬ -> ‫۲۱ جولای ۲۰۰۸‬
-fa_IR	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMMM y‬، ساعت ‫h:mm‬‬ a -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱‬‬ ب.ظ
-fa_IR	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMMM y‬، ساعت ‫H:mm‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱‬‬
-fa_IR	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMMM y‬، ساعت ‫h:mm:ss‬‬ a -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰‬‬ ب.ظ
-fa_IR	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMMM y‬، ساعت ‫H:mm:ss‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰‬‬
-fa_IR	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMMM y‬، ساعت ‫h:mm:ss ( a z)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMMM y‬، ساعت ‫H:mm:ss (z)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫EEEE d MMMM y‬ -> ‫دوشنبه ۲۱ جولای ۲۰۰۸‬
-fa_IR	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫EEEE d MMMM y‬ -> ‫دوشنبه ۲۱ جولای ۲۰۰۸‬
-fa_IR	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm‬‬ a -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱‬‬ ب.ظ
-fa_IR	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱‬‬
-fa_IR	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss‬‬ a -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰‬‬ ب.ظ
-fa_IR	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰‬‬
-fa_IR	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a z)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (z)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR & de_DE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR & de_DE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR & en_US	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR & en_US	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d‏/L‏/y‬ -> ‫۲۱‏/۷‏/۲۰۰۸‬
+fa_IR	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d‏/L‏/y‬ -> ‫۲۱‏/۷‏/۲۰۰۸‬
+fa_IR	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/L‏/y‬،‏ ‫h:mm‬‬ a -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱‬‬ ب.ظ
+fa_IR	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/L‏/y‬،‏ ‫H:mm‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱‬‬
+fa_IR	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/L‏/y‬،‏ ‫h:mm:ss‬‬ a -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱:۰۰‬‬ ب.ظ
+fa_IR	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/L‏/y‬،‏ ‫H:mm:ss‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰‬‬
+fa_IR	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/L‏/y‬،‏ ‫h:mm:ss ( a z)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/L‏/y‬،‏ ‫H:mm:ss (z)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/L‏/y‬،‏ ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/L‏/y‬،‏ ‫H:mm:ss (zzzz)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d LLL y‬ -> ‫۲۱ ژوئیه ۲۰۰۸‬
+fa_IR	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d LLL y‬ -> ‫۲۱ ژوئیه ۲۰۰۸‬
+fa_IR	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLL y‬،‏ ‫h:mm‬‬ a -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۲:۳۱‬‬ ب.ظ
+fa_IR	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLL y‬،‏ ‫H:mm‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۱۴:۳۱‬‬
+fa_IR	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLL y‬،‏ ‫h:mm:ss‬‬ a -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۲:۳۱:۰۰‬‬ ب.ظ
+fa_IR	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLL y‬،‏ ‫H:mm:ss‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰‬‬
+fa_IR	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLL y‬،‏ ‫h:mm:ss ( a z)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLL y‬،‏ ‫H:mm:ss (z)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLL y‬،‏ ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLL y‬،‏ ‫H:mm:ss (zzzz)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d LLLL y‬ -> ‫۲۱ ژوئیه ۲۰۰۸‬
+fa_IR	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d LLLL y‬ -> ‫۲۱ ژوئیه ۲۰۰۸‬
+fa_IR	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLLL y‬، ساعت ‫h:mm‬‬ a -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱‬‬ ب.ظ
+fa_IR	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLLL y‬، ساعت ‫H:mm‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱‬‬
+fa_IR	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLLL y‬، ساعت ‫h:mm:ss‬‬ a -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰‬‬ ب.ظ
+fa_IR	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLLL y‬، ساعت ‫H:mm:ss‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰‬‬
+fa_IR	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLLL y‬، ساعت ‫h:mm:ss ( a z)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLLL y‬، ساعت ‫H:mm:ss (z)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫EEEE d LLLL y‬ -> ‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬
+fa_IR	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫EEEE d LLLL y‬ -> ‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬
+fa_IR	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm‬‬ a -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱‬‬ ب.ظ
+fa_IR	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱‬‬
+fa_IR	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss‬‬ a -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰‬‬ ب.ظ
+fa_IR	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰‬‬
+fa_IR	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a z)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (z)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR & de_DE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR & de_DE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR & en_US	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR & en_US	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
 fa_IR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h:mm a -> ۲:۳۱ ب.ظ
 fa_IR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> ۱۴:۳۱
 fa_IR	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a -> ۲:۳۱:۰۰ ب.ظ
@@ -5933,13 +5933,13 @@ fa_IR@numbers=arabext	Name of month 09 (Gregorian calendar), stand-alone, wide	�
 fa_IR@numbers=arabext	Name of month 10 (Gregorian calendar), stand-alone, wide	اکتبر
 fa_IR@numbers=arabext	Name of month 11 (Gregorian calendar), stand-alone, wide	نوامبر
 fa_IR@numbers=arabext	Name of month 12 (Gregorian calendar), stand-alone, wide	دسامبر
-fa_IR@numbers=arabext	Name of month 01 (Gregorian calendar), stand-alone, abbreviated	ژانویهٔ
-fa_IR@numbers=arabext	Name of month 02 (Gregorian calendar), stand-alone, abbreviated	فوریهٔ
+fa_IR@numbers=arabext	Name of month 01 (Gregorian calendar), stand-alone, abbreviated	ژانویه
+fa_IR@numbers=arabext	Name of month 02 (Gregorian calendar), stand-alone, abbreviated	فوریه
 fa_IR@numbers=arabext	Name of month 03 (Gregorian calendar), stand-alone, abbreviated	مارس
 fa_IR@numbers=arabext	Name of month 04 (Gregorian calendar), stand-alone, abbreviated	آوریل
-fa_IR@numbers=arabext	Name of month 05 (Gregorian calendar), stand-alone, abbreviated	می
-fa_IR@numbers=arabext	Name of month 06 (Gregorian calendar), stand-alone, abbreviated	جون
-fa_IR@numbers=arabext	Name of month 07 (Gregorian calendar), stand-alone, abbreviated	جولای
+fa_IR@numbers=arabext	Name of month 05 (Gregorian calendar), stand-alone, abbreviated	مه
+fa_IR@numbers=arabext	Name of month 06 (Gregorian calendar), stand-alone, abbreviated	ژوئن
+fa_IR@numbers=arabext	Name of month 07 (Gregorian calendar), stand-alone, abbreviated	ژوئیه
 fa_IR@numbers=arabext	Name of month 08 (Gregorian calendar), stand-alone, abbreviated	اوت
 fa_IR@numbers=arabext	Name of month 09 (Gregorian calendar), stand-alone, abbreviated	سپتامبر
 fa_IR@numbers=arabext	Name of month 10 (Gregorian calendar), stand-alone, abbreviated	اکتبر
@@ -5949,7 +5949,7 @@ fa_IR@numbers=arabext	Name of month 01 (Gregorian calendar), stand-alone, narrow
 fa_IR@numbers=arabext	Name of month 02 (Gregorian calendar), stand-alone, narrow	ف
 fa_IR@numbers=arabext	Name of month 03 (Gregorian calendar), stand-alone, narrow	م
 fa_IR@numbers=arabext	Name of month 04 (Gregorian calendar), stand-alone, narrow	آ
-fa_IR@numbers=arabext	Name of month 05 (Gregorian calendar), stand-alone, narrow	می
+fa_IR@numbers=arabext	Name of month 05 (Gregorian calendar), stand-alone, narrow	م
 fa_IR@numbers=arabext	Name of month 06 (Gregorian calendar), stand-alone, narrow	ژ
 fa_IR@numbers=arabext	Name of month 07 (Gregorian calendar), stand-alone, narrow	ژ
 fa_IR@numbers=arabext	Name of month 08 (Gregorian calendar), stand-alone, narrow	ا
@@ -5961,10 +5961,10 @@ fa_IR@numbers=arabext	Name of month 01 (Gregorian calendar), format, wide	ژان
 fa_IR@numbers=arabext	Name of month 02 (Gregorian calendar), format, wide	فوریهٔ
 fa_IR@numbers=arabext	Name of month 03 (Gregorian calendar), format, wide	مارس
 fa_IR@numbers=arabext	Name of month 04 (Gregorian calendar), format, wide	آوریل
-fa_IR@numbers=arabext	Name of month 05 (Gregorian calendar), format, wide	می
-fa_IR@numbers=arabext	Name of month 06 (Gregorian calendar), format, wide	جون
-fa_IR@numbers=arabext	Name of month 07 (Gregorian calendar), format, wide	جولای
-fa_IR@numbers=arabext	Name of month 08 (Gregorian calendar), format, wide	آگوست
+fa_IR@numbers=arabext	Name of month 05 (Gregorian calendar), format, wide	مهٔ
+fa_IR@numbers=arabext	Name of month 06 (Gregorian calendar), format, wide	ژوئن
+fa_IR@numbers=arabext	Name of month 07 (Gregorian calendar), format, wide	ژوئیهٔ
+fa_IR@numbers=arabext	Name of month 08 (Gregorian calendar), format, wide	اوت
 fa_IR@numbers=arabext	Name of month 09 (Gregorian calendar), format, wide	سپتامبر
 fa_IR@numbers=arabext	Name of month 10 (Gregorian calendar), format, wide	اکتبر
 fa_IR@numbers=arabext	Name of month 11 (Gregorian calendar), format, wide	نوامبر
@@ -5973,9 +5973,9 @@ fa_IR@numbers=arabext	Name of month 01 (Gregorian calendar), format, abbreviated
 fa_IR@numbers=arabext	Name of month 02 (Gregorian calendar), format, abbreviated	فوریهٔ
 fa_IR@numbers=arabext	Name of month 03 (Gregorian calendar), format, abbreviated	مارس
 fa_IR@numbers=arabext	Name of month 04 (Gregorian calendar), format, abbreviated	آوریل
-fa_IR@numbers=arabext	Name of month 05 (Gregorian calendar), format, abbreviated	می
-fa_IR@numbers=arabext	Name of month 06 (Gregorian calendar), format, abbreviated	جون
-fa_IR@numbers=arabext	Name of month 07 (Gregorian calendar), format, abbreviated	جولای
+fa_IR@numbers=arabext	Name of month 05 (Gregorian calendar), format, abbreviated	مهٔ
+fa_IR@numbers=arabext	Name of month 06 (Gregorian calendar), format, abbreviated	ژوئن
+fa_IR@numbers=arabext	Name of month 07 (Gregorian calendar), format, abbreviated	ژوئیهٔ
 fa_IR@numbers=arabext	Name of month 08 (Gregorian calendar), format, abbreviated	اوت
 fa_IR@numbers=arabext	Name of month 09 (Gregorian calendar), format, abbreviated	سپتامبر
 fa_IR@numbers=arabext	Name of month 10 (Gregorian calendar), format, abbreviated	اکتبر
@@ -5985,7 +5985,7 @@ fa_IR@numbers=arabext	Name of month 01 (Gregorian calendar), format, narrow	ژ
 fa_IR@numbers=arabext	Name of month 02 (Gregorian calendar), format, narrow	ف
 fa_IR@numbers=arabext	Name of month 03 (Gregorian calendar), format, narrow	م
 fa_IR@numbers=arabext	Name of month 04 (Gregorian calendar), format, narrow	آ
-fa_IR@numbers=arabext	Name of month 05 (Gregorian calendar), format, narrow	می
+fa_IR@numbers=arabext	Name of month 05 (Gregorian calendar), format, narrow	م
 fa_IR@numbers=arabext	Name of month 06 (Gregorian calendar), format, narrow	ژ
 fa_IR@numbers=arabext	Name of month 07 (Gregorian calendar), format, narrow	ژ
 fa_IR@numbers=arabext	Name of month 08 (Gregorian calendar), format, narrow	ا
@@ -6162,52 +6162,52 @@ fa_IR@numbers=arabext	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 1
 fa_IR@numbers=arabext	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫H:mm:ss (z)‬ -> ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬
 fa_IR@numbers=arabext	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫h:mm:ss ( a zzzz)‬ -> ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬
 fa_IR@numbers=arabext	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫H:mm:ss (zzzz)‬ -> ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬
-fa_IR@numbers=arabext	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d‏/M‏/y‬ -> ‫۲۱‏/۷‏/۲۰۰۸‬
-fa_IR@numbers=arabext	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d‏/M‏/y‬ -> ‫۲۱‏/۷‏/۲۰۰۸‬
-fa_IR@numbers=arabext	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/M‏/y‬،‏ ‫h:mm‬‬ a -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱‬‬ ب.ظ
-fa_IR@numbers=arabext	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/M‏/y‬،‏ ‫H:mm‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱‬‬
-fa_IR@numbers=arabext	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/M‏/y‬،‏ ‫h:mm:ss‬‬ a -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱:۰۰‬‬ ب.ظ
-fa_IR@numbers=arabext	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/M‏/y‬،‏ ‫H:mm:ss‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰‬‬
-fa_IR@numbers=arabext	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/M‏/y‬،‏ ‫h:mm:ss ( a z)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/M‏/y‬،‏ ‫H:mm:ss (z)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/M‏/y‬،‏ ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/M‏/y‬،‏ ‫H:mm:ss (zzzz)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d MMM y‬ -> ‫۲۱ جولای ۲۰۰۸‬
-fa_IR@numbers=arabext	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d MMM y‬ -> ‫۲۱ جولای ۲۰۰۸‬
-fa_IR@numbers=arabext	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMM y‬،‏ ‫h:mm‬‬ a -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۲:۳۱‬‬ ب.ظ
-fa_IR@numbers=arabext	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMM y‬،‏ ‫H:mm‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۱۴:۳۱‬‬
-fa_IR@numbers=arabext	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMM y‬،‏ ‫h:mm:ss‬‬ a -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۲:۳۱:۰۰‬‬ ب.ظ
-fa_IR@numbers=arabext	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMM y‬،‏ ‫H:mm:ss‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰‬‬
-fa_IR@numbers=arabext	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMM y‬،‏ ‫h:mm:ss ( a z)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMM y‬،‏ ‫H:mm:ss (z)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMM y‬،‏ ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMM y‬،‏ ‫H:mm:ss (zzzz)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d MMMM y‬ -> ‫۲۱ جولای ۲۰۰۸‬
-fa_IR@numbers=arabext	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d MMMM y‬ -> ‫۲۱ جولای ۲۰۰۸‬
-fa_IR@numbers=arabext	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMMM y‬، ساعت ‫h:mm‬‬ a -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱‬‬ ب.ظ
-fa_IR@numbers=arabext	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMMM y‬، ساعت ‫H:mm‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱‬‬
-fa_IR@numbers=arabext	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMMM y‬، ساعت ‫h:mm:ss‬‬ a -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰‬‬ ب.ظ
-fa_IR@numbers=arabext	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMMM y‬، ساعت ‫H:mm:ss‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰‬‬
-fa_IR@numbers=arabext	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMMM y‬، ساعت ‫h:mm:ss ( a z)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMMM y‬، ساعت ‫H:mm:ss (z)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫EEEE d MMMM y‬ -> ‫دوشنبه ۲۱ جولای ۲۰۰۸‬
-fa_IR@numbers=arabext	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫EEEE d MMMM y‬ -> ‫دوشنبه ۲۱ جولای ۲۰۰۸‬
-fa_IR@numbers=arabext	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm‬‬ a -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱‬‬ ب.ظ
-fa_IR@numbers=arabext	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱‬‬
-fa_IR@numbers=arabext	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss‬‬ a -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰‬‬ ب.ظ
-fa_IR@numbers=arabext	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰‬‬
-fa_IR@numbers=arabext	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a z)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (z)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext & de_DE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext & de_DE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext & en_US	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
-fa_IR@numbers=arabext & en_US	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ جولای ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d‏/L‏/y‬ -> ‫۲۱‏/۷‏/۲۰۰۸‬
+fa_IR@numbers=arabext	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d‏/L‏/y‬ -> ‫۲۱‏/۷‏/۲۰۰۸‬
+fa_IR@numbers=arabext	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/L‏/y‬،‏ ‫h:mm‬‬ a -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱‬‬ ب.ظ
+fa_IR@numbers=arabext	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/L‏/y‬،‏ ‫H:mm‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱‬‬
+fa_IR@numbers=arabext	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/L‏/y‬،‏ ‫h:mm:ss‬‬ a -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱:۰۰‬‬ ب.ظ
+fa_IR@numbers=arabext	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/L‏/y‬،‏ ‫H:mm:ss‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰‬‬
+fa_IR@numbers=arabext	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/L‏/y‬،‏ ‫h:mm:ss ( a z)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/L‏/y‬،‏ ‫H:mm:ss (z)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/L‏/y‬،‏ ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/L‏/y‬،‏ ‫H:mm:ss (zzzz)‬‬ -> ‫‫۲۱‏/۷‏/۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d LLL y‬ -> ‫۲۱ ژوئیه ۲۰۰۸‬
+fa_IR@numbers=arabext	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d LLL y‬ -> ‫۲۱ ژوئیه ۲۰۰۸‬
+fa_IR@numbers=arabext	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLL y‬،‏ ‫h:mm‬‬ a -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۲:۳۱‬‬ ب.ظ
+fa_IR@numbers=arabext	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLL y‬،‏ ‫H:mm‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۱۴:۳۱‬‬
+fa_IR@numbers=arabext	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLL y‬،‏ ‫h:mm:ss‬‬ a -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۲:۳۱:۰۰‬‬ ب.ظ
+fa_IR@numbers=arabext	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLL y‬،‏ ‫H:mm:ss‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰‬‬
+fa_IR@numbers=arabext	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLL y‬،‏ ‫h:mm:ss ( a z)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLL y‬،‏ ‫H:mm:ss (z)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLL y‬،‏ ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLL y‬،‏ ‫H:mm:ss (zzzz)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬،‏ ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d LLLL y‬ -> ‫۲۱ ژوئیه ۲۰۰۸‬
+fa_IR@numbers=arabext	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d LLLL y‬ -> ‫۲۱ ژوئیه ۲۰۰۸‬
+fa_IR@numbers=arabext	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLLL y‬، ساعت ‫h:mm‬‬ a -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱‬‬ ب.ظ
+fa_IR@numbers=arabext	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLLL y‬، ساعت ‫H:mm‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱‬‬
+fa_IR@numbers=arabext	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLLL y‬، ساعت ‫h:mm:ss‬‬ a -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰‬‬ ب.ظ
+fa_IR@numbers=arabext	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLLL y‬، ساعت ‫H:mm:ss‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰‬‬
+fa_IR@numbers=arabext	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLLL y‬، ساعت ‫h:mm:ss ( a z)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLLL y‬، ساعت ‫H:mm:ss (z)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫EEEE d LLLL y‬ -> ‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬
+fa_IR@numbers=arabext	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫EEEE d LLLL y‬ -> ‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬
+fa_IR@numbers=arabext	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm‬‬ a -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱‬‬ ب.ظ
+fa_IR@numbers=arabext	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱‬‬
+fa_IR@numbers=arabext	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss‬‬ a -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰‬‬ ب.ظ
+fa_IR@numbers=arabext	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰‬‬
+fa_IR@numbers=arabext	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a z)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (z)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext & de_DE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext & de_DE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext & en_US	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۲:۳۱:۰۰ ( ب.ظ GMT+۰۰:۰۰)‬‬
+fa_IR@numbers=arabext & en_US	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه ۲۱ ژوئیه ۲۰۰۸‬، ساعت ‫۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)‬‬
 fa_IR@numbers=arabext	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h:mm a -> ۲:۳۱ ب.ظ
 fa_IR@numbers=arabext	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> ۱۴:۳۱
 fa_IR@numbers=arabext	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a -> ۲:۳۱:۰۰ ب.ظ
@@ -6281,13 +6281,13 @@ fa_IR@numbers=latn	Name of month 09 (Gregorian calendar), stand-alone, wide	سپ
 fa_IR@numbers=latn	Name of month 10 (Gregorian calendar), stand-alone, wide	اکتبر
 fa_IR@numbers=latn	Name of month 11 (Gregorian calendar), stand-alone, wide	نوامبر
 fa_IR@numbers=latn	Name of month 12 (Gregorian calendar), stand-alone, wide	دسامبر
-fa_IR@numbers=latn	Name of month 01 (Gregorian calendar), stand-alone, abbreviated	ژانویهٔ
-fa_IR@numbers=latn	Name of month 02 (Gregorian calendar), stand-alone, abbreviated	فوریهٔ
+fa_IR@numbers=latn	Name of month 01 (Gregorian calendar), stand-alone, abbreviated	ژانویه
+fa_IR@numbers=latn	Name of month 02 (Gregorian calendar), stand-alone, abbreviated	فوریه
 fa_IR@numbers=latn	Name of month 03 (Gregorian calendar), stand-alone, abbreviated	مارس
 fa_IR@numbers=latn	Name of month 04 (Gregorian calendar), stand-alone, abbreviated	آوریل
-fa_IR@numbers=latn	Name of month 05 (Gregorian calendar), stand-alone, abbreviated	می
-fa_IR@numbers=latn	Name of month 06 (Gregorian calendar), stand-alone, abbreviated	جون
-fa_IR@numbers=latn	Name of month 07 (Gregorian calendar), stand-alone, abbreviated	جولای
+fa_IR@numbers=latn	Name of month 05 (Gregorian calendar), stand-alone, abbreviated	مه
+fa_IR@numbers=latn	Name of month 06 (Gregorian calendar), stand-alone, abbreviated	ژوئن
+fa_IR@numbers=latn	Name of month 07 (Gregorian calendar), stand-alone, abbreviated	ژوئیه
 fa_IR@numbers=latn	Name of month 08 (Gregorian calendar), stand-alone, abbreviated	اوت
 fa_IR@numbers=latn	Name of month 09 (Gregorian calendar), stand-alone, abbreviated	سپتامبر
 fa_IR@numbers=latn	Name of month 10 (Gregorian calendar), stand-alone, abbreviated	اکتبر
@@ -6297,7 +6297,7 @@ fa_IR@numbers=latn	Name of month 01 (Gregorian calendar), stand-alone, narrow	ژ
 fa_IR@numbers=latn	Name of month 02 (Gregorian calendar), stand-alone, narrow	ف
 fa_IR@numbers=latn	Name of month 03 (Gregorian calendar), stand-alone, narrow	م
 fa_IR@numbers=latn	Name of month 04 (Gregorian calendar), stand-alone, narrow	آ
-fa_IR@numbers=latn	Name of month 05 (Gregorian calendar), stand-alone, narrow	می
+fa_IR@numbers=latn	Name of month 05 (Gregorian calendar), stand-alone, narrow	م
 fa_IR@numbers=latn	Name of month 06 (Gregorian calendar), stand-alone, narrow	ژ
 fa_IR@numbers=latn	Name of month 07 (Gregorian calendar), stand-alone, narrow	ژ
 fa_IR@numbers=latn	Name of month 08 (Gregorian calendar), stand-alone, narrow	ا
@@ -6309,10 +6309,10 @@ fa_IR@numbers=latn	Name of month 01 (Gregorian calendar), format, wide	ژانو�
 fa_IR@numbers=latn	Name of month 02 (Gregorian calendar), format, wide	فوریهٔ
 fa_IR@numbers=latn	Name of month 03 (Gregorian calendar), format, wide	مارس
 fa_IR@numbers=latn	Name of month 04 (Gregorian calendar), format, wide	آوریل
-fa_IR@numbers=latn	Name of month 05 (Gregorian calendar), format, wide	می
-fa_IR@numbers=latn	Name of month 06 (Gregorian calendar), format, wide	جون
-fa_IR@numbers=latn	Name of month 07 (Gregorian calendar), format, wide	جولای
-fa_IR@numbers=latn	Name of month 08 (Gregorian calendar), format, wide	آگوست
+fa_IR@numbers=latn	Name of month 05 (Gregorian calendar), format, wide	مهٔ
+fa_IR@numbers=latn	Name of month 06 (Gregorian calendar), format, wide	ژوئن
+fa_IR@numbers=latn	Name of month 07 (Gregorian calendar), format, wide	ژوئیهٔ
+fa_IR@numbers=latn	Name of month 08 (Gregorian calendar), format, wide	اوت
 fa_IR@numbers=latn	Name of month 09 (Gregorian calendar), format, wide	سپتامبر
 fa_IR@numbers=latn	Name of month 10 (Gregorian calendar), format, wide	اکتبر
 fa_IR@numbers=latn	Name of month 11 (Gregorian calendar), format, wide	نوامبر
@@ -6321,9 +6321,9 @@ fa_IR@numbers=latn	Name of month 01 (Gregorian calendar), format, abbreviated	ژ
 fa_IR@numbers=latn	Name of month 02 (Gregorian calendar), format, abbreviated	فوریهٔ
 fa_IR@numbers=latn	Name of month 03 (Gregorian calendar), format, abbreviated	مارس
 fa_IR@numbers=latn	Name of month 04 (Gregorian calendar), format, abbreviated	آوریل
-fa_IR@numbers=latn	Name of month 05 (Gregorian calendar), format, abbreviated	می
-fa_IR@numbers=latn	Name of month 06 (Gregorian calendar), format, abbreviated	جون
-fa_IR@numbers=latn	Name of month 07 (Gregorian calendar), format, abbreviated	جولای
+fa_IR@numbers=latn	Name of month 05 (Gregorian calendar), format, abbreviated	مهٔ
+fa_IR@numbers=latn	Name of month 06 (Gregorian calendar), format, abbreviated	ژوئن
+fa_IR@numbers=latn	Name of month 07 (Gregorian calendar), format, abbreviated	ژوئیهٔ
 fa_IR@numbers=latn	Name of month 08 (Gregorian calendar), format, abbreviated	اوت
 fa_IR@numbers=latn	Name of month 09 (Gregorian calendar), format, abbreviated	سپتامبر
 fa_IR@numbers=latn	Name of month 10 (Gregorian calendar), format, abbreviated	اکتبر
@@ -6333,7 +6333,7 @@ fa_IR@numbers=latn	Name of month 01 (Gregorian calendar), format, narrow	ژ
 fa_IR@numbers=latn	Name of month 02 (Gregorian calendar), format, narrow	ف
 fa_IR@numbers=latn	Name of month 03 (Gregorian calendar), format, narrow	م
 fa_IR@numbers=latn	Name of month 04 (Gregorian calendar), format, narrow	آ
-fa_IR@numbers=latn	Name of month 05 (Gregorian calendar), format, narrow	می
+fa_IR@numbers=latn	Name of month 05 (Gregorian calendar), format, narrow	م
 fa_IR@numbers=latn	Name of month 06 (Gregorian calendar), format, narrow	ژ
 fa_IR@numbers=latn	Name of month 07 (Gregorian calendar), format, narrow	ژ
 fa_IR@numbers=latn	Name of month 08 (Gregorian calendar), format, narrow	ا
@@ -6510,52 +6510,52 @@ fa_IR@numbers=latn	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12  
 fa_IR@numbers=latn	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫H:mm:ss (z)‬ -> ‫14:31:00 (GMT+00:00)‬
 fa_IR@numbers=latn	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫h:mm:ss ( a zzzz)‬ -> ‫2:31:00 ( ب.ظ GMT+00:00)‬
 fa_IR@numbers=latn	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫H:mm:ss (zzzz)‬ -> ‫14:31:00 (GMT+00:00)‬
-fa_IR@numbers=latn	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d‏/M‏/y‬ -> ‫21‏/7‏/2008‬
-fa_IR@numbers=latn	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d‏/M‏/y‬ -> ‫21‏/7‏/2008‬
-fa_IR@numbers=latn	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/M‏/y‬،‏ ‫h:mm‬‬ a -> ‫‫21‏/7‏/2008‬،‏ ‫2:31‬‬ ب.ظ
-fa_IR@numbers=latn	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/M‏/y‬،‏ ‫H:mm‬‬ -> ‫‫21‏/7‏/2008‬،‏ ‫14:31‬‬
-fa_IR@numbers=latn	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/M‏/y‬،‏ ‫h:mm:ss‬‬ a -> ‫‫21‏/7‏/2008‬،‏ ‫2:31:00‬‬ ب.ظ
-fa_IR@numbers=latn	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/M‏/y‬،‏ ‫H:mm:ss‬‬ -> ‫‫21‏/7‏/2008‬،‏ ‫14:31:00‬‬
-fa_IR@numbers=latn	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/M‏/y‬،‏ ‫h:mm:ss ( a z)‬‬ -> ‫‫21‏/7‏/2008‬،‏ ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
-fa_IR@numbers=latn	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/M‏/y‬،‏ ‫H:mm:ss (z)‬‬ -> ‫‫21‏/7‏/2008‬،‏ ‫14:31:00 (GMT+00:00)‬‬
-fa_IR@numbers=latn	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/M‏/y‬،‏ ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫21‏/7‏/2008‬،‏ ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
-fa_IR@numbers=latn	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/M‏/y‬،‏ ‫H:mm:ss (zzzz)‬‬ -> ‫‫21‏/7‏/2008‬،‏ ‫14:31:00 (GMT+00:00)‬‬
-fa_IR@numbers=latn	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d MMM y‬ -> ‫21 جولای 2008‬
-fa_IR@numbers=latn	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d MMM y‬ -> ‫21 جولای 2008‬
-fa_IR@numbers=latn	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMM y‬،‏ ‫h:mm‬‬ a -> ‫‫21 جولای 2008‬،‏ ‫2:31‬‬ ب.ظ
-fa_IR@numbers=latn	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMM y‬،‏ ‫H:mm‬‬ -> ‫‫21 جولای 2008‬،‏ ‫14:31‬‬
-fa_IR@numbers=latn	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMM y‬،‏ ‫h:mm:ss‬‬ a -> ‫‫21 جولای 2008‬،‏ ‫2:31:00‬‬ ب.ظ
-fa_IR@numbers=latn	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMM y‬،‏ ‫H:mm:ss‬‬ -> ‫‫21 جولای 2008‬،‏ ‫14:31:00‬‬
-fa_IR@numbers=latn	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMM y‬،‏ ‫h:mm:ss ( a z)‬‬ -> ‫‫21 جولای 2008‬،‏ ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
-fa_IR@numbers=latn	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMM y‬،‏ ‫H:mm:ss (z)‬‬ -> ‫‫21 جولای 2008‬،‏ ‫14:31:00 (GMT+00:00)‬‬
-fa_IR@numbers=latn	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMM y‬،‏ ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫21 جولای 2008‬،‏ ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
-fa_IR@numbers=latn	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMM y‬،‏ ‫H:mm:ss (zzzz)‬‬ -> ‫‫21 جولای 2008‬،‏ ‫14:31:00 (GMT+00:00)‬‬
-fa_IR@numbers=latn	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d MMMM y‬ -> ‫21 جولای 2008‬
-fa_IR@numbers=latn	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d MMMM y‬ -> ‫21 جولای 2008‬
-fa_IR@numbers=latn	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMMM y‬، ساعت ‫h:mm‬‬ a -> ‫‫21 جولای 2008‬، ساعت ‫2:31‬‬ ب.ظ
-fa_IR@numbers=latn	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMMM y‬، ساعت ‫H:mm‬‬ -> ‫‫21 جولای 2008‬، ساعت ‫14:31‬‬
-fa_IR@numbers=latn	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMMM y‬، ساعت ‫h:mm:ss‬‬ a -> ‫‫21 جولای 2008‬، ساعت ‫2:31:00‬‬ ب.ظ
-fa_IR@numbers=latn	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMMM y‬، ساعت ‫H:mm:ss‬‬ -> ‫‫21 جولای 2008‬، ساعت ‫14:31:00‬‬
-fa_IR@numbers=latn	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMMM y‬، ساعت ‫h:mm:ss ( a z)‬‬ -> ‫‫21 جولای 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
-fa_IR@numbers=latn	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMMM y‬، ساعت ‫H:mm:ss (z)‬‬ -> ‫‫21 جولای 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
-fa_IR@numbers=latn	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫21 جولای 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
-fa_IR@numbers=latn	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫21 جولای 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
-fa_IR@numbers=latn	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫EEEE d MMMM y‬ -> ‫دوشنبه 21 جولای 2008‬
-fa_IR@numbers=latn	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫EEEE d MMMM y‬ -> ‫دوشنبه 21 جولای 2008‬
-fa_IR@numbers=latn	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm‬‬ a -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫2:31‬‬ ب.ظ
-fa_IR@numbers=latn	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm‬‬ -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫14:31‬‬
-fa_IR@numbers=latn	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss‬‬ a -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫2:31:00‬‬ ب.ظ
-fa_IR@numbers=latn	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss‬‬ -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫14:31:00‬‬
-fa_IR@numbers=latn	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a z)‬‬ -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
-fa_IR@numbers=latn	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (z)‬‬ -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
-fa_IR@numbers=latn	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
-fa_IR@numbers=latn	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
-fa_IR@numbers=latn & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
-fa_IR@numbers=latn & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
-fa_IR@numbers=latn & de_DE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
-fa_IR@numbers=latn & de_DE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
-fa_IR@numbers=latn & en_US	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d MMMM y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
-fa_IR@numbers=latn & en_US	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d MMMM y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه 21 جولای 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
+fa_IR@numbers=latn	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d‏/L‏/y‬ -> ‫21‏/7‏/2008‬
+fa_IR@numbers=latn	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d‏/L‏/y‬ -> ‫21‏/7‏/2008‬
+fa_IR@numbers=latn	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/L‏/y‬،‏ ‫h:mm‬‬ a -> ‫‫21‏/7‏/2008‬،‏ ‫2:31‬‬ ب.ظ
+fa_IR@numbers=latn	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/L‏/y‬،‏ ‫H:mm‬‬ -> ‫‫21‏/7‏/2008‬،‏ ‫14:31‬‬
+fa_IR@numbers=latn	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/L‏/y‬،‏ ‫h:mm:ss‬‬ a -> ‫‫21‏/7‏/2008‬،‏ ‫2:31:00‬‬ ب.ظ
+fa_IR@numbers=latn	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/L‏/y‬،‏ ‫H:mm:ss‬‬ -> ‫‫21‏/7‏/2008‬،‏ ‫14:31:00‬‬
+fa_IR@numbers=latn	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/L‏/y‬،‏ ‫h:mm:ss ( a z)‬‬ -> ‫‫21‏/7‏/2008‬،‏ ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
+fa_IR@numbers=latn	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/L‏/y‬،‏ ‫H:mm:ss (z)‬‬ -> ‫‫21‏/7‏/2008‬،‏ ‫14:31:00 (GMT+00:00)‬‬
+fa_IR@numbers=latn	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d‏/L‏/y‬،‏ ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫21‏/7‏/2008‬،‏ ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
+fa_IR@numbers=latn	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d‏/L‏/y‬،‏ ‫H:mm:ss (zzzz)‬‬ -> ‫‫21‏/7‏/2008‬،‏ ‫14:31:00 (GMT+00:00)‬‬
+fa_IR@numbers=latn	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d LLL y‬ -> ‫21 ژوئیه 2008‬
+fa_IR@numbers=latn	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d LLL y‬ -> ‫21 ژوئیه 2008‬
+fa_IR@numbers=latn	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLL y‬،‏ ‫h:mm‬‬ a -> ‫‫21 ژوئیه 2008‬،‏ ‫2:31‬‬ ب.ظ
+fa_IR@numbers=latn	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLL y‬،‏ ‫H:mm‬‬ -> ‫‫21 ژوئیه 2008‬،‏ ‫14:31‬‬
+fa_IR@numbers=latn	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLL y‬،‏ ‫h:mm:ss‬‬ a -> ‫‫21 ژوئیه 2008‬،‏ ‫2:31:00‬‬ ب.ظ
+fa_IR@numbers=latn	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLL y‬،‏ ‫H:mm:ss‬‬ -> ‫‫21 ژوئیه 2008‬،‏ ‫14:31:00‬‬
+fa_IR@numbers=latn	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLL y‬،‏ ‫h:mm:ss ( a z)‬‬ -> ‫‫21 ژوئیه 2008‬،‏ ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
+fa_IR@numbers=latn	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLL y‬،‏ ‫H:mm:ss (z)‬‬ -> ‫‫21 ژوئیه 2008‬،‏ ‫14:31:00 (GMT+00:00)‬‬
+fa_IR@numbers=latn	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLL y‬،‏ ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫21 ژوئیه 2008‬،‏ ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
+fa_IR@numbers=latn	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLL y‬،‏ ‫H:mm:ss (zzzz)‬‬ -> ‫‫21 ژوئیه 2008‬،‏ ‫14:31:00 (GMT+00:00)‬‬
+fa_IR@numbers=latn	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫d LLLL y‬ -> ‫21 ژوئیه 2008‬
+fa_IR@numbers=latn	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫d LLLL y‬ -> ‫21 ژوئیه 2008‬
+fa_IR@numbers=latn	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLLL y‬، ساعت ‫h:mm‬‬ a -> ‫‫21 ژوئیه 2008‬، ساعت ‫2:31‬‬ ب.ظ
+fa_IR@numbers=latn	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLLL y‬، ساعت ‫H:mm‬‬ -> ‫‫21 ژوئیه 2008‬، ساعت ‫14:31‬‬
+fa_IR@numbers=latn	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLLL y‬، ساعت ‫h:mm:ss‬‬ a -> ‫‫21 ژوئیه 2008‬، ساعت ‫2:31:00‬‬ ب.ظ
+fa_IR@numbers=latn	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLLL y‬، ساعت ‫H:mm:ss‬‬ -> ‫‫21 ژوئیه 2008‬، ساعت ‫14:31:00‬‬
+fa_IR@numbers=latn	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLLL y‬، ساعت ‫h:mm:ss ( a z)‬‬ -> ‫‫21 ژوئیه 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
+fa_IR@numbers=latn	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLLL y‬، ساعت ‫H:mm:ss (z)‬‬ -> ‫‫21 ژوئیه 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
+fa_IR@numbers=latn	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫21 ژوئیه 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
+fa_IR@numbers=latn	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫21 ژوئیه 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
+fa_IR@numbers=latn	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	‫EEEE d LLLL y‬ -> ‫دوشنبه 21 ژوئیه 2008‬
+fa_IR@numbers=latn	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	‫EEEE d LLLL y‬ -> ‫دوشنبه 21 ژوئیه 2008‬
+fa_IR@numbers=latn	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm‬‬ a -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫2:31‬‬ ب.ظ
+fa_IR@numbers=latn	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm‬‬ -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫14:31‬‬
+fa_IR@numbers=latn	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss‬‬ a -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫2:31:00‬‬ ب.ظ
+fa_IR@numbers=latn	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss‬‬ -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫14:31:00‬‬
+fa_IR@numbers=latn	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a z)‬‬ -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
+fa_IR@numbers=latn	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (z)‬‬ -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
+fa_IR@numbers=latn	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
+fa_IR@numbers=latn	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
+fa_IR@numbers=latn & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
+fa_IR@numbers=latn & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
+fa_IR@numbers=latn & de_DE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
+fa_IR@numbers=latn & de_DE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
+fa_IR@numbers=latn & en_US	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	‫‫EEEE d LLLL y‬، ساعت ‫h:mm:ss ( a zzzz)‬‬ -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫2:31:00 ( ب.ظ GMT+00:00)‬‬
+fa_IR@numbers=latn & en_US	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	‫‫EEEE d LLLL y‬، ساعت ‫H:mm:ss (zzzz)‬‬ -> ‫‫دوشنبه 21 ژوئیه 2008‬، ساعت ‫14:31:00 (GMT+00:00)‬‬
 fa_IR@numbers=latn	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 ب.ظ
 fa_IR@numbers=latn	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
 fa_IR@numbers=latn	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 ب.ظ
