@@ -1437,10 +1437,6 @@ bool MWindow::event(QEvent *event)
 
     if ((event->type() == QEvent::Show && !isMinimized()) || event->type() == QEvent::WindowActivate) {
         MComponentData::setActiveWindow(this);
-    } else if (event->type() == QEvent::Show || event->type() == QEvent::Hide) {
-#ifdef Q_WS_X11
-        d->resolveOrientationRules();
-#endif
     } else if (event->type() == QEvent::WindowStateChange) {
         d->handleWindowStateChangeEvent(static_cast<QWindowStateChangeEvent *>(event));
     } else if (event->type() == QEvent::Close) {
