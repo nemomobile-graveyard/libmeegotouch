@@ -1,9 +1,19 @@
-libmeegotouch (0.24.6~1) unstable; urgency=low
+libmeegotouch (0.24.6-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
   * Fixes: NB#276864 - [TASK] Support for setting the timestamp of notifications
+  * Fixes: NB#286996 - The Persian translation of the months in contacts is not consistent
+  * Fixes: NB#286952 - When adding a contact it is impossible to enter a "mobile number" for the contact
+  * Fixes: NB#258444 - [TASK] Lollipop for text selection
+  * Fixes: NB#271327 - [TASK] Improve unit test coverage for MSyslogClient, MTimestamp, MDebug
+  * Fixes: NB#283251 - [TASK] Windows opened in flat state should follow orientation of the previous top most window
+  * Fixes: NB#284298 - MBasicSheetHeader setPositiveAction and setNegativeAction do not disconnect previous action
+  * Fixes: NB#275691 - Text edit in dialog moving upwards on every character.
+  * Fixes: NB#283306 - MContainer and instantaneous bad position of progress indicator, text and icon after using toggleHeaderVisible()
+  * Fixes: NB#271317 - [TASK] MTextEditPrompt does not support length variants
+  * Fixes: NB#286569 - song title, artist and album name in Ukrainian language are not recognized in the device
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 17 Oct 2011 17:09:45 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 24 Oct 2011 11:35:31 +0300
 
 libmeegotouch (0.24.5-1) unstable; urgency=low
 
