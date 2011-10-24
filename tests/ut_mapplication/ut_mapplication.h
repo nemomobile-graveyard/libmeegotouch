@@ -78,6 +78,14 @@ private slots:
     void testIsPrestartedTerminateOnCloseMultiWindow();
     void testIsPrestartedLazyShutdownMultiWindow();
     void testPrestartedProperty();
+    void testShowPosition();
+    void testShowSize();
+    void testShowObjectNames();
+    void testShowStyleNames();
+    void testShowBoundingRect();
+    void testShowFps();
+    void testLogFps();
+    void testShowCursor();
 #ifdef Q_WS_X11
     void testMinimizing_data();
     void testMinimizing();

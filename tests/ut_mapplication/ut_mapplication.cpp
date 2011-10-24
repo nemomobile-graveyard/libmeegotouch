@@ -797,4 +797,78 @@ void Ut_MApplication::prestartRestored()
     m_prestartRestored = true;
 }
 
+// The following tests are trivial and quite flakey, ideally we'd take a
+// screengrab and compare it to reference pictures
+void Ut_MApplication::testShowPosition()
+{
+    app = buildApp(1, "appName");
+    app->setShowPosition(true);
+
+    QVERIFY(app->showPosition() == true);
+    delete app;
+}
+
+void Ut_MApplication::testShowSize()
+{
+    app = buildApp(1, "appName");
+    app->setShowSize(true);
+
+    QVERIFY(app->showSize() == true);
+    delete app;
+}
+
+void Ut_MApplication::testShowObjectNames()
+{
+    app = buildApp(1, "appName");
+    app->setShowObjectNames(true);
+
+    QVERIFY(app->showObjectNames() == true);
+    delete app;
+}
+
+void Ut_MApplication::testShowStyleNames()
+{
+    app = buildApp(1, "appName");
+    app->setShowStyleNames(true);
+
+    QVERIFY(app->showStyleNames() == true);
+    delete app;
+}
+
+void Ut_MApplication::testShowBoundingRect()
+{
+    app = buildApp(1, "appName");
+    app->setShowBoundingRect(true);
+
+    QVERIFY(app->showBoundingRect() == true);
+    delete app;
+}
+
+void Ut_MApplication::testShowFps()
+{
+    app = buildApp(1, "appName");
+    app->setShowFps(true);
+
+    QVERIFY(app->showFps() == true);
+    delete app;
+}
+
+void Ut_MApplication::testLogFps()
+{
+    app = buildApp(1, "appName");
+    app->setLogFps(true);
+
+    QVERIFY(app->logFps() == true);
+    delete app;
+}
+
+void Ut_MApplication::testShowCursor()
+{
+    app = buildApp(1, "appName");
+    app->setShowCursor(true);
+
+    QVERIFY(app->showCursor() == true);
+    delete app;
+}
+
 QTEST_APPLESS_MAIN(Ut_MApplication);
