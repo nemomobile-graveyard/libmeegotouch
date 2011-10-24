@@ -163,6 +163,15 @@ void MButtonSwitchViewPrivate::_q_toggleCheck()
     toggleOnAnimationFinish = false;
 }
 
+void MButtonSwitchViewPrivate::_q_updateGestureGrab()
+{
+    if (controller->isEnabled()) {
+        controller->grabGesture(Qt::PanGesture);
+    } else {
+        controller->ungrabGesture(Qt::PanGesture);
+    }
+}
+
 void MButtonSwitchViewPrivate::setText(const QString &text)
 {
     Q_UNUSED(text);
@@ -174,6 +183,7 @@ MButtonSwitchView::MButtonSwitchView(MButton *controller) :
     Q_D(MButtonSwitchView);
     controller->grabGesture(Qt::PanGesture);
     connect(d->m_thumbAnimation, SIGNAL(finished()), this, SLOT(_q_toggleCheck()));
+    connect(controller, SIGNAL(enabledChanged()), this, SLOT(_q_updateGestureGrab()));
 }
 
 MButtonSwitchView::~MButtonSwitchView()

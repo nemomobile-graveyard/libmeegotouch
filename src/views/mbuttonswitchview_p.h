@@ -42,6 +42,7 @@ public:
     void drawSwitchThumb(QPainter *painter) const;
 
     void _q_toggleCheck();
+    void _q_updateGestureGrab();
 
     virtual void setText(const QString &text);
 

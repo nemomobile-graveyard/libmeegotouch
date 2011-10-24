@@ -1612,6 +1612,7 @@ MSliderView::MSliderView(MSlider *controller):
 
     connect(controller, SIGNAL(visibleChanged()), this, SLOT(changeSliderHandleIndicatorVisibility()));
     connect(controller, SIGNAL(displayExited()), this, SLOT(lowerSliderHandleIndicator()));
+    connect(controller, SIGNAL(enabledChanged()), this, SLOT(updateGestureGrab()));
 }
 
 MSliderView::~MSliderView()
@@ -1937,6 +1938,19 @@ void MSliderView::setPosition(int position)
 
     d->position = position;
     d->updateSliderGroove();
+}
+
+void MSliderView::updateGestureGrab()
+{
+    Q_D(const MSliderView);
+
+    if (d->controller->isEnabled()) {
+        d->controller->grabGesture(Qt::SwipeGesture);
+        d->controller->grabGesture(Qt::PanGesture);
+    } else {
+        d->controller->ungrabGesture(Qt::SwipeGesture);
+        d->controller->ungrabGesture(Qt::PanGesture);
+    }
 }
 
 M_REGISTER_VIEW_NEW(MSliderView, MSlider)

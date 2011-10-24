@@ -117,6 +117,7 @@ protected:
 
 private:
     Q_PRIVATE_SLOT(d_func(), void _q_toggleCheck())
+    Q_PRIVATE_SLOT(d_func(), void _q_updateGestureGrab())
 
 private:
     Q_DISABLE_COPY(MButtonSwitchView)
