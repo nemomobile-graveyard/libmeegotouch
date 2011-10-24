@@ -47,9 +47,6 @@ void MWindowPrivate::sendDelayedExitDisplayEvent()
 void MWindowPrivate::setX11PrestartProperty(bool)
 {
 }
-void MWindowPrivate::resolveOrientationRules()
-{
-}
 
 const char* MWindowPrivate::LogicallyClosedPropertyName = "_m_logicallyClosed";
 

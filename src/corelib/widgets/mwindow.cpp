@@ -99,6 +99,7 @@ MWindowPrivate::MWindowPrivate() :
     beforeFirstPaintEvent(true),
     invisiblePaintCounter(0),
     borderDecorator(0),
+    isAboutToBeShown(false),
     q_ptr(NULL)
 {
 #ifdef Q_WS_X11
@@ -174,7 +175,6 @@ void MWindowPrivate::init()
     // we have to set X11 property _MEEGOTOUCH_PRESTARTED
     if(MApplication::isPrestarted()) {
         setX11PrestartProperty(true);
-        resolveOrientationRules();
     }
     setX11OrientationAngleProperty(angle);
 #endif
@@ -408,31 +408,6 @@ void MWindowPrivate::applyStartupWindowBackground()
 
     MTheme::releaseStyle(style);
 }
-
-void MWindowPrivate::resolveOrientationRules() {
-    Q_Q(MWindow);
-
-    MOrientationTrackerPrivate *privateTracker = MOrientationTracker::instance()->d_ptr;
-
-    // follow current application window if corresponding dynamic property is set
-    // (no matter to what value).
-    if (q->property(FollowsCurrentApplicationWindowOrientationPropertyName).isValid()) {
-        privateTracker->startFollowingCurrentAppWindow(q);
-        privateTracker->stopFollowingDesktop(q);
-    //follow desktop if visible in switcher
-    } else if ((isInSwitcher && q->isOnDisplay())) {
-        privateTracker->startFollowingDesktop(q);
-        privateTracker->stopFollowingCurrentAppWindow(q);
-    //in other cases do not follow other windows.
-    //MOrientationTracker will resolve if following sensors is required
-    } else {
-        privateTracker->stopFollowingDesktop(q);
-        privateTracker->stopFollowingCurrentAppWindow(q);
-    }
-
-    MOrientationTracker::instance()->d_ptr->reevaluateSubscriptionToSensorProperties();
-
-}
 #endif
 
 void MWindowPrivate::_q_onPixmapRequestsFinished()
@@ -562,9 +537,7 @@ void MWindowPrivate::doEnterDisplayEvent()
     q->enterDisplayEvent();
     emit q->displayEntered();
 
-#ifdef Q_WS_X11
-    resolveOrientationRules();
-#endif //Q_WS_X11
+    MOrientationTracker::instance()->resolveOrientationRulesOfWindow(q);
 
     if (discardedPaintEvent) {
         // we discarded a paint event while beeing invisible
@@ -584,9 +557,7 @@ void MWindowPrivate::doExitDisplayEvent()
 
     q->exitDisplayEvent();
     emit q->displayExited();
-#ifdef Q_WS_X11
-    resolveOrientationRules();
-#endif
+    MOrientationTracker::instance()->resolveOrientationRulesOfWindow(q);
 
     QPixmapCache::clear();
 }
@@ -637,23 +608,6 @@ void MWindowPrivate::_q_enablePaintUpdates()
     q->setUpdatesEnabled(true);
 }
 
-void MWindowPrivate::ensureOrientationAngleIsUpToDateBeforeShowing()
-{
-    Q_Q(MWindow);
-
-    if (!q->isVisible() && !q->isOrientationAngleLocked()
-        && MOrientationTracker::instance()->orientationAngle() != q->orientationAngle()) {
-
-#ifdef HAVE_CONTEXTSUBSCRIBER
-        // We are about to be shown but our orientation angle is outdated.
-        MOrientationTracker::instance()->d_ptr->updateOrientationAngleOfWindows();
-#endif
-
-        q->setUpdatesEnabled(true);
-        q->update();
-    }
-}
-
 MSceneManager::TransitionMode MWindowPrivate::orientationChangeTransitionMode()
 {
     Q_Q(MWindow);
@@ -681,9 +635,7 @@ void MWindowPrivate::doSwitcherExited()
 
     if (isInSwitcher) {
         isInSwitcher = false;
-#ifdef Q_WS_X11
-        resolveOrientationRules();
-#endif
+        MOrientationTracker::instance()->resolveOrientationRulesOfWindow(q);
         emit q->switcherExited();
         throttleInSwitcher = false;
     }
@@ -695,9 +647,7 @@ void MWindowPrivate::doSwitcherEntered()
 
     if (!isInSwitcher) {
         isInSwitcher = true;
-#ifdef Q_WS_X11
-        resolveOrientationRules();
-#endif
+        MOrientationTracker::instance()->resolveOrientationRulesOfWindow(q);
         emit q->switcherEntered();
         throttleInSwitcher = false;
         QTimer::singleShot(ThrottlingInSwitcherDelay, q, SLOT(_q_enableThrottlingInSwitcher()));
@@ -839,6 +789,7 @@ MWindow::~MWindow()
 {
     MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this);
     MOrientationTracker::instance()->d_func()->stopFollowingDesktop(this);
+    MOrientationTracker::instance()->d_func()->stopFollowingDevice(this);
     MComponentData::unregisterWindow(this);
     delete d_ptr;
 }
@@ -1105,10 +1056,7 @@ void MWindow::setOrientationAngleLocked(bool locked)
 
     if (d->orientationAngleLocked != locked) {
         d->orientationAngleLocked = locked;
-
-        // update from the orientation tracker if we're unlocking orientation changes
-        if (!locked)
-            setOrientationAngle(MOrientationTracker::instance()->orientationAngle());
+        MOrientationTracker::instance()->resolveOrientationRulesOfWindow(this);
     }
 }
 
@@ -1125,10 +1073,7 @@ void MWindow::setOrientationLocked(bool locked)
 
     if (d->orientationLocked != locked) {
         d->orientationLocked = locked;
-
-        // update from the orientation tracker if we're unlocking orientation changes
-        if (!locked)
-            setOrientationAngle(MOrientationTracker::instance()->orientationAngle());
+        MOrientationTracker::instance()->resolveOrientationRulesOfWindow(this);
     }
 }
 
@@ -1553,7 +1498,7 @@ bool MWindow::event(QEvent *event)
     else if (event->type() == QEvent::DynamicPropertyChange) {
         QDynamicPropertyChangeEvent* dynamicEvent = static_cast<QDynamicPropertyChangeEvent*>(event);        
         if (dynamicEvent->propertyName() == FollowsCurrentApplicationWindowOrientationPropertyName) {
-            d->resolveOrientationRules();
+            MOrientationTracker::instance()->resolveOrientationRulesOfWindow(this);
         }
     }
     else if (event->type() == QEvent::WinIdChange) {
@@ -1574,9 +1519,15 @@ void MWindow::setVisible(bool visible)
             return;
         }
 
-        // Ensure that window is in a proper orientation angle before
-        // it gets displayed on screen.
-        d->ensureOrientationAngleIsUpToDateBeforeShowing();
+        if (!isVisible()) {
+            d->isAboutToBeShown = true;
+
+            // Ensure that window is in a proper orientation angle before
+            // it gets displayed on screen.
+            MOrientationTracker::instance()->resolveOrientationRulesOfWindow(this);
+            setUpdatesEnabled(true);
+            update();
+        }
 
         // Set onDisplay if it's not already set, because
         // it is used to discard paint events and we don't have
@@ -1610,6 +1561,9 @@ void MWindow::setVisible(bool visible)
     d->invisiblePaintCounter = 0;
 
     QGraphicsView::setVisible(visible);
+
+    d->isAboutToBeShown = false;
+    MOrientationTracker::instance()->resolveOrientationRulesOfWindow(this);
 }
 
 void MWindow::setCloseOnLazyShutdown(bool enable)

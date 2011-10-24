@@ -129,7 +129,6 @@ void MApplicationPrivate::setX11PrestartPropertyForWindows(bool set)
 {
     Q_FOREACH(MWindow * win, MApplication::windows()) {
         win->d_ptr->setX11PrestartProperty(set);
-        win->d_ptr->resolveOrientationRules();
     }
 }
 

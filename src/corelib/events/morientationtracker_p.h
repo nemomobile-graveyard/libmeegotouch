@@ -72,6 +72,8 @@ public:
     // according to current profile.
     M::OrientationAngle findClosestAllowedAngle(M::OrientationAngle angle, bool isKeyboardOpen) const;
     void reevaluateSubscriptionToSensorProperties();
+    bool canRotate(MWindow *window) const;
+    void resolveOrientationRulesOfWindow(MWindow *window);
     void rotateToAngleIfAllowed(M::OrientationAngle angle, MWindow* window);
 #ifdef HAVE_CONTEXTSUBSCRIBER
     bool fetchCurrentWindowAngle(M::OrientationAngle &angle) const;
@@ -79,7 +81,6 @@ public:
     void updateWindowOrientationAngle(MWindow *window);
     M::OrientationAngle updateOrientationAngleWithDeviceAngle(M::OrientationAngle *currentAngle) const;
     M::OrientationAngle updateOrientationAngle(M::OrientationAngle *currentAngle) const;
-    bool windowIsFollowingDeviceOrientation(MWindow *window);
     bool checkIfOrientationUpdatesRequired();
     M::OrientationAngle angleForTopEdge(const QString topEdge) const;
     void subscribeToSensorProperties();
@@ -95,6 +96,7 @@ public:
     MContextProperty *currentWindowAngleProperty;
     MContextProperty *desktopAngleProperty;
     bool isSubscribedToSensorProperties;
+    bool isTracking; // see startTracking() and stopTracking()
 #endif
     bool rotationsDisabled;
     bool pendingOrientationAngleUpdate;
@@ -113,14 +115,30 @@ public:
     void stopFollowingDesktop(MWindow *win);
     QList<QPointer<MWindow> > windowsFollowingDesktop;
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    void startFollowingDevice(MWindow *win);
+    void stopFollowingDevice(MWindow *win);
+    QList<QPointer<MWindow> > windowsFollowingDevice;
+#endif //HAVE_CONTEXTSUBSCRIBER
+
 public slots:
     void videoRouteChanged();
     void updateOrientationAngleOfWindows();
+
     void disableRotations();
     void enableRotations();
 #ifdef HAVE_CONTEXTSUBSCRIBER
     void handleCurrentAppWindowOrientationAngleChange();
     void handleDesktopOrientationChange();
+
+    // go through all existing windows and start keeping tabs
+    // on their orientation (if applicable) and subscribe to relevant
+    // context properties if needed.
+    void startTracking();
+
+    // unsubscribe from all context properties.
+    // keep silent. stop updating orientation of windows
+    void stopTracking();
 #endif // HAVE_CONTEXTSUBSCRIBER
 
 protected:

@@ -51,7 +51,6 @@ public:
     void setVisible(bool visible);
     void _q_enablePaintUpdates();
     MSceneManager::TransitionMode orientationChangeTransitionMode();
-    void ensureOrientationAngleIsUpToDateBeforeShowing();
 
 #ifdef Q_WS_X11
     void appendVisibilityChangeMask();
@@ -60,7 +59,6 @@ public:
     qreal getX11Property(const char *propertyName) const;
     void setX11PrestartProperty(bool set);
     void setX11OrientationAngleProperty(M::OrientationAngle angle);
-    void resolveOrientationRules();
     void setX11NotificationPreviewsDisabledProperty(bool set);
     bool getX11NotificationPreviewsDisabledProperty() const;
     void setMeegoX11Properties();
@@ -135,6 +133,10 @@ public:
     int invisiblePaintCounter;
     MWindowBorderDecorator *borderDecorator;
     static const char *LogicallyClosedPropertyName;
+
+    // Is "true" between the moment application code calls MWindow::setVisible(true)
+    // and the moment where MWindow::isVisible() starts returning "true".
+    bool isAboutToBeShown;
 
 protected:
     MWindow *q_ptr;

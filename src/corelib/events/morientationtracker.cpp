@@ -101,6 +101,7 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     , currentWindowAngleProperty(new MContextProperty("/Screen/CurrentWindow/OrientationAngle"))
     , desktopAngleProperty(new MContextProperty("/Screen/Desktop/OrientationAngle"))
     , isSubscribedToSensorProperties(false)
+    , isTracking(true)
 #endif
     , rotationsDisabled(false)
     , pendingOrientationAngleUpdate(false)
@@ -126,6 +127,22 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     }
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
+    // Tests might not have an MApplication instance
+    if (MApplication::instance()) {
+        if (MApplication::isPrestarted()) {
+            stopTracking();
+        }
+
+        bool ok;
+        ok = connect(MApplication::instance(), SIGNAL(prestartReleased()),
+                SLOT(startTracking()));
+        if (!ok) { qFatal("Signal connection failed"); }
+
+        ok = connect(MApplication::instance(), SIGNAL(prestartRestored()),
+                SLOT(stopTracking()));
+        if (!ok) { qFatal("Signal connection failed"); }
+    }
+
     videoRouteProperty->unsubscribe();
     topEdgeProperty->unsubscribe();
     remoteTopEdgeProperty->unsubscribe();
@@ -192,44 +209,81 @@ void MOrientationTrackerPrivate::videoRouteChanged()
 #ifdef HAVE_CONTEXTSUBSCRIBER
 bool MOrientationTrackerPrivate::checkIfOrientationUpdatesRequired()
 {
-    if (MApplication::isPrestarted()) {
-        return false;
-    }
-
-    bool result = false;
-
-    // If there's no current app. window angle to follow, those windows are free to
-    // rotate like the others
-    bool haveCurrWindowAngle = currentWindowAnglePropertyContainsValidAngle();
-
-    foreach(MWindow* win, MApplication::windows()) {
-#ifdef Q_WS_X11
-        if (win && (win->isOnDisplay()) &&
-            (!haveCurrWindowAngle || !windowsFollowingCurrentAppWindow.contains(win)) &&
-            !windowsFollowingDesktop.contains(win))
-#else
-        if (win && win->isOnDisplay())
-#endif
-        {
-            result = true;
-            break;
-        }
-    }
-
-    return result;
+    return (!windowsFollowingDevice.isEmpty()) ||
+        // If there's no current app. window angle to follow, those windows fall
+        // back to follow the device orientation
+        (!windowsFollowingCurrentAppWindow.isEmpty()
+        && !currentWindowAnglePropertyContainsValidAngle());
 }
 #endif
 
 void MOrientationTrackerPrivate::reevaluateSubscriptionToSensorProperties()
 {
-#ifdef HAVE_CONTEXTSUBSCRIBER
     bool updatesRequired = checkIfOrientationUpdatesRequired();
-
     if (updatesRequired && !isSubscribedToSensorProperties) {
         subscribeToSensorProperties();
-        updateOrientationAngleOfWindows();
-    } else if (!updatesRequired && isSubscribedToSensorProperties)
+    } else if (!updatesRequired && isSubscribedToSensorProperties) {
         unsubscribeFromSensorProperties();
+    }
+}
+
+bool MOrientationTrackerPrivate::canRotate(MWindow *window) const
+{
+    if (window->isOrientationAngleLocked())
+        return false;
+
+    if (window->isOrientationLocked()) {
+        // check if the other angle in the same orientation is supported
+        // (e.g.: portrait and inverted portrait)
+        int invertedAngle = (window->orientationAngle() + 180) % 360;
+        if (!MDeviceProfile::instance()->orientationAngleIsSupported((M::OrientationAngle)invertedAngle,
+                                                                    MKeyboardStateTracker::instance()->isOpen())) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void MOrientationTrackerPrivate::resolveOrientationRulesOfWindow(MWindow *window)
+{
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    // early way out
+    if (!isTracking) {
+        stopFollowingDevice(window);
+        stopFollowingDesktop(window);
+        stopFollowingCurrentAppWindow(window);
+        return;
+    }
+
+    // Don't follow anything if it cannot rotate in the first place
+    if (!canRotate(window)) {
+        stopFollowingDevice(window);
+        stopFollowingDesktop(window);
+        stopFollowingCurrentAppWindow(window);
+    // follow current application window if corresponding dynamic property is set
+    // (no matter to what value).
+    } else if (window->property("followsCurrentApplicationWindowOrientation").isValid()) {
+        startFollowingCurrentAppWindow(window);
+        stopFollowingDesktop(window);
+        stopFollowingDevice(window);
+    //follow desktop if visible in switcher
+    } else if ((window->isInSwitcher() && window->isOnDisplay())) {
+        startFollowingDesktop(window);
+        stopFollowingCurrentAppWindow(window);
+        stopFollowingDevice(window);
+    //follow device orientation if being shown while not minimized (i.e., not on switcher)
+    } else if (!window->isInSwitcher() &&
+                (window->isOnDisplay() || window->d_func()->isAboutToBeShown)) {
+        startFollowingDevice(window);
+        stopFollowingDesktop(window);
+        stopFollowingCurrentAppWindow(window);
+    // in other cases stay put
+    } else {
+        stopFollowingDevice(window);
+        stopFollowingDesktop(window);
+        stopFollowingCurrentAppWindow(window);
+    }
 #endif
 }
 
@@ -247,16 +301,33 @@ void MOrientationTrackerPrivate::updateOrientationAngleOfWindows()
 
     QString remoteTopEdge = remoteTopEdgeProperty->value().toString();
 
+    // If there's no current app. window angle to follow, those windows fall
+    // back to follow the device orientation
+    bool updateWindowsFollowingCurrentAppWindow = !windowsFollowingCurrentAppWindow.isEmpty()
+        && !currentWindowAnglePropertyContainsValidAngle();
+
     if ((remoteTopEdgeListener->isServicePresent() != MServiceListener::Present) || remoteTopEdge.isEmpty()) {
 
-        foreach(MWindow * window, MApplication::windows()) {
+        foreach(MWindow * window, windowsFollowingDevice) {
             updateWindowOrientationAngle(window);
+        }
+
+        if (updateWindowsFollowingCurrentAppWindow) {
+            foreach(MWindow * window, windowsFollowingCurrentAppWindow) {
+                updateWindowOrientationAngle(window);
+            }
         }
     } else {
         M::OrientationAngle angle = angleForTopEdge(remoteTopEdge);
-        foreach(MWindow * window, MApplication::windows()) {
-            if (windowIsFollowingDeviceOrientation(window))
+
+        foreach(MWindow * window, windowsFollowingDevice) {
+            rotateToAngleIfAllowed(angle, window);
+        }
+
+        if (updateWindowsFollowingCurrentAppWindow) {
+            foreach(MWindow * window, windowsFollowingCurrentAppWindow) {
                 rotateToAngleIfAllowed(angle, window);
+            }
         }
     }
 
@@ -379,29 +450,19 @@ M::OrientationAngle MOrientationTrackerPrivate::computeTrackerOrientationAngle()
 #endif //HAVE_CONTEXTSUBSCRIBER
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
-bool MOrientationTrackerPrivate::windowIsFollowingDeviceOrientation(MWindow *window)
-{
-    if (windowsFollowingDesktop.contains(window))
-        return false;
-
-    // If there's no current app. window angle to follow, those windows are
-    // free to rotate like the others
-    if (windowsFollowingCurrentAppWindow.contains(window)
-        && currentWindowAnglePropertyContainsValidAngle())
-        return false;
-
-    return true;
-}
-#endif //HAVE_CONTEXTSUBSCRIBER
-
-#ifdef HAVE_CONTEXTSUBSCRIBER
 void MOrientationTrackerPrivate::updateWindowOrientationAngle(MWindow *window)
 {
-    if (!windowIsFollowingDeviceOrientation(window))
-        return;
-
+    M::OrientationAngle targetAngle;
     M::OrientationAngle windowAngle = window->orientationAngle();
-    M::OrientationAngle targetAngle = updateOrientationAngle(&windowAngle);
+
+    if (window->isVisible()) {
+        targetAngle = updateOrientationAngle(&windowAngle);
+    } else {
+        // If the window is not being shown yet (i.e. it's not mapped) its
+        // current angle is not relevant and therefore shouldn't be considered
+        // or preserved.
+        targetAngle = updateOrientationAngle(0);
+    }
 
     if (targetAngle != windowAngle)
         rotateToAngleIfAllowed(targetAngle, window);
@@ -534,6 +595,13 @@ bool MOrientationTracker::isSubscribedToSensorProperties() const
 #endif
 }
 
+
+void MOrientationTracker::resolveOrientationRulesOfWindow(MWindow *window)
+{
+    Q_D(MOrientationTracker);
+    d->resolveOrientationRulesOfWindow(window);
+}
+
 #ifdef HAVE_CONTEXTSUBSCRIBER
 void MOrientationTrackerPrivate::subscribeToSensorProperties()
 {
@@ -582,6 +650,10 @@ void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
         return;
     }
 
+    // CurrentAppWindow followers will follow device orientation (i.e. sensors)
+    // instead in case the currentAppWindow context property is invalid.
+    reevaluateSubscriptionToSensorProperties();
+
     M::OrientationAngle angle;
     if (!fetchCurrentWindowAngle(angle))
         return;
@@ -617,6 +689,8 @@ void MOrientationTrackerPrivate::stopFollowingCurrentAppWindow(MWindow *win)
 #ifdef HAVE_CONTEXTSUBSCRIBER
 bool MOrientationTrackerPrivate::currentWindowAnglePropertyContainsValidAngle()
 {
+    Q_ASSERT(currentWindowAngleProperty->isSubscribed());
+
     QVariant currentWindowAngleVariant = currentWindowAngleProperty->value();
 
     if (currentWindowAngleVariant.isNull() || !currentWindowAngleVariant.isValid()) {
@@ -697,3 +771,53 @@ void MOrientationTrackerPrivate::stopFollowingDesktop(MWindow *win)
     Q_UNUSED(win);
 #endif //HAVE_CONTEXTSUBSCRIBER
 }
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void MOrientationTrackerPrivate::stopTracking()
+{
+    if (!isTracking)
+        return;
+
+    foreach(MWindow *window, MApplication::windows()) {
+        stopFollowingDevice(window);
+        stopFollowingDesktop(window);
+        stopFollowingCurrentAppWindow(window);
+    }
+
+    isTracking = false;
+}
+#endif //HAVE_CONTEXTSUBSCRIBER
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void MOrientationTrackerPrivate::startTracking()
+{
+    if (isTracking)
+        return;
+
+    isTracking = true;
+
+    foreach(MWindow *window, MApplication::windows()) {
+        resolveOrientationRulesOfWindow(window);
+    }
+}
+#endif //HAVE_CONTEXTSUBSCRIBER
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void MOrientationTrackerPrivate::startFollowingDevice(MWindow *win)
+{
+    if (windowsFollowingDevice.contains(win))
+        return;
+
+    windowsFollowingDevice.append(win);
+    reevaluateSubscriptionToSensorProperties();
+    updateOrientationAngleOfWindows();
+}
+#endif //HAVE_CONTEXTSUBSCRIBER
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void MOrientationTrackerPrivate::stopFollowingDevice(MWindow *win)
+{
+    windowsFollowingDevice.removeAll(win);
+    reevaluateSubscriptionToSensorProperties();
+}
+#endif //HAVE_CONTEXTSUBSCRIBER

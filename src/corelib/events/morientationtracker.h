@@ -26,6 +26,7 @@
 #include "mexport.h"
 
 class MOrientationTrackerPrivate;
+class MWindow;
 
 //! \internal
 
@@ -77,6 +78,8 @@ private:
     void disableRotations();
     void enableRotations();
     bool isSubscribedToSensorProperties() const;
+
+    void resolveOrientationRulesOfWindow(MWindow *window);
 
 #ifdef Q_WS_X11
     void handleCurrentAppWindowChange();
