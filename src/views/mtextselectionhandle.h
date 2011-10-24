@@ -154,6 +154,7 @@ private:
     using MStylableWidget::setVisible;
 
     friend class Ut_MTextSelectionHandle;
+    friend class Ut_MTextSelectionOverlay;
 
     M_STYLABLE_WIDGET(MTextSelectionHandleStyle)
 };

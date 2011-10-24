@@ -144,6 +144,8 @@ private:
     QPointF offset; // offset from mouse position to pressed handle
     QPointF lastUpdatePos; // last position used for selection update
     bool mouseIsPressed;
+
+    friend class Ut_MTextSelectionOverlay;
 };
 
 //! \internal_end

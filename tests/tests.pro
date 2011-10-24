@@ -217,6 +217,7 @@ SUBDIRS     =  \
     ut_mhelpbutton \
     ut_mpreloader \
     ut_mlistindex \
+    ut_mtextselectionoverlay\
 
 # enable only when we have icu available
 
