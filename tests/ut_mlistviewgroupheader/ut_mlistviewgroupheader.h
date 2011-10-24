@@ -126,6 +126,8 @@ private slots:
 
     void testPerformance();
 
+    void testMaxVisibleItemsCount();
+
 private:
     QObject *phoneBook;
     MyIndexedModel *phoneBookModel;

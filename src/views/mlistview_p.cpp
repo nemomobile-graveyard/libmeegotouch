@@ -141,6 +141,14 @@ void MListViewPrivate::updateRecyclerMaxItemsCount()
         recycler->setMaxItemsPerClass(viewportVisibleHeight / itemHeight + 2);
 }
 
+int MListViewPrivate::maxVisibleItemsCount() const
+{
+    if (itemHeight > 0)
+        return viewportVisibleHeight / itemHeight + 1;
+    else
+        return 0;
+}
+
 void MListViewPrivate::setHeadersCreator(MCellCreator *creator)
 {
     delete headersCreator;
@@ -231,7 +239,7 @@ bool MListViewPrivate::animateRowsInsertion(const QModelIndex &parent, int start
     updateHeaderHeight();
 
     int firstVisibleRow = indexToFlatRow(controllerModel->firstVisibleItem());
-    int lastVisibleRow = indexToFlatRow(controllerModel->lastVisibleItem());
+    int lastVisibleRow = firstVisibleRow + maxVisibleItemsCount();
 
     if (parent.isValid()) {
         int parentFlatRow = indexToFlatRow(parent);
@@ -239,12 +247,12 @@ bool MListViewPrivate::animateRowsInsertion(const QModelIndex &parent, int start
         end += parentFlatRow + 1;
     }
 
-    if (start > lastVisibleRow + 1 || !controller->isVisible() ||
+    if (start > lastVisibleRow || !controller->isVisible() ||
             !MListViewPrivateNamespace::intersects(start, end, firstVisibleRow, lastVisibleRow))
         return false;
 
     start = firstVisibleRow > start ? firstVisibleRow : start;
-    end = end > lastVisibleRow + 1 ? lastVisibleRow + 1 : end;
+    end = end > lastVisibleRow ? lastVisibleRow : end;
 
     // Set targets for insert animation
     appendTargetsToInsertAnimation(start, end, firstVisibleRow, lastVisibleRow);
@@ -1036,6 +1044,14 @@ void MPlainMultiColumnListViewPrivate::updateRecyclerMaxItemsCount()
         recycler->setMaxItemsPerClass((viewportVisibleHeight / itemHeight + 2) * controllerModel->columns());
 }
 
+int MPlainMultiColumnListViewPrivate::maxVisibleItemsCount() const
+{
+    if (itemHeight > 0)
+        return (viewportVisibleHeight / itemHeight + 1) * controllerModel->columns();
+    else
+        return 0;
+}
+
 void MPlainMultiColumnListViewPrivate::setVerticalSeparator(MWidget *separator)
 {
     if(vseparator)
@@ -1759,6 +1775,14 @@ void MMultiColumnListViewPrivate::updateRecyclerMaxItemsCount()
 {
     if (itemHeight > 0)
         recycler->setMaxItemsPerClass((viewportVisibleHeight / itemHeight + 2) * controllerModel->columns());
+}
+
+int MMultiColumnListViewPrivate::maxVisibleItemsCount() const
+{
+    if (itemHeight > 0)
+        return (viewportVisibleHeight / itemHeight + 1) * controllerModel->columns();
+    else
+        return 0;
 }
 
 int MMultiColumnListViewPrivate::itemsToRows(int items) const

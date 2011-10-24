@@ -242,6 +242,16 @@ void Ut_MListView::testPrivateUpdateItemSize()
 	d->MListViewPrivate::updateItemSize();
 }
 
+void Ut_MListView::testPrivateMaxVisibleItemsCount()
+{
+        MListViewPrivate *d = m_subject->d_func();
+
+        d->viewportVisibleHeight = 50;
+        d->itemHeight = 20;
+
+        QCOMPARE(d->maxVisibleItemsCount(), 50 / 20 + 1);
+}
+
 void Ut_MListView::testIndexToFlatRowAssert()
 {
     QVERIFY(m_subject->model()->showGroups());

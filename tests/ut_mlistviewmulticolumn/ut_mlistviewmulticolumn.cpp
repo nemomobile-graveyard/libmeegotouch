@@ -416,4 +416,14 @@ void Ut_MListViewMultiColumn::testLocatePosOfItemAt10Index()
     QCOMPARE(listViewPrivate->locatePosOfItem(index), 524);
 }
 
+void Ut_MListViewMultiColumn::testMaxVisibleItemsCount()
+{
+    listViewPrivate->viewportVisibleHeight = 50;
+    listViewPrivate->itemHeight = 20;
+    listViewPrivate->controllerModel->setColumns(2);
+
+    QCOMPARE(listViewPrivate->maxVisibleItemsCount(), (50 / 20 + 1)  * 2);
+}
+
 QTEST_APPLESS_MAIN(Ut_MListViewMultiColumn);
+

@@ -124,6 +124,7 @@ private slots:
     void testLocatePosOfItemAt9Index();
     void testLocatePosOfItemAt10Index();
 
+    void testMaxVisibleItemsCount();
 private:
     QObject *phoneBook;
     MyIndexedModel *phoneBookModel;

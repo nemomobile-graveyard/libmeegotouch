@@ -182,6 +182,8 @@ public:
     virtual void updateItemConnections();
     virtual void updateItemLongTapConnection(MWidget *cell);
 
+    virtual int maxVisibleItemsCount() const;
+
 public Q_SLOTS:
     void syncAnimationState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
     void movingDetectionTimerTimeout();
@@ -305,6 +307,9 @@ public:
 
     virtual void appendTargetsToInsertAnimation(int start, int end, int firstVisibleRow, int lastVisibleRow);
     virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
+
+    virtual int maxVisibleItemsCount() const;
+
 public:
     QHash<MWidget *, int> widgetFlatRows;
     MWidget *vseparator;
@@ -420,6 +425,9 @@ public:
 
     virtual void appendTargetsToInsertAnimation(int start, int end, int firstVisibleRow, int lastVisibleRow);
     virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
+
+    virtual int maxVisibleItemsCount() const;
+
 public:
     QHash<MWidget *, int> widgetFlatRows;
     MWidget *vseparator;

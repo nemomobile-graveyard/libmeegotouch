@@ -425,6 +425,14 @@ void Ut_MListViewGroupHeader::testPerformance()
     }
 }
 
+void Ut_MListViewGroupHeader::testMaxVisibleItemsCount()
+{
+    listViewPrivate->viewportVisibleHeight = 50;
+    listViewPrivate->itemHeight = 20;
+
+    QCOMPARE(listViewPrivate->maxVisibleItemsCount(), 50 / 20 + 1);
+}
+
 void Ut_MListViewGroupHeader2::makePhoneBook()
 {
     phoneBook = new QObject;
@@ -570,3 +578,4 @@ int main(int argc, char *argv[])
 
     return QTest::qExec(&tc, argc, argv) | QTest::qExec(&tc2, argc, argv) | QTest::qExec(&tc3, argc, argv);
 }
+
