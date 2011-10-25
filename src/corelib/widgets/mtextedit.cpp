@@ -1166,10 +1166,12 @@ bool MTextEditPrivate::isPreediting() const
 
 void MTextEditPrivate::requestSip()
 {
+    Q_Q(MTextEdit);
     QInputContext *inputContext = qApp->inputContext();
     QGraphicsView *focusedGraphicsView = dynamic_cast<QGraphicsView *>(QApplication::focusWidget());
 
-    if (!inputContext || !focusedGraphicsView) {
+    const bool editable = q->model()->textInteractionFlags() & Qt::TextEditable;
+    if (!inputContext || !focusedGraphicsView || !editable) {
         return;
     }
 
@@ -3130,17 +3132,15 @@ void MTextEdit::setTextInteractionFlags(Qt::TextInteractionFlags flags)
     bool editable = flags & Qt::TextEditable;
     model()->setTextInteractionFlags(flags);
 
-    // if not editable, remove focus and hide cursor. Commit preedit
+    // if not editable. Commit preedit, and disable cut/paste
     if (!editable && wasEditable) {
         d->commitPreedit();
-        setFocusPolicy(Qt::NoFocus);
 
         QObject::disconnect(this, SIGNAL(copyAvailable(bool)),
                             &(d->cutAction), SLOT(setVisible(bool)));
         d->cutAction.setVisible(false);
         d->pasteAction.setVisible(false);
     } else if (editable && !wasEditable) {
-        setFocusPolicy(Qt::ClickFocus);
 
         QObject::connect(this, SIGNAL(copyAvailable(bool)),
                          &(d->cutAction), SLOT(setVisible(bool)));
