@@ -1648,7 +1648,10 @@ QRect MTextEditViewPrivate::visibleArea() const
 void MTextEditViewPrivate::hideSelectionOverlayTemporarily()
 {
     // hide text selection overlay temporarily
-    if (controller->hasSelectedText()) {
+    if (controller->hasSelectedText() && !selectionOverlay.isNull()) {
+        QObject::disconnect(selectionOverlay.data(), SIGNAL(visibleChanged()),
+                            this, SLOT(onSelectionOverlayVisibleChanged()));
+
         selectionOverlay->disappear();
     }
 }
@@ -1656,9 +1659,10 @@ void MTextEditViewPrivate::hideSelectionOverlayTemporarily()
 void MTextEditViewPrivate::restoreSelectionOverlay()
 {
     // restore text selection overlay if it was temporarily hidden
-    if (controller->hasSelectedText()
-        && !selectionOverlay.isNull()) {
+    if (controller->hasSelectedText() && !selectionOverlay.isNull()) {
         showSelectionOverlay();
+        QObject::connect(selectionOverlay.data(), SIGNAL(visibleChanged()),
+                         this, SLOT(onSelectionOverlayVisibleChanged()));
         selectionOverlay->skipTransitions();
     }
 }
