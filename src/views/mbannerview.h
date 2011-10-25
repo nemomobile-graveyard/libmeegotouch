@@ -71,6 +71,9 @@ protected Q_SLOTS:
     virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end
 
+private Q_SLOTS:
+    void onMinimumTapFeedbackDurationReached();
+
 private:
     Q_DECLARE_PRIVATE(MBannerView)
     Q_DISABLE_COPY(MBannerView)

@@ -24,6 +24,7 @@
 #include "mbannerview.h"
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
+#include <QTimer>
 #include <MLocale>
 
 class MLabel;
@@ -92,6 +93,10 @@ protected:
     mutable bool dayPassed;
 
     MBanner *controller;
+
+    //Used to ensure that the press down feedback is always shown for at least the minimum time
+    QTimer minimumTapFeedbackDurationTimer;
+    bool isBeingPressed;
 
 #ifdef UNIT_TEST
     friend class Ut_MBannerView;

@@ -70,6 +70,7 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    virtual void applyStyle();
 
 private:
     Q_DISABLE_COPY(MStatusBarView)
@@ -87,11 +88,17 @@ private:
     //! position of mouse button press(firstPos) and position of last point of mouse move(lastPos)
     QPointF firstPos, lastPos;
 
-    //! Used to track whether a mouse button is currently being pressed
-    bool pressDown;
+    bool showPressDownEffect; //  whether to draw the status bar in pressed/highlighted state
+    bool isBeingPressed; // whether the user is pressing the status bar
+
+    //! Used to ensure that the press down feedback is always shown for at least the minimum time
+    QTimer minimumTapFeedbackDurationTimer;
+
+private Q_SLOTS:
+    void onMinimumTapFeedbackDurationReached();
 
 #ifdef Q_WS_X11
-
+private:
     //! Timer to poll the status bar property window from root window property
     QTimer propertyWindowPollTimer;
 

@@ -31,6 +31,7 @@ class M_VIEWS_EXPORT MStatusBarStyle : public MSceneWindowStyle
     M_STYLE_ATTRIBUTE(int, swipeThreshold, SwipeThreshold)
     M_STYLE_ATTRIBUTE(qreal, pressDimFactor, PressDimFactor)
     M_STYLE_ATTRIBUTE(bool, enableStatusIndicatorMenu, EnableStatusIndicatorMenu)
+    M_STYLE_ATTRIBUTE(int, minimumTapFeedbackDuration, MinimumTapFeedbackDuration)
 };
 
 class M_VIEWS_EXPORT MStatusBarStyleContainer : public MSceneWindowStyleContainer

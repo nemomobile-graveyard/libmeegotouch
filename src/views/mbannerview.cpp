@@ -46,7 +46,8 @@ MBannerViewPrivate::MBannerViewPrivate() :
     isDownOpacityEnabled(false),
     pixmapBanner(NULL),
     dayPassed(false),
-    controller(0)
+    controller(0),
+    isBeingPressed(false)
 {
 }
 
@@ -708,6 +709,11 @@ MBannerView::MBannerView(MBanner *controller) :
     Q_D(MBannerView);
     d->q_ptr = this;
     d->controller = controller;
+
+    bool ok = connect(&d_ptr->minimumTapFeedbackDurationTimer, SIGNAL(timeout()),
+                      this, SLOT(onMinimumTapFeedbackDurationReached()));
+    if (!ok) qFatal("Signal connection failed!");
+    d_ptr->minimumTapFeedbackDurationTimer.setSingleShot(true);
 }
 
 MBannerView::MBannerView(MBannerViewPrivate &dd, MBanner *controller) :
@@ -733,6 +739,9 @@ void MBannerView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (model()->down())
         return;
 
+    d->isBeingPressed = true;
+    d->minimumTapFeedbackDurationTimer.start();
+
     model()->setDown(true);
     d->refreshStyleMode();
 }
@@ -744,7 +753,12 @@ void MBannerView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     if (!model()->down())
         return;
 
-    model()->setDown(false);
+    if (!d->minimumTapFeedbackDurationTimer.isActive()) {
+        model()->setDown(false);
+        d->refreshStyleMode();
+    }
+
+    d->isBeingPressed = false;
 
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
@@ -754,8 +768,6 @@ void MBannerView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     if (rect.contains(touch)) {
         d->controller->click();
     }
-
-    d->refreshStyleMode();
 }
 
 void MBannerView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -768,16 +780,19 @@ void MBannerView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                 M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
 
     if (rect.contains(touch)) {
+        d->isBeingPressed = true;
         if (!model()->down()) {
+            d->minimumTapFeedbackDurationTimer.start();
             model()->setDown(true);
+            d->refreshStyleMode();
         }
     } else {
-        if (model()->down()) {
+        d->isBeingPressed = false;
+        if (model()->down() && !d->minimumTapFeedbackDurationTimer.isActive()) {
             model()->setDown(false);
+            d->refreshStyleMode();
         }
     }
-
-    d->refreshStyleMode();
 }
 
 void MBannerView::cancelEvent(MCancelEvent *event)
@@ -788,8 +803,21 @@ void MBannerView::cancelEvent(MCancelEvent *event)
     if (!model()->down())
         return;
 
-    model()->setDown(false);
-    d->refreshStyleMode();
+    if (!d->minimumTapFeedbackDurationTimer.isActive()) {
+        model()->setDown(false);
+        d->refreshStyleMode();
+    }
+
+    d->isBeingPressed = false;
+}
+
+void MBannerView::onMinimumTapFeedbackDurationReached()
+{
+    Q_D(MBannerView);
+    if (model()->down() && !d->isBeingPressed) {
+        model()->setDown(false);
+        d->refreshStyleMode();
+    }
 }
 
 void MBannerView::setupModel()
@@ -816,7 +844,9 @@ void MBannerView::setupModel()
 
 void MBannerView::applyStyle()
 {
+    Q_D(MBannerView);
     MSceneWindowView::applyStyle();
+    d->minimumTapFeedbackDurationTimer.setInterval(style()->minimumTapFeedbackDuration());
 }
 
 void MBannerView::drawForeground(QPainter *painter, const QStyleOptionGraphicsItem *option) const

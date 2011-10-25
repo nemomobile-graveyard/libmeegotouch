@@ -187,7 +187,8 @@ bool MStatusBarView::updateSharedPixmapHandleFromPropertyWindow(const Window &wi
 MStatusBarView::MStatusBarView(MStatusBar *controller) :
     MSceneWindowView(controller),
     controller(controller),
-    pressDown(false)
+    showPressDownEffect(false),
+    isBeingPressed(false)
 #ifdef Q_WS_X11
     , isOnDisplay(false)
     , isInSwitcher(false)
@@ -230,6 +231,11 @@ MStatusBarView::MStatusBarView(MStatusBar *controller) :
     updateStatusBarSharedPixmapHandle();
 
 #endif // Q_WS_X11
+
+    bool ok = connect(&minimumTapFeedbackDurationTimer, SIGNAL(timeout()),
+                      this, SLOT(onMinimumTapFeedbackDurationReached()));
+    if (!ok) qFatal("Signal connection failed!");
+    minimumTapFeedbackDurationTimer.setSingleShot(true);
 }
 
 MStatusBarView::~MStatusBarView()
@@ -332,7 +338,7 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
         const_cast<MStatusBarView*>(this)->sharedPixmap = QPixmap();
     }
 
-    if (pressDown) {
+    if (showPressDownEffect) {
         painter->save();
         painter->setOpacity(style()->pressDimFactor());
         painter->fillRect(QRectF(QPointF(0.0, 0.0), size()), Qt::black);
@@ -346,13 +352,16 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
 
 void MStatusBarView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (isBeingPressed)
+        return;
+
     firstPos = event->pos();
     playHapticsFeedback();
 
-    if (pressDown)
-        return;
+    isBeingPressed = true;
+    minimumTapFeedbackDurationTimer.start();
 
-    pressDown = true;
+    showPressDownEffect = true;
     update();
 }
 
@@ -369,13 +378,18 @@ void MStatusBarView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
                     M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
         if (rect.contains(touch)) {
-            if (!pressDown) {
-                pressDown = true;
+            isBeingPressed = true;
+            if (!showPressDownEffect) {
+                playHapticsFeedback();
+                minimumTapFeedbackDurationTimer.start();
+                showPressDownEffect = true;
                 update();
             }
         } else {
-            if (pressDown) {
-                pressDown = false;
+            isBeingPressed = false;
+            if (showPressDownEffect && !minimumTapFeedbackDurationTimer.isActive()) {
+                playHapticsReleaseFeedback();
+                showPressDownEffect = false;
                 update();
             }
         }
@@ -384,12 +398,6 @@ void MStatusBarView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void MStatusBarView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (!pressDown)
-        return;
-
-    pressDown = false;
-    update();
-
     if (style()->useSwipeGesture()) {
         return;
     }
@@ -399,10 +407,35 @@ void MStatusBarView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     QRectF rect = controller->mapToScene(controller->shape()).boundingRect();
     rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
                 M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
-    if(rect.contains(touch)) {
+
+    if (!minimumTapFeedbackDurationTimer.isActive() && rect.contains(touch) && isBeingPressed) {
+        if (showPressDownEffect) {
+            showPressDownEffect = false;
+            update();
+        }
         playHapticsReleaseFeedback();
-        showStatusIndicatorMenu();
     }
+
+    // never delay the opening of the menu, unlike the "unhighlight"
+    if (rect.contains(touch) && isBeingPressed)
+        showStatusIndicatorMenu();
+
+    isBeingPressed = false;
+}
+
+void MStatusBarView::onMinimumTapFeedbackDurationReached()
+{
+    if (showPressDownEffect && !isBeingPressed) {
+        showPressDownEffect = false;
+        update();
+        playHapticsReleaseFeedback();
+    }
+}
+
+void MStatusBarView::applyStyle()
+{
+    MSceneWindowView::applyStyle();
+    minimumTapFeedbackDurationTimer.setInterval(style()->minimumTapFeedbackDuration());
 }
 
 #ifdef Q_WS_X11
