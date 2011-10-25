@@ -65,6 +65,7 @@ private slots:
     void testFollowsCurrentAppWindowWhenDynamicPropertySet();
 
     void testDontRotateWhenOnStackButNotTopmost();
+    void testDontRotateWhenOnStackButNotTopmost_SameMApplication();
 
     void testRotatesFreelyIfCurrentAppWindowContextPorpertyIsInvalid_data();
     void testRotatesFreelyIfCurrentAppWindowContextPorpertyIsInvalid();
@@ -82,6 +83,13 @@ private slots:
     void testOrientationAngleIsClosestAllowedAngle();
 
     void testNewWindowShowsInCurrentWindowOrientationIfDeviceIsFlat();
+
+    void testStayPutIfShownButDidNotGetOnDisplay();
+
+    void testNoSubscriptionToContextPropertiesIfWindowLockedAngle();
+    void testNoSubscriptionToContextPropertiesIfWindowLockedOrientation();
+
+    void testStartAndStopTracking();
 
 private:
     /*  Helper members   */

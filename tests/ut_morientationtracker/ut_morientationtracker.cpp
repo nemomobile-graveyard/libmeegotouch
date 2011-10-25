@@ -575,6 +575,56 @@ void Ut_MOrientationTracker::testDontRotateWhenOnStackButNotTopmost()
     QCOMPARE(window1->orientationAngle(), M::Angle90);
 }
 
+// Regression test for NB#277993
+void Ut_MOrientationTracker::testDontRotateWhenOnStackButNotTopmost_SameMApplication()
+{
+    MOnDisplayChangeEvent eventOnDisplay(true, QRectF(QPointF(0,0), window1->visibleSceneSize()));
+    MOnDisplayChangeEvent eventOffDisplay(false, QRectF(QPointF(0,0), window1->visibleSceneSize()));
+
+    setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
+    setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
+
+    setDesktopOrientationAngle(M::Angle270);
+    setDeviceOrientationAngle(M::Angle90);
+    emitDeviceOrientationAngleChanged();
+
+    setCurrentWindowOrientationAngle(M::Angle180);
+    emitCurrentWindowOrientationAngleChanged();
+
+    window1->setVisible(true);
+    qApp->sendEvent(window1, &eventOnDisplay);
+
+    // window1 follows device orientation
+    QCOMPARE(window1->orientationAngle(), M::Angle90);
+
+    window2->setVisible(true);
+    qApp->sendEvent(window2, &eventOnDisplay);
+
+    // window2 follows device orientation
+    QCOMPARE(window1->orientationAngle(), M::Angle90);
+
+    // window1 is now being covered by window2.
+    qApp->sendEvent(window1, &eventOffDisplay);
+
+    setDeviceOrientationAngle(M::Angle0);
+    emitDeviceOrientationAngleChanged();
+
+    // window2 follows device orientation
+    QCOMPARE(window2->orientationAngle(), M::Angle0);
+
+    // window1 maintains its orientation since it's not being displayed
+    QCOMPARE(window1->orientationAngle(), M::Angle90);
+
+    delete window2;
+    window2 = 0;
+
+    // window 2 is gone, thus window1 is on display, topmost, again
+    qApp->sendEvent(window1, &eventOnDisplay);
+
+    // window1 now follows device orientation
+    QCOMPARE(window1->orientationAngle(), M::Angle0);
+}
+
 void Ut_MOrientationTracker::testRotatesFreelyIfCurrentAppWindowContextPorpertyIsInvalid_data()
 {
     QTest::addColumn<QVariant>("angleVariant");
@@ -863,6 +913,100 @@ void Ut_MOrientationTracker::testNewWindowShowsInCurrentWindowOrientationIfDevic
     QCOMPARE((int)window->orientationAngle(), (int)M::Angle0);
 
     delete window;
+}
+
+void Ut_MOrientationTracker::testStayPutIfShownButDidNotGetOnDisplay()
+{
+    setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
+    setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
+
+    setTVOutIsConnected(false);
+    setDeviceOrientationAngle(M::Angle180);
+    setCurrentWindowOrientationAngle(M::Angle270);
+    setDeviceIsLyingFlat(false);
+    disableRemoteScreen();
+
+    window1->show();
+
+    QCOMPARE((int)window1->orientationAngle(), (int)M::Angle180);
+
+    MOnDisplayChangeEvent displayEvent(false, QRectF(QPointF(0,0), window1->visibleSceneSize()));
+    qApp->sendEvent(window1, &displayEvent);
+
+    setDeviceOrientationAngle(M::Angle90);
+    emitDeviceOrientationAngleChanged();
+
+    // stay put
+    QCOMPARE((int)window1->orientationAngle(), (int)M::Angle180);
+}
+
+void Ut_MOrientationTracker::testNoSubscriptionToContextPropertiesIfWindowLockedAngle()
+{
+    window1->setOrientationAngleLocked(true);
+    showWindowAndSendDisplayEvent(window1);
+
+    QVERIFY(!mTracker->isSubscribedToSensorProperties());
+
+    window1->setOrientationAngleLocked(false);
+
+    // now it's free to rotate
+    QVERIFY(mTracker->isSubscribedToSensorProperties());
+}
+
+void Ut_MOrientationTracker::testNoSubscriptionToContextPropertiesIfWindowLockedOrientation()
+{
+    supportedAnglesStubLists[KeyboardClosed].clear();
+    supportedAnglesStubLists[KeyboardClosed] << M::Angle0;
+    supportedAnglesStubLists[KeyboardClosed] << M::Angle270;
+
+    setTVOutIsConnected(false);
+    setKeyboardIsOpen(false);
+    setDeviceIsLyingFlat(false);
+    setDeviceOrientationAngle(M::Angle0);
+
+    window1->setOrientationAngle(M::Angle0);
+    window1->setOrientationLocked(true);
+
+    showWindowAndSendDisplayEvent(window1);
+
+    // Cannot rotate since the other angle that has the same orientation as M::Angle0,
+    // M::Angle180, is not supported.
+    QVERIFY(!mTracker->isSubscribedToSensorProperties());
+
+    window1->setOrientationLocked(false);
+
+    // now it's free to rotate
+    QVERIFY(mTracker->isSubscribedToSensorProperties());
+}
+
+void Ut_MOrientationTracker::testStartAndStopTracking()
+{
+    QVERIFY(!mTracker->isSubscribedToSensorProperties());
+
+    showWindowAndSendDisplayEvent(window1);
+
+    QVERIFY(mTracker->isSubscribedToSensorProperties());
+
+    mTracker->stopTracking();
+
+    QVERIFY(!mTracker->isSubscribedToSensorProperties());
+
+    mTracker->startTracking();
+
+    QVERIFY(mTracker->isSubscribedToSensorProperties());
+
+    delete window1;
+    window1 = 0;
+
+    mTracker->stopTracking();
+
+    showWindowAndSendDisplayEvent(window2);
+
+    QVERIFY(!mTracker->isSubscribedToSensorProperties());
+
+    mTracker->startTracking();
+
+    QVERIFY(mTracker->isSubscribedToSensorProperties());
 }
 
 ///////////////////////////////////////////////////////

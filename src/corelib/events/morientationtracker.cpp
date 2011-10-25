@@ -602,6 +602,18 @@ void MOrientationTracker::resolveOrientationRulesOfWindow(MWindow *window)
     d->resolveOrientationRulesOfWindow(window);
 }
 
+void MOrientationTracker::startTracking()
+{
+    Q_D(MOrientationTracker);
+    d->startTracking();
+}
+
+void MOrientationTracker::stopTracking()
+{
+    Q_D(MOrientationTracker);
+    d->stopTracking();
+}
+
 #ifdef HAVE_CONTEXTSUBSCRIBER
 void MOrientationTrackerPrivate::subscribeToSensorProperties()
 {

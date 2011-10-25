@@ -81,6 +81,10 @@ private:
 
     void resolveOrientationRulesOfWindow(MWindow *window);
 
+    // see private header for documentation
+    void startTracking();
+    void stopTracking();
+
 #ifdef Q_WS_X11
     void handleCurrentAppWindowChange();
     void handleCurrentAppWindowOrientationAngleChange();
