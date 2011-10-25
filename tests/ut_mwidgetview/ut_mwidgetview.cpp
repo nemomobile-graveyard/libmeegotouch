@@ -294,6 +294,9 @@ void Ut_MWidgetView::testDrawBackground_data()
 
 void Ut_MWidgetView::testDrawBackground()
 {
+    if (QPixmap::defaultDepth() < 24)
+        QSKIP("Executed only on higher pixmap color depths", SkipAll); // Skip the test as the expected value is not for lower bit depths
+
     QFETCH(qreal, parentOpacity);
     QFETCH(qreal, itemOpacity);
     QFETCH(qreal, itemBackgroundOpacity);
