@@ -421,7 +421,6 @@ void MWindowPrivate::resolveOrientationRules() {
     //MOrientationTracker will resolve if following sensors is required
     } else {
         privateTracker->stopFollowingDesktop(q);
-        privateTracker->stopFollowingCurrentAppWindow(q, true);
     }
 
     MOrientationTracker::instance()->d_ptr->reevaluateSubscriptionToSensorProperties();
@@ -831,8 +830,7 @@ MWindow::MWindow(QWidget *parent)
 
 MWindow::~MWindow()
 {
-    MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this, true);
-    MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this, false);
+    MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this);
     MOrientationTracker::instance()->d_func()->stopFollowingDesktop(this);
     MComponentData::unregisterWindow(this);
     delete d_ptr;

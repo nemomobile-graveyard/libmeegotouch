@@ -205,8 +205,7 @@ bool MOrientationTrackerPrivate::checkIfOrientationUpdatesRequired()
     foreach(MWindow* win, MApplication::windows()) {
 #ifdef Q_WS_X11
         if (win && (win->isOnDisplay()) &&
-            (!haveCurrWindowAngle || (!windowsFollowingCurrentAppWindow.contains(win) &&
-            !windowsFollowingWithConstraintsCurrentAppWindow.contains(win))) &&
+            (!haveCurrWindowAngle || !windowsFollowingCurrentAppWindow.contains(win)) &&
             !windowsFollowingDesktop.contains(win))
 #else
         if (win && win->isOnDisplay())
@@ -387,8 +386,7 @@ bool MOrientationTrackerPrivate::windowIsFollowingDeviceOrientation(MWindow *win
 
     // If there's no current app. window angle to follow, those windows are
     // free to rotate like the others
-    if ((windowsFollowingCurrentAppWindow.contains(window) ||
-         windowsFollowingWithConstraintsCurrentAppWindow.contains(window))
+    if (windowsFollowingCurrentAppWindow.contains(window)
         && currentWindowAnglePropertyContainsValidAngle())
         return false;
 
@@ -592,18 +590,12 @@ void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
     foreach(MWindow * win, windowsFollowingCurrentAppWindow) {
         win->setOrientationAngle(angle);
     }
-    //some special windows have their constraints and we have to follow them
-    foreach(MWindow * window, windowsFollowingWithConstraintsCurrentAppWindow) {
-        rotateToAngleIfAllowed(angle, window);
-    }
 }
 #endif //HAVE_CONTEXTSUBSCRIBER
 
-void MOrientationTrackerPrivate::startFollowingCurrentAppWindow(MWindow *win, bool limitedByConstraints)
+void MOrientationTrackerPrivate::startFollowingCurrentAppWindow(MWindow *win)
 {
-    if (limitedByConstraints && !windowsFollowingWithConstraintsCurrentAppWindow.contains(win)) {
-        windowsFollowingWithConstraintsCurrentAppWindow.append(win);;
-    } else if (!limitedByConstraints && !windowsFollowingCurrentAppWindow.contains(win)) {
+    if (!windowsFollowingCurrentAppWindow.contains(win)) {
         windowsFollowingCurrentAppWindow.append(win);
     }
 #ifdef HAVE_CONTEXTSUBSCRIBER
@@ -613,15 +605,11 @@ void MOrientationTrackerPrivate::startFollowingCurrentAppWindow(MWindow *win, bo
 #endif //HAVE_CONTEXTSUBSCRIBER
 }
 
-void MOrientationTrackerPrivate::stopFollowingCurrentAppWindow(MWindow *win, bool limitedByConstraints)
+void MOrientationTrackerPrivate::stopFollowingCurrentAppWindow(MWindow *win)
 {
-    if (limitedByConstraints)
-        windowsFollowingWithConstraintsCurrentAppWindow.removeAll(win);
-    else
-        windowsFollowingCurrentAppWindow.removeAll(win);
+    windowsFollowingCurrentAppWindow.removeAll(win);
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    if (windowsFollowingWithConstraintsCurrentAppWindow.isEmpty() &&
-        windowsFollowingCurrentAppWindow.isEmpty())
+    if (windowsFollowingCurrentAppWindow.isEmpty())
         currentWindowAngleProperty->unsubscribe();
 #endif //HAVE_CONTEXTSUBSCRIBER
 }

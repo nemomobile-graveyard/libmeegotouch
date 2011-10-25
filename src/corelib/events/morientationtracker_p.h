@@ -103,13 +103,8 @@ public:
     //windows from this list follow "/Screen/CurrentWindow/OrientationAngle" (set by meego window manager).
     //by default it includes modal dialogs.
     QList<QPointer<MWindow> > windowsFollowingCurrentAppWindow;
-    //windows from this list will follow "/Screen/CurrentWindow/OrientationAngle" but with
-    //regard to restrictions as orientation lock or device profile data.
-    //This list includes windows off display which do not get iconic state (WM_STATE),
-    //and windows which have _MEEGOTOUCH_ALWAYS_MAPPED property set to 1 or 2.
-    QList<QPointer<MWindow> > windowsFollowingWithConstraintsCurrentAppWindow;
-    void startFollowingCurrentAppWindow(MWindow* win, bool limitedByConstraints = false);
-    void stopFollowingCurrentAppWindow(MWindow* win, bool limitedByConstraints = false);
+    void startFollowingCurrentAppWindow(MWindow* win);
+    void stopFollowingCurrentAppWindow(MWindow* win);
 #ifdef HAVE_CONTEXTSUBSCRIBER
     bool currentWindowAnglePropertyContainsValidAngle();
 #endif //HAVE_CONTEXTSUBSCRIBER
