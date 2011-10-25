@@ -414,13 +414,20 @@ void MWindowPrivate::resolveOrientationRules() {
 
     MOrientationTrackerPrivate *privateTracker = MOrientationTracker::instance()->d_ptr;
 
+    // follow current application window if corresponding dynamic property is set
+    // (no matter to what value).
+    if (q->property(FollowsCurrentApplicationWindowOrientationPropertyName).isValid()) {
+        privateTracker->startFollowingCurrentAppWindow(q);
+        privateTracker->stopFollowingDesktop(q);
     //follow desktop if visible in switcher
-    if ((isInSwitcher && q->isOnDisplay())) {
+    } else if ((isInSwitcher && q->isOnDisplay())) {
         privateTracker->startFollowingDesktop(q);
+        privateTracker->stopFollowingCurrentAppWindow(q);
     //in other cases do not follow other windows.
     //MOrientationTracker will resolve if following sensors is required
     } else {
         privateTracker->stopFollowingDesktop(q);
+        privateTracker->stopFollowingCurrentAppWindow(q);
     }
 
     MOrientationTracker::instance()->d_ptr->reevaluateSubscriptionToSensorProperties();
@@ -1546,16 +1553,7 @@ bool MWindow::event(QEvent *event)
     else if (event->type() == QEvent::DynamicPropertyChange) {
         QDynamicPropertyChangeEvent* dynamicEvent = static_cast<QDynamicPropertyChangeEvent*>(event);        
         if (dynamicEvent->propertyName() == FollowsCurrentApplicationWindowOrientationPropertyName) {
-            //property was set, does not matter what value
-            if (property(FollowsCurrentApplicationWindowOrientationPropertyName).isValid()) {
-                mDebug("MWindow") << "window follows current app window orientation";
-                MOrientationTracker::instance()->d_func()->startFollowingCurrentAppWindow(this);
-            }
-            //propery was unset
-            else {
-                MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this);
-                d->resolveOrientationRules();
-            }
+            d->resolveOrientationRules();
         }
     }
     else if (event->type() == QEvent::WinIdChange) {
