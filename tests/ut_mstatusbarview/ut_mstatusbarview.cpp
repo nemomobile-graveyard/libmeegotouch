@@ -409,6 +409,7 @@ void Ut_MStatusBarView::testPressDimming()
     QCOMPARE(styleDimCSS, m_subject->modifiableStyle()->pressDimFactor());
 
     m_subject->modifiableStyle()->setPressDimFactor(0.6);
+    m_subject->modifiableStyle()->setUseSwipeGesture(false);
 
     m_subject->sharedPixmap = QPixmap(50, 72);
     MSceneManager sceneManager;
@@ -437,13 +438,30 @@ void Ut_MStatusBarView::testPressDimming()
     QCOMPARE(gFilledRect.size(), gPixmapSourceRect.size());
     QCOMPARE(gFilledRect.topLeft(), gPixmapTargetRect.topLeft());
 
-    // Release the mouse button and verify that the dimmer disappers
+    // Release the mouse button
     mouseUpWorker(START_POINT);
 
     gTestOpacity = -1;
     gFillColor = -1;
     gFilledRect = QRectF();
 
+    // the dimming rectangle should still be there
+    m_subject->drawContents(&painter, NULL);
+    QCOMPARE(gTestOpacity, m_subject->modifiableStyle()->pressDimFactor());
+    QCOMPARE(gFillColor, QColor(Qt::black));
+    QCOMPARE(gFilledRect.size(), gPixmapSourceRect.size());
+    QCOMPARE(gFilledRect.topLeft(), gPixmapTargetRect.topLeft());
+
+    // make the timer timeout immediately
+    QTimerEvent timerEvt(m_subject->minimumTapFeedbackDurationTimer.timerId());
+    QApplication::instance()->sendEvent(&m_subject->minimumTapFeedbackDurationTimer, &timerEvt);
+    QApplication::processEvents();
+
+    gTestOpacity = -1;
+    gFillColor = -1;
+    gFilledRect = QRectF();
+
+    // now the dimming rectangle should disappear
     m_subject->drawContents(&painter, NULL);
     QVERIFY(gFilledRect.isNull() || gTestOpacity != m_subject->modifiableStyle()->pressDimFactor());
 

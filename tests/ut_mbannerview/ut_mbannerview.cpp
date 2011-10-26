@@ -149,6 +149,14 @@ void Ut_MBannerView::testBannerMouseEvents()
     m_subject->mousePressEvent(&pressEvent);
     QVERIFY(m_banner->isDown());
     m_subject->mouseReleaseEvent(&releaseEvent);
+
+    QVERIFY(m_banner->isDown());  // should still be down
+
+    // make the timer timeout immediately
+    QTimerEvent timerEvt(m_subject->d_ptr->minimumTapFeedbackDurationTimer.timerId());
+    QApplication::instance()->sendEvent(&m_subject->d_ptr->minimumTapFeedbackDurationTimer, &timerEvt);
+    QApplication::processEvents();
+
     QVERIFY(!m_banner->isDown());
 
     m_subject->cancelEvent(&event);
@@ -173,6 +181,14 @@ void Ut_MBannerView::testMouseMoveEvent()
                            d->controller->sceneBoundingRect().y() - M_RELEASE_MISS_DELTA - 1));
 
     m_subject->mouseMoveEvent(event);
+
+    QVERIFY2(m_subject->model()->down(), "Model supposed to be down!");  // should still be down
+
+    // make the timer timeout immediately
+    QTimerEvent timerEvt(d->minimumTapFeedbackDurationTimer.timerId());
+    QApplication::instance()->sendEvent(&d->minimumTapFeedbackDurationTimer, &timerEvt);
+    QApplication::processEvents();
+
     QVERIFY2(!m_subject->model()->down(), "Model supposed not to be down!");
 }
 
