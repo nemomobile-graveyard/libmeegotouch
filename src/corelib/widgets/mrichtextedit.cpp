@@ -192,22 +192,31 @@ void MRichTextEditPrivate::init()
 
 void MRichTextEditPrivate::_q_updateToolbarButtons()
 {
-    // Make group visible to check buttons state in it
-    // otherwise all buttons in this group will be invisible
-    textEditButtons.setVisible(true);
-    if (!textEditButtons.visibleItemCount()) {
-        modeAction.setVisible(false);
-        _q_showRichTextToolbar(true);
+    Q_Q(MRichTextEdit);
+    if (!q->isReadOnly()) {
+        // Make group visible to check buttons state in it
+        // otherwise all buttons in this group will be invisible
+        textEditButtons.setVisible(true);
+        if (!textEditButtons.visibleItemCount()) {
+            modeAction.setVisible(false);
+            _q_showRichTextToolbar(true);
+        } else {
+            modeAction.setVisible(true);
+            modeAction.setChecked(false);
+            _q_showRichTextToolbar(false);
+        }
     } else {
-        modeAction.setVisible(true);
+        textEditButtons.setVisible(true);
+        richTextEditButtons.setVisible(false);
         modeAction.setChecked(false);
-        _q_showRichTextToolbar(false);
+        modeAction.setVisible(false);
     }
 }
 
 void MRichTextEditPrivate::_q_showRichTextToolbar(bool show)
 {
-    if (show) {
+    Q_Q(MRichTextEdit);
+    if (show && !q->isReadOnly()) {
         textEditButtons.setVisible(false);
         richTextEditButtons.setVisible(true);
     } else {
@@ -553,6 +562,7 @@ MRichTextEdit::MRichTextEdit(MTextEditModel::LineMode type, const QString &text,
             SLOT(_q_updateToolbarButtons()));
 
     d->init();
+    d->_q_updateToolbarButtons();
 }
 
 
