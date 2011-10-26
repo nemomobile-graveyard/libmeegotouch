@@ -600,9 +600,6 @@ void Ut_MOrientationTracker::testRotatesFreelyIfCurrentAppWindowContextPorpertyI
     StubMap<QString, ContextProperty>::StubType *topEdgePropStub =
             gContextPropertyStubMap->findStub("Screen.TopEdge");
 
-    window1->setProperty("followsCurrentApplicationWindowOrientation", true);
-    window1->setVisible(true);
-
     // Set a NULL or unsupported angle to "/Screen/CurrentWindow/OrientationAngle"
     currentWindowOrientationPropStub->stubReset();
     currentWindowOrientationPropStub->stubSetReturnValue("value", angleVariant);
@@ -610,6 +607,9 @@ void Ut_MOrientationTracker::testRotatesFreelyIfCurrentAppWindowContextPorpertyI
     topEdgePropStub->stubReset();
     topEdgePropStub->stubSetReturnValue("value", QVariant(QString("top")));
     QMetaObject::invokeMethod(topEdgePropStub->getProxy(), "valueChanged");
+
+    window1->setProperty("followsCurrentApplicationWindowOrientation", true);
+    window1->setVisible(true);
 
     MOnDisplayChangeEvent displayEvent(true, QRectF(QPointF(0,0), window1->visibleSceneSize()));
     qApp->sendEvent(window1, &displayEvent);
