@@ -337,9 +337,13 @@ void Ut_MApplication::mApplicationTranslationPath()
 
     QStringList list = l.translationPaths();
 
-    QVERIFY(list.size() == 1);
+    QVERIFY(list.size() >= 1);
+    QVERIFY(list.size() <= 2);
     if (list.size() == 1) {
         QVERIFY(list.at(0) == TRANSLATION_DIR);
+    }
+    if (list.size() == 2) {
+        QVERIFY(list.at(1) == TRANSLATION_DIR);
     }
 
     delete app;
