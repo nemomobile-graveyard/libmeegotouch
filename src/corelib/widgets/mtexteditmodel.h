@@ -109,6 +109,15 @@ private:
     M_MODEL_PROPERTY(QList<MTextEditFormatRange>, additionalFormats, AdditionalFormats, true, QList<MTextEditFormatRange>())
     M_MODEL_PROPERTY(bool, isInputContextUpdateEnabled, InputContextUpdateEnabled, true, true)
     M_MODEL_PROPERTY(bool, isWesternNumericInputEnforced, WesternNumericInputEnforced, true, false)
+    /*!
+        \property MTextEditModel::isSelecting
+        \brief Boolean value that defines whether the text edit is during selecting.
+        \note isSelecting is different with MTextEdit::hasSelectedText(). isSelecting
+        is true when the selection handles are appearing, false when disappearing.
+        While the MTextEdit::hasSelectedText() could be false even when handles are
+        still appearing.
+    */
+    M_MODEL_PROPERTY(bool, isSelecting, IsSelecting, true, false)
 
 public:
     void updateCursor()   {

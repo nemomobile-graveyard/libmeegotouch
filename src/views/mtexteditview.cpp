@@ -815,6 +815,7 @@ void MTextEditViewPrivate::showSelectionOverlay()
                          this, SLOT(mapSelectionChange()),
                          Qt::UniqueConnection);
         mapSelectionChange();
+        q->model()->setIsSelecting(true);
     }
 }
 
@@ -1251,6 +1252,7 @@ void MTextEditViewPrivate::onSelectionHandleReleased()
 
 void MTextEditViewPrivate::onSelectionOverlayVisibleChanged()
 {
+    Q_Q(MTextEditView);
     if (!selectionOverlay.isNull() && !selectionOverlay.data()->isVisible()) {
         QObject::disconnect(controller, SIGNAL(textChanged()),
                             this, SLOT(mapSelectionChange()));
@@ -1265,6 +1267,7 @@ void MTextEditViewPrivate::onSelectionOverlayVisibleChanged()
                                 this,
                                 SLOT(mapSelectionChange()));
         }
+        q->model()->setIsSelecting(false);
     }
 }
 
