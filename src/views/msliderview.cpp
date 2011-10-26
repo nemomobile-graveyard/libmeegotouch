@@ -292,6 +292,8 @@ void MSliderIndicator::setText(const QString &text)
 
     label->setText(text);
 
+    QSizeF preferredSize = label->sizeHint(Qt::PreferredSize);
+
     if (text.isEmpty()) {
         QSizeF emptySize(0, 0);
 
@@ -308,22 +310,22 @@ void MSliderIndicator::setText(const QString &text)
             sizeHintChanged = true;
         }
     } else {
-        if (label->preferredSize() != label->minimumSize()) {
-            label->setMinimumSize(label->preferredSize());
+        if (preferredSize != label->minimumSize()) {
+            label->setMinimumSize(preferredSize);
             sizeHintChanged = true;
         }
-        if (label->preferredSize() != label->preferredSize()) {
-            label->setPreferredSize(label->preferredSize());
+        if (preferredSize != label->preferredSize()) {
+            label->setPreferredSize(preferredSize);
             sizeHintChanged = true;
         }
-        if (label->preferredSize() != label->maximumSize()) {
-            label->setMaximumSize(label->preferredSize());
+        if (preferredSize != label->maximumSize()) {
+            label->setMaximumSize(preferredSize);
             sizeHintChanged = true;
         }
     }
 
-    if (label->preferredSize() != label->size())
-        label->resize(label->preferredSize());
+    if (preferredSize != label->size())
+        label->resize(preferredSize);
 
     if (sizeHintChanged)
         updateGeometry();
@@ -347,6 +349,8 @@ void MSliderIndicator::setImage(const QString &id)
         delete pixmap;
     }
 
+    QSizeF preferredSize = image->sizeHint(Qt::PreferredSize);
+
     if (id.isEmpty()) {
         QSizeF emptySize(0, 0);
 
@@ -363,22 +367,22 @@ void MSliderIndicator::setImage(const QString &id)
             sizeHintChanged = true;
         }
     } else {
-        if (image->preferredSize() != image->minimumSize()) {
-            image->setMinimumSize(image->preferredSize());
+        if (preferredSize != image->minimumSize()) {
+            image->setMinimumSize(preferredSize);
             sizeHintChanged = true;
         }
-        if (image->preferredSize() != image->preferredSize()) {
-            image->setPreferredSize(image->preferredSize());
+        if (preferredSize != image->preferredSize()) {
+            image->setPreferredSize(preferredSize);
             sizeHintChanged = true;
         }
-        if (image->preferredSize() != image->maximumSize()) {
-            image->setMaximumSize(image->preferredSize());
+        if (preferredSize != image->maximumSize()) {
+            image->setMaximumSize(preferredSize);
             sizeHintChanged = true;
         }
     }
 
-    if (image->preferredSize() != label->size())
-        image->resize(image->preferredSize());
+    if (preferredSize != label->size())
+        image->resize(preferredSize);
 
     if (sizeHintChanged)
         updateGeometry();
