@@ -2091,6 +2091,7 @@ private:
     friend struct MStaticLocaleDestroyer;
     friend class MIcuBreakIteratorPrivate;
     friend class MBreakIterator;
+    friend class MStringSearch;
 
 private Q_SLOTS:
     void refreshSettings();

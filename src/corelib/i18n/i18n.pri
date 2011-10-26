@@ -54,6 +54,7 @@ contains(DEFINES, HAVE_ICU) {
             $$I18N_SRC_DIR/mcollator_proxy.cpp \
             $$I18N_SRC_DIR/mcharsetdetector_proxy.cpp \
             $$I18N_SRC_DIR/mcharsetmatch_proxy.cpp \
+            $$I18N_SRC_DIR/mstringsearch_proxy.cpp \
 
     } else {
         PRIVATE_HEADERS += \
