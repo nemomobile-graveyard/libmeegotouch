@@ -441,7 +441,10 @@ QAbstractTextDocumentLayout::PaintContext MTextEditViewPrivate::paintContext() c
         paintContext.selections.append(selection);
 
     } else if (focused == true) {
-        if ( q->model()->edit() == MTextEditModel::EditModeBasic) {
+        if (controller->isReadOnly()) {
+            // dont't draw cursor if it is readOnly
+            paintContext.cursorPosition = -1;
+        } else if ( q->model()->edit() == MTextEditModel::EditModeBasic) {
             paintContext.cursorPosition = cursor.position();
         } else if (q->model()->edit() == MTextEditModel::EditModeActive
                    && q->model()->preeditCursor() >= 0) {
