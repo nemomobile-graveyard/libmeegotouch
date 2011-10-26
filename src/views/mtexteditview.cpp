@@ -2297,8 +2297,10 @@ void MTextEditView::handleLongPress()
         return;
     }
 
-    // Bring up magnifier on long press.
-    d->showMagnifier();
+    // Bring up magnifier on long press if it is not readonly.
+    if (!d->controller->isReadOnly()) {
+        d->showMagnifier();
+    }
 }
 
 void MTextEditView::hideInfoBanner()
