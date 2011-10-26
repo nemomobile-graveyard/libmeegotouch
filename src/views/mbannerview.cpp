@@ -274,12 +274,14 @@ void MBannerViewPrivate::layoutShortEventBanner()
         portraitPolicy->addItem(subtitle(), Qt::AlignTop);
         portraitPolicy->setStretchFactor(subtitle(), 1);
         landscapePolicy->setStretchFactor(subtitle(), 1);
+    } else {
+        landscapePolicy->addStretch();
+        portraitPolicy->addStretch();
     }
 
     prefixTimeStamp()->setVisible(false);
     bannerTimeStamp()->setVisible(false);
-    landscapePolicy->addStretch();
-    portraitPolicy->addStretch();
+
     isDownOpacityEnabled = true;
 }
 
