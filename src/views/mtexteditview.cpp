@@ -700,6 +700,26 @@ void MTextEditViewPrivate::hideMagnifier()
     }
 }
 
+void MTextEditViewPrivate::showSelectionMagnifier()
+{
+    if (!magnifier) {
+        magnifier.reset(new MTextMagnifier(*controller,
+                                           cursorRect().size()));
+    }
+
+    updateMagnifierPosition();
+
+    magnifier->appear();
+}
+
+void MTextEditViewPrivate::hideSelectionMagnifier()
+{
+    if (magnifier) {
+        magnifier->disappear(MTextMagnifier::DestroyWhenDone);
+        (void)magnifier.take(); // Set pointer to null without destroying.
+    }
+}
+
 void MTextEditViewPrivate::showSelectionOverlay()
 {
     Q_Q(MTextEditView);
@@ -1049,13 +1069,9 @@ void MTextEditViewPrivate::onSelectionHandlePressed(const QPointF &position)
     q->model()->setInputContextUpdateEnabled(false);
     controller->setCacheMode(QGraphicsItem::ItemCoordinateCache);
 
-    if (!magnifier) {
-        magnifier.reset(new MTextMagnifier(*controller,
-                                           cursorRect().size()));
-    }
+    showSelectionMagnifier();
     setMouseTarget(position);
-    updateMagnifierPosition();
-    makeMagnifierAppear();
+
     lastHandlePos = QPointF();
     handleTime.start();
 
@@ -1084,7 +1100,7 @@ void MTextEditViewPrivate::onSelectionHandleReleased()
     restoreEditorToolbar();
     controller->setCacheMode(QGraphicsItem::NoCache);
     q->model()->setInputContextUpdateEnabled(true);
-    hideMagnifier();
+    hideSelectionMagnifier();
     mapSelectionChange();
 }
 

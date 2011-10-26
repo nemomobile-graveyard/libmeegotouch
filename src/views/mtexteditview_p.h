@@ -74,6 +74,9 @@ public:
     void showMagnifier();
     void hideMagnifier();
 
+    void showSelectionMagnifier();
+    void hideSelectionMagnifier();
+
     void showEditorToolbar();
     void hideEditorToolbar();
 
