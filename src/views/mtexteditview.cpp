@@ -26,6 +26,7 @@
 #include <MSceneManager>
 #include <MApplicationPage>
 #include <MPannableViewport>
+#include <MDeviceProfile>
 
 #include <QApplication>
 #include <QPainter>
@@ -53,6 +54,9 @@ namespace
     const int ScrollMargin = 20; // distance from the edge to start scrolling
     const int ScrollingTimeDuration = 100;
     const int ScrollStep = 10; // pixels to scroll at once
+
+    const int HoldFeedbackTime = 250; // time to not play feedback after scroll while selecting or moving magnifier in ms
+    const int WhitespaceCheckLimit = 10; // selection amount where existance of whitespace is checked
 
     //! how long before character becomes masked
     const int MaskedTimeInterval = 1000;
@@ -109,7 +113,12 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       focusAnimationDelay(new QTimer(this)),
       scrollSelectTimer(new QTimer(this)),
       focusingTap(true),
-      selectionHandleIsPressed(false)
+      selectionHandleIsPressed(false),
+      timeOnFeedback(QElapsedTimer()),
+      timeOnMove(QElapsedTimer()),
+      previousHorizontalScroll(0.0),
+      viewScrolled(false),
+      previousSelectionCursorPosition(0)
 {
     selectionFormat.setForeground(Qt::white);
     selectionFormat.setBackground(Qt::black);
@@ -126,6 +135,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
     scrollSelectTimer->setInterval(200);
 
     handleTime.invalidate();
+    timeOnFeedback.invalidate();
+    timeOnMove.invalidate();
 
     controller->grabGesture(Qt::PanGesture);
 
@@ -668,12 +679,18 @@ void MTextEditViewPrivate::showMagnifier()
                                            cursorRect().size()));
     }
 
+    QObject::connect(controller, SIGNAL(cursorPositionChanged()),
+                     this, SLOT(playSelectionAndMagnifierFeedback()),
+                     Qt::UniqueConnection);
+
     updateMagnifierPosition();
     magnifier->appear();
     MTextEditPrivate *textWidgetPtr = static_cast<MTextEditPrivate *>(controller->d_func());
     if (textWidgetPtr) {
         connect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()),
                 this, SLOT(updateMagnifierPosition()), Qt::UniqueConnection);
+        connect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()),
+                this, SLOT(onScenePositionChanged()), Qt::UniqueConnection);
     }
 }
 
@@ -694,12 +711,20 @@ void MTextEditViewPrivate::hideMagnifier()
     if (magnifier) {
         MTextEditPrivate *textWidgetPtr = static_cast<MTextEditPrivate *>(controller->d_func());
         if (textWidgetPtr) {
-            disconnect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()), this, SLOT(updateMagnifierPosition()));
+            disconnect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()),
+                       this, SLOT(updateMagnifierPosition()));
+            disconnect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()),
+                       this, SLOT(onScenePositionChanged()));
         }
+
+        viewScrolled = false;
 
         magnifier->disappear(MTextMagnifier::DestroyWhenDone);
         (void)magnifier.take(); // Set pointer to null without destroying.
     }
+
+    QObject::disconnect(controller, SIGNAL(cursorPositionChanged()),
+                        this, SLOT(playSelectionAndMagnifierFeedback()));
 }
 
 void MTextEditViewPrivate::showSelectionMagnifier()
@@ -711,6 +736,16 @@ void MTextEditViewPrivate::showSelectionMagnifier()
 
     updateMagnifierPosition();
 
+    QObject::connect(controller, SIGNAL(selectionChanged()),
+                     this, SLOT(playSelectionAndMagnifierFeedback()),
+                     Qt::UniqueConnection);
+
+    MTextEditPrivate *textWidgetPtr = static_cast<MTextEditPrivate *>(controller->d_func());
+    if (textWidgetPtr) {
+        connect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()),
+                this, SLOT(onScenePositionChanged()), Qt::UniqueConnection);
+    }
+
     magnifier->appear();
 }
 
@@ -720,6 +755,18 @@ void MTextEditViewPrivate::hideSelectionMagnifier()
         magnifier->disappear(MTextMagnifier::DestroyWhenDone);
         (void)magnifier.take(); // Set pointer to null without destroying.
     }
+
+    MTextEditPrivate *textWidgetPtr
+        = static_cast<MTextEditPrivate *>(controller->d_func());
+    if (textWidgetPtr) {
+        QObject::disconnect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()),
+                            this, SLOT(onScenePositionChanged()));
+    }
+
+    QObject::disconnect(controller, SIGNAL(selectionChanged()),
+                        this, SLOT(playSelectionAndMagnifierFeedback()));
+
+    viewScrolled = false;
 }
 
 void MTextEditViewPrivate::showSelectionOverlay()
@@ -937,11 +984,68 @@ void MTextEditViewPrivate::handleDocumentSizeChange(const QSizeF &newSize)
     checkScroll();
 }
 
-void MTextEditViewPrivate::playTextFieldSelectionFeedback()
+void MTextEditViewPrivate::playSelectionAndMagnifierFeedback()
 {
     Q_Q(const MTextEditView);
 
-    q->style()->changeSelectionFeedback().play();
+    static bool holdFeedback = false;
+
+    const int moveLimit = MDeviceProfile::instance()->mmToPixels(q->style()->feedbackSpeedLimit())
+                          * timeOnMove.restart();
+    // approximates sqrt(dx^2 + dy^2) * 1000
+    const int moveAmount = (qAbs(previousPosition.x() - currentPosition.x())
+                            + qAbs(previousPosition.y() - currentPosition.y())) * 700;
+
+    // Play feedback if:
+    // - We are not scrolling (vertically or horizontally) and
+    // - Enough time has passed since scrolling and
+    // - Finger is moving slow enough and
+    // - Enough time has elapsed since last feedback
+    if (viewScrolled || previousHorizontalScroll != hscroll) {
+        timeOnFeedback.start();
+        viewScrolled = false;
+        previousHorizontalScroll = hscroll;
+        holdFeedback = true;
+    } else if (moveAmount < moveLimit && timeOnFeedback.isValid()
+        && timeOnFeedback.elapsed() > q->style()->minimumFeedbackInterval()
+        && (!holdFeedback || (timeOnFeedback.elapsed() > HoldFeedbackTime))) {
+        if (magnifier) {
+            // Cursor moved while text magnifier is up
+            q->style()->magnifierCursorMoveFeedback().play();
+            timeOnFeedback.start();
+            holdFeedback = false;
+        } else {
+            // Selection changed
+            const int selectedAmount = qAbs(previousSelectionCursorPosition
+                                            - controller->cursorPosition());
+            bool playFeedback = false;
+
+            // Don't play feedback for whitespace. If selected amount is greater
+            // than WhitespaceCheckLimit, assume that selection contains something
+            // other than whitespace.
+            if (selectedAmount > WhitespaceCheckLimit) {
+                playFeedback = true;
+            } else {
+                const int start = qMin(previousSelectionCursorPosition,
+                                       controller->cursorPosition());
+                for (int i = 0; i < selectedAmount; ++i) {
+                    if (!activeDocument()->characterAt(start + i).isSpace()) {
+                        playFeedback = true;
+                        break;
+                    }
+                }
+            }
+
+            if (playFeedback) {
+                q->style()->changeSelectionFeedback().play();
+                timeOnFeedback.start();
+                holdFeedback = false;
+            }
+        }
+    }
+
+    previousSelectionCursorPosition = controller->cursorPosition();
+    previousPosition = currentPosition;
 }
 
 /*!
@@ -956,10 +1060,20 @@ void MTextEditViewPrivate::startSelection(QGraphicsSceneMouseEvent *event)
             hideEditorToolbar();
         }
 
+        QObject::connect(controller, SIGNAL(selectionChanged()),
+                         this, SLOT(playSelectionAndMagnifierFeedback()),
+                         Qt::UniqueConnection);
+
+        MTextEditPrivate *textWidgetPtr = static_cast<MTextEditPrivate *>(controller->d_func());
+        if (textWidgetPtr) {
+            connect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()),
+                    this, SLOT(onScenePositionChanged()), Qt::UniqueConnection);
+        }
+
         int currentPos = cursorPosition(event);
         startCursorPos = cursorPosition(event->buttonDownPos(Qt::LeftButton));
+        previousSelectionCursorPosition = startCursorPos;
         controller->setSelection(startCursorPos, currentPos - startCursorPos, true);
-
     } else {
         // with masked input we just select all
         selecting = false;
@@ -971,6 +1085,24 @@ void MTextEditViewPrivate::startSelection(QGraphicsSceneMouseEvent *event)
     longPressTimer->stop();
 }
 
+void MTextEditViewPrivate::stopSelection()
+{
+    scrollSelectTimer->stop();
+
+    if (selecting) {
+        MTextEditPrivate *textWidgetPtr = static_cast<MTextEditPrivate *>(controller->d_func());
+        if (textWidgetPtr) {
+            disconnect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()),
+                       this, SLOT(onScenePositionChanged()));
+        }
+
+        QObject::disconnect(controller, SIGNAL(selectionChanged()),
+                            this, SLOT(playSelectionAndMagnifierFeedback()));
+
+        viewScrolled = false;
+        selecting = false;
+    }
+}
 
 /*!
  * \brief Method to update text selection when mouse is moved
@@ -1014,6 +1146,11 @@ void MTextEditViewPrivate::scrollSelectSlot()
     }
 }
 
+void MTextEditViewPrivate::onScenePositionChanged()
+{
+    viewScrolled = true;
+}
+
 void MTextEditViewPrivate::mapSelectionChange()
 {
     Q_Q(MTextEditView);
@@ -1044,6 +1181,7 @@ void MTextEditViewPrivate::onSelectionHandleMoved(const QPointF &position)
     localPos.rx() -= margin;
     anchorPos = cursor.anchor();
     cursorPos = cursorPosition(localPos);
+    currentPosition = position;
 
     qreal speed = 0;
     const qreal elapsed = handleTime.restart();
@@ -1070,6 +1208,8 @@ void MTextEditViewPrivate::onSelectionHandlePressed(const QPointF &position)
     hideEditorToolbarTemporarily();
     q->model()->setInputContextUpdateEnabled(false);
     controller->setCacheMode(QGraphicsItem::ItemCoordinateCache);
+    previousPosition = position;
+    currentPosition = position;
 
     showSelectionMagnifier();
     setMouseTarget(position);
@@ -1706,6 +1846,12 @@ void MTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
+    d->timeOnMove.start();
+    d->timeOnFeedback.start();
+    d->previousHorizontalScroll = d->hscroll;
+    d->previousPosition = event->pos();
+    d->currentPosition = event->pos();
+
     MTextEdit::TextFieldLocationType location;
     int cursor = d->cursorPosition(event);
     d->setMouseTarget(event->pos());
@@ -1730,13 +1876,6 @@ void MTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
             style()->pressBoundaryFeedback().play();
         }
     }
-
-    // Connect when pressing and disconnect when releasing
-    // to make sure that feedback is only given when user is
-    // making changes to the selection by touching.
-    QObject::connect(d->controller, SIGNAL(selectionChanged()),
-                     d, SLOT(playTextFieldSelectionFeedback()),
-                     Qt::UniqueConnection);
 }
 
 
@@ -1802,13 +1941,11 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         d->showEditorToolbar();
     }
 
-    d->selecting = false;
+    d->stopSelection();
+
     d->inAutoSelectionClick = false;
     d->longPressTimer->stop();
     d->scrollTimer->stop();
-
-    QObject::disconnect(d->controller, SIGNAL(selectionChanged()),
-                        d, SLOT(playTextFieldSelectionFeedback()));
 
     if (d->controller->hasSelectedText()) {
         d->showSelectionOverlay();
@@ -1823,6 +1960,8 @@ void MTextEditView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if (d->focusingTap) {
         return;
     }
+
+    d->currentPosition = event->pos();
 
     // Only update selection if magnifier is not in use.
     const bool updateSelection = !(d->magnifier && d->magnifier->isAppeared());
@@ -1991,21 +2130,18 @@ void MTextEditView::cancelEvent(MCancelEvent *event)
 
     style()->cancelFeedback().play();
 
+    d->stopSelection();
+
     // restore state before as before mouse press
     d->hideMagnifier();
-    d->selecting = false;
     d->inAutoSelectionClick = false;
     d->longPressTimer->stop();
     d->scrollTimer->stop();
-    d->scrollSelectTimer->stop();
 
     // hide completer if there is active one
     if (d->controller->completer() && d->controller->completer()->isActive()) {
         d->controller->completer()->hideCompleter();
     }
-
-    QObject::disconnect(d->controller, SIGNAL(selectionChanged()),
-                        d, SLOT(playTextFieldSelectionFeedback()));
 }
 
 void MTextEditView::notifyItemChange(QGraphicsItem::GraphicsItemChange change,

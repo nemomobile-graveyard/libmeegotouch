@@ -127,6 +127,24 @@ class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
      * This property is applied when magnifier is visible.
      */
     M_STYLE_ATTRIBUTE(int, scrollCursorMarginBottom, ScrollCursorMarginBottom)
+
+    /*!
+        \property MTextEditStyle::magnifierCursorMoveFeedback
+        \brief Feedback given when cursor position changes while magnifier is active
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, magnifierCursorMoveFeedback, MagnifierCursorMoveFeedback)
+
+    /*!
+        \property MTextEditStyle::minimumFeedbackInterval
+        \brief Minimum time between haptic feedbacks when selecting or magnifying (in milliseconds)
+      */
+    M_STYLE_ATTRIBUTE(int, minimumFeedbackInterval, MinimumFeedbackInterval)
+
+    /*!
+        \property MTextEditStyle::feedbackSpeedLimit
+        \brief When finger is moved over this speed while selecting or magnifying there will be no feedback (in mm/s)
+      */
+    M_STYLE_ATTRIBUTE(int, feedbackSpeedLimit, FeedbackSpeedLimit)
 };
 
 class M_VIEWS_EXPORT MTextEditStyleContainer : public MWidgetStyleContainer

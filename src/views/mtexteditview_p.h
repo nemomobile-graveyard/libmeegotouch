@@ -25,8 +25,8 @@
 #include <QAbstractTextDocumentLayout>
 #include <QPointer>
 #include <QPropertyAnimation>
-#include <QElapsedTimer>
 #include <QTimer>
+#include <QElapsedTimer>
 
 #include "mtexteditview.h"
 
@@ -94,7 +94,7 @@ protected slots:
     void handleDocumentUpdate(int position, int charsRemoved, int charsAdded);
     void handleDocumentUpdated();
     void handleDocumentSizeChange(const QSizeF &newSize);
-    void playTextFieldSelectionFeedback();
+    void playSelectionAndMagnifierFeedback();
     void updateMagnifierPosition();
     void makeMagnifierDisappear();
     void makeMagnifierAppear();
@@ -103,6 +103,7 @@ protected slots:
     void updateEditorToolbarPosition();
     void startFocusAnimation();
     void scrollSelectSlot();
+    void onScenePositionChanged();
 
     void mapSelectionChange();
     void onSelectionHandleMoved(const QPointF &position);
@@ -118,6 +119,7 @@ private:
     void scrollingTestAndStart(const QPointF &pos);
     void checkStartOfSelection(QGraphicsSceneMouseEvent *event);
     void startSelection(QGraphicsSceneMouseEvent *event);
+    void stopSelection();
     void updateSelection(const QPointF &pos);
     void updateSelection(QGraphicsSceneMouseEvent *event);
 
@@ -206,6 +208,14 @@ protected:
     QTimer delaySelection;
     int anchorPos;
     int cursorPos;
+
+    QElapsedTimer timeOnFeedback;
+    QElapsedTimer timeOnMove;
+    QPointF currentPosition;
+    QPointF previousPosition;
+    qreal previousHorizontalScroll;
+    bool viewScrolled;
+    int previousSelectionCursorPosition;
 
 #ifdef UNIT_TEST
     friend class Ut_MTextEditView;
