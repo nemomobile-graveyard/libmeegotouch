@@ -489,10 +489,12 @@ MOrientationTracker::~MOrientationTracker()
 
 M::OrientationAngle MOrientationTracker::orientationAngle() const
 {
-    Q_D(const MOrientationTracker);
+
     M::OrientationAngle result = M::Angle0;
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
+    Q_D(const MOrientationTracker);
+
     if (!d->isSubscribedToSensorProperties) {
         MOrientationTrackerPrivate *priv = const_cast<MOrientationTracker*>(this)->d_ptr;
         // Momentarily subscribe to sensor properties.
