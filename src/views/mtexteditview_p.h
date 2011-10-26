@@ -25,7 +25,7 @@
 #include <QAbstractTextDocumentLayout>
 #include <QPointer>
 #include <QPropertyAnimation>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QTimer>
 
 #include "mtexteditview.h"
@@ -202,7 +202,7 @@ protected:
     QScopedPointer<MTextSelectionOverlay> selectionOverlay;
     bool selectionHandleIsPressed;
     QPointF lastHandlePos;
-    QTime handleTime;
+    QElapsedTimer handleTime;
     QTimer delaySelection;
     int anchorPos;
     int cursorPos;

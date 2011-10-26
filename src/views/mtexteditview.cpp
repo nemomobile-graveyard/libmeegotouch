@@ -125,6 +125,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
     scrollSelectTimer->setSingleShot(false);
     scrollSelectTimer->setInterval(200);
 
+    handleTime.invalidate();
+
     controller->grabGesture(Qt::PanGesture);
 
     QObject::connect(longPressTimer, SIGNAL(timeout()), q, SLOT(handleLongPress()));
