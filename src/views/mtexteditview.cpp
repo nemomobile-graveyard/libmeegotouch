@@ -2382,6 +2382,7 @@ void MTextEditView::setFocused(Qt::FocusReason reason)
     if (reason == Qt::ActiveWindowFocusReason
         || reason == Qt::PopupFocusReason) {
         d->restoreEditorToolbar();
+        d->restoreSelectionOverlay();
     }
 
     doUpdate();
