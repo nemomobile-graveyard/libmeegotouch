@@ -12,6 +12,7 @@ SOURCES += \
 HEADERS += \
     ut_mtextselectionoverlay.h \
     mtextselectionhandlestyle.h \
+    testview.h \
     $$MSRCDIR/views/mtextselectionoverlay.h \
     $$MSRCDIR/views/mtextselectionhandle.h \
     $$MSRCDIR/views/mtopleveloverlay.h

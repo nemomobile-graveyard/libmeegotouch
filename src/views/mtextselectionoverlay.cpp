@@ -97,6 +97,21 @@ void MTextSelectionOverlay::skipTransitions()
     handleB.skipTransitions();
 }
 
+QRegion MTextSelectionOverlay::region() const
+{
+    QRegion result;
+
+    if (handleA.isVisible()) {
+        result = mapRectToItem(controller, handleA.region()).toRect();
+    }
+
+    if (handleB.isVisible()) {
+        result |= mapRectToItem(controller, handleB.region()).toRect();
+    }
+
+    return result;
+}
+
 void MTextSelectionOverlay::onSelectionChange(int newAnchor,
                                               const QRectF &newAnchorRect,
                                               bool newAnchorVisible,

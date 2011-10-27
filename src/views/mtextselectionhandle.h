@@ -119,6 +119,15 @@ public:
      */
     void enable();
 
+    /*!
+     * \brief Return region occupied by this widget.
+     *
+     * Other widgets could take this region into account to prevent
+     * colliding with selection handle.
+     * Region is returned in parent's coordinates.
+     */
+    QRectF region() const;
+
 Q_SIGNALS:
     /*!
      * \brief Emitted when handle disappears from the screen.

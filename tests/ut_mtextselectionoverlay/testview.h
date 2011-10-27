@@ -17,43 +17,20 @@
 **
 ****************************************************************************/
 
-#ifndef UT_MTEXTSELECTIONOVERLAY_H
-#define UT_MTEXTSELECTIONOVERLAY_H
+#ifndef TESTVIEW_H
 
-#include <QObject>
-#include <QtTest/QtTest>
+#include <mwidgetview.h>
 
-class MApplication;
-class MApplicationWindow;
-class MTextSelectionOverlay;
-class MWidgetController;
-class TestView;
-
-class Ut_MTextSelectionOverlay : public QObject
+class TestView : public MWidgetView
 {
     Q_OBJECT
 
-private slots:
-    void init();
-    void cleanup();
-    void initTestCase();
-    void cleanupTestCase();
+    friend class Ut_MTextSelectionOverlay;
 
-    void testSelectionChange_data();
-    void testSelectionChange();
+Q_SIGNALS:
+    void selectionChanged(int, QRectF, bool, int, QRectF, bool);
 
-    void testSelectionPressAndMove();
-
-    void testRegion_data();
-    void testRegion();
-
-private:
-    MApplication *m_app;
-    MApplicationWindow *m_appWindow;
-    MTextSelectionOverlay *subject;
-    MWidgetController *selectedWidget;
-    TestView *selectedView;
+    void contentScrolled();
 };
 
 #endif
-

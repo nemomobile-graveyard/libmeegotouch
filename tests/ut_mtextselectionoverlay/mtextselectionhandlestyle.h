@@ -41,6 +41,8 @@ public:
 
     QSizeF preferredSize() const { return QSizeF(30, 80); }
 
+    int regionPadding() const { return 50; }
+
 }static gTextSelectionHandleStyle;
 
 class MTextSelectionHandleStyleContainer : public MWidgetStyleContainer

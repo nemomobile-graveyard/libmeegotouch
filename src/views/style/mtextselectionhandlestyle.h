@@ -46,6 +46,9 @@ class MTextSelectionHandleStyle : public MWidgetStyle
 
     //! Opacity in disable state
     M_STYLE_ATTRIBUTE(qreal, disableOpacity, DisableOpacity)
+
+    //! \brief Defines possible overlapping with text editor toolbar, in pixels.
+    M_STYLE_ATTRIBUTE(int, regionPadding, RegionPadding)
 };
 
 class MTextSelectionHandleStyleContainer : public MWidgetStyleContainer

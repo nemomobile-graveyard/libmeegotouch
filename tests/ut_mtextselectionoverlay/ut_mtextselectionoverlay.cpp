@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "ut_mtextselectionoverlay.h"
+#include "testview.h"
 #include "views/mtextselectionoverlay.h"
 #include "views/mtextselectionhandle.h"
 
@@ -52,6 +53,7 @@ Qt::GestureState QGesture::state() const
 void Ut_MTextSelectionOverlay::initTestCase()
 {
     qRegisterMetaType<M::OrientationAngle>("M::OrientationAngle");
+    qRegisterMetaType<const MTextSelectionHandle*>("const MTextSelectionHandle*");
 
     static int dummyArgc = 1;
     static char *dummyArgv[1] = { (char *) "./ut_mtextselectionoverlay" };
@@ -59,7 +61,7 @@ void Ut_MTextSelectionOverlay::initTestCase()
     m_app = new MApplication(dummyArgc, dummyArgv);
     m_appWindow = new MApplicationWindow;
 
-    selectedView = new MWidgetView;
+    selectedView = new TestView;
     selectedWidget = new MWidgetController;
     selectedWidget->setView(selectedView);
     m_appWindow->scene()->addItem(selectedWidget);
@@ -127,8 +129,8 @@ void Ut_MTextSelectionOverlay::testSelectionChange()
 
     QFETCH(bool, isOverlayVisible);
 
-    subject->onSelectionChange(newAnchor, newAnchorRect, newAnchorVisible,
-                               newCursor, newCursorRect, newCursorVisible);
+    emit selectedView->selectionChanged(newAnchor, newAnchorRect, newAnchorVisible,
+                                        newCursor, newCursorRect, newCursorVisible);
 
     QCOMPARE(subject->isVisible(), isOverlayVisible);
 
@@ -150,8 +152,12 @@ void Ut_MTextSelectionOverlay::testSelectionChange()
 
 void Ut_MTextSelectionOverlay::testSelectionPressAndMove()
 {
-    subject->onSelectionChange(10, QRectF(300, 50, 1, 10), true,
-                               20, QRectF(600, 50, 1, 10), true);
+    QCOMPARE(subject->isVisible(), false);
+    QCOMPARE(subject->handleA.isVisible(), false);
+    QCOMPARE(subject->handleB.isVisible(), false);
+
+    emit selectedView->selectionChanged(10, QRectF(300, 50, 1, 10), true,
+                                        20, QRectF(600, 50, 1, 10), true);
 
     QCOMPARE(subject->isVisible(), true);
     QCOMPARE(subject->handleA.isVisible(), true);
@@ -253,6 +259,56 @@ void Ut_MTextSelectionOverlay::testSelectionPressAndMove()
     QCOMPARE(subject->handleB.isPressed(), false);
     QCOMPARE(subject->handleB.isVisible(), true);
     QCOMPARE(selectionHanldeBReleasedSpy.count(), 1);
+}
+
+void Ut_MTextSelectionOverlay::testRegion_data()
+{
+    QTest::addColumn<int>("newAnchor");
+    QTest::addColumn<QRectF>("newAnchorRect");
+    QTest::addColumn<bool>("newAnchorVisible");
+
+    QTest::addColumn<int>("newCursor");
+    QTest::addColumn<QRectF>("newCursorRect");
+    QTest::addColumn<bool>("newCursorVisible");
+
+    QTest::addColumn<bool>("isRegionEmpty");
+
+    QTest::newRow("selection start") << 0 << QRectF(50, 50, 1, 10) << true
+        << 10 << QRectF(300, 50, 1, 10) << true << false;
+
+    QTest::newRow("selection changing 1") << 3 << QRectF(100, 50, 1, 10) << false
+        << 10 << QRectF(300, 50, 1, 10) << true << false;
+
+    QTest::newRow("selection changing 2") << 5 << QRectF(150, 50, 1, 10) << false
+        << 10 << QRectF(300, 50, 1, 10) << true << false;
+
+    QTest::newRow("selection changed") << 5 << QRectF(100, 50, 1, 10) << true
+        << 10 << QRectF(300, 50, 1, 10) << true << false;
+
+    QTest::newRow("selection disappear") << 5 << QRectF(100, 50, 1, 10) << false
+        << 5 << QRectF(100, 50, 1, 10) << false << true;
+
+    QTest::newRow("default values") << -1 << QRectF() << true
+        << -1 << QRectF() << false << true;
+}
+
+void Ut_MTextSelectionOverlay::testRegion()
+{
+    QFETCH(int, newAnchor);
+    QFETCH(QRectF, newAnchorRect);
+    QFETCH(bool, newAnchorVisible);
+    QFETCH(int, newCursor);
+    QFETCH(QRectF, newCursorRect);
+    QFETCH(bool, newCursorVisible);
+
+    QFETCH(bool, isRegionEmpty);
+
+    QVERIFY(subject->region().isEmpty());
+
+    emit selectedView->selectionChanged(newAnchor, newAnchorRect, newAnchorVisible,
+                                        newCursor, newCursorRect, newCursorVisible);
+
+    QCOMPARE(subject->region().isEmpty(), isRegionEmpty);
 }
 
 QTEST_APPLESS_MAIN(Ut_MTextSelectionOverlay)

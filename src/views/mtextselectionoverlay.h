@@ -22,6 +22,7 @@
 #include "mtopleveloverlay.h"
 #include "mtextselectionhandle.h"
 #include <QPointer>
+#include <QRegion>
 
 class MWidgetController;
 class MWidgetView;
@@ -57,15 +58,21 @@ public:
      */
     void skipTransitions();
 
+    /*!
+     * \brief Return region occupied by selection handles.
+     * This region is in coordinates of controller.
+     */
+    QRegion region() const;
+
 Q_SIGNALS:
     //! \brief Emitted when any selection handle is pressed.
     //!
-    //! \param position Handle position in coordinates of textEdit
+    //! \param position Handle position in coordinates of controller
     void selectionHandlePressed(const QPointF &position);
 
     //! \brief Emitted when pressed selection handle is moved by user.
     //!
-    //! \param position New position of the handle in coordinates of textEdit
+    //! \param position New position of the handle in coordinates of controller
     void selectionHandleMoved(const QPointF &position);
 
     //! \brief Emitted selection handle is released.

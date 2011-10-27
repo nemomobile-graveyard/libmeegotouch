@@ -290,3 +290,7 @@ void MTextSelectionHandle::enable()
     }
 }
 
+QRectF MTextSelectionHandle::region() const
+{
+    return geometry().adjusted(0, 0, 0, -style()->regionPadding());
+}
