@@ -25,7 +25,7 @@ Build-Depends: debhelper (>= 5),
  libngf-dev,
  aegis-builder (>= 1.6),
  libmaliit1-dev,
- libmlocale-dev
+ libmlocale-dev (>= 0.3.10-1)
 Standards-Version: 3.7.2
 
 Package: libmeegotouchcore0
