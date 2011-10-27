@@ -1103,6 +1103,10 @@ void Ft_Numbers::testDoubles_data()
             << QString("es_US")
             << double(1234567.1234567)
             << QString("1,234,567.123");
+    QTest::newRow("fa_IR 1234.56")
+            << QString("fa_IR")
+            << double(1234.56)
+            << QString("‪۱٬۲۳۴٫۵۶‬");
 }
 
 void Ft_Numbers::testDoubles()
@@ -1608,6 +1612,20 @@ void Ft_Numbers::testToDouble_data()
         << true
         << double(1234567.1234567)
         << QString("१२,३४,५६७.१२३४५६७");
+    QTest::newRow("fa_IR with markers ‪۱٬۲۳۴٫۵۶‬")
+        << QString("fa_IR")
+        << QString("‪۱٬۲۳۴٫۵۶‬")
+        << int(7)
+        << true
+        << double(1234.56)
+        << QString("‪۱٬۲۳۴٫۵۶‬");
+    QTest::newRow("fa_IR without markers ۱٬۲۳۴٫۵۶")
+        << QString("fa_IR")
+        << QString("۱٬۲۳۴٫۵۶")
+        << int(7)
+        << true
+        << double(1234.56)
+        << QString("‪۱٬۲۳۴٫۵۶‬");
 }
 
 void Ft_Numbers::testToDouble()
@@ -1620,6 +1638,7 @@ void Ft_Numbers::testToDouble()
     QFETCH(QString, formattedAgainDouble);
 
     MLocale locale(localeName);
+    locale.setCategoryLocale(MLocale::MLcNumeric, localeName);
     double result = locale.toDouble(formattedDouble);
     QCOMPARE(result, parsedDouble);
     QCOMPARE(locale.toDouble(formattedDouble, NULL), parsedDouble);

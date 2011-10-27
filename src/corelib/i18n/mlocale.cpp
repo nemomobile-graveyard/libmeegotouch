@@ -2749,7 +2749,7 @@ void MLocalePrivate::fixFormattedNumberForRTL(QString *formattedNumber) const
 void MLocalePrivate::fixParseInputForRTL(QString *formattedNumber) const
 {
     removeDirectionalFormattingCodes(formattedNumber);
-    if(formattedNumber->contains(QRegExp("[٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹]"))) {
+    if(formattedNumber->contains(QRegExp(QString::fromUtf8("[٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹]")))) {
         swapPostAndPrefixOfFormattedNumber(formattedNumber);
 #if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
         // icu >= 4.6 can use different symbols for different
