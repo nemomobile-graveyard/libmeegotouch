@@ -1045,7 +1045,7 @@ void Ut_MTextEdit::testConstraints()
     // Test email address
     singleLine.setContentType(M::EmailContentType);
     QCOMPARE(singleLine.contentType(), M::EmailContentType);
-    constraintTest(&singleLine, testInput, "abcdABCD1234*/+-#{}");
+    constraintTest(&singleLine, testInput, "abcdABCD1234*/+-#[]{}");
 
     // Test URL address
     // TODO: URL mode does not currently constrain anything

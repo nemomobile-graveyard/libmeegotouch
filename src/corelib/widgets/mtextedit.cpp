@@ -289,7 +289,7 @@ namespace
         .arg(QChar(0x06F9)); // Extended Arabic numbers end
 
     //! character set for Email field type
-    const QString EmailCharacterSet       = "[a-zA-Z0-9.!#$%&'*+-\\/=?\\^_\\`{|}~@]+";
+    const QString EmailCharacterSet = "[\\w.!#$%&'*+-\\/=?\\^_\\`{|}~@\\[\\]]+";
 
     const QChar PlusSign('+');
     const QChar MinusSign('-');
