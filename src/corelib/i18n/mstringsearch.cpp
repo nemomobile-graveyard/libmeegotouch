@@ -49,18 +49,13 @@ MStringSearchPrivate::MStringSearchPrivate()
 
 MStringSearchPrivate::~MStringSearchPrivate()
 {
-    if(_icuCollator)
-        delete _icuCollator;
-    if(_icuStringSearch)
-        delete _icuStringSearch;
+    delete _icuCollator;
+    delete _icuStringSearch;
 }
 
 bool MStringSearchPrivate::hasError() const
 {
-    if(U_SUCCESS(_status))
-        return false;
-    else
-        return true;
+    return(!U_SUCCESS(_status));
 }
 
 void MStringSearchPrivate::clearError()
