@@ -149,24 +149,6 @@ public:
     virtual ~MStringSearch();
 
     /*!
-     * \brief checks whether an error occurred during the last action
-     *
-     * \sa clearError()
-     * \sa errorString()
-     */
-    bool hasError() const;
-
-    /*!
-     * \brief clears any error which might have occurred during previous action
-     *
-     * Useful if one wants to ignore an error and continue.
-     *
-     * \sa hasError()
-     * \sa errorString()
-     */
-    void clearError();
-
-    /*!
      * \brief text describing the error which occurred during the last action
      *
      * Example:
@@ -176,7 +158,7 @@ public:
      * QString text("Hello world!");
      * MLocale locale("en_US");
      * MStringSearch stringSearch(pattern, text, locale);
-     * if(stringSearch.hasError())
+     * if(!stringSearch.errorString().isEmpty())
      *   qWarning() << stringSearch.errorString();
      * \endcode
      *

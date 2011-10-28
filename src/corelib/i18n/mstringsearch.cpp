@@ -70,7 +70,10 @@ void MStringSearchPrivate::clearError()
 
 QString MStringSearchPrivate::errorString() const
 {
-    return QString(u_errorName(_status));
+    if (hasError())
+        return QString(u_errorName(_status));
+    else
+        return QString();
 }
 
 bool MStringSearchPrivate::containsHani(const QString &text) const
@@ -279,19 +282,19 @@ MStringSearch::MStringSearch(const QString &pattern, const QString &text, const 
             d->_status);
         break;
     }
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "breakIteratorType =" << breakIteratorType
                    << "icu::BreakIterator::create...Instance() failed with error"
                    << errorString();
-    clearError();
+    d->clearError();
     d->_icuStringSearch = new icu::StringSearch(
         MIcuConversions::qStringToUnicodeString(d->_pattern),
         MIcuConversions::qStringToUnicodeString(d->_text),
         static_cast<RuleBasedCollator *>(d->_icuCollator),
         icuBreakIterator,
         d->_status);
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "new icu::StringSearch() failed with error"
                    << errorString();
@@ -300,18 +303,6 @@ MStringSearch::MStringSearch(const QString &pattern, const QString &text, const 
 MStringSearch::~MStringSearch()
 {
     delete d_ptr;
-}
-
-bool MStringSearch::hasError() const
-{
-    Q_D(const MStringSearch);
-    return d->hasError();
-}
-
-void MStringSearch::clearError()
-{
-    Q_D(MStringSearch);
-    d->clearError();
 }
 
 QString MStringSearch::errorString() const
@@ -323,7 +314,7 @@ QString MStringSearch::errorString() const
 void MStringSearch::setLocale(const MLocale &locale)
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     d->_locale=locale;
     d->updateOrInitIcuCollator();
     d->icuStringSearchSetCollator();
@@ -334,12 +325,12 @@ void MStringSearch::setText(const QString &text)
     Q_D(MStringSearch);
     d->_text = text;
     d->_currentIndex = 0;
-    clearError();
+    d->clearError();
     if(d->_icuStringSearch)
         d->_icuStringSearch->setText(
             MIcuConversions::qStringToUnicodeString(d->_text),
             d->_status);
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "new icu::StringSearch::setText() failed with error"
                    << errorString();
@@ -354,14 +345,14 @@ QString MStringSearch::text() const
 void MStringSearch::setPattern(const QString &pattern)
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     if(pattern == d->_pattern)
         return;
     d->_pattern = pattern;
     d->_icuStringSearch->setPattern(
         MIcuConversions::qStringToUnicodeString(d->_pattern),
         d->_status);
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "icu::StringSearch::setPattern() failed with error"
                    << errorString();
@@ -404,9 +395,9 @@ bool MStringSearch::alternateHandlingShifted() const
 int MStringSearch::first()
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     int first = d->_icuStringSearch->first(d->_status);
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "icu::StringSearch::first() failed with error"
                    << errorString();
@@ -423,9 +414,9 @@ int MStringSearch::first()
 int MStringSearch::last()
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     int last = d->_icuStringSearch->last(d->_status);
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "icu::StringSearch::last() failed with error"
                    << errorString();
@@ -442,7 +433,7 @@ int MStringSearch::last()
 bool MStringSearch::hasNext()
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     int next = d->_icuStringSearch->following(d->_currentIndex, d->_status);
     // using the above _icuStringSearch->following() behaves the same
     // as the two calls:
@@ -451,7 +442,7 @@ bool MStringSearch::hasNext()
     // “next” is set to the position of the next match >= the current
     // position, i.e. if there is a match at the current position,
     // “next” is set to the current position.
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "icu::StringSearch::following("
                    << d->_currentIndex
@@ -466,7 +457,7 @@ bool MStringSearch::hasNext()
 int MStringSearch::next()
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     int next = d->_icuStringSearch->following(d->_currentIndex, d->_status);
     // using the above _icuStringSearch->following() behaves the same
     // as the two calls:
@@ -475,7 +466,7 @@ int MStringSearch::next()
     // “next” is set to the position of the next match >= the current
     // position, i.e. if there is a match at the current position,
     // “next” is set to the current position.
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "icu::StringSearch::following("
                    << d->_currentIndex
@@ -494,7 +485,7 @@ int MStringSearch::next()
 int MStringSearch::next(int index)
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     d->_currentIndex = index;
     int next = d->_icuStringSearch->following(d->_currentIndex, d->_status);
     // using the above _icuStringSearch->following() behaves the same
@@ -504,7 +495,7 @@ int MStringSearch::next(int index)
     // “next” is set to the position of the next match >= the current
     // position, i.e. if there is a match at the current position,
     // “next” is set to the current position.
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "icu::StringSearch::following("
                    << d->_currentIndex
@@ -523,7 +514,7 @@ int MStringSearch::next(int index)
 int MStringSearch::peekNext()
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     int next = d->_icuStringSearch->following(d->_currentIndex, d->_status);
     // using the above _icuStringSearch->following() behaves the same
     // as the two calls:
@@ -532,7 +523,7 @@ int MStringSearch::peekNext()
     // “next” is set to the position of the next match >= the current
     // position, i.e. if there is a match at the current position,
     // “next” is set to the current position.
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "icu::StringSearch::following("
                    << d->_currentIndex
@@ -546,9 +537,9 @@ int MStringSearch::peekNext()
 bool MStringSearch::hasPrevious()
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     int previous = d->_icuStringSearch->preceding(d->_currentIndex, d->_status);
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "icu::StringSearch::preceding("
                    << d->_currentIndex
@@ -563,9 +554,9 @@ bool MStringSearch::hasPrevious()
 int MStringSearch::previous()
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     int previous = d->_icuStringSearch->preceding(d->_currentIndex, d->_status);
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "icu::StringSearch::preceding("
                    << d->_currentIndex
@@ -584,10 +575,10 @@ int MStringSearch::previous()
 int MStringSearch::previous(int index)
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     d->_currentIndex = index;
     int previous = d->_icuStringSearch->preceding(d->_currentIndex, d->_status);
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "icu::StringSearch::preceding("
                    << d->_currentIndex
@@ -606,9 +597,9 @@ int MStringSearch::previous(int index)
 int MStringSearch::peekPrevious()
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     int previous = d->_icuStringSearch->preceding(d->_currentIndex, d->_status);
-    if(hasError())
+    if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
                    << "icu::StringSearch::preceding("
                    << d->_currentIndex
@@ -622,14 +613,14 @@ int MStringSearch::peekPrevious()
 void MStringSearch::toBack()
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     d->_currentIndex = d->_text.size();
 }
 
 void MStringSearch::toFront()
 {
     Q_D(MStringSearch);
-    clearError();
+    d->clearError();
     d->_currentIndex = 0;
 }
 
