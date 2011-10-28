@@ -586,14 +586,14 @@ void Ft_MStringSearch::testSearch()
             << matchStart
             << "\tmatchLength     (" << matchCount << "): \t"
             << matchLength
-            << "\tmatchLengths.at (" << matchCount << "): \t"
+            << "\tmatchText       (" << matchCount << "): \t["
             << matchText << "]"
             << "\n";
         debugStream.flush();
         debugStream
             << "\tmatchStarts.at  (" << matchCount << "): \t"
             << matchLengths.at(matchCount)
-            << "\tmatchText       (" << matchCount << "): \t["
+            << "\tmatchStarts.at  (" << matchCount << "): \t"
             << matchStarts.at(matchCount)
             << "\tmatchTexts.at   (" << matchCount << "): \t["
             << matchTexts.at(matchCount) << "]"
