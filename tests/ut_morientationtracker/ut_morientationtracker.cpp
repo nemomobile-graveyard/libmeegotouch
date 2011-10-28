@@ -861,6 +861,8 @@ void Ut_MOrientationTracker::testNewWindowShowsInCurrentWindowOrientationIfDevic
     emitDeviceIsLyingFlatChanged();
 
     QCOMPARE((int)window->orientationAngle(), (int)M::Angle0);
+
+    delete window;
 }
 
 ///////////////////////////////////////////////////////
