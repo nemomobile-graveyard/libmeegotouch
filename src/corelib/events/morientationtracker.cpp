@@ -679,9 +679,10 @@ void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
 
 void MOrientationTrackerPrivate::startFollowingCurrentAppWindow(MWindow *win)
 {
-    if (!windowsFollowingCurrentAppWindow.contains(win)) {
-        windowsFollowingCurrentAppWindow.append(win);
-    }
+    if (windowsFollowingCurrentAppWindow.contains(win))
+        return;
+
+    windowsFollowingCurrentAppWindow.append(win);
 #ifdef HAVE_CONTEXTSUBSCRIBER
     if (!currentWindowAngleProperty->isSubscribed())
         currentWindowAngleProperty->subscribeAndWaitForSubscription();
@@ -762,8 +763,10 @@ void MOrientationTrackerPrivate::handleDesktopOrientationChange()
 void MOrientationTrackerPrivate::startFollowingDesktop(MWindow *win)
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    if (!windowsFollowingDesktop.contains(win))
-        windowsFollowingDesktop.append(win);
+    if (windowsFollowingDesktop.contains(win))
+        return;
+
+    windowsFollowingDesktop.append(win);
 
     if (!desktopAngleProperty->isSubscribed())
         desktopAngleProperty->subscribeAndWaitForSubscription();
