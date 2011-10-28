@@ -38,27 +38,12 @@ public:
 
 
 
-MStringSearch::MStringSearch( QString &pattern, QString &text, const MLocale &locale, MBreakIterator::Type breakIteratorType )
+MStringSearch::MStringSearch(const QString &pattern,const QString &text, const MLocale &locale, MBreakIterator::Type breakIteratorType )
     : d_ptr ( new MStringSearchPrivate )
 {
     d_ptr->pStringSearch = new ML10N::MStringSearch(
              pattern, text, *locale.d_ptr->pLocale,
              (ML10N::MBreakIterator::Type)breakIteratorType );
-}
-
-MStringSearch::~MStringSearch()
-{
-    delete d_ptr;
-}
-
-bool MStringSearch::hasError() const
-{
-    return d_ptr->pStringSearch->hasError();
-}
-
-void MStringSearch::clearError()
-{
-    d_ptr->pStringSearch->clearError();
 }
 
 QString MStringSearch::errorString() const
@@ -121,29 +106,9 @@ int MStringSearch::last()
     return d_ptr->pStringSearch->last();
 }
 
-bool MStringSearch::hasNext()
-{
-    return d_ptr->pStringSearch->hasNext();
-}
-
 int MStringSearch::next()
 {
     return d_ptr->pStringSearch->next();
-}
-
-int MStringSearch::next(int index)
-{
-    return d_ptr->pStringSearch->next( index );
-}
-
-int MStringSearch::peekNext()
-{
-    return d_ptr->pStringSearch->peekNext();
-}
-
-bool MStringSearch::hasPrevious()
-{
-    return d_ptr->pStringSearch->hasPrevious();
 }
 
 int MStringSearch::previous()
@@ -151,47 +116,27 @@ int MStringSearch::previous()
     return d_ptr->pStringSearch->previous();
 }
 
-int MStringSearch::previous(int index)
+int MStringSearch::offset() const
 {
-    return d_ptr->pStringSearch->previous( index );
+    return d_ptr->pStringSearch->offset();
 }
 
-int MStringSearch::peekPrevious()
+void MStringSearch::setOffset(int offset)
 {
-    return d_ptr->pStringSearch->peekPrevious();
+    d_ptr->pStringSearch->setOffset( offset );
 }
 
-void MStringSearch::toBack()
-{
-    d_ptr->pStringSearch->toBack();
-}
-
-void MStringSearch::toFront()
-{
-    d_ptr->pStringSearch->toFront();
-}
-
-int MStringSearch::index() const
-{
-    return d_ptr->pStringSearch->index();
-}
-
-void MStringSearch::setIndex(int index)
-{
-    d_ptr->pStringSearch->setIndex( index );
-}
-
-int MStringSearch::matchedStart()
+int MStringSearch::matchedStart() const
 {
     return d_ptr->pStringSearch->matchedStart();
 }
 
-int MStringSearch::matchedLength()
+int MStringSearch::matchedLength() const
 {
     return d_ptr->pStringSearch->matchedLength();
 }
 
-QString MStringSearch::matchedText()
+QString MStringSearch::matchedText() const
 {
     return d_ptr->pStringSearch->matchedText();
 }
