@@ -36,8 +36,7 @@
 #include "micuconversions.h"
 
 MStringSearchPrivate::MStringSearchPrivate()
-    : _currentIndex(0),
-      _collatorStrength(MLocale::CollatorStrengthPrimary),
+    : _collatorStrength(MLocale::CollatorStrengthPrimary),
       _caseSensitivity(Qt::CaseInsensitive),
       _alternateHandlingShifted(true),
       _status(U_ZERO_ERROR),
@@ -319,7 +318,6 @@ void MStringSearch::setText(const QString &text)
 {
     Q_D(MStringSearch);
     d->_text = text;
-    d->_currentIndex = 0;
     d->clearError();
     if(d->_icuStringSearch)
         d->_icuStringSearch->setText(
@@ -396,14 +394,10 @@ int MStringSearch::first()
         qWarning() << __PRETTY_FUNCTION__
                    << "icu::StringSearch::first() failed with error"
                    << errorString();
-    if (first == USEARCH_DONE) {
-        first = -1;
-        d->_currentIndex = d->_text.size();
-    }
-    else {
-        d->_currentIndex = first;
-    }
-    return first;
+    if (first == USEARCH_DONE)
+        return -1;
+    else
+        return first;
 }
 
 int MStringSearch::last()
@@ -415,80 +409,57 @@ int MStringSearch::last()
         qWarning() << __PRETTY_FUNCTION__
                    << "icu::StringSearch::last() failed with error"
                    << errorString();
-    if (last == USEARCH_DONE) {
-        last = -1;
-        d->_currentIndex = 0;
-    }
-    else {
-        d->_currentIndex = last;
-    }
-    return last;
+    if (last == USEARCH_DONE)
+        return -1;
+    else
+        return last;
 }
 
 int MStringSearch::next()
 {
     Q_D(MStringSearch);
     d->clearError();
-    int next = d->_icuStringSearch->following(d->_currentIndex, d->_status);
-    // using the above _icuStringSearch->following() behaves the same
-    // as the two calls:
-    //     d->_icuStringSearch->setOffset(d->_currentIndex, d->_status);
-    //     next = d->_icuStringSearch->next(d->_status);
-    // “next” is set to the position of the next match >= the current
-    // position, i.e. if there is a match at the current position,
-    // “next” is set to the current position.
+    int next = d->_icuStringSearch->next(d->_status);
     if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
-                   << "icu::StringSearch::following("
-                   << d->_currentIndex
-                   <<") failed with error"
+                   << "icu::StringSearch::next() failed with error"
                    << errorString();
-    if (next == USEARCH_DONE) {
-        next = -1;
-        d->_currentIndex = d->_text.size();
-    }
-    else {
-        d->_currentIndex = next;
-    }
-    return next;
+    if (next == USEARCH_DONE)
+        return -1;
+    else
+        return next;
 }
 
 int MStringSearch::previous()
 {
     Q_D(MStringSearch);
     d->clearError();
-    int previous = d->_icuStringSearch->preceding(d->_currentIndex, d->_status);
+    int previous = d->_icuStringSearch->previous(d->_status);
     if(d->hasError())
         qWarning() << __PRETTY_FUNCTION__
-                   << "icu::StringSearch::preceding("
-                   << d->_currentIndex
-                   <<") failed with error"
+                   << "icu::StringSearch::previous() failed with error"
                    << errorString();
-    if (previous == USEARCH_DONE) {
-        previous = -1;
-        d->_currentIndex = 0;
-    }
-    else {
-        d->_currentIndex = previous;
-    }
-    return previous;
+    if (previous == USEARCH_DONE)
+        return -1;
+    else
+        return previous;
 }
 
-int MStringSearch::index() const
+int MStringSearch::offset() const
 {
     Q_D(const MStringSearch);
-    return d->_currentIndex;
+    return d->_icuStringSearch->getOffset();
 }
 
-void MStringSearch::setIndex(int index)
+void MStringSearch::setOffset(int offset)
 {
     Q_D(MStringSearch);
-    if(index < 0)
-        d->_currentIndex = 0;
-    else if (index > d->_text.size())
-        d->_currentIndex = d->_text.size();
+    if(offset < 0)
+        d->_icuStringSearch->setOffset(0, d->_status);
+    else if (offset > d->_text.size())
+        d->_icuStringSearch->setOffset(d->_text.size(), d->_status);
     else
-        d->_currentIndex = index;
+        d->_icuStringSearch->setOffset(offset, d->_status);
 }
 
 int MStringSearch::matchedStart() const

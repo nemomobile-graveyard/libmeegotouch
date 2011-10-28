@@ -453,14 +453,6 @@ void Ft_MStringSearch::testSearch()
     QCOMPARE(firstMatchStart, matchStarts.first());
     QCOMPARE(firstMatchLength, matchLengths.first());
     QCOMPARE(firstMatchText, matchTexts.first());
-    QCOMPARE(next, firstMatchStart);
-    QCOMPARE(nextMatchStart, firstMatchStart);
-    QCOMPARE(nextMatchLength, firstMatchLength);
-    QCOMPARE(nextMatchText, firstMatchText);
-    QCOMPARE(previous, -1);
-    QCOMPARE(previousMatchStart, -1);
-    QCOMPARE(previousMatchLength, 0);
-    QCOMPARE(previousMatchText, QString());
 
     last = stringSearch.last();
     lastMatchStart = stringSearch.matchedStart();
@@ -524,8 +516,8 @@ void Ft_MStringSearch::testSearch()
         << " collatorStrength: " << collatorStrengthDescription << "\n";
     debugStream.flush();
 #endif
-    stringSearch.setIndex(0);
-    QCOMPARE(stringSearch.index(), 0);
+    stringSearch.setOffset(0);
+    QCOMPARE(stringSearch.offset(), 0);
     int matchCount = 0;
     int matchStart = -1;
     int matchLength = 0;
@@ -559,7 +551,7 @@ void Ft_MStringSearch::testSearch()
         QCOMPARE(matchText, matchTexts.at(matchCount));
         // without incrementing the index, “next”
         // always matches the same match again
-        stringSearch.setIndex(matchStart+1);
+        stringSearch.setOffset(matchStart+1);
         matchCount++;
     }
     QCOMPARE(matchStart, lastMatchStart);
@@ -578,8 +570,8 @@ void Ft_MStringSearch::testSearch()
         << " collatorStrength: " << collatorStrengthDescription << "\n";
     debugStream.flush();
 #endif
-    stringSearch.setIndex(text.size());
-    QCOMPARE(stringSearch.index(), text.size());
+    stringSearch.setOffset(text.size());
+    QCOMPARE(stringSearch.offset(), text.size());
     matchCount = matchTexts.size()-1;
     matchStart = -1;
     matchLength = 0;

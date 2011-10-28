@@ -279,21 +279,22 @@ public:
     int last();
 
     /*!
-     * \brief moves to the “next” (>=) match
+     * \brief moves to the next match
      *
-     * If there is a match at a position greater or equal than the
-     * current search index position, returns the index of that match,
-     * returns “-1” if there no such match
+     * Returns the index of the next point at which the text matches
+     * the search pattern, starting from the current position.
      *
-     * The current search index is changed to the position of the
-     * match.
+     * The iterator is adjusted so that its current index (as returned
+     * by offset()) is the match position if one was found.
+     *
+     * Returns “-1” if there no next match is found.
      *
      * If there is a match, matchedStart(), matchedLength(), and
      * matchedText() can be used to find out what was matched.
      *
      * \sa previous()
-     * \sa index()
-     * \sa setIndex()
+     * \sa offset()
+     * \sa setOffset(int offset)
      * \sa matchedStart()
      * \sa matchedLength()
      * \sa matchedText()
@@ -301,21 +302,23 @@ public:
     int next();
 
     /*!
-     * \brief moves to the “previous” (<) match
+     * \brief moves to the previous < match
      *
-     * If there is a match at a position smaller than the
-     * current search index position, returns the index of that match,
-     * returns “-1” if there no such match
+     * Returns the index of the previous point at which the string
+     * text matches the search pattern, starting at the current
+     * position.
      *
-     * The current search index is changed to the position of the
-     * match.
+     * The iterator is adjusted so that its current index (as returned
+     * by offset()) is the match position if one was found.
+     *
+     * Returns “-1” if there no previous match is found.
      *
      * If there is a match, matchedStart(), matchedLength(), and
      * matchedText() can be used to find out what was matched.
      *
      * \sa previous()
-     * \sa index()
-     * \sa setIndex()
+     * \sa offset()
+     * \sa setOffset(int offset)
      * \sa matchedStart()
      * \sa matchedLength()
      * \sa matchedText()
@@ -325,16 +328,16 @@ public:
     /*!
      * \brief returns the current search index position
      *
-     * \sa setIndex(int index)
+     * \sa setOffset(int offset)
      */
-    int index() const;
+    int offset() const;
 
     /*!
      * \brief sets the current search index position
      *
-     * \sa index()
+     * \sa offset()
      */
-    void setIndex(int index);
+    void setOffset(int offset);
 
     /*!
      * \brief returns the start index of a match found by a previous command

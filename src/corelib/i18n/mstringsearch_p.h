@@ -48,7 +48,6 @@ public:
     MLocale _locale;
     QString _pattern;
     QString _text;
-    int _currentIndex;
     QString _searchCollatorLocaleName;
     MLocale::CollatorStrength _collatorStrength;
     Qt::CaseSensitivity _caseSensitivity;
