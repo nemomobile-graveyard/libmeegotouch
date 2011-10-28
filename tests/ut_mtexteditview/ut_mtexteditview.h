@@ -27,8 +27,10 @@
 
 class MApplication;
 class MApplicationWindow;
+class MSceneManager;
 class MTextEdit;
 class MTextEditView;
+class AutoActivatedScene;
 
 class Ut_MTextEditView : public QObject
 {
@@ -59,11 +61,13 @@ private slots:
     void testEditorToolbarReappearanceAfterFocusLost_data();
     void testEditorToolbarReappearanceAfterFocusLost();
     void testEditorToolbarAutoHide();
+    void testSelectionOverlay();
 
 private:
     bool editorAppeared() const;
 
 private:
+    AutoActivatedScene *sc;
     MTextEdit *m_controller;
     MTextEditView *m_subject;
     MApplication *m_app;

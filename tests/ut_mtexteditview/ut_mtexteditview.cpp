@@ -29,7 +29,10 @@
 
 #include <MApplication>
 #include <MApplicationWindow>
+#include <MApplicationPage>
 #include <MScene>
+#include <mscenemanager.h>
+#include <mscenewindow.h>
 
 #include <QPaintEngine>
 
@@ -38,13 +41,65 @@
 
 #include "corelib/widgets/mtextedit_p.h"
 #include "views/mtexteditview_p.h"
+#include "utils.h"
 
 Q_DECLARE_METATYPE(Qt::FocusReason)
 
+
+
+class AlwaysOnDisplayWindow
+    : public MWindow
+{
+public:
+    explicit AlwaysOnDisplayWindow(MSceneManager *sm, QWidget *parent = 0)
+        : MWindow(sm, parent)
+        , m_page(new MApplicationPage)
+    {
+        setVisible(true);
+        QTest::qWaitForWindowShown(this);
+        QVERIFY(testAttribute(Qt::WA_Mapped));
+
+        QSignalSpy spy(m_page, SIGNAL(appeared()));
+        m_page->setCentralWidget(new QGraphicsWidget);
+        m_page->appear(this);
+        Ut_Utils::waitForSignal(spy);
+        QApplication::setActiveWindow(this);
+    }
+
+    QGraphicsWidget* box()
+    {
+        return m_page->centralWidget();
+    }
+
+private:
+    QPointer<MApplicationPage> m_page;
+};
+
+class AutoActivatedScene
+    : public MScene
+{
+public:
+    explicit AutoActivatedScene(QObject *parent = 0)
+        : MScene(parent)
+        , m(new MSceneManager(this))
+
+    {
+        setFocus(Qt::OtherFocusReason);
+    }
+
+    AlwaysOnDisplayWindow *window()
+    {
+        return &m;
+    }
+
+private:
+    AlwaysOnDisplayWindow m;
+};
+
 void Ut_MTextEditView::initTestCase()
 {
-    static int dummyArgc = 1;
-    static char *dummyArgv[1] = { (char *) "./ut_mtexteditview" };
+    static int dummyArgc = 2;
+    static char *dummyArgv[2] = { (char *) "./ut_mtexteditview"};
     MApplication::setLoadMInputContext(false);
     m_app = new MApplication(dummyArgc, dummyArgv);
     m_appWindow = new MApplicationWindow;
@@ -62,6 +117,7 @@ void Ut_MTextEditView::cleanupTestCase()
 
 void Ut_MTextEditView::init()
 {
+    sc = new AutoActivatedScene();
     m_controller = new MTextEdit(MTextEditModel::MultiLine, "");
     m_controller->setStyleName("Ut_MTextEditView_MTextEdit");
     m_subject = new MTextEditView(m_controller);
@@ -75,6 +131,8 @@ void Ut_MTextEditView::cleanup()
     m_subject = 0;
     delete m_controller;
     m_controller = 0;
+    delete sc;
+    sc = 0;
 }
 
 namespace {
@@ -634,6 +692,27 @@ bool Ut_MTextEditView::editorAppeared() const
 {
     return m_subject->d_func()->editorToolbar
            && m_subject->d_func()->editorToolbar->isAppeared();
+}
+
+void Ut_MTextEditView::testSelectionOverlay()
+{
+    m_controller->setParentItem(sc->window()->box());
+    m_controller->setFocus();
+    sc->window()->show();
+    QTest::qWaitForWindowShown(sc->window());
+
+    QCOMPARE(m_controller->model()->isSelecting(), false);
+    m_controller->setText("test text");
+    m_controller->setSelection(0, 5, false);
+    m_subject->d_func()->showSelectionOverlay();
+
+    QCOMPARE(m_subject->d_func()->selectionOverlay.isNull(), false);
+    QCOMPARE(m_subject->d_func()->selectionOverlay->isVisible(), true);
+    QCOMPARE(m_controller->model()->isSelecting(), true);
+
+    m_controller->setSelection(0, 0, false);
+    QCOMPARE(m_subject->d_func()->selectionOverlay->isVisible(), false);
+    QCOMPARE(m_controller->model()->isSelecting(), false);
 }
 
 QTEST_APPLESS_MAIN(Ut_MTextEditView)

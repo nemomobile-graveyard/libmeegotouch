@@ -3,10 +3,10 @@
 
 #include <QGraphicsWidget>
 #include <QPointer>
+#include <mtexteditview.h>
 
 class MSceneManager;
 class MTextEdit;
-class MTextEditView;
 
 //! \internal
 
@@ -15,12 +15,15 @@ class MTextSelectionOverlay : public QGraphicsWidget
     Q_OBJECT
 public:
     explicit MTextSelectionOverlay(MTextEdit *,
-                                   MTextEditView *)
+                                   MTextEditView *view)
     {
+        connect(view, SIGNAL(selectionChanged(int, QRectF, bool, int, QRectF, bool)),
+                this, SLOT(onSelectionChange(int, QRectF, bool, int, QRectF, bool)));
     };
 
     void disappear()
     {
+        hide();
     }
 
     void skipTransitions()
@@ -35,6 +38,18 @@ Q_SIGNALS:
     void selectionHandlePressed();
 
     void selectionHandleReleased();
+
+private Q_SLOTS:
+    void onSelectionChange(int newAnchor, const QRectF &, bool,
+                           int newCursor, const QRectF &, bool)
+    {
+        if (newAnchor != newCursor) {
+            show();
+        } else {
+            hide();
+        }
+    };
+
 };
 
 //! \internal_end

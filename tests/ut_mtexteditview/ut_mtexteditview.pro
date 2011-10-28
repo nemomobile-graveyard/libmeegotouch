@@ -17,6 +17,7 @@ OTHER_FILES += ut_mtexteditview.css
 
 INCLUDEPATH += \
     $$MSRCDIR/corelib/widgets/ \
+    $$MSRCDIR/../tests/ \
 
 # Use stubbed versions of mtextmagnifier.h and meditortoolbar.h
 # when compiling mtexteditview.cpp.
