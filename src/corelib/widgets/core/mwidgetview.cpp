@@ -495,7 +495,7 @@ void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, con
         if (value.value<QGraphicsItem*>() != NULL) {
             mPerformanceWarning("MWidgetView::reloadChildItemsStyles") << "Styles are recursively reloaded due to parent change :" << d->controller;
             d->reloadChildItemsStyles(d->controller);
-            applyStyle();
+            d->applyStyleIfNeeded();
         }
     } else if (change == QGraphicsItem::ItemSceneChange) {
         QGraphicsScene *scene = value.value<QGraphicsScene*>();
@@ -505,7 +505,7 @@ void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, con
 
         if (mscene) {
             d->styleContainer->setSceneManager(mscene->sceneManager());
-            applyStyle();
+            d->applyStyleIfNeeded();
         } else
             d->styleContainer->setSceneManager(0);
     }

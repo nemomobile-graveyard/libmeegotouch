@@ -92,6 +92,10 @@ void MMessageBoxViewPrivate::updateLayout()
     clearLayout();
     prepareLayout();
 
+    if (centralWidget) {
+        contentsLayout->insertItem(0, centralWidget);
+    }
+
     if (textLabel) {
         contentsLayout->insertItem(0, textLabel);
         contentsLayout->setAlignment(textLabel, Qt::AlignCenter);
@@ -123,6 +127,7 @@ void MMessageBoxViewPrivate::clearLayout()
     contentsLayout->removeItem(iconImage);
     contentsLayout->removeItem(titleLabel);
     contentsLayout->removeItem(textLabel);
+    contentsLayout->removeItem(centralWidget);
 }
 
 void MMessageBoxViewPrivate::updateIconWidget()
@@ -189,7 +194,8 @@ void MMessageBoxView::updateData(const QList<const char *>& modifications)
     bool updateLayout = false;
     foreach(member, modifications) {
         if (member == MMessageBoxModel::Text || member == MMessageBoxModel::Title ||
-            member == MMessageBoxModel::IconId || member == MMessageBoxModel::IconPixmap) {
+            member == MMessageBoxModel::IconId || member == MMessageBoxModel::IconPixmap ||
+            member == MDialogModel::CentralWidget) {
             updateLayout = true;
             break;
         }
@@ -218,6 +224,17 @@ void MMessageBoxView::setupModel()
     else
         d->dialogBox->setPreferredWidth(style()->dialogPreferredSize().width());
 
+    // update the layout if MDialogView::setupModel() inserted us a central widget
+    bool updateLayout = false;
+    for (int i = 0; i < d->contentsLayout->count(); i++) {
+        if (d->contentsLayout->itemAt(i) == d->centralWidget) {
+            updateLayout = true;
+            break;
+        }
+    }
+
+    if (updateLayout)
+        d->updateLayout();
 
     updateGeometry();
 }
