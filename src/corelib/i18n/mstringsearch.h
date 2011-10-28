@@ -286,14 +286,12 @@ public:
      * returns “-1” if there no such match
      *
      * The current search index is changed to the position of the
-     * match, toBack() is called if there is no match.
+     * match.
      *
      * If there is a match, matchedStart(), matchedLength(), and
      * matchedText() can be used to find out what was matched.
      *
      * \sa previous()
-     * \sa toBack()
-     * \sa toFront()
      * \sa index()
      * \sa setIndex()
      * \sa matchedStart()
@@ -310,14 +308,12 @@ public:
      * returns “-1” if there no such match
      *
      * The current search index is changed to the position of the
-     * match, toFront() is called if there is no match.
+     * match.
      *
      * If there is a match, matchedStart(), matchedLength(), and
      * matchedText() can be used to find out what was matched.
      *
      * \sa previous()
-     * \sa toBack()
-     * \sa toFront()
      * \sa index()
      * \sa setIndex()
      * \sa matchedStart()
@@ -325,37 +321,6 @@ public:
      * \sa matchedText()
      */
     int previous();
-
-    /*!
-     * \brief moves the current search index to the end of the string
-     *
-     * moves the current search index to text.size(), i.e. one position
-     * <b>after</b> the last index in the text in which the pattern
-     * is searched.
-     *
-     * Calling previous() after toBack() goes to the last match, i.e.
-     * it achieves the same as last().
-     *
-     * \sa toFront()
-     * \sa previous()
-     * \sa last()
-     */
-    void toBack();
-
-    /*!
-     * \brief moves the current search index to the beginning of the string
-     *
-     * moves the current search index to 0, i.e. the first index
-     * in the text in which the pattern is searched.
-     *
-     * Calling next() after toFront() goes to the first match, i.e.
-     * it achieves the same as first().
-     *
-     * \sa toFront()
-     * \sa previous()
-     * \sa last()
-     */
-    void toFront();
 
     /*!
      * \brief returns the current search index position
