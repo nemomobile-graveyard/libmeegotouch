@@ -491,9 +491,9 @@ void MStringSearch::setIndex(int index)
         d->_currentIndex = index;
 }
 
-int MStringSearch::matchedStart()
+int MStringSearch::matchedStart() const
 {
-    Q_D(MStringSearch);
+    Q_D(const MStringSearch);
     int start = d->_icuStringSearch->getMatchedStart();
     if (start == USEARCH_DONE)
         return -1;
@@ -501,9 +501,9 @@ int MStringSearch::matchedStart()
         return start;
 }
 
-int MStringSearch::matchedLength()
+int MStringSearch::matchedLength() const
 {
-    Q_D(MStringSearch);
+    Q_D(const MStringSearch);
     int length = d->_icuStringSearch->getMatchedLength();
     if (length == USEARCH_DONE)
         return -1;
@@ -511,9 +511,9 @@ int MStringSearch::matchedLength()
         return length;
 }
 
-QString MStringSearch::matchedText()
+QString MStringSearch::matchedText() const
 {
-    Q_D(MStringSearch);
+    Q_D(const MStringSearch);
     icu::UnicodeString uString;
     d->_icuStringSearch->getMatchedText(uString);
     return MIcuConversions::unicodeStringToQString(uString);

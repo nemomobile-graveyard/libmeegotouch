@@ -347,7 +347,7 @@ public:
      * \sa next()
      * \sa previous()
      */
-    int matchedStart();
+    int matchedStart() const;
 
     /*!
      * \brief returns the start index of a match found by a previous command
@@ -360,7 +360,7 @@ public:
      * \sa next()
      * \sa previous()
      */
-    int matchedLength();
+    int matchedLength() const;
 
     /*!
      * \brief returns the start index of a match found by a previous command
@@ -373,7 +373,7 @@ public:
      * \sa next()
      * \sa previous()
      */
-    QString matchedText();
+    QString matchedText() const;
 
 private:
     Q_DISABLE_COPY(MStringSearch)
