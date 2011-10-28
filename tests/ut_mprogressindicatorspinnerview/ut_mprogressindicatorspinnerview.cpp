@@ -31,6 +31,7 @@
 #include "mapplication.h"
 #include "mapplicationwindow.h"
 #include "mapplicationpage.h"
+#include <mondisplaychangeevent.h>
 
 MApplication *app;
 MApplicationWindow *win;
@@ -79,24 +80,39 @@ QImage Ut_MProgressIndicatorSpinnerView::captureImage(MProgressIndicator *progre
 
 void Ut_MProgressIndicatorSpinnerView::testSpinnerInSwitcher()
 {
-    // get animation duration
-    int normalDuration = m_subject->d_func()->positionAnimation->duration();
+    MOnDisplayChangeEvent onDisplayEvent(true,
+                                         QRectF(QPointF(0,0),
+                                         win->visibleSceneSize()));
+
+    MOnDisplayChangeEvent offDisplayEvent(false,
+                                         QRectF(QPointF(0,0),
+                                         win->visibleSceneSize()));
+
+    win->show();
+    qApp->sendEvent(win, &onDisplayEvent);
+
+    QVERIFY(m_subject->d_func()->positionAnimation->state() == QPropertyAnimation::Running);
 
     // emulate entering the switcher
-    m_subject->d_func()->_q_switcherEntered();
+    win->showMinimized();
 
-    // get animation duration
-    int slowDuration = m_subject->d_func()->positionAnimation->duration();
+    // the animation should be paused when we are in switcher
+    QVERIFY(m_subject->d_func()->positionAnimation->state() == QPropertyAnimation::Paused ||
+            m_subject->d_func()->positionAnimation->state() == QPropertyAnimation::Stopped);
 
-    //same duration, but the animation should be paused when we are in switcher
-    QVERIFY(normalDuration == slowDuration);
+    // emulate display exited when on switcher (should have no effect)
+    qApp->sendEvent(win, &offDisplayEvent);
+    QVERIFY(m_subject->d_func()->positionAnimation->state() == QPropertyAnimation::Paused ||
+            m_subject->d_func()->positionAnimation->state() == QPropertyAnimation::Stopped);
+
+    // emulate display entered when on switcher (should have no effect)
+    qApp->sendEvent(win, &onDisplayEvent);
     QVERIFY(m_subject->d_func()->positionAnimation->state() == QPropertyAnimation::Paused ||
             m_subject->d_func()->positionAnimation->state() == QPropertyAnimation::Stopped);
     
     // emulate leaving the switcher
-    m_subject->d_func()->_q_switcherExited();
-    int currentDuration = m_subject->d_func()->positionAnimation->duration();
-    QCOMPARE(currentDuration, normalDuration);
+    win->showNormal();
+
     QVERIFY(m_subject->d_func()->positionAnimation->state() == QPropertyAnimation::Running);
 }
 
