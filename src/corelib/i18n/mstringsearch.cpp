@@ -241,7 +241,7 @@ void MStringSearchPrivate::icuStringSearchSetCollator()
                    << errorString();
 }
 
-MStringSearch::MStringSearch(QString &pattern, QString &text, const MLocale &locale, MBreakIterator::Type breakIteratorType)
+MStringSearch::MStringSearch(const QString &pattern, const QString &text, const MLocale &locale, MBreakIterator::Type breakIteratorType)
     : d_ptr (new MStringSearchPrivate)
 {
     Q_D(MStringSearch);

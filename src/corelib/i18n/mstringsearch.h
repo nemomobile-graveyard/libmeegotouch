@@ -141,7 +141,7 @@ public:
      * \sa setCollatorStrength(MLocale::CollatorStrength collatorStrength)
      * \sa setAlternateHandlingShifted(bool isShifted)
      */
-    MStringSearch(QString &pattern, QString &text, const MLocale &locale, MBreakIterator::Type breakIteratorType = MBreakIterator::CharacterIterator);
+    MStringSearch(const QString &pattern, const QString &text, const MLocale &locale, MBreakIterator::Type breakIteratorType = MBreakIterator::CharacterIterator);
 
     /*!
      * \brief destructor for MStringSearch
