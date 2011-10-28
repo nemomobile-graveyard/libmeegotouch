@@ -162,8 +162,6 @@ public:
      *   qWarning() << stringSearch.errorString();
      * \endcode
      *
-     * \sa hasError()
-     * \sa clearError()
      */
     QString errorString() const;
 
@@ -281,28 +279,6 @@ public:
     int last();
 
     /*!
-     * \brief checks whether there is a “next” (>=) match
-     *
-     * returns “true” if there is match at a position greater or
-     * equal than the current search index position, “false” if not.
-     *
-     * The current search index is <b>not</b> changed.
-     *
-     * If there is a match, matchedStart(), matchedLength(), and
-     * matchedText() can be used to find out what was matched.
-     *
-     * \sa toBack()
-     * \sa toFront()
-     * \sa hasPrevious()
-     * \sa index()
-     * \sa setIndex()
-     * \sa matchedStart()
-     * \sa matchedLength()
-     * \sa matchedText()
-     */
-    bool hasNext();
-
-    /*!
      * \brief moves to the “next” (>=) match
      *
      * If there is a match at a position greater or equal than the
@@ -318,7 +294,6 @@ public:
      * \sa previous()
      * \sa toBack()
      * \sa toFront()
-     * \sa hasPrevious()
      * \sa index()
      * \sa setIndex()
      * \sa matchedStart()
@@ -326,53 +301,6 @@ public:
      * \sa matchedText()
      */
     int next();
-
-    /*!
-     * \brief moves to the “next” (>=) match starting from a given index
-     * \param index the position in the text where to start
-     *
-     * like next(), only that the current search index where
-     * where to start from is given as a parameter.
-     *
-     * \sa next()
-     * \sa previous()
-     * \sa previous(int index)
-     */
-    int next(int index);
-
-    /*!
-     * \brief gets the “next” (>=) match without updating the index
-     *
-     * like next(), only that the current search index is not
-     * changed.
-     *
-     * \sa next()
-     * \sa previous()
-     * \sa peekPrevious()
-     */
-    int peekNext();
-
-    /*!
-     * \brief checks whether there is a “previous” (<) match
-     *
-     * returns “true” if there is match at a position smaller than
-     * the current search index position, “false” if not.
-     *
-     * The current search index is <b>not</b> changed.
-     *
-     * If there is a match, matchedStart(), matchedLength(), and
-     * matchedText() can be used to find out what was matched.
-     *
-     * \sa toBack()
-     * \sa toFront()
-     * \sa hasNext()
-     * \sa index()
-     * \sa setIndex()
-     * \sa matchedStart()
-     * \sa matchedLength()
-     * \sa matchedText()
-     */
-    bool hasPrevious();
 
     /*!
      * \brief moves to the “previous” (<) match
@@ -390,7 +318,6 @@ public:
      * \sa previous()
      * \sa toBack()
      * \sa toFront()
-     * \sa hasPrevious()
      * \sa index()
      * \sa setIndex()
      * \sa matchedStart()
@@ -398,31 +325,6 @@ public:
      * \sa matchedText()
      */
     int previous();
-
-    /*!
-     * \brief moves to the “previous” (<) match starting from a given index
-     * \param index the position in the text where to start
-     *
-     * like previous(), only that the current search index where
-     * where to start from is given as a parameter.
-     *
-     * \sa next()
-     * \sa previous()
-     * \sa next(int index)
-     */
-    int previous(int index);
-
-    /*!
-     * \brief gets the “previous” (<) match without updating the index
-     *
-     * like previous(), only that the current search index is not
-     * changed.
-     *
-     * \sa next()
-     * \sa previous()
-     * \sa peekNext()
-     */
-    int peekPrevious();
 
     /*!
      * \brief moves the current search index to the end of the string
@@ -473,39 +375,25 @@ public:
      * \brief returns the start index of a match found by a previous command
      *
      * Returns the start index of the text that was matched by the
-     * most recent call to first(), last(), hasNext(), next(),
-     * peekNext(), hasPrevious(), previous(), and peekPrevious().
+     * most recent call to first(), last(), next(), previous().
      *
      * \sa first()
      * \sa last()
-     * \sa hasNext()
      * \sa next()
-     * \sa next(int index)
-     * \sa peekNext()
-     * \sa hasPrevious()
      * \sa previous()
-     * \sa previous(int index)
-     * \sa peekPrevious()
      */
     int matchedStart();
 
     /*!
      * \brief returns the start index of a match found by a previous command
      *
-     * Returns the length of the text that was matched by the
-     * most recent call to first(), last(), hasNext(), next(),
-     * peekNext(), hasPrevious(), previous(), and peekPrevious().
+     * Returns the length of the text that was matched by the most
+     * recent call to first(), last(), next(), previous().
      *
      * \sa first()
      * \sa last()
-     * \sa hasNext()
      * \sa next()
-     * \sa next(int index)
-     * \sa peekNext()
-     * \sa hasPrevious()
      * \sa previous()
-     * \sa previous(int index)
-     * \sa peekPrevious()
      */
     int matchedLength();
 
@@ -513,19 +401,12 @@ public:
      * \brief returns the start index of a match found by a previous command
      *
      * Returns the text that was matched by the most recent call to
-     * first(), last(), hasNext(), next(), peekNext(), hasPrevious(),
-     * previous(), and peekPrevious().
+     * first(), last(), next(), previous().
      *
      * \sa first()
      * \sa last()
-     * \sa hasNext()
      * \sa next()
-     * \sa next(int index)
-     * \sa peekNext()
-     * \sa hasPrevious()
      * \sa previous()
-     * \sa previous(int index)
-     * \sa peekPrevious()
      */
     QString matchedText();
 
