@@ -89,6 +89,8 @@ void Ft_MGConfItem::cleanupTestCase()
     unsetRecursive(&rootItem);
     rootItem.sync();
 
+    QTest::qWait(500); // sync won't happen immediately -> give some time for it
+
     QCOMPARE(rootItem.listEntries().count(), 0);
 }
 
@@ -289,6 +291,8 @@ void Ft_MGConfItem::unset_dir()
     MGConfItem testDirItem("/Test/UnsetDir/Item");
     testDirItem.unset();
     testDirItem.sync();
+
+    QTest::qWait(500); // sync won't happen immediately -> give some time for it
 
     dirs = test.listDirs();
     entries = test.listEntries();
