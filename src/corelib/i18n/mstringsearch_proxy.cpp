@@ -38,12 +38,17 @@ public:
 
 
 
-MStringSearch::MStringSearch(const QString &pattern,const QString &text, const MLocale &locale, MBreakIterator::Type breakIteratorType )
+MStringSearch::MStringSearch(const QString &pattern, const QString &text, const MLocale &locale, MBreakIterator::Type breakIteratorType )
     : d_ptr ( new MStringSearchPrivate )
 {
     d_ptr->pStringSearch = new ML10N::MStringSearch(
              pattern, text, *locale.d_ptr->pLocale,
              (ML10N::MBreakIterator::Type)breakIteratorType );
+}
+
+MStringSearch::~MStringSearch()
+{
+    delete d_ptr;
 }
 
 QString MStringSearch::errorString() const
