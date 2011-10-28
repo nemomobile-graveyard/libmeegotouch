@@ -1013,6 +1013,11 @@ void MThemePrivate::pixmapCreatedOrChangedSlot(const QString &imageId, const QSi
 
     *pixmap = MGraphicsSystemHelper::pixmapFromHandle(pixmapHandle, &iterator->addr, &iterator->numBytes);
 
+    if (pixmap->isNull() || !pixmap->size().isValid()) {
+        mWarning("MThemePrivate") << "pixmapFromHandle: shared pixmap creation failed";
+        *pixmap = *invalidPixmap();
+        pixmap->fill(Qt::cyan); //to see that it is different case
+    }
     pixmapRequestFinished();
 }
 
