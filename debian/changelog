@@ -1,9 +1,15 @@
-libmeegotouch (0.24.7~1) unstable; urgency=low
+libmeegotouch (0.24.7-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#285936 - The name of the days in month view are corrupt and unrecognizable.
   * Fixes: NB#276864 - [TASK] Support for setting the timestamp of notifications
+  * Fixes: NB#286356 - Button showing completions count has elided label
+  * Fixes: NB#288168 - Error pop-up shows up when trying to paste decimal numbers in calculator
+  * Fixes: NB#274054 - [TASK] Cannot use English word for Chinese name search.
+  * Fixes: NB#285514 - [REG] Select search engine text in Selection provider dialogue is shown in wrong place
+  * Fixes: NB#284327 - Entered text is shown out of the text field in a scenario
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 24 Oct 2011 11:38:20 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 31 Oct 2011 09:38:49 +0200
 
 libmeegotouch (0.24.6-1) unstable; urgency=low
 
