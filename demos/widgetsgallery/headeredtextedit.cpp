@@ -20,6 +20,7 @@
 #include "headeredtextedit.h"
 #include <QDebug>
 #include <MLocale>
+#include <MTextEditView>
 
 HeaderedTextEdit::HeaderedTextEdit(QGraphicsItem *parent)
     : MTextEdit(MTextEditModel::MultiLine, QString(), parent),
@@ -84,15 +85,16 @@ void HeaderedTextEdit::updateTextLeftMargin()
 void HeaderedTextEdit::updateLabelPosition(const QRectF &geom)
 {
     Q_UNUSED(geom);
+    const MTextEditStyle *s = static_cast<const MTextEditStyle *>(style().operator ->());
     // The header imitates beginning of text for the user.
     // So, we need to place header where the beginning is.
     if (layoutDirection() == Qt::RightToLeft) {
         // put header to right side of text entry
         QRectF geometry;
+        QSizeF textSize = size();
         QSizeF labelSize = headerLabel->preferredSize();
         geometry.setSize(labelSize);
-        QSizeF textSize = sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
-        geometry.setX(textSize.width() - labelSize.width());
+        geometry.setX(textSize.width() - labelSize.width() - qMin<int>(s->paddingRight(), s->textClippingRight()));
         headerLabel->setGeometry(geometry);
     } else {
         // put header to left side of text entry
