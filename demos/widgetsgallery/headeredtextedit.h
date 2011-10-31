@@ -60,15 +60,11 @@ public:
      */ 
     QString staticHeaderText() const;
 
-protected Q_SLOTS:
+    //! \reimp
+    virtual void setGeometry(const QRectF &rect);
+    //! \reimp_end
 
-    /*!
-     *\brief: protected slot. Called after creating label and 
-     * setting up its text.
-     * It sets the cursor at an indented position equal to the width
-     * of label size.
-     */
-    void _q_updateTextLeftMargin();
+protected Q_SLOTS:
 
     /*!
      *\brief: Protected slot is called, whenever a user presses return key.
@@ -78,8 +74,16 @@ protected Q_SLOTS:
      */
     void _q_resetNewBlockMargin();
 
-    void _q_updateLabelPosition();
 private:
+    /*!
+     * 'brief Called after creating label and setting up its text.
+     *
+     * It sets the cursor at an indented position equal to the width
+     * of label size.
+     */
+    void updateTextLeftMargin();
+
+    void updateLabelPosition(const QRectF &geom);
     /*!
      *\brief: Label inside text input
      */

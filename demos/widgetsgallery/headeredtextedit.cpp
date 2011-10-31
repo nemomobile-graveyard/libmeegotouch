@@ -26,7 +26,6 @@ HeaderedTextEdit::HeaderedTextEdit(QGraphicsItem *parent)
     headerLabel(0)
 {
     connect(document(), SIGNAL(blockCountChanged(int)), this, SLOT(_q_resetNewBlockMargin()));
-    connect(this, SIGNAL(geometryChanged()), this, SLOT(_q_updateLabelPosition()));
 }
 
 HeaderedTextEdit::~HeaderedTextEdit()
@@ -46,7 +45,7 @@ void HeaderedTextEdit::setHeaderText(const QString &text)
     }
     headerLabel->setText(text);
 
-    _q_updateTextLeftMargin();
+    updateTextLeftMargin();
 }
 
 QString HeaderedTextEdit::staticHeaderText() const
@@ -58,7 +57,13 @@ QString HeaderedTextEdit::staticHeaderText() const
     }
 }
 
-void HeaderedTextEdit::_q_updateTextLeftMargin()
+void HeaderedTextEdit::setGeometry(const QRectF &rect)
+{
+    MTextEdit::setGeometry(rect);
+    updateLabelPosition(rect);
+}
+
+void HeaderedTextEdit::updateTextLeftMargin()
 {
     QSizeF labelSize = headerLabel->sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
     QTextCursor cursor(document());
@@ -72,18 +77,19 @@ void HeaderedTextEdit::_q_updateTextLeftMargin()
     tbf.setTextIndent(labelSize.width());
     Qt::LayoutDirection dir = MLocale::directionForText(headerLabel->text());
     setLayoutDirection(dir);
-    _q_updateLabelPosition();
+    updateLabelPosition(geometry());
     cursor.setBlockFormat(tbf);    
 }
 
-void HeaderedTextEdit::_q_updateLabelPosition()
+void HeaderedTextEdit::updateLabelPosition(const QRectF &geom)
 {
+    Q_UNUSED(geom);
     // The header imitates beginning of text for the user.
     // So, we need to place header where the beginning is.
     if (layoutDirection() == Qt::RightToLeft) {
         // put header to right side of text entry
         QRectF geometry;
-        QSizeF labelSize = headerLabel->sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
+        QSizeF labelSize = headerLabel->preferredSize();
         geometry.setSize(labelSize);
         QSizeF textSize = sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
         geometry.setX(textSize.width() - labelSize.width());
@@ -91,7 +97,7 @@ void HeaderedTextEdit::_q_updateLabelPosition()
     } else {
         // put header to left side of text entry
         QRectF geometry;
-        QSizeF labelSize = headerLabel->sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
+        QSizeF labelSize = headerLabel->preferredSize();
         geometry.setSize(labelSize);
         headerLabel->setGeometry(geometry);
     }
