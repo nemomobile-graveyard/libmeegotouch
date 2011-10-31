@@ -169,8 +169,9 @@ public:
     static const QString timestampKey;
 
 };
-
+#if QT_VERSION < QT_VERSION_CHECK(4,8,0)
     QDBusArgument &operator<<(QDBusArgument &, const QVariantHash &);
+#endif //QT_VERSION < QT_VERSION_CHECK(4,8,0)
     const QDBusArgument &operator>>(const QDBusArgument &, QVariantHash &);
 //! \internal_end
 

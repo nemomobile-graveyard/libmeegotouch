@@ -41,11 +41,13 @@ QDateTime QDateTime::currentDateTimeUtc()
     return gCurrentDateTimeUtc;
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(4,8,0)
 QDBusArgument &operator<<(QDBusArgument &argument, const QVariantHash &parameters)
 {
     Q_UNUSED(parameters);
     return argument;
 }
+#endif //QT_VERSION < QT_VERSION_CHECK(4,8,0)
 
 const QDBusArgument &operator>>(const QDBusArgument &argument, QVariantHash &parameters)
 {
