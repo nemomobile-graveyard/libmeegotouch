@@ -35,8 +35,23 @@
 
 static bool g_configItemFactorySet = false;
 
+static bool g_translationPathsInitialized = false;
+
 MLocalePrivate::MLocalePrivate() : pLocale( 0 )
 {
+    // make sure we set the right translation paths by default when
+    // creating the first MLocalePrivate
+    if ( ! g_translationPathsInitialized )
+    {
+        if ( ML10N::MLocale::translationPaths().isEmpty() )
+        {
+            ML10N::MLocale::setTranslationPaths(
+                (QStringList() << QString(TRANSLATION_DIR)) );
+        }
+
+        g_translationPathsInitialized = true;
+    }
+
     if ( ! g_configItemFactorySet )
     {
         ML10N::MLocale::setConfigItemFactory( new MLocaleGConfConfigItemFactory );
