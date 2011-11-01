@@ -309,8 +309,7 @@ void MLabelViewSimple::initializeTextProperties()
            || textOffset.x() + staticText.size().width() > paintingRectWithMargins.right()
            || textOffset.y() + staticText.size().height() > paintingRectWithMargins.bottom();
 
-    const QColor& color = viewPrivate->model()->color();
-    pen = QPen(color.isValid() ? color : style->color());
+    pen = QPen(viewPrivate->textColor());
     font = QFont(viewPrivate->controller->font());
 }
 

@@ -132,6 +132,11 @@ void MLabelViewPrivate::autoSetTextDirection(const QString &text, bool isMultipl
     textOptions.setAlignment(alignment);
 }
 
+QColor MLabelViewPrivate::textColor() const
+{
+    return (model()->color().isValid() ? model()->color() : style()->color());
+}
+
 MLabel::PreferredLineCountBehavior MLabelViewPrivate::stringToLineCountBehavior(const QString &behavior) const {
     if (behavior.compare("limit", Qt::CaseInsensitive) == 0)
         return MLabel::LineCountLimitsPreferredHeight;

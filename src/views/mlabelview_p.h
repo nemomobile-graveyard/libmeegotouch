@@ -330,6 +330,9 @@ public:
     // the model or (if auto) based on give text and whether it wraps over multiple lines
     void autoSetTextDirection(const QString &text, bool isMultipleLines);
 
+    // Color used for the text.  This is model color if it is valid, otherwise the style color
+    QColor textColor() const;
+
     // need define this for there are overload functions in controller
     MLabel *controller;
 

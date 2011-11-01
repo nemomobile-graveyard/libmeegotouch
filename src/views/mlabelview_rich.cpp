@@ -492,7 +492,7 @@ void MLabelViewRich::updateRichTextEliding()
         //default font
         QTextCharFormat format;
         format.setFont(textDocument.defaultFont());
-        format.setForeground(viewPrivate->controller->color());
+        format.setForeground(viewPrivate->textColor());
         cursor.insertText(ellipsisString, format);
         cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, ellipsisString.size());
         textDocument.setPageSize(viewPrivate->boundingRect().size());
@@ -902,9 +902,8 @@ QRectF MLabelViewRich::textBoundaries(qreal *x) const
 
 QString MLabelViewRich::defaultStyleSheet() const
 {
-    const QColor textColor(viewPrivate->model()->color().isValid() ? viewPrivate->model()->color() : viewPrivate->style()->color());
     const QColor anchorColor(viewPrivate->style()->highlightColor());
-    return QString::fromLatin1("* { color: %1; } a {color: %2;}").arg(textColor.name()).arg(anchorColor.name());
+    return QString::fromLatin1("* { color: %1; } a {color: %2;}").arg(viewPrivate->textColor().name()).arg(anchorColor.name());
 }
 
 void MLabelViewRich::triggerHighlightingUpdate()

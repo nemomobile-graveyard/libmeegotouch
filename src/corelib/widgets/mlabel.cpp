@@ -171,10 +171,6 @@ void MLabel::setColor(const QColor &color)
 
 QColor MLabel::color() const
 {
-    /*if( !model()->color().isValid() ) {
-        if( view() )
-            return view()->color();
-    }*/
     return model()->color();
 }
 
