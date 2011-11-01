@@ -43,7 +43,7 @@ class MEditorToolbarPrivate;
  * There is no specific reason why this class could not be used with widgets other than
  * MTextEdit but no promises about applicability to other use cases are made.
  */
-class MEditorToolbar : public MStylableWidget
+class M_VIEWS_EXPORT MEditorToolbar : public MStylableWidget
 {
     Q_OBJECT
 
