@@ -949,9 +949,9 @@ void Ut_MTextEdit::testTextInteractionFlags()
     // Remove editable-flag
     m_subject->setTextInteractionFlags(0);
 
-    // Confirm that flags were removed and policy set to NoFocus
+    // Confirm that flags were removed and focus policy is no changed.
     QCOMPARE(m_subject->textInteractionFlags(), 0);
-    QCOMPARE(m_subject->focusPolicy(), Qt::NoFocus);
+    QCOMPARE(m_subject->focusPolicy(), Qt::ClickFocus);
 
     // Confirm also that pre-edit mode was exited
     QVERIFY(m_subject->mode() != MTextEditModel::EditModeActive);
