@@ -219,6 +219,7 @@ SUBDIRS     =  \
     ut_mpreloader \
     ut_mlistindex \
     ut_mtextselectionoverlay\
+    ut_mcomponentdata
 
 # enable only when we have icu available
 
