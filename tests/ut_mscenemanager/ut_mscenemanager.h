@@ -108,6 +108,11 @@ private slots:
     void testPageTransitionsQueue();
 private:
     MComponentData* m_componentData;
+    M::OrientationAngle m_portraitAngle;
+    M::OrientationAngle m_invertedPortraitAngle;
+    M::OrientationAngle m_landscapeAngle;
+    M::OrientationAngle m_invertedLandscapeAngle;
+
 };
 
 #endif

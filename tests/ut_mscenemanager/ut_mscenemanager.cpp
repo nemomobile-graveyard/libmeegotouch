@@ -33,6 +33,7 @@
 #include <MMessageBox>
 #include <MOverlay>
 #include <MNavigationBar>
+#include <MDeviceProfile>
 #include "mdockwidget.h"
 #include <MScene>
 #include "mscenemanager_p.h"
@@ -55,9 +56,11 @@
 bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const
 {
     Q_UNUSED(isKeyboardOpen);
-    if (angle == M::Angle270)
-        return true;
-    return false;
+
+    bool screenIsPortrait = MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Portrait;
+
+    // We support only standard portrait orientation angle
+    return (angle == (screenIsPortrait ? M::Angle0 : M::Angle270));
 }
 
 bool gMWindowIsOnDisplay = false;
@@ -124,6 +127,12 @@ void Ut_MSceneManager::initTestCase()
     qRegisterMetaType<M::Orientation>("M::Orientation");
     qRegisterMetaType<M::Orientation>("M::OrientationAngle");
     mWindow = new MWindow;
+
+    m_portraitAngle = (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Portrait) ? M::Angle0 : M::Angle270;
+    m_invertedPortraitAngle = (M::OrientationAngle)((m_portraitAngle + 180)%360);
+
+    m_landscapeAngle = (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Portrait) ? M::Angle90 : M::Angle0;
+    m_invertedLandscapeAngle = (M::OrientationAngle)((m_landscapeAngle + 180)%360);
 }
 
 void Ut_MSceneManager::cleanupTestCase()
@@ -290,7 +299,7 @@ void Ut_MSceneManager::testOrientationChangedSignal()
 
     sm->setOrientationAngle((M::OrientationAngle) newAngle,
                             MSceneManager::ImmediateTransition);
-    M::Orientation newOrientation = (newAngle == M::Angle0 || newAngle == M::Angle180)
+    M::Orientation newOrientation = (newAngle == m_landscapeAngle || newAngle == m_invertedLandscapeAngle)
                                       ? M::Landscape
                                       : M::Portrait;
 
@@ -326,32 +335,32 @@ void Ut_MSceneManager::testOrientationChangeVisibility()
     sm->appearSceneWindowNow(win);
 
     // Init with landscape
-    sm->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
+    sm->setOrientationAngle(m_landscapeAngle, MSceneManager::ImmediateTransition);
 
     const int height = win->geometry().height();
     const int width  = win->geometry().width();
 
     // Rotate to portrait, immediately
     win->mustBeResolvedReceived = false;
-    sm->setOrientationAngle(M::Angle90, MSceneManager::ImmediateTransition);
+    sm->setOrientationAngle(m_portraitAngle, MSceneManager::ImmediateTransition);
     QVERIFY(win->mustBeResolvedReceived == true);
     QVERIFY(win->latestViewRect == QRectF(0, 0, height, width));
 
     // Rotate to landscape, immediately
     win->mustBeResolvedReceived = false;
-    sm->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
+    sm->setOrientationAngle(m_landscapeAngle, MSceneManager::ImmediateTransition);
     QVERIFY(win->mustBeResolvedReceived == true);
     QVERIFY(win->latestViewRect == QRectF(0, 0, width, height));
 
     // Rotate back to portrait, immediately
     win->mustBeResolvedReceived = false;
-    sm->setOrientationAngle(M::Angle90, MSceneManager::ImmediateTransition);
+    sm->setOrientationAngle(m_portraitAngle, MSceneManager::ImmediateTransition);
     QVERIFY(win->mustBeResolvedReceived == true);
     QVERIFY(win->latestViewRect == QRectF(0, 0, height, width));
 
     // Rotate to landscape, animatedly
     win->mustBeResolvedReceived = false;
-    sm->setOrientationAngle(M::Angle0);
+    sm->setOrientationAngle(m_landscapeAngle);
     QVERIFY(win->mustBeResolvedReceived == false);
     sm->fastForwardOrientationChangeAnimation();
     QVERIFY(win->mustBeResolvedReceived == true);
@@ -359,7 +368,7 @@ void Ut_MSceneManager::testOrientationChangeVisibility()
 
     // Rotate back to portrait, animatedly
     win->mustBeResolvedReceived = false;
-    sm->setOrientationAngle(M::Angle90);
+    sm->setOrientationAngle(m_portraitAngle);
     QVERIFY(win->mustBeResolvedReceived == false);
     sm->fastForwardOrientationChangeAnimation();
     QVERIFY(win->mustBeResolvedReceived == true);
@@ -418,7 +427,7 @@ void Ut_MSceneManager::testSceneSizes()
     QVERIFY(vSR.width() > 0);
     QVERIFY(vSR.height() > 0);
 
-    sm->setOrientationAngle(M::Angle90, MSceneManager::ImmediateTransition);
+    sm->setOrientationAngle(m_portraitAngle, MSceneManager::ImmediateTransition);
 
     // check scenerects are in correct orientation
     // what about square?
@@ -431,7 +440,7 @@ void Ut_MSceneManager::testSceneSizes()
     vSR = sm->visibleSceneSize(M::Landscape);
     QVERIFY(vSR.width() > vSR.height());
 
-    sm->setOrientationAngle(M::Angle180, MSceneManager::ImmediateTransition);
+    sm->setOrientationAngle(m_invertedLandscapeAngle, MSceneManager::ImmediateTransition);
 
     QCOMPARE(sm->orientation(), M::Landscape);
     QCOMPARE(sm->visibleSceneSize(), sm->visibleSceneSize(M::Landscape));
@@ -1209,13 +1218,13 @@ void Ut_MSceneManager::testStatusBarGeometryProperty()
 
     QCOMPARE(getX11Property(window, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY"), QVector<unsigned long>());
 
-    sceneManager->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
+    sceneManager->setOrientationAngle(m_landscapeAngle, MSceneManager::ImmediateTransition);
 
     sceneManager->appearSceneWindowNow(statusbar);
 
     QCOMPARE(getX11Property(window, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY"), windowGeometry(statusbar));
 
-    sceneManager->setOrientationAngle(M::Angle270, MSceneManager::ImmediateTransition);
+    sceneManager->setOrientationAngle(m_portraitAngle, MSceneManager::ImmediateTransition);
 
     QCOMPARE(getX11Property(window, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY"), windowGeometry(statusbar));
 
@@ -1227,7 +1236,7 @@ void Ut_MSceneManager::testStatusBarGeometryProperty()
     // set the property manually
     setX11Property(window, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY", QVector<unsigned long>() << 1 << 2 << 30 << 40);
 
-    sceneManager->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
+    sceneManager->setOrientationAngle(m_landscapeAngle, MSceneManager::ImmediateTransition);
 
     // changing an orientation shouldn't affect the property if the window has no statusbar
     QCOMPARE(getX11Property(window, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY"), QVector<unsigned long>() << 1 << 2 << 30 << 40);
@@ -1636,7 +1645,7 @@ void Ut_MSceneManager::testApplicationMenuBelowStatusBar()
     gMWindowIsOnDisplay = true;
     mWindow->show();
 
-    sm->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
+    sm->setOrientationAngle(m_landscapeAngle, MSceneManager::ImmediateTransition);
 
     MSceneWindow* menu = new MApplicationMenu;
     MSceneWindow* statusBar = new MStatusBar;
