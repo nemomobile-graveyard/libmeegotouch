@@ -60,6 +60,6 @@ void MGridLayoutPolicyPrivate::refreshWidget()
     qreal height = layout->geometry().bottom();
     engineWidget->setContentsMargins(leftMargin, topMargin, 0, 0);
     engineWidget->resize(width, height);
-    engine->setGeometry(engine->geometry()); //We need to call this to make sure the layout actually updates contents margins and RTL
+    engine->activate(); //We need to call this to make sure the layout actually updates contents margins and RTL
 }
 

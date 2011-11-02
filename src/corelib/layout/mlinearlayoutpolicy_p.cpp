@@ -78,7 +78,7 @@ void MLinearLayoutPolicyPrivate::refreshWidget()
     qreal width = layout->geometry().right();
     qreal height = layout->geometry().bottom();
     engineWidget->resize(width, height);
-    engine->setGeometry(engine->geometry()); //We need to call this to make sure the layout actually updates contents margins and RTL
+    engine->activate(); //We need to call this to make sure the layout actually updates contents margins and RTL
 }
 
 void MLinearLayoutPolicyPrivate::notifyWidgetOfLayoutPosition(int index, M::Position position)
