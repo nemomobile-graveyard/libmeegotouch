@@ -32,9 +32,10 @@ Q_DECLARE_METATYPE(MSceneManager::TransitionMode)
 bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const
 {
     Q_UNUSED(isKeyboardOpen);
-    if (angle == M::Angle270)
-        return true;
-    return false;
+    bool screenIsPortrait = MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Portrait;
+
+    // We support only standard portrait orientation angle
+    return (angle == (screenIsPortrait ? M::Angle0 : M::Angle270));
 }
 
 MWindow *win;
@@ -55,7 +56,7 @@ void MWindow::exitDisplayEvent()
 }
 
 // Test class implementation
-void Ut_MWindow::init()
+void Ut_MWindow::initTestCase()
 {
     if(MComponentData::instance() == 0) {
         static int argc = 1;
@@ -63,6 +64,16 @@ void Ut_MWindow::init()
         argv[ 0 ] = (char*)"./ut_mwindow";
         m_componentData = MComponentData::createInstance(argc, argv);
     }
+
+    m_portraitAngle = (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Portrait) ? M::Angle0 : M::Angle270;
+    m_invertedPortraitAngle = (M::OrientationAngle)((m_portraitAngle + 180)%360);
+
+    m_landscapeAngle = (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Portrait) ? M::Angle270 : M::Angle0;
+    m_invertedLandscapeAngle = (M::OrientationAngle)((m_landscapeAngle + 180)%360);
+}
+
+void Ut_MWindow::init()
+{
     win = new MWindow;
 }
 
@@ -113,30 +124,10 @@ void Ut_MWindow::testSetSceneManager()
 void Ut_MWindow::testSceneRect()
 {
     win->setSceneManager(new MSceneManager);
-    QCOMPARE(win->sceneRect(), QRectF(QPoint(0,0), win->visibleSceneSize(M::Landscape)));
+    QCOMPARE(win->sceneRect(), QRectF(QPoint(0,0), win->visibleSceneSize(MDeviceProfile::instance()->orientationFromAngle(M::Angle0))));
 }
 
 void Ut_MWindow::testOrientation_data()
-{
-    QTest::addColumn<M::OrientationAngle>("newAngle");
-    QTest::addColumn<M::Orientation>("newOrientation");
-    QTest::newRow("Angle0")   << M::Angle0   << M::Landscape;
-    QTest::newRow("Angle90")  << M::Angle90  << M::Portrait;
-    QTest::newRow("Angle180") << M::Angle180 << M::Landscape;
-    QTest::newRow("Angle270") << M::Angle270 << M::Portrait;
-    QTest::newRow("Angle360") << M::Angle0   << M::Landscape;
-}
-
-void Ut_MWindow::testOrientation()
-{
-    QFETCH(M::OrientationAngle, newAngle);
-    QFETCH(M::Orientation, newOrientation);
-
-    win->setOrientationAngle(newAngle);
-    QCOMPARE(win->orientation(), newOrientation);
-}
-
-void Ut_MWindow::testSetOrientationAngle_data()
 {
     QTest::addColumn<M::OrientationAngle>("newAngle");
     QTest::newRow("Angle0")   << M::Angle0;
@@ -146,24 +137,25 @@ void Ut_MWindow::testSetOrientationAngle_data()
     QTest::newRow("Angle360") << M::Angle0;
 }
 
-void Ut_MWindow::testSetOrientationAngle()
+void Ut_MWindow::testOrientation()
 {
     QFETCH(M::OrientationAngle, newAngle);
 
     win->setOrientationAngle(newAngle);
     QCOMPARE(win->orientationAngle(), newAngle);
+    QCOMPARE(win->orientation(), MDeviceProfile::instance()->orientationFromAngle(newAngle));
 }
 
 void Ut_MWindow::testSetOrientation()
 {
     win->setLandscapeOrientation();
-    QVERIFY(win->orientationAngle() == M::Angle0 || win->orientationAngle() == M::Angle180);
+    QVERIFY(win->orientationAngle() == m_landscapeAngle || win->orientationAngle() == m_invertedLandscapeAngle);
 
     win->setPortraitOrientation();
-    QVERIFY(win->orientationAngle() == M::Angle90 || win->orientationAngle() == M::Angle270);
+    QVERIFY(win->orientationAngle() == m_portraitAngle || win->orientationAngle() == m_invertedPortraitAngle);
 
     win->setLandscapeOrientation();
-    QVERIFY(win->orientationAngle() == M::Angle0 || win->orientationAngle() == M::Angle180);
+    QVERIFY(win->orientationAngle() == m_landscapeAngle || win->orientationAngle() == m_invertedLandscapeAngle);
 }
 
 void Ut_MWindow::testSetOrientationAngleCalledFromSceneManager()
@@ -171,21 +163,20 @@ void Ut_MWindow::testSetOrientationAngleCalledFromSceneManager()
     win->setSceneManager(new MSceneManager);
     QCOMPARE(win->orientationAngle(), win->sceneManager()->orientationAngle());
 
-    win->sceneManager()->setOrientationAngle(M::Angle90, MSceneManager::ImmediateTransition);
-    win->setOrientationAngle(M::Angle0);
-    QCOMPARE(win->orientationAngle(), M::Angle0);
-    QCOMPARE(win->sceneManager()->orientationAngle(), M::Angle0);
+    win->sceneManager()->setOrientationAngle(m_portraitAngle, MSceneManager::ImmediateTransition);
+    win->setOrientationAngle(m_landscapeAngle);
+    QCOMPARE(win->orientationAngle(), m_landscapeAngle);
+    QCOMPARE(win->sceneManager()->orientationAngle(), m_landscapeAngle);
 }
 
 void Ut_MWindow::testVisibleSceneSize_data()
 {
     QTest::addColumn<M::OrientationAngle>("newAngle");
     QTest::addColumn<M::Orientation>("newOrientation");
-    QTest::newRow("Angle0")   << M::Angle0   << M::Landscape;
-    QTest::newRow("Angle90")  << M::Angle90  << M::Portrait;
-    QTest::newRow("Angle180") << M::Angle180 << M::Landscape;
-    QTest::newRow("Angle270") << M::Angle270 << M::Portrait;
-    QTest::newRow("Angle360") << M::Angle0   << M::Landscape;
+    QTest::newRow("Angle0")   << m_landscapeAngle   << M::Landscape;
+    QTest::newRow("Angle90")  << m_portraitAngle  << M::Portrait;
+    QTest::newRow("Angle180") << m_invertedLandscapeAngle << M::Landscape;
+    QTest::newRow("Angle270") << m_invertedPortraitAngle << M::Portrait;
 }
 
 void Ut_MWindow::testVisibleSceneSize()
@@ -197,7 +188,7 @@ void Ut_MWindow::testVisibleSceneSize()
 
     QSize vss = win->visibleSceneSize();
 
-    if (newOrientation == M::Portrait)
+    if (newOrientation == MDeviceProfile::instance()->orientationFromAngle(M::Angle90))
         vss.transpose();
 
     QCOMPARE(vss, MDeviceProfile::instance()->resolution());
@@ -205,14 +196,15 @@ void Ut_MWindow::testVisibleSceneSize()
 
 void Ut_MWindow::testOrientationChangedSignalPropagationFromSceneManager()
 {
+    // create the scene manager
+    win->sceneManager();
+
+    win->sceneManager()->setOrientationAngle(m_landscapeAngle, MSceneManager::ImmediateTransition);
+
     QSignalSpy orientationSpy(win, SIGNAL(orientationChanged(M::Orientation)));
     QSignalSpy angleSpy(win, SIGNAL(orientationAngleChanged(M::OrientationAngle)));
 
-    // create the scene manager
-    win->sceneManager();
-    M::OrientationAngle newAngle = (M::OrientationAngle)(0);
-
-    win->sceneManager()->setOrientationAngle(newAngle, MSceneManager::ImmediateTransition);
+    win->sceneManager()->setOrientationAngle(m_portraitAngle, MSceneManager::ImmediateTransition);
 
     QCOMPARE(orientationSpy.count(), 1);
     QCOMPARE(angleSpy.count(), 1);
@@ -222,12 +214,12 @@ void Ut_MWindow::testNoOrientationChangedSignalWhenRotatingBy180Degrees()
 {
     // create the scene manager
     win->sceneManager();
-    win->setOrientationAngle(M::Angle0);
+    win->setOrientationAngle(m_landscapeAngle);
 
     QSignalSpy orientationSpy(win, SIGNAL(orientationChanged(M::Orientation)));
     QSignalSpy angleSpy(win, SIGNAL(orientationAngleChanged(M::OrientationAngle)));
 
-    win->setOrientationAngle(M::Angle180);
+    win->setOrientationAngle(m_invertedLandscapeAngle);
 
     QCOMPARE(orientationSpy.count(), 0);
     QCOMPARE(angleSpy.count(), 1);
@@ -466,10 +458,10 @@ void Ut_MWindow::testSetLandscapeOrientation_data()
 {
     QTest::addColumn<M::OrientationAngle>("initialAngle");
     QTest::addColumn<M::OrientationAngle>("landscapeAngle");
-    QTest::newRow("0->0")     << M::Angle0   << M::Angle0;
-    QTest::newRow("90->0")    << M::Angle90  << M::Angle0;
-    QTest::newRow("180->180") << M::Angle180 << M::Angle180;
-    QTest::newRow("270->0")   << M::Angle270 << M::Angle0;
+    QTest::newRow("landscape->landscape")   << m_landscapeAngle   << m_landscapeAngle;
+    QTest::newRow("inv. portrait->landscape")   << m_invertedPortraitAngle  << m_landscapeAngle;
+    QTest::newRow("inv. landscape->inv. landscape") << m_invertedLandscapeAngle << m_invertedLandscapeAngle;
+    QTest::newRow("portrait->landscape") << m_portraitAngle << m_landscapeAngle;
 }
 
 void Ut_MWindow::testSetLandscapeOrientation()
@@ -486,10 +478,10 @@ void Ut_MWindow::testSetPortraitOrientation_data()
 {
     QTest::addColumn<M::OrientationAngle>("initialAngle");
     QTest::addColumn<M::OrientationAngle>("portraitAngle");
-    QTest::newRow("0->270")   << M::Angle0   << M::Angle270;
-    QTest::newRow("90->90")   << M::Angle90  << M::Angle90;
-    QTest::newRow("180->270") << M::Angle180 << M::Angle270;
-    QTest::newRow("270->270") << M::Angle270 << M::Angle270;
+    QTest::newRow("landscape->portrait")   << m_landscapeAngle   << m_portraitAngle;
+    QTest::newRow("inv. portrait->inv. portrait")   << m_invertedPortraitAngle  << m_invertedPortraitAngle;
+    QTest::newRow("inv. landscape->portrait") << m_invertedLandscapeAngle << m_portraitAngle;
+    QTest::newRow("portrait->portrait") << m_portraitAngle << m_portraitAngle;
 }
 
 void Ut_MWindow::testSetPortraitOrientation()

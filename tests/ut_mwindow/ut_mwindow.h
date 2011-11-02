@@ -35,6 +35,7 @@ class Ut_MWindow: public QObject
     Q_OBJECT
 
 private slots:
+    void initTestCase();
     void init();
     void cleanup();
 
@@ -47,8 +48,6 @@ private slots:
     void testSceneRect();
     void testOrientation_data();
     void testOrientation();
-    void testSetOrientationAngle_data();
-    void testSetOrientationAngle();
     void testSetOrientation();
     void testSetOrientationAngleCalledFromSceneManager();
     void testVisibleSceneSize_data();
@@ -92,6 +91,11 @@ public slots:
 public:
     static bool m_onDisplayHandlerCalled;
     static bool m_onDisplaySignalSent;
+    M::OrientationAngle m_portraitAngle;
+    M::OrientationAngle m_invertedPortraitAngle;
+    M::OrientationAngle m_landscapeAngle;
+    M::OrientationAngle m_invertedLandscapeAngle;
+
 private:
     MComponentData* m_componentData;
 };
