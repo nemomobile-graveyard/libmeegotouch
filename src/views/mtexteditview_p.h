@@ -130,6 +130,8 @@ protected slots:
     void restoreSelectionOverlay();
     void setSelection();
 
+    void updateGestureGrab();
+
 private:
     void scrollingTestAndStart(QGraphicsSceneMouseEvent *event);
     void scrollingTestAndStart(const QPointF &pos);

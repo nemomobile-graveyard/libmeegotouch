@@ -140,7 +140,7 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
     timeOnFeedback.invalidate();
     timeOnMove.invalidate();
 
-    controller->grabGesture(Qt::PanGesture);
+    updateGestureGrab();
 
     QObject::connect(longPressTimer, SIGNAL(timeout()), q, SLOT(handleLongPress()));
     QObject::connect(scrollTimer, SIGNAL(timeout()), this, SLOT(scrolling()));
@@ -149,6 +149,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
                      this, SLOT(updateEditorToolbarPosition()));
     QObject::connect(control, SIGNAL(selectionChanged()),
                      this, SLOT(updateEditorToolbarPosition()));
+    QObject::connect(control, SIGNAL(enabledChanged()),
+                     this, SLOT(updateGestureGrab()));
     QObject::connect(focusAnimationDelay, SIGNAL(timeout()),
                      this, SLOT(startFocusAnimation()));
     QObject::connect(scrollSelectTimer, SIGNAL(timeout()),
@@ -1773,6 +1775,14 @@ void MTextEditViewPrivate::setSelection()
 {
     controller->setSelection(anchorPos, cursorPos - anchorPos, false);
     scrollingTestAndStart(lastHandlePos);
+}
+
+void MTextEditViewPrivate::updateGestureGrab()
+{
+    if (controller->isEnabled())
+        controller->grabGesture(Qt::PanGesture);
+    else
+        controller->ungrabGesture(Qt::PanGesture);
 }
 
 //////////////////////
