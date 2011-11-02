@@ -40,6 +40,8 @@ namespace
         model->setLine(type);
         return model;
     }
+
+    const char * const NoCloseToolbarOnTriggerProperty("noCloseToolbarOnTrigger");
 }
 
 MActionGroup::MActionGroup(QObject *parent): group(parent),
@@ -163,6 +165,11 @@ void MRichTextEditPrivate::init()
     italicAction.setCheckable(true);
     underlineAction.setCheckable(true);
 
+    boldAction.setProperty(NoCloseToolbarOnTriggerProperty, true);
+    italicAction.setProperty(NoCloseToolbarOnTriggerProperty, true);
+    underlineAction.setProperty(NoCloseToolbarOnTriggerProperty, true);
+    formatAction.setProperty(NoCloseToolbarOnTriggerProperty, true);
+
     q->connect(&boldAction, SIGNAL(triggered(bool)), SLOT(_q_toggleFontBold()));
     q->connect(&italicAction, SIGNAL(triggered(bool)), SLOT(_q_toggleFontItalic()));
     q->connect(&underlineAction, SIGNAL(triggered(bool)), SLOT(_q_toggleFontUnderline()));
@@ -185,7 +192,7 @@ void MRichTextEditPrivate::init()
     modeAction.setVisible(textEditButtons.visibleItemCount() != 0);
     modeAction.setCheckable(true);
     modeAction.setChecked(false);
-    modeAction.setProperty("noCloseToolbarOnTrigger", true);// TODO: Use defined constant instead of string
+    modeAction.setProperty(NoCloseToolbarOnTriggerProperty, true);
     q->connect(&modeAction, SIGNAL(triggered(bool)), SLOT(_q_showRichTextToolbar(bool)));
     q->addAction(&modeAction);
 }
