@@ -1,3 +1,10 @@
+libmeegotouch (0.24.7-2) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#288879 - feeds title is displaying with logical name
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 02 Nov 2011 11:09:15 +0200
+
 libmeegotouch (0.24.7-1) unstable; urgency=low
 
   * New version
