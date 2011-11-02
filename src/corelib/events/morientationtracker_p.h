@@ -71,7 +71,9 @@ public:
     // Returns the closest orientation angle to the given one that is allowed
     // according to current profile.
     M::OrientationAngle findClosestAllowedAngle(M::OrientationAngle angle, bool isKeyboardOpen) const;
+#ifdef HAVE_CONTEXTSUBSCRIBER
     void reevaluateSubscriptionToSensorProperties();
+#endif
     bool canRotate(MWindow *window) const;
     void resolveOrientationRulesOfWindow(MWindow *window);
     void rotateToAngleIfAllowed(M::OrientationAngle angle, MWindow* window);

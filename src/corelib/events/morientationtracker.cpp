@@ -215,7 +215,6 @@ bool MOrientationTrackerPrivate::checkIfOrientationUpdatesRequired()
         (!windowsFollowingCurrentAppWindow.isEmpty()
         && !currentWindowAnglePropertyContainsValidAngle());
 }
-#endif
 
 void MOrientationTrackerPrivate::reevaluateSubscriptionToSensorProperties()
 {
@@ -226,6 +225,7 @@ void MOrientationTrackerPrivate::reevaluateSubscriptionToSensorProperties()
         unsubscribeFromSensorProperties();
     }
 }
+#endif
 
 bool MOrientationTrackerPrivate::canRotate(MWindow *window) const
 {
@@ -284,6 +284,8 @@ void MOrientationTrackerPrivate::resolveOrientationRulesOfWindow(MWindow *window
         stopFollowingDesktop(window);
         stopFollowingCurrentAppWindow(window);
     }
+#else
+    Q_UNUSED(window);
 #endif
 }
 
@@ -604,14 +606,18 @@ void MOrientationTracker::resolveOrientationRulesOfWindow(MWindow *window)
 
 void MOrientationTracker::startTracking()
 {
+#ifdef HAVE_CONTEXTSUBSCRIBER
     Q_D(MOrientationTracker);
     d->startTracking();
+#endif
 }
 
 void MOrientationTracker::stopTracking()
 {
+#ifdef HAVE_CONTEXTSUBSCRIBER
     Q_D(MOrientationTracker);
     d->stopTracking();
+#endif
 }
 
 #ifdef HAVE_CONTEXTSUBSCRIBER

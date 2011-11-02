@@ -789,7 +789,9 @@ MWindow::~MWindow()
 {
     MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this);
     MOrientationTracker::instance()->d_func()->stopFollowingDesktop(this);
+#ifdef HAVE_CONTEXTSUBSCRIBER
     MOrientationTracker::instance()->d_func()->stopFollowingDevice(this);
+#endif
     MComponentData::unregisterWindow(this);
     delete d_ptr;
 }
