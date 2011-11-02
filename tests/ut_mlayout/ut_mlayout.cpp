@@ -34,6 +34,7 @@
 #include <mwindow.h>
 #include <mscenemanager.h>
 #include <mscenewindow.h>
+#include <mdeviceprofile.h>
 
 #include "../src/corelib/layout/mlayout_p.h"
 
@@ -162,7 +163,13 @@ void Ut_MLayout::init()
     m_proxy->setParentItem(m_scenewindow);
     m_form->setParentItem(m_scenewindow);
 
-    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
+    m_portraitAngle = (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Portrait) ? M::Angle0 : M::Angle270;
+    m_invertedPortraitAngle = (M::OrientationAngle)((m_portraitAngle + 180)%360);
+
+    m_landscapeAngle = (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Portrait) ? M::Angle90 : M::Angle0;
+    m_invertedLandscapeAngle = (M::OrientationAngle)((m_landscapeAngle + 180)%360);
+
+    MApplication::activeWindow()->setOrientationAngle(m_landscapeAngle);
     Q_ASSERT(0 != m_button);
     Q_ASSERT(0 != m_scene);
     Q_ASSERT(0 != m_proxy);
@@ -993,12 +1000,12 @@ void Ut_MLayout::testLayoutInsideLayoutOrientation()
     QCOMPARE(appWin->orientation(), M::Landscape); //Default
     QVERIFY(innerLayout->policy() == landscapePolicy);
 
-    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
+    MApplication::activeWindow()->setOrientationAngle(m_portraitAngle);
     QCOMPARE(appWin->orientation(), M::Portrait);
 
     QVERIFY(innerLayout->policy() == portraitPolicy);
 
-    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
+    MApplication::activeWindow()->setOrientationAngle(m_landscapeAngle);
     QVERIFY(innerLayout->policy() == landscapePolicy);
 }
 /* We are testing a layout inside of a layout.  We test four combinations
@@ -1714,7 +1721,7 @@ void Ut_MLayout::testLayoutPolicyStylingSimple()
     MLayoutTest *layout = new MLayoutTest(m_form);
     MAbstractLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
 
-    QCOMPARE(MApplication::activeWindow()->orientationAngle(), M::Angle0);
+    QCOMPARE(MApplication::activeWindow()->orientationAngle(), m_landscapeAngle);
     // The numbers which follow here are taken from the ut_mlayout.css file
     // if you change the css file, you need to keep them in sync:
     policy->getContentsMargins(&left, &top, &right, &bottom);
@@ -1724,7 +1731,7 @@ void Ut_MLayout::testLayoutPolicyStylingSimple()
     QCOMPARE(bottom, -1.0);
 
     //Now rotate - the values should be read in from the CSS file
-    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
+    MApplication::activeWindow()->setOrientationAngle(m_portraitAngle);
     policy->getContentsMargins(&left, &top, &right, &bottom);
     QCOMPARE(left, 4.0);
     QCOMPARE(top, 5.0);
@@ -1744,7 +1751,7 @@ void Ut_MLayout::testLayoutPolicyStylingSimpleWithSceneManager()
 
     (void)MApplication::activeWindow()->sceneManager(); //Force the creation of a scene manager
 
-    QCOMPARE(MApplication::activeWindow()->orientationAngle(), M::Angle0);
+    QCOMPARE(MApplication::activeWindow()->orientationAngle(), m_landscapeAngle);
     // The numbers which follow here are taken from the ut_mlayout.css file
     // if you change the css file, you need to keep them in sync:
     policy->getContentsMargins(&left, &top, &right, &bottom);
@@ -1754,7 +1761,7 @@ void Ut_MLayout::testLayoutPolicyStylingSimpleWithSceneManager()
     QCOMPARE(bottom, -1.0);
 
     //Now rotate - the values should be read in from the CSS file
-    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
+    MApplication::activeWindow()->setOrientationAngle(m_portraitAngle);
     policy->getContentsMargins(&left, &top, &right, &bottom);
     QCOMPARE(left, 4.0);
     QCOMPARE(top, 5.0);
@@ -1893,7 +1900,7 @@ void Ut_MLayout::testLayoutPolicyStyling()
     // The styleName of the policy should be empty be default, make sure it is:
     QVERIFY(policy->styleName().isEmpty());
 
-    QCOMPARE(MApplication::activeWindow()->orientationAngle(), M::Angle0);
+    QCOMPARE(MApplication::activeWindow()->orientationAngle(), m_landscapeAngle);
 
     // The numbers which follow here are taken from the ut_mlayout.css file
     // if you change the css file, you need to keep them in sync:
@@ -1915,20 +1922,20 @@ void Ut_MLayout::testLayoutPolicyStyling()
     checkPolicies(layout, policy, isCurrent, policyType, -1.0, -1.0, -1.0, -1.0, 6.0, 7.0);
 
     // Now rotate to portrait
-    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
+    MApplication::activeWindow()->setOrientationAngle(m_portraitAngle);
     checkPolicies(layout, policy, isCurrent, policyType, 4.0, 5.0, 2.0, 6.0, 2.0, 3.0);
     policy->setStyleName("packed");
     QCOMPARE(policy->styleName(), QString("packed"));
     checkPolicies(layout, policy, isCurrent, policyType, 1, 2.0, 3.0, 4.0, 5.0, 6.0);
 
-    MApplication::activeWindow()->setOrientationAngle(M::Angle180);
+    MApplication::activeWindow()->setOrientationAngle((M::OrientationAngle)(m_invertedLandscapeAngle));
     QCOMPARE(policy->styleName(), QString("packed"));
     checkPolicies(layout, policy, isCurrent, policyType, -1, 0.0, 0.0, 0.0, 0.0, 0.0);
     policy->setStyleName("spacing");
     QCOMPARE(policy->styleName(), QString("spacing"));
     checkPolicies(layout, policy, isCurrent, policyType, -1, 0.0, 0.0, 0.0, 10.0, 11.0);
 
-    MApplication::activeWindow()->setOrientationAngle(M::Angle270);
+    MApplication::activeWindow()->setOrientationAngle((M::OrientationAngle)(m_invertedPortraitAngle));
     QCOMPARE(policy->styleName(), QString("spacing"));
     checkPolicies(layout, policy, isCurrent, policyType, -1, 0.0, 0.0, 0.0, 10.0, 11.0);
 
@@ -1936,7 +1943,7 @@ void Ut_MLayout::testLayoutPolicyStyling()
     QCOMPARE(policy->styleName(), QString("packed"));
     checkPolicies(layout, policy, isCurrent, policyType, 1, 2.0, 3.0, 4.0, 5.0, 6.0);
 
-    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
+    MApplication::activeWindow()->setOrientationAngle(m_landscapeAngle);
     policy->setStyleName(QString::null);
     QVERIFY(policy->styleName().isEmpty());
     checkPolicies(layout, policy, isCurrent, policyType, -1.0, -1.0, -1.0, -1.0, 6.0, 7.0);
@@ -1946,12 +1953,12 @@ void Ut_MLayout::testLayoutSwitchingWithOrientation()
 {
     //Test rotating the screen to make sure that the landscape/portrait policy is always correctly set
     //This was written in response to NB#144347 but the test passes, without finding any problems
-    QCOMPARE(MApplication::activeWindow()->orientationAngle(), M::Angle0);
+    QCOMPARE(MApplication::activeWindow()->orientationAngle(), m_landscapeAngle);
     MLayoutTest *layout = new MLayoutTest(m_form);
     MAbstractLayoutPolicy *landscape_policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
     QVERIFY(layout->policy() == landscape_policy); //Only policy, so it must be this one
-    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
-    QCOMPARE(MApplication::activeWindow()->orientationAngle(), M::Angle90);
+    MApplication::activeWindow()->setOrientationAngle(m_portraitAngle);
+    QCOMPARE(MApplication::activeWindow()->orientationAngle(), m_portraitAngle);
     MAbstractLayoutPolicy *portrait_policy = new MGridLayoutPolicy(layout);
     QVERIFY(layout->policy() == landscape_policy); //Still only policy, so it must be this one
 
@@ -1961,26 +1968,26 @@ void Ut_MLayout::testLayoutSwitchingWithOrientation()
     layout->setLandscapePolicy(landscape_policy);
     QVERIFY(layout->policy() == portrait_policy);
 
-    MApplication::activeWindow()->setOrientationAngle(M::Angle90); //Set it to 90, again
-    QCOMPARE(MApplication::activeWindow()->orientationAngle(), M::Angle90);
+    MApplication::activeWindow()->setOrientationAngle(m_portraitAngle); //Set it to 90, again
+    QCOMPARE(MApplication::activeWindow()->orientationAngle(), m_portraitAngle);
     QVERIFY(layout->policy() == portrait_policy);
-    MApplication::activeWindow()->setOrientationAngle(M::Angle180);
-    QCOMPARE(MApplication::activeWindow()->orientationAngle(), M::Angle180);
+    MApplication::activeWindow()->setOrientationAngle((M::OrientationAngle)(m_invertedLandscapeAngle));
+    QCOMPARE(MApplication::activeWindow()->orientationAngle(), (M::OrientationAngle)(m_invertedLandscapeAngle));
     QVERIFY(layout->policy() == landscape_policy);
-    MApplication::activeWindow()->setOrientationAngle(M::Angle270);
-    QCOMPARE(MApplication::activeWindow()->orientationAngle(), M::Angle270);
+    MApplication::activeWindow()->setOrientationAngle((M::OrientationAngle)(m_invertedPortraitAngle));
+    QCOMPARE(MApplication::activeWindow()->orientationAngle(), (M::OrientationAngle)(m_invertedPortraitAngle));
     QVERIFY(layout->policy() == portrait_policy);
-    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
-    QCOMPARE(MApplication::activeWindow()->orientationAngle(), M::Angle90);
+    MApplication::activeWindow()->setOrientationAngle(m_portraitAngle);
+    QCOMPARE(MApplication::activeWindow()->orientationAngle(), m_portraitAngle);
     QVERIFY(layout->policy() == portrait_policy);
-    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
-    QCOMPARE(MApplication::activeWindow()->orientationAngle(), M::Angle0);
+    MApplication::activeWindow()->setOrientationAngle(m_landscapeAngle);
+    QCOMPARE(MApplication::activeWindow()->orientationAngle(), m_landscapeAngle);
     QVERIFY(layout->policy() == landscape_policy);
-    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
-    QCOMPARE(MApplication::activeWindow()->orientationAngle(), M::Angle0);
+    MApplication::activeWindow()->setOrientationAngle(m_landscapeAngle);
+    QCOMPARE(MApplication::activeWindow()->orientationAngle(), m_landscapeAngle);
     QVERIFY(layout->policy() == landscape_policy);
-    MApplication::activeWindow()->setOrientationAngle(M::Angle180);
-    QCOMPARE(MApplication::activeWindow()->orientationAngle(), M::Angle180);
+    MApplication::activeWindow()->setOrientationAngle((M::OrientationAngle)(m_invertedLandscapeAngle));
+    QCOMPARE(MApplication::activeWindow()->orientationAngle(), (M::OrientationAngle)(m_invertedLandscapeAngle));
     QVERIFY(layout->policy() == landscape_policy);
 
 }
@@ -3090,7 +3097,7 @@ void Ut_MLayout::testSwitchingPoliciesHidesItems()
     QCOMPARE(widgets[3]->isVisible(), false);
 
     //Rotate, to switch to policy2
-    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
+    MApplication::activeWindow()->setOrientationAngle(m_portraitAngle);
 
     qApp->processEvents();
     while (layout->animation()->isAnimating())
@@ -3156,7 +3163,7 @@ void Ut_MLayout::testSwitchingPoliciesInsidePolicyHidesItems()
     QCOMPARE(widgets[2]->isVisible(), true);
     QCOMPARE(widgets[3]->isVisible(), true);
 
-    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
+    MApplication::activeWindow()->setOrientationAngle(m_landscapeAngle);
 
     innerLayout->setLandscapePolicy(innerPolicy1);
     innerLayout->setPortraitPolicy(innerPolicy2);
@@ -3171,7 +3178,7 @@ void Ut_MLayout::testSwitchingPoliciesInsidePolicyHidesItems()
     QCOMPARE(widgets[3]->isVisible(), false);
 
     //Rotate, to switch to innerPolicy2
-    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
+    MApplication::activeWindow()->setOrientationAngle(m_portraitAngle);
 
     qApp->processEvents();
     while (layout->animation()->isAnimating() || innerLayout->animation()->isAnimating())

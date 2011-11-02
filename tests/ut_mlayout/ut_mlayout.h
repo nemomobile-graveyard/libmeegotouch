@@ -24,6 +24,7 @@
 #include <QObject>
 
 #include <mlayout.h>
+#include "mnamespace.h"
 
 class MScene;
 class QGraphicsProxyWidget;
@@ -110,6 +111,10 @@ private:
     MScene *m_scene;
     QGraphicsProxyWidget *m_proxy;
     MSceneWindow *m_scenewindow;
+    M::OrientationAngle m_portraitAngle;
+    M::OrientationAngle m_invertedPortraitAngle;
+    M::OrientationAngle m_landscapeAngle;
+    M::OrientationAngle m_invertedLandscapeAngle;
 };
 
 #endif // Header guard
