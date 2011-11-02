@@ -25,6 +25,7 @@ public:
     QString key;
     QString englishName;
     QString localName;
+    QString countryCode;
 };
 
 
@@ -76,6 +77,13 @@ QString MCountry::localName() const
 }
 
 
+QString MCountry::countryCode() const
+{
+    Q_D( const MCountry );
+    return d->countryCode;
+}
+
+
 void MCountry::setKey( const QString& val )
 {
     Q_D( MCountry );
@@ -94,4 +102,11 @@ void MCountry::setLocalName( const QString& val )
 {
     Q_D( MCountry );
     d->localName = val;
+}
+
+
+void MCountry::setCountryCode( const QString& val )
+{
+    Q_D( MCountry );
+    d->countryCode = val;
 }
