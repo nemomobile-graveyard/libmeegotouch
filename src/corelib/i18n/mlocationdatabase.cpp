@@ -104,6 +104,9 @@ bool MLocationDatabasePrivate::loadCountries()
         tmpEl = e.elementsByTagName( "localname" ).at( 0 ).toElement();
         country.setLocalName( tmpEl.text() );
 
+        tmpEl = e.elementsByTagName( "countrycode" ).at( 0 ).toElement();
+        country.setCountryCode( tmpEl.text() );
+
         countries[ country.key() ] = country;
 
         // QTextStream s( stdout );

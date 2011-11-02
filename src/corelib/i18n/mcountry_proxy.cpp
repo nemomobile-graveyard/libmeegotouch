@@ -88,6 +88,11 @@ QString MCountry::localName() const
     return d_ptr->pCountry->localName();
 }
 
+QString MCountry::countryCode() const
+{
+    return d_ptr->pCountry->countryCode();
+}
+
 
 void MCountry::setKey( const QString& val )
 {
@@ -104,4 +109,10 @@ void MCountry::setEnglishName( const QString& val )
 void MCountry::setLocalName( const QString& val )
 {
     d_ptr->pCountry->setLocalName( val );
+}
+
+
+void MCountry::setCountryCode( const QString& val )
+{
+    d_ptr->pCountry->setCountryCode( val );
 }
