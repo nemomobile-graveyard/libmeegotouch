@@ -1159,7 +1159,7 @@ void MTextEditViewPrivate::mapSelectionChange()
 {
     Q_Q(MTextEditView);
 
-    if (!controller->hasSelectedText()) {
+    if (!controller->hasSelectedText() || !focused) {
         emit q->selectionChanged(0, QRect(), false, 0, QRect(), false);
         return;
     }
