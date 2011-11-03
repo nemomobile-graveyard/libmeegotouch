@@ -29,7 +29,6 @@
 #include "mapplicationservice_p.h"
 #include <MApplicationWindow>
 #include <MApplicationIfProxy>
-#include <MComponentData>
 
 #include "ut_mapplicationservice.h"
 
@@ -53,28 +52,14 @@ bool    Ut_MApplicationService::windowActivated = false;
 bool    Ut_MApplicationService::windowRaised = false;
 bool    Ut_MApplicationService::windowClosed = false;
 bool    Ut_MApplicationService::windowShown = false;
-
-M::PrestartMode MComponentData::prestartMode()
-{
-    return M::NoPrestart;
-}
-
-QString MComponentData::appName()
-{
-    return "ut_mapplicationservice";
-}
-
-QString MComponentData::binaryName()
-{
-    return "ut_mapplicationservice";
-}
+bool    Ut_MApplicationService::closedAllWindows = false;
 
 QDBusPendingReply<> MApplicationIfProxy::launch()
 {
     return QDBusPendingReply<>();
 }
 
-void MApplicationPrivate::stdExit(int status)
+void MApplication::stdExit(int status)
 {
     Ut_MApplicationService::applicationExited = true;
     Q_UNUSED(status);
@@ -191,8 +176,10 @@ void MApplicationServicePrivate::unregisterObject(const QString &path)
 {
     Q_UNUSED(path);
 }
+
 void MApplicationServicePrivate::closeAllWindows()
 {
+    Ut_MApplicationService::closedAllWindows = true;
     mApp->closeAllWindows();
 }
 
@@ -213,9 +200,10 @@ MApplicationServicePrivate::~MApplicationServicePrivate()
 void Ut_MApplicationService::init()
 {
     m_subject = new MApplicationService("ut_mapplicationservice");
-    //new MComponentData( m_subject );
     isPrestartedReturnValue = false;
     isLazyShutdownReturnValue = false;
+    applicationExited = false;
+    closedAllWindows = false;
 }
 
 void Ut_MApplicationService::cleanup()
@@ -241,7 +229,7 @@ void Ut_MApplicationService::cleanupTestCase()
     }
 }
 
-void Ut_MApplicationService::plainLaunch()
+void Ut_MApplicationService::testPlainLaunch()
 {
     Ut_MApplicationService::allowRegisterService = true;
     Ut_MApplicationService::allowRegisterService2 = true;
@@ -261,7 +249,27 @@ void Ut_MApplicationService::plainLaunch()
     QCOMPARE(Ut_MApplicationService::windowActivated, true);
 }
 
-void Ut_MApplicationService::launchWithRegistrationFailure()
+void Ut_MApplicationService::testLaunchWithParameters()
+{
+    Ut_MApplicationService::allowRegisterService = true;
+    Ut_MApplicationService::allowRegisterService2 = true;
+    windowRaised = false;
+    windowActivated = false;
+
+    // without window
+    activeWindowSet = false;
+    m_subject->launch(QStringList("-software"));
+    QCOMPARE(Ut_MApplicationService::windowRaised, false);
+    QCOMPARE(Ut_MApplicationService::windowActivated, false);
+
+    // with window
+    activeWindowSet = true;
+    m_subject->launch(QStringList("-software"));
+    QCOMPARE(Ut_MApplicationService::windowRaised, true);
+    QCOMPARE(Ut_MApplicationService::windowActivated, true);
+}
+
+void Ut_MApplicationService::testLaunchWithRegistrationFailure()
 {
     Ut_MApplicationService::allowRegisterService = false;
     Ut_MApplicationService::allowRegisterService2 = false;
@@ -281,7 +289,7 @@ void Ut_MApplicationService::launchWithRegistrationFailure()
     QCOMPARE(Ut_MApplicationService::windowActivated, true);
 }
 
-void Ut_MApplicationService::launchAnotherWithQProcess()
+void Ut_MApplicationService::testLaunchAnotherWithQProcess()
 {
     Ut_MApplicationService::allowRegisterService = true;
     Ut_MApplicationService::allowRegisterService2 = true;
@@ -297,7 +305,7 @@ void Ut_MApplicationService::launchAnotherWithQProcess()
     QCOMPARE(Ut_MApplicationService::programStarted, true);
 }
 
-void Ut_MApplicationService::incrementAndRegisterOneFail()
+void Ut_MApplicationService::testIncrementAndRegisterOneFail()
 {
     Ut_MApplicationService::allowRegisterService = false;
     Ut_MApplicationService::allowRegisterService2 = true;
@@ -307,27 +315,47 @@ void Ut_MApplicationService::incrementAndRegisterOneFail()
     QCOMPARE(Ut_MApplicationService::registeredService, QString("com.nokia.ut_mapplicationservice2"));
 }
 
-void Ut_MApplicationService::incrementAndRegisterTenFail()
+void Ut_MApplicationService::testIncrementAndRegisterEightFail()
+{
+    Ut_MApplicationService::allowRegisterService = false;
+    Ut_MApplicationService::allowRegisterService2 = true;
+    Ut_MApplicationService::failRegisterServiceTimes = 8;
+
+    m_subject->incrementAndRegister();
+    QCOMPARE(Ut_MApplicationService::registeredService, QString("com.nokia.ut_mapplicationservice9"));
+}
+
+void Ut_MApplicationService::testIncrementAndRegisterTenFail()
 {
     Ut_MApplicationService::allowRegisterService = false;
     Ut_MApplicationService::allowRegisterService2 = true;
     Ut_MApplicationService::failRegisterServiceTimes = 10;
 
     m_subject->incrementAndRegister();
-    QCOMPARE(Ut_MApplicationService::registeredService, QString("com.nokia.ut_mapplicationservice11"));
+    QVERIFY(Ut_MApplicationService::applicationExited == true);
 }
 
-void Ut_MApplicationService::misc()
+void Ut_MApplicationService::testClose()
 {
     Ut_MApplicationService::allowRegisterService = false;
     windowRaised = false;
     windowActivated = false;
 
     m_subject->close();
-    m_subject->exit();
+    QVERIFY(Ut_MApplicationService::Ut_MApplicationService::closedAllWindows == true);
 }
 
-void Ut_MApplicationService::prestartLaunch()
+void Ut_MApplicationService::testExit()
+{
+    Ut_MApplicationService::allowRegisterService = false;
+    windowRaised = false;
+    windowActivated = false;
+
+    m_subject->exit();
+    QVERIFY(Ut_MApplicationService::applicationExited == true);
+}
+
+void Ut_MApplicationService::testPrestartLaunch()
 {
     isPrestartedReturnValue = true;
     prestartReleased = false;
@@ -335,42 +363,76 @@ void Ut_MApplicationService::prestartLaunch()
     QVERIFY(prestartReleased == true);
 }
 
-void Ut_MApplicationService::prestartLaunchNoPrestart()
+void Ut_MApplicationService::testPrestartLaunchNoPrestart()
 {
     prestartReleased = false;
     m_subject->launch();
     QVERIFY(prestartReleased == false);
 }
 
-void Ut_MApplicationService::prestartCloseLazyShutdown()
+void Ut_MApplicationService::testPrestartCloseLazyShutdown()
 {
     prestartRestored = false;
     isLazyShutdownReturnValue = true;
     m_subject->close();
+    QVERIFY(Ut_MApplicationService::Ut_MApplicationService::closedAllWindows == true);
     QVERIFY(prestartRestored == true);
 }
 
-void Ut_MApplicationService::prestartCloseNoLazyShutdown()
+void Ut_MApplicationService::testPrestartCloseNoLazyShutdown()
 {
     prestartRestored = false;
     m_subject->close();
+    QVERIFY(Ut_MApplicationService::Ut_MApplicationService::closedAllWindows == true);
     QVERIFY(prestartRestored == false);
 }
 
-void Ut_MApplicationService::prestartExitLazyShutdown()
+void Ut_MApplicationService::testPrestartExitLazyShutdown()
 {
     prestartRestored = false;
     isLazyShutdownReturnValue = true;
     m_subject->exit();
+    QVERIFY(Ut_MApplicationService::applicationExited == false);
     QVERIFY(prestartRestored == true);
 }
 
-void Ut_MApplicationService::prestartExitNoLazyShutdown()
+void Ut_MApplicationService::testPrestartExitNoLazyShutdown()
 {
     prestartRestored = false;
     m_subject->exit();
+    QVERIFY(Ut_MApplicationService::applicationExited == true);
     QVERIFY(prestartRestored == false);
 }
+
+void Ut_MApplicationService::testSetServiceName()
+{
+    QString newServiceName("testThisName");
+    m_subject->setServiceName(newServiceName);
+    QCOMPARE(m_subject->registeredName(), newServiceName);
+}
+
+void Ut_MApplicationService::testRegisterService()
+{
+    Ut_MApplicationService::allowRegisterService = false;
+    Ut_MApplicationService::allowRegisterService2 = false;
+
+    m_subject->setServiceName("ut_mapplicationservice");
+    Ut_MApplicationService::applicationExited = false;
+    QVERIFY(m_subject->registerService() == false);
+    QVERIFY(Ut_MApplicationService::applicationExited == true);
+
+    m_subject->setServiceName("#ut_mapplicationservice");
+    Ut_MApplicationService::applicationExited = false;
+    QVERIFY(m_subject->registerService() == false);
+    QVERIFY(Ut_MApplicationService::applicationExited == true);
+
+    Ut_MApplicationService::allowRegisterService = true;
+    Ut_MApplicationService::applicationExited = false;
+    m_subject->setServiceName("ut_mapplicationservice1");
+    QVERIFY(m_subject->registerService() == true);
+    QVERIFY(Ut_MApplicationService::applicationExited == false);
+}
+
 
 
 QTEST_MAIN(Ut_MApplicationService)

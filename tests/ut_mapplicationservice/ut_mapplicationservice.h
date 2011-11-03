@@ -43,6 +43,7 @@ public:
     static bool    windowShown;
     static bool    windowClosed;
     static bool    applicationExited;
+    static bool    closedAllWindows;
     static bool    allowRegisterService;
     static bool    allowRegisterService2;
     static int     failRegisterServiceTimes;
@@ -64,18 +65,23 @@ private slots:
     void cleanup();
     void initTestCase();
     void cleanupTestCase();
-    void plainLaunch();
-    void incrementAndRegisterTenFail();
-    void launchWithRegistrationFailure();
-    void launchAnotherWithQProcess();
-    void incrementAndRegisterOneFail();
-    void misc();
-    void prestartLaunch();
-    void prestartLaunchNoPrestart();
-    void prestartCloseLazyShutdown();
-    void prestartCloseNoLazyShutdown();
-    void prestartExitLazyShutdown();
-    void prestartExitNoLazyShutdown();
+    void testPlainLaunch();
+    void testLaunchWithParameters();
+    void testLaunchWithRegistrationFailure();
+    void testLaunchAnotherWithQProcess();
+    void testIncrementAndRegisterOneFail();
+    void testIncrementAndRegisterEightFail();
+    void testIncrementAndRegisterTenFail();
+    void testClose();
+    void testExit();
+    void testPrestartLaunch();
+    void testPrestartLaunchNoPrestart();
+    void testPrestartCloseLazyShutdown();
+    void testPrestartCloseNoLazyShutdown();
+    void testPrestartExitLazyShutdown();
+    void testPrestartExitNoLazyShutdown();
+    void testSetServiceName();
+    void testRegisterService();
 
 private:
     void buildApp();
