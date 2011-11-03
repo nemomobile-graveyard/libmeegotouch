@@ -389,10 +389,6 @@ void MRichTextEditPrivate::_q_showTextStylingOptions()
     q->focusOutEvent(&focusOut);
     q->clearFocus();
 
-    if (hasSelectedText) {
-        q->setSelection(startPos, endPos - startPos);
-    }
-
     dialogsManager->showTextStylingDialog(fontFamily, fontPointSize, fontColor);
     q->setFocus(Qt::PopupFocusReason);
 
@@ -509,6 +505,8 @@ void MRichTextEditPrivate::_q_setFontSize(int fontPointSize)
         return;
     }
 
+    int savePosition = textcursor.position();
+    int saveAnchor = textcursor.anchor();
     // To avoid losing style, processing each character in the selection individually
     int startPos = textcursor.selectionStart();
     int endPos  = textcursor.selectionEnd();
@@ -531,11 +529,9 @@ void MRichTextEditPrivate::_q_setFontSize(int fontPointSize)
         textcursor.setCharFormat(curFormat);
     }
 
+    textcursor.setPosition(saveAnchor);
+    textcursor.setPosition(savePosition, QTextCursor::KeepAnchor);
     q->setTextCursor(textcursor);
-
-    if (hasSelectedText) {
-        q->setSelection(startPos, endPos - startPos);
-    }
 }
 
 

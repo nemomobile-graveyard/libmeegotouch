@@ -2161,7 +2161,7 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
     d->commitPreedit();
 
     Qt::FocusReason reason = event->reason();
-    if (reason != Qt::ActiveWindowFocusReason && reason != Qt::PopupFocusReason)
+    if (reason != Qt::ActiveWindowFocusReason && reason != Qt::PopupFocusReason && reason != Qt::OtherFocusReason)
         deselect();
 
 #if QT_VERSION >= 0x040702 // 4.7.1 was missing stopItem parameter
