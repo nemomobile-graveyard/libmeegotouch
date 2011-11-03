@@ -1,8 +1,16 @@
-libmeegotouch (0.24.8~1) unstable; urgency=low
+libmeegotouch (0.24.8-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#282302 - Randomly failing test cases in ft_mgconfitem
+  * Fixes: NB#285464 - Fix ellipsis to use the same color as the text if set by CSS
+  * Fixes: NB#288879 - feeds title is displaying with logical name
+  * Fixes: NB#281782 - export MEditorToolbar class with M_VIEWS_EXPORT
+  * Fixes: NB#269388 - [TASK] Missing sounds/haptics from text edit
+  * Fixes: NB#277993 - MSceneManager orientation change signals are delivered to non-foreground windows
+  * Fixes: NB#263666 - [TASK] Spinner takes too much CPU in Recents view
+  * Fixes: NB#264254 - [TASK] When adding alarms there is no addition visualization
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 31 Oct 2011 09:39:52 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 03 Nov 2011 15:07:17 +0200
 
 libmeegotouch (0.24.7-1) unstable; urgency=low
 
