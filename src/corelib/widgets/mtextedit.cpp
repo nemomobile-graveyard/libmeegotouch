@@ -436,6 +436,10 @@ void MTextEditPrivate::init()
     QObject::connect(&copyAction, SIGNAL(triggered(bool)), q, SLOT(copy()));
     QObject::connect(&pasteAction, SIGNAL(triggered(bool)), q, SLOT(_q_pasteAndClear()));
 
+    cutAction.setObjectName("cutAction");
+    copyAction.setObjectName("copyAction");
+    pasteAction.setObjectName("pasteAction");
+
     q->addAction(&cutAction);
     q->addAction(&copyAction);
     q->addAction(&pasteAction);
