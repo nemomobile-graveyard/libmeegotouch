@@ -1382,6 +1382,12 @@ void MWindow::paintEvent(QPaintEvent *event)
         }
     }
 
+    /* Force all layout requests and
+       "QMetaObject::invokeMethod(this, "_q_relayout",Qt::QueuedConnection);"
+       calls before painting in order to reduce flickering when changing
+       layout's contents */
+    QApplication::sendPostedEvents(0, QEvent::MetaCall);
+    QApplication::sendPostedEvents(0, QEvent::LayoutRequest);
     QGraphicsView::paintEvent(event);
 }
 
