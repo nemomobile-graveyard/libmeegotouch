@@ -143,7 +143,10 @@ private:
                 return false;
             }
         }
+        // resize the file and ensure that the file space gets allocated by writing a byte at the end of it
         cacheFile.resize(MAX_CACHE_SIZE);
+        cacheFile.seek(MAX_CACHE_SIZE - 1);
+        cacheFile.write("");
         cacheFile.close();
         return true;
     }
