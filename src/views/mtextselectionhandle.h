@@ -109,7 +109,14 @@ public:
      */
     void skipTransitions();
 
+    /*!
+     * \brief Disable widget, so it becomes translucent.
+     */
     void disable();
+
+    /*!
+     * \brief Enable widget, so it become opaque.
+     */
     void enable();
 
 Q_SIGNALS:
