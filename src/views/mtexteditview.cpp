@@ -2426,12 +2426,17 @@ void MTextEditView::setFocused(Qt::FocusReason reason)
 
     d->playFocusAnimation(QAbstractAnimation::Forward, style()->focusedPromptOpacity());
 
-    // Try restoring editor toolbar if window is no longer minimized,
-    // or if a popup window has disappeared.
-    if (reason == Qt::ActiveWindowFocusReason
-        || reason == Qt::PopupFocusReason) {
-        d->restoreEditorToolbar();
-        d->restoreSelectionOverlay();
+    if (d->controller->hasSelectedText()) {
+        d->showEditorToolbar();
+        d->showSelectionOverlay();
+    } else {
+        // Try restoring editor toolbar if window is no longer minimized,
+        // or if a popup window has disappeared.
+        if (reason == Qt::ActiveWindowFocusReason
+            || reason == Qt::PopupFocusReason) {
+            d->restoreEditorToolbar();
+            d->restoreSelectionOverlay();
+        }
     }
 
     doUpdate();
