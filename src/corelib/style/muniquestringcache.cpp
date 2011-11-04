@@ -33,7 +33,8 @@
 #include <QScopedPointer>
 
 namespace {
-const int MAX_CACHE_SIZE = 1024*1024;
+const int CACHE_CHUNK_SIZE = 1024*1024;
+const double CACHE_INCREASE_PRECENTAGE = 0.75;
 #define CACHE_NAME "MTF_UNIQUE_STRING_CACHE"
 
 // slightly adapted from the version found in Qt's corelib/tools/qhash.cpp
@@ -61,10 +62,12 @@ class UniqueStringCacheMappedMemory
 public:
     UniqueStringCacheMappedMemory(const QString& filename)
         : cacheFile(filename),
+        cacheSize(0),
         accessSemaphore(filename + "_UNIQUE_STRING_SEMAPHORE", 1),
         rawMappedMemory(0),
         attached(false),
-        locked(false)
+        locked(false),
+        fileResized(false)
     {
         if (!accessSemaphore.acquire()) {
             mWarning("UniqueStringCacheMappedMemory::UniqueStringCacheMappedMemory") << "Unable to aquire semaphore:" << accessSemaphore.errorString();
@@ -79,6 +82,7 @@ public:
     bool isAttached() const { return attached; }
 
     uchar* data() { return rawMappedMemory; }
+    qint64 size() { return cacheSize; }
     QString errorString() { return accessSemaphore.errorString(); }
 
     ~UniqueStringCacheMappedMemory()
@@ -101,6 +105,21 @@ public:
         return accessSemaphore.release();
     }
 
+    void increaseSize() {
+        if (!fileResized) {
+            cacheFile.open(QFile::ReadWrite);
+            if (cacheFile.size() == cacheSize) {
+                // Need to resize the file and it hasn't been resized yet so
+                // add new chunk to the file
+                cacheFile.resize(cacheSize + CACHE_CHUNK_SIZE);
+                cacheFile.seek(cacheSize + CACHE_CHUNK_SIZE - 1);
+                cacheFile.write("");
+            }
+            cacheFile.close();
+            fileResized = true;
+        }
+    }
+
 private:
     friend class MUniqueStringCacheLocker;
 
@@ -119,13 +138,8 @@ private:
             return;
         }
 
-        if (cacheFile.size() != MAX_CACHE_SIZE) {
-            mWarning("UniqueStringCacheMappedMemory") << "Wrong cache file size" <<
-                cacheFile.size() << "Expected:" << MAX_CACHE_SIZE;
-            return;
-        }
-
-        rawMappedMemory = cacheFile.map(0, MAX_CACHE_SIZE);
+        cacheSize = cacheFile.size();
+        rawMappedMemory = cacheFile.map(0, cacheSize);
 
         attached = true;
 
@@ -142,17 +156,21 @@ private:
                           cacheFile.fileName();
                 return false;
             }
+            cacheFile.close();
         }
-        cacheFile.resize(MAX_CACHE_SIZE);
-        cacheFile.close();
+
+        increaseSize();
+        fileResized = false;
         return true;
     }
 
     QFile cacheFile;
+    qint64 cacheSize;
     QSystemSemaphore accessSemaphore;
     uchar* rawMappedMemory;
     bool attached;
     bool locked;
+    bool fileResized;
 };
 
 MUniqueStringCachePrivate::MUniqueStringCachePrivate(MUniqueStringCache *parent, const QString &filename)
@@ -197,7 +215,7 @@ void MUniqueStringCachePrivate::fillUniqueStringCache() {
     }
 
     mDebug("MUniqueStringCachePrivate::fillUniqueStringCache")
-            << QString("Elements in cache %1: %2, %3% filled").arg(filename).arg(elementsInCache).arg((float)offset/MAX_CACHE_SIZE*100);
+        << QString("Elements in cache %1: %2, %3% filled").arg(filename).arg(elementsInCache).arg((float)offset/uniqueStringCacheMappedMemory->size()*100);
 }
 
 // insert one string into the cache, makes sure to handle it gracefully when the cache has
@@ -218,6 +236,25 @@ int MUniqueStringCachePrivate::insertStringToCache(const QByteArray &string) {
         }
     }
 
+    // fill percentage of last chunk
+    double fillPercentage = (double)(offset % CACHE_CHUNK_SIZE) / CACHE_CHUNK_SIZE;
+    if (fillPercentage > CACHE_INCREASE_PRECENTAGE ||
+            offset >= uniqueStringCacheMappedMemory->size()) {
+        mDebug("MUniqueStringCachePrivate::insertStringToCache")
+            << "Cache " << filename << " reaching full state, scheduling size increase from "
+            << uniqueStringCacheMappedMemory->size() << " to "
+            << uniqueStringCacheMappedMemory->size() + CACHE_CHUNK_SIZE << fillPercentage;
+        uniqueStringCacheMappedMemory->increaseSize();
+    }
+
+    if (offset + sizeof(int) + string.length() > uniqueStringCacheMappedMemory->size()) {
+        // Cache full. This could only happen if the cache was increased but the user hasn't
+        // restarted the app to use the new size, which is very unlikely to happen.
+        // At this point we can only abort the program. When it gets relaunched it will use the
+        // new file size and it work properly.
+        qFatal("Unique string cache is full. Application restart is needed.");
+    }
+
     ++*reinterpret_cast<int*>(rawCache);
 
     uchar *stringAdress = rawCache + offset;
@@ -225,9 +262,6 @@ int MUniqueStringCachePrivate::insertStringToCache(const QByteArray &string) {
     memcpy(stringAdress + sizeof(int), string.constData(), string.length() + 1);
 
     offset += sizeof(int) + string.length() + 1;
-    if (offset >= MAX_CACHE_SIZE) {
-        qFatal("unique string cache is full");
-    }
 
     idToPointerCache.append((uchar*)stringAdress);
     stringToIdCache.insert(QLatin1String(reinterpret_cast<const char*>(stringAdress + sizeof(int))), idToPointerCache.count() - 1);
