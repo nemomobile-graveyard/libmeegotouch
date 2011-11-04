@@ -436,6 +436,16 @@ void Ut_AllWidgets::testSizeHints()
     widget->setMinimumSize(0,0);
     widget->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
 
+    preferredSize100 = widget->effectiveSizeHint(Qt::PreferredSize, QSizeF(100,-1));
+    preferredSize200 = widget->effectiveSizeHint(Qt::PreferredSize, QSizeF(200,-1));
+    preferredSize10 = widget->effectiveSizeHint(Qt::PreferredSize, QSizeF(10,-1));
+    minimumSize100 = widget->effectiveSizeHint(Qt::MinimumSize, QSizeF(100,-1));
+    minimumSize200 = widget->effectiveSizeHint(Qt::MinimumSize, QSizeF(200,-1));
+    minimumSize10 = widget->effectiveSizeHint(Qt::MinimumSize, QSizeF(10,-1));
+    maximumSize100 = widget->effectiveSizeHint(Qt::MaximumSize, QSizeF(100,-1));
+    maximumSize200 = widget->effectiveSizeHint(Qt::MaximumSize, QSizeF(200,-1));
+    maximumSize10 = widget->effectiveSizeHint(Qt::MaximumSize, QSizeF(10,-1));
+
     widget->setPreferredWidth(10);
     QCOMPARE(widget->preferredSize(), preferredSize10);
     widget->setPreferredWidth(100);
