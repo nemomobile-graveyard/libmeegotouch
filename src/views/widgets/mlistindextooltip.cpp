@@ -49,8 +49,7 @@ void MListIndexTooltipPrivate::init()
     layout->setSpacing(0);
 
     MLabel *titleLabelWidget = titleLabel();
-    layout->addCornerAnchors(titleLabelWidget, Qt::TopLeftCorner, layout, Qt::TopLeftCorner);
-    layout->addCornerAnchors(titleLabelWidget, Qt::BottomLeftCorner, layout, Qt::BottomLeftCorner);
+    layout->addAnchors(titleLabelWidget, layout);
 }
 
 void MListIndexTooltipPrivate::setTitle(const QString &title)
