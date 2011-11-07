@@ -373,7 +373,13 @@ void MRichTextEditPrivate::_q_showTextStylingOptions()
         endPos  = textcursor.selectionEnd();
     }
 
-    // Get rid of software input panel (SIP), which might obstruct our dialog otherwise.
+    // The appearing styling dialog should grab focus with Qt::PopupFocusReason. But
+    // because MRichTextEdit can't access the styling dialog, so below is a workaround
+    // way by calling MTextEdit::FocusOutEvent() with Qt::PopupFocusReason and then
+    // calling clearFocus to get rid of software input panel (SIP) by clear focus,
+    // which might obstruct our dialog otherwise.
+    QFocusEvent focusOut(QEvent::FocusOut, Qt::PopupFocusReason);
+    q->focusOutEvent(&focusOut);
     q->clearFocus();
 
     if (hasSelectedText) {
@@ -381,7 +387,7 @@ void MRichTextEditPrivate::_q_showTextStylingOptions()
     }
 
     dialogsManager->showTextStylingDialog(fontFamily, fontPointSize, fontColor);
-    q->setFocus();
+    q->setFocus(Qt::PopupFocusReason);
 
     q->disconnect(dialogsManager, 0, q, 0);
 }
