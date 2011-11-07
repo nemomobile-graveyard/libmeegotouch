@@ -236,7 +236,6 @@ public:
     QPropertyAnimation *scrollToAnimation;
     int lastScrolledToFlatRow;
     QSizeF lastGeometrySize;
-    bool lockPosition;
 
     // Item remove animations
     MBasicListItemInsertionAnimation* itemInsertionAnimation;

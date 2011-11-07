@@ -201,23 +201,6 @@ void MListView::setGeometry(const QRectF &rect)
             d_ptr->viewWidth = rect.width();
             d_ptr->updateItemSize();
             d_ptr->updateSeparatorSize();
-
-            if (d_ptr->lockPosition) {
-                d_ptr->lockPosition = false;
-                if (d_ptr->pannableViewport &&
-                        d_ptr->lastGeometrySize.height() != 0 && rect.size().height() != 0) {
-                    qreal heightDelta = rect.size().height() - d_ptr->lastGeometrySize.height();
-                    QRectF viewportRange = d_ptr->pannableViewport->range();
-                    if ((int)heightDelta != 0 && viewportRange.height() > 0) {
-                        QPointF lockedViewportPosition = d_ptr->pannableViewport->position();
-                        lockedViewportPosition.setY(qBound(viewportRange.top(),
-                                                           lockedViewportPosition.y() + heightDelta,
-                                                           viewportRange.bottom()));
-                        d_ptr->pannableViewport->physics()->setPosition(lockedViewportPosition, false);
-                    }
-                }
-            }
-
             relayoutItemsInViewportRect();
 
             d_ptr->scrollToLastIndex();
@@ -313,13 +296,8 @@ void MListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &botto
  */
 void MListView::rowsInserted(const QModelIndex &parent, int start, int end, bool animated)
 {
-    if (!d_ptr->animateRowsInsertion(parent, start, end, animated)) {
-        int first = d_ptr->indexToFlatRow(model()->firstVisibleItem());
-        start = d_ptr->indexToFlatRow(model()->itemModel()->index(start, 0, parent));
-        end = d_ptr->indexToFlatRow(model()->itemModel()->index(end, 0, parent));
-        d_ptr->lockPosition = (start < first && end < first);
+    if (!d_ptr->animateRowsInsertion(parent, start, end, animated))
         layoutChanged();
-    }
 }
 
 /*!
@@ -330,13 +308,8 @@ void MListView::rowsInserted(const QModelIndex &parent, int start, int end, bool
  */
 void MListView::rowsRemoved(const QModelIndex &parent, int start, int end, bool animated)
 {
-    if (!d_ptr->animateRowsRemoval(parent, start, end, animated)) {
-        int first = d_ptr->indexToFlatRow(model()->firstVisibleItem());
-        start = d_ptr->indexToFlatRow(model()->itemModel()->index(start, 0, parent));
-        end = d_ptr->indexToFlatRow(model()->itemModel()->index(end, 0, parent));
-        d_ptr->lockPosition = (start < first && end < first);
+    if (!d_ptr->animateRowsRemoval(parent, start, end, animated))
         layoutChanged();
-    }
 }
 
 void MListView::layoutChanged()

@@ -63,8 +63,6 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     scrollToAnimation = new QPropertyAnimation(this);
     lastScrolledToFlatRow = -1;
     lastGeometrySize = QSizeF();
-    lockPosition = false;
-
     isDeleted = false;
 
     itemInsertionAnimation = NULL;

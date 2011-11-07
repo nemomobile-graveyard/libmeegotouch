@@ -219,16 +219,6 @@ public:
     void setPosition(const QPointF &position);
 
     /*!
-     * \brief Sets \a position of the physics
-     *
-     * If the new position is in the border, the border springs are
-     * activated.
-     *
-     * \param resetPhysics will either stop the ongoing kinetics, or will continue from new position
-     */
-    void setPosition(const QPointF &position, bool resetPhysics);
-
-    /*!
      * \brief Returns the current position of the physics.
      */
     QPointF position() const;
