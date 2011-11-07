@@ -146,6 +146,9 @@ private:
     void playFocusAnimation(QAbstractAnimation::Direction direction,
                             qreal endValue);
 
+    //! \brief map item coordinates to view coordinates
+    QPointF fromItem(const QPointF &point) const;
+
 protected:
     MTextEditView *q_ptr;
 

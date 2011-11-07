@@ -1180,12 +1180,12 @@ void MTextEditViewPrivate::onSelectionHandleMoved(const QPointF &position)
     Q_Q(MTextEditView);
 
     QTextCursor cursor = controller->textCursor();
-    QPointF localPos = position;
-    qreal margin = isLayoutLeftToRight() ? q->marginLeft() : q->marginRight();
-    localPos.rx() -= margin;
+
+    // The position comes in in item coordinates. Translate it to view coordinates.
+    const QPointF viewPos = fromItem(position);
     anchorPos = cursor.anchor();
-    cursorPos = cursorPosition(localPos);
-    currentPosition = position;
+    cursorPos = cursorPosition(viewPos);
+    currentPosition = viewPos;
 
     qreal speed = 0;
     const qreal elapsed = handleTime.restart();
@@ -1193,7 +1193,7 @@ void MTextEditViewPrivate::onSelectionHandleMoved(const QPointF &position)
     if (!lastHandlePos.isNull()) {
         speed = (position - lastHandlePos).manhattanLength() / elapsed;
     }
-    lastHandlePos = position;
+    lastHandlePos = viewPos;
     if (speed < q->style()->selectionSpeedThreshold()) {
         setSelection();
         delaySelection.stop();
@@ -1201,7 +1201,7 @@ void MTextEditViewPrivate::onSelectionHandleMoved(const QPointF &position)
         delaySelection.start();
     }
 
-    setMouseTarget(position);
+    setMouseTarget(viewPos);
     updateMagnifierPosition();
 }
 
@@ -1212,21 +1212,20 @@ void MTextEditViewPrivate::onSelectionHandlePressed(const QPointF &position)
     hideEditorToolbarTemporarily();
     q->model()->setInputContextUpdateEnabled(false);
     controller->setCacheMode(QGraphicsItem::ItemCoordinateCache);
-    previousPosition = position;
-    currentPosition = position;
+
+    const QPointF viewPos = fromItem(position);
+    previousPosition = viewPos;
+    currentPosition = viewPos;
 
     showSelectionMagnifier();
-    setMouseTarget(position);
+    setMouseTarget(viewPos);
 
     lastHandlePos = QPointF();
     handleTime.start();
 
     QTextCursor cursor = controller->textCursor();
-    QPointF localPos = position;
-    qreal margin = isLayoutLeftToRight() ? q->marginLeft() : q->marginRight();
-    localPos.rx() -= margin;
 
-    int pressedHandlePos = cursorPosition(localPos);
+    int pressedHandlePos = cursorPosition(viewPos);
     anchorPos = cursor.anchor();
     cursorPos = cursor.position();
 
@@ -1269,6 +1268,14 @@ void MTextEditViewPrivate::onSelectionOverlayVisibleChanged()
         }
         q->model()->setIsSelecting(false);
     }
+}
+
+QPointF MTextEditViewPrivate::fromItem(const QPointF &point) const
+{
+    Q_Q(const MTextEditView);
+    // Translate item point to view coordinates.
+    const qreal leftMargin = isLayoutLeftToRight() ? q->marginLeft() : q->marginRight();
+    return (point - QPointF(leftMargin, q->marginTop()));
 }
 
 /*!
