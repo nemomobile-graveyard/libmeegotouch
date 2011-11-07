@@ -1838,7 +1838,8 @@ void MTextEditView::resizeEvent(QGraphicsSceneResizeEvent *event)
 
 QRectF MTextEditView::boundingRect() const
 {
-    return QRectF(QPointF(0, 0), geometry().size());
+    // This virtual method should be removed since base class implementation is sufficient.
+    return MWidgetView::boundingRect();
 }
 
 
