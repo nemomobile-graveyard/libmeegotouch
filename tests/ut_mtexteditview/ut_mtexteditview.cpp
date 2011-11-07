@@ -331,7 +331,10 @@ void Ut_MTextEditView::testMultilineGrowsOnWordWrap()
     QFontMetrics fm(m_controller->document()->defaultFont());
     qreal totalWidth = fm.width(fullRowContent)
                        + horizontalPadding
-                       + m_controller->document()->documentMargin() * 2;
+                       + m_controller->document()->documentMargin() * 2
+
+                       // Workaround for bug NB#289538 requires cursorWidth to be added. This is only temporary.
+                       + m_subject->d_func()->cursorWidth();
 
     m_controller->setPreferredWidth(totalWidth);
 

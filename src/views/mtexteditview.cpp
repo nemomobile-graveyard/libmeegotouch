@@ -206,14 +206,14 @@ int MTextEditViewPrivate::cursorPosition(const QPointF &point, Qt::HitTestAccura
     if (hitPoint.x() < 0) {
         hitPoint.setX(0);
 
-    } else if (hitPoint.x() > activeDocument()->size().width()) {
-        hitPoint.setX(activeDocument()->size().width());
+    } else if (hitPoint.x() > activeDocumentSize().width()) {
+        hitPoint.setX(activeDocumentSize().width());
     }
 
     // on a few lowest pixels, the hitTest returns position on the end.
     // a limitor before the real lower edge is used to avoid this.
     const int MaxYLimitor = 4;
-    int maxY = activeDocument()->size().height()
+    int maxY = activeDocumentSize().height()
                - MaxYLimitor - 2 * activeDocument()->documentMargin();
 
     if (hitPoint.y() < activeDocument()->documentMargin()) {
@@ -238,7 +238,7 @@ void MTextEditViewPrivate::scrolling()
         return;
     }
 
-    const int maxScroll(activeDocument()->size().width() - activeDocument()->textWidth());
+    const int maxScroll(activeDocumentSize().width() - activeDocumentTextWidth());
 
     hscroll += scrollSpeedVertical;
 
@@ -301,7 +301,7 @@ void MTextEditViewPrivate::scrollingTestAndStart(const QPointF &pos)
     } else if (pos.x() < (ScrollMargin + paddingLeft) && hscroll > 0) {
         scrollSpeedVertical = -ScrollStep;
     } else if (pos.x() > (rect.width() - (ScrollMargin + paddingRight))
-               && hscroll < (activeDocument()->size().width() - activeDocument()->textWidth())) {
+               && hscroll < (activeDocumentSize().width() - activeDocumentTextWidth())) {
         scrollSpeedVertical = ScrollStep;
     } else {
         scrollSpeedVertical = 0;
@@ -339,10 +339,12 @@ void MTextEditViewPrivate::checkScroll()
     bool scrolled = false;
     // 1. size().width is in fact not less than availableWidth, even when actual text is smaller
     // I do not know why, but this allows to align RTL text
-    // 2. if cursor is in the very end of the text, it takes more space to be drawn than size().width()
-    // we consider it and now are sure that whole cursor always is inside of (0, contentsWidth)
-    int contentsWidth = qMax<qreal>(activeDocument()->size().width(), currentX + cWidth);
-    int availableWidth = activeDocument()->textWidth();
+    // 2. if cursor is in the very end of the text or at start of RTL text, it takes more
+    //    space to be drawn than size().width(). We work around it by using extended width
+    //    for document and document's textWidth, see activeDocumentSize() and activeDocumentTextWidth().
+    //    Now we are sure that whole cursor always is inside of (0, contentsWidth)
+    int contentsWidth = activeDocumentSize().width();
+    int availableWidth = activeDocumentTextWidth();
 
     if (controller->lineMode() != MTextEditModel::MultiLine // multiline text is not scrolled as it always wraps
         && availableWidth > 0 // just safety, inherited from older code
@@ -548,7 +550,7 @@ void MTextEditViewPrivate::initMaskedDocument()
     // copy the settings
     maskedTextDocument->setDocumentMargin(document()->documentMargin());
     maskedTextDocument->setDefaultFont(document()->defaultFont());
-    maskedTextDocument->setTextWidth(document()->textWidth());
+    maskedTextDocument->setTextWidth(documentTextWidth());
     QVariant cursorWidth = document()->documentLayout()->property(CursorWidthProperty);
     maskedTextDocument->documentLayout()->setProperty(CursorWidthProperty, cursorWidth);
 
@@ -906,7 +908,7 @@ void MTextEditViewPrivate::checkSize()
     // note: as of Qt documentation, the size of newly created empty document is
     // configuration dependent. in practice it seems to match the selected font size.
     // possibly as a side effect of setDefaultFont()
-    qreal docHeight = activeDocument()->size().height();
+    qreal docHeight = activeDocumentSize().height();
 
     if (documentHeight != docHeight) {
         documentHeight = docHeight;
@@ -991,7 +993,7 @@ void MTextEditViewPrivate::handleDocumentUpdate(int position, int charsRemoved, 
 void MTextEditViewPrivate::handleDocumentUpdated()
 {
     qreal currentWidth = activeDocument()->idealWidth();
-    qreal textWidth = activeDocument()->textWidth();
+    qreal textWidth = activeDocumentTextWidth();
 
     // Check the need to scroll when current text width is so wide that cursor
     // would be partially visible or hidden but not wide enough to trigger
@@ -1780,7 +1782,7 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     // with no content we show the prompt text
     bool showPrompt = d->isPromptVisible || d->promptShowHideAnimation.state() == QAbstractAnimation::Running;
     // prompt box is now directly got from document, so no need to check its clipping explicitly
-    clip = isGreater(clipping.size(), d->activeDocument()->size());
+    clip = isGreater(clipping.size(), d->activeDocumentSize());
 
 
     if (clip) {
@@ -1849,8 +1851,7 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
 void MTextEditView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     Q_D(MTextEditView);
-    int textWidth = event->newSize().width() - style()->paddingLeft() - style()->paddingRight();
-
+    qreal textWidth = d->realDocumentTextWidth();
     d->document()->setTextWidth(textWidth);
 
     if (d->maskedTextDocument != 0) {
@@ -2099,7 +2100,7 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
         {
             if (model()->line() == MTextEditModel::SingleLine) {
                 if (hint.width() < 0) {
-                    hint.setWidth(d->document()->size().width() +
+                    hint.setWidth(d->documentSize().width() +
                         s->paddingLeft() + s->paddingRight());
                 }
                 if (hint.height() < 0) {
@@ -2111,10 +2112,10 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
                     hint.setHeight(d->heightForWidth(hint.width()));
                 } else {
                     //Use the current document width if we are given no constraints
-                    hint.setWidth(d->document()->size().width() +
+                    hint.setWidth(d->documentSize().width() +
                         s->paddingLeft() + s->paddingRight());
                     if (hint.height() < 0)
-                        hint.setHeight(d->document()->size().height() +
+                        hint.setHeight(d->documentSize().height() +
                             s->paddingTop() + s->paddingBottom());
                 }
             }
@@ -2150,7 +2151,6 @@ qreal MTextEditViewPrivate::heightForWidth(qreal width) const
      */
     const MTextEditStyle *s = static_cast<const MTextEditStyle *>(q->style().operator ->());
     const qreal oldDocumentWidth = document()->textWidth();
-    const qreal horizontalPadding = s->paddingLeft() + s->paddingRight();
     const qreal verticalPadding = s->paddingTop() + s->paddingBottom();
 
     // Disconnect size change signal
@@ -2158,8 +2158,8 @@ qreal MTextEditViewPrivate::heightForWidth(qreal width) const
                this, SLOT(handleDocumentSizeChange(QSizeF)));
 
     // Set temporary width to document and read in corresponding height for widget.
-    document()->setTextWidth(width - horizontalPadding);
-    const qreal height = document()->size().height() + verticalPadding;
+    document()->setTextWidth(realDocumentTextWidth(width));
+    const qreal height = activeDocumentSize().height() + verticalPadding;
 
     // Restore
     document()->setTextWidth(oldDocumentWidth);
