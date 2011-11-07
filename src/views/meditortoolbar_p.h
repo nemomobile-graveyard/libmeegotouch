@@ -91,6 +91,10 @@ private:
     bool positionUpdatePending;
     QPointF pendingPosition;
     MEditorToolbarArrow::ArrowDirection pendingArrowDirection;
+
+#ifdef UNIT_TEST
+    friend class Ut_MEditorToolbar;
+#endif
 };
 
 class EatMButtonGestureFilter : public QObject

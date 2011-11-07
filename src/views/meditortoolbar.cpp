@@ -32,6 +32,11 @@
 #include <QApplication>
 #include <QGraphicsLinearLayout>
 
+namespace {
+    // Any value above 1.0 will put our overlay on top of any other MTopLevelOverlay
+    const qreal OverlayZValue = 10.0f;
+}
+
 MEditorToolbar::MEditorToolbar(MWidget *followWidget)
     : d_ptr(new MEditorToolbarPrivate(this, followWidget))
 {
@@ -171,6 +176,7 @@ void MEditorToolbarPrivate::init()
 
     q->setFlag(QGraphicsItem::ItemHasNoContents, true);
     overlay->hide();
+    overlay->setZValue(OverlayZValue); // put toolbar on top of any other MTopLevelOverlay
     q->hide();
     followWidget->scene()->addItem(overlay);
     q->setParentItem(overlay);

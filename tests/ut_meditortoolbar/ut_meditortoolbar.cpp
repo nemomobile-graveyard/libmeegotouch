@@ -19,6 +19,8 @@
 
 #include "ut_meditortoolbar.h"
 #include "views/meditortoolbar.h"
+#include "views/meditortoolbar_p.h"
+#include "views/mtopleveloverlay.h"
 
 #include <QAction>
 #include <QGraphicsLayout>
@@ -235,6 +237,12 @@ void Ut_MEditorToolbar::testAutoHide()
     QCOMPARE(subject->isAppeared(), isAppearedImmediately);
     QTest::qWait(100);
     QCOMPARE(subject->isAppeared(), isAppearedAfterTimeout);
+}
+
+void Ut_MEditorToolbar::testZOrder()
+{
+    QScopedPointer<MTopLevelOverlay> overlay(new MTopLevelOverlay(fakeParent->sceneManager()));
+    QVERIFY(subject->d_ptr->overlay->zValue() > overlay->zValue());
 }
 
 QList<MButton *> Ut_MEditorToolbar::subjectButtons() const

@@ -58,6 +58,7 @@ private slots:
     void testActionTextChange();
     void testAutoHide_data();
     void testAutoHide();
+    void testZOrder();
 
 private:
     QList<MButton *> subjectButtons() const;
