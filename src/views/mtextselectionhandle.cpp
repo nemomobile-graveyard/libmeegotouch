@@ -137,8 +137,7 @@ void MTextSelectionHandle::setPositionVisibility(bool visible)
 
 void MTextSelectionHandle::updatePosition(const QPointF &pos)
 {
-    QSizeF constraint(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-    const QPointF correction(sizeHint(Qt::PreferredSize, constraint).width() / 2,
+    const QPointF correction(preferredWidth() / 2,
                              style()->visualOffset());
     setPos(pos - correction);
 }
@@ -164,9 +163,7 @@ bool MTextSelectionHandle::isPressed() const
 
 QPointF MTextSelectionHandle::hotSpot() const
 {
-    const QSizeF constraint(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-    const QPointF correction(sizeHint(Qt::PreferredSize, constraint).width() / 2,
-                             0);
+    const QPointF correction(preferredWidth() / 2, 0);
     return pos() + correction;
 }
 
