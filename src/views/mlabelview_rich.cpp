@@ -617,7 +617,7 @@ void MLabelViewRich::applyStyle()
 QString MLabelViewRich::renderedText() const
 {
     const_cast<MLabelViewRich*>(this)->initTiles();
-    return textDocument.toHtml();
+    return textDocument.toPlainText();
 }
 
 bool MLabelViewRich::tileInformation(int index, QPixmap &pixmap, int &y) const

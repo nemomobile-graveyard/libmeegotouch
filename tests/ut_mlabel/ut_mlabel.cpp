@@ -1413,7 +1413,6 @@ void Ut_MLabel::wrapModes()
 void Ut_MLabel::multiLengthSeparator()
 {
     label->resize(100, 100);
-    const MLabelView* view = qobject_cast<const MLabelView*>(label->view());
 
     QChar separatorChar(0x9c, 0);
     QString separator(separatorChar);
@@ -1426,10 +1425,10 @@ void Ut_MLabel::multiLengthSeparator()
 
     label->setText(shortAndShort);
     QImage shortAndShortCapture = captureImage(label);
-    QCOMPARE(view->renderedText(), shortWord);
+    QCOMPARE(label->renderedText(), shortWord);
     label->setText(shortWord);
     QImage shortCapture = captureImage(label);
-    QCOMPARE(view->renderedText(), shortWord);
+    QCOMPARE(label->renderedText(), shortWord);
 
     QCOMPARE(shortCapture.isNull(), false);
     QCOMPARE(shortAndShortCapture.isNull(), false);
@@ -1438,7 +1437,7 @@ void Ut_MLabel::multiLengthSeparator()
     label->setText(longAndShort);
     QImage longAndShortCapture = captureImage(label);
 
-    QCOMPARE(view->renderedText(), shortWord);
+    QCOMPARE(label->renderedText(), shortWord);
     QCOMPARE(shortCapture, longAndShortCapture);
 
 }
@@ -1731,10 +1730,6 @@ void Ut_MLabel::testPreferredLineCount_data()
             }
 }
 
-QString removeHtml(QString string) {
-    return string.replace(QRegExp("<head>.*</head>"), "").replace(QRegExp("<br[^>]*>"), "\n").replace(QRegExp("<[^>]*>"), "").trimmed();
-}
-
 void Ut_MLabel::testPreferredLineCount()
 {
     QFETCH(bool, richText);
@@ -1751,20 +1746,19 @@ void Ut_MLabel::testPreferredLineCount()
     else
         label->setText("A\nB\nC");
     label->resize(label->preferredSize());
-    const MLabelView* view = qobject_cast<const MLabelView*>(label->view());
     if (wrapMode == QTextOption::WrapAnywhere || richText)
-        QCOMPARE(removeHtml(view->renderedText()), QString("AAA\nBBB\nCCC"));
+        QCOMPARE(label->renderedText(), QString("AAA\nBBB\nCCC"));
     else
-        QCOMPARE(removeHtml(view->renderedText()), QString("A B C"));
+        QCOMPARE(label->renderedText(), QString("A B C"));
     if (useCSS)
         label->setStyleName("lineCount3");
     else
         label->setPreferredLineCount(3);
     label->resize(label->preferredSize());
     if (wrapMode == QTextOption::WrapAnywhere || richText)
-        QCOMPARE(removeHtml(view->renderedText()), QString("AAA\nBBB\nCCC"));
+        QCOMPARE(label->renderedText(), QString("AAA\nBBB\nCCC"));
     else
-        QCOMPARE(removeHtml(view->renderedText()), QString("A B C"));
+        QCOMPARE(label->renderedText(), QString("A B C"));
     if (useCSS)
         label->setStyleName("lineCount2");
     else
@@ -1773,25 +1767,25 @@ void Ut_MLabel::testPreferredLineCount()
     label->resize(label->preferredSize());
     QString ellipsisChar("...");
     if (wrapMode == QTextOption::WrapAnywhere || richText)
-        QCOMPARE(removeHtml(view->renderedText()), QString("AAA\nBBB") + ellipsisChar);
+        QCOMPARE(label->renderedText(), QString("AAA\nBBB") + ellipsisChar);
     else
-        QCOMPARE(removeHtml(view->renderedText()), QString("A B C"));
+        QCOMPARE(label->renderedText(), QString("A B C"));
     if (useCSS)
         label->setStyleName("lineCount1");
     else
         label->setPreferredLineCount(1);
     label->resize(label->preferredSize());
     if (wrapMode == QTextOption::WrapAnywhere || richText)
-        QCOMPARE(removeHtml(view->renderedText()), QString("AAA") + ellipsisChar);
+        QCOMPARE(label->renderedText(), QString("AAA") + ellipsisChar);
     else
-        QCOMPARE(removeHtml(view->renderedText()), QString("A B C"));
+        QCOMPARE(label->renderedText(), QString("A B C"));
     if (useCSS)
         label->setStyleName("lineCount0");
     else
         label->setPreferredLineCount(0);
     label->setMinimumSize(0,0);
     label->resize(label->preferredSize());
-    QCOMPARE(removeHtml(view->renderedText()), QString(""));
+    QCOMPARE(label->renderedText(), QString(""));
 
     if (useCSS)
         QCOMPARE(label->preferredLineCount(), -1);
@@ -1803,9 +1797,9 @@ void Ut_MLabel::testPreferredLineCount()
     label->setPreferredLineCount(1);
     label->resize(label->preferredSize());
     if (wrapMode == QTextOption::WrapAnywhere || richText)
-        QCOMPARE(removeHtml(view->renderedText()), QString("AAA") + ellipsisChar);
+        QCOMPARE(label->renderedText(), QString("AAA") + ellipsisChar);
     else
-        QCOMPARE(removeHtml(view->renderedText()), QString("A B C"));
+        QCOMPARE(label->renderedText(), QString("A B C"));
 }
 void Ut_MLabel::testSingleLineElidingWithWordwrap()
 {
@@ -1918,7 +1912,6 @@ void Ut_MLabel::testLabelShrinkingAndRegrowing()
 {
     QFETCH(bool, richText);
 
-    const MLabelView* view = qobject_cast<const MLabelView*>(label->view());
     label->setTextElide(true);
     label->setTextFormat(richText?Qt::RichText:Qt::PlainText);
     QString text = "Hello there how are you?";
@@ -1928,22 +1921,39 @@ void Ut_MLabel::testLabelShrinkingAndRegrowing()
     label->resize(preferredSize);
 
     QImage image = captureImage(label);
-    QString renderedText = removeHtml(view->renderedText());
+    QString renderedText = label->renderedText();
     QCOMPARE(renderedText, text);
     
     //Now resize to a smaller size
     label->resize(preferredSize.width()/2, preferredSize.height());
     
     QImage imageShorter = captureImage(label);
-    QString renderedTextShorter = removeHtml(view->renderedText());
-    
     QVERIFY(imageShorter != image);
-    QVERIFY(renderedTextShorter != renderedText);
+    QVERIFY(label->renderedText() != renderedText);
 
     //And resize back again
     label->resize(preferredSize);
     QVERIFY(image == captureImage(label));
-    QCOMPARE(text, removeHtml(view->renderedText()));
+    QCOMPARE(text, label->renderedText());
+}
+
+void Ut_MLabel::testRenderedTextProperty_data()
+{
+    QTest::addColumn<QString>("text");
+    QTest::addColumn<QString>("renderedText");
+
+    QTest::newRow("Plain text") << "Hello\nhow are you?" << "Hello how are you?";
+    QTest::newRow("Rich text") << "<i>Hello how are you?</i>" << "Hello how are you?";
+}
+
+void Ut_MLabel::testRenderedTextProperty()
+{
+    QFETCH(QString, text);
+    QFETCH(QString, renderedText);
+
+    label->setText(text);
+    QCOMPARE(label->renderedText(), renderedText);
+    QCOMPARE(label->property("renderedText").toString(), renderedText);
 }
 
 QTEST_APPLESS_MAIN(Ut_MLabel);

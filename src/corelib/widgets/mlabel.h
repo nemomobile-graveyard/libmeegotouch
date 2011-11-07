@@ -180,6 +180,14 @@ class M_CORE_EXPORT MLabel : public MWidgetController
     Q_PROPERTY(QString text READ text WRITE setText)
 
     /*!
+        \property MLabel::renderedText
+        \brief Text that is rendered on the display.
+
+        See MLabel::renderedText for details.
+    */
+    Q_PROPERTY(QString renderedText READ renderedText)
+
+    /*!
         \property MLabel::color
         \brief Color of the label text.
 
@@ -287,6 +295,14 @@ public:
         \return text
      */
     QString text() const;
+
+    /*!
+        Returns the text that is rendered on the display. The rendered
+        text might differ from MLabel::text e.g. because the rendered
+        text got elided or got line breaks.
+        \return rendered text
+     */
+    QString renderedText() const;
 
     /*!
         \brief Enable/disable automatic text eliding.

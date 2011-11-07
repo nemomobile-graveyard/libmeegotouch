@@ -154,6 +154,12 @@ MLabelView::~MLabelView()
 {
 }
 
+QString MLabelView::renderedText() const
+{
+    Q_D(const MLabelView);
+    return d->impl->renderedText();
+}
+
 void MLabelView::applyStyle()
 {
     MWidgetView::applyStyle();
@@ -315,12 +321,6 @@ QPointF MLabelView::mapToRoot(const QPointF &point)
 {
     Q_D(MLabelView);
     return d->controller->mapToRoot(point);
-}
-
-QString MLabelView::renderedText() const
-{
-    Q_D(const MLabelView);
-    return d->impl->renderedText();
 }
 
 bool MLabelView::tileInformation(int index, QPixmap &pixmap, int &y) const

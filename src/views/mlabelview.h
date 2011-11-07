@@ -79,6 +79,14 @@ class M_VIEWS_EXPORT MLabelView : public MWidgetView
     Q_OBJECT
     M_VIEW(MLabelModel, MLabelStyle)
 
+    /*!
+        \property MLabelView::renderedText
+        \brief Text that is rendered on the display.
+
+        See MLabelView::renderedText for details.
+    */
+    Q_PROPERTY(QString renderedText READ renderedText)
+
 public:
 
     /*!
@@ -91,6 +99,14 @@ public:
         \brief Destructs label view.
      */
     virtual ~MLabelView();
+
+    /*!
+        Returns the text that is rendered on the display. The rendered
+        text might differ from MLabel::text e.g. because the rendered
+        text got elided or got line breaks.
+        \return rendered text
+     */
+    QString renderedText() const;
 
     //! \reimp
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
@@ -143,9 +159,6 @@ private:
     //! \internal_end
 
     Q_PRIVATE_SLOT(d_func(), void _q_highlighterUpdateTimerExceeded())
-
-    //! \see MLabelViewSimple::renderedText()
-    QString renderedText() const;
 
     //! \see MLabelViewSimple::tileInformation()
     bool tileInformation(int index, QPixmap &pixmap, int &y) const;

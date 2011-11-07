@@ -158,6 +158,10 @@ private slots:
 
     void testLabelShrinkingAndRegrowing_data();
     void testLabelShrinkingAndRegrowing();
+
+    void testRenderedTextProperty_data();
+    void testRenderedTextProperty();
+
 private:
     /**
      * Helper method for testSizeHint().

@@ -110,6 +110,11 @@ QString MLabel::text() const
     return model()->text();
 }
 
+QString MLabel::renderedText() const
+{
+    return view()->property("renderedText").toString();
+}
+
 bool MLabel::wordWrap() const
 {
     return model()->wordWrap();
