@@ -350,10 +350,13 @@ QRectF MPhysics2DPanning::range() const
 
 void MPhysics2DPanning::setPosition(const QPointF &position)
 {
+    setPosition(position, true);
+}
+
+void MPhysics2DPanning::setPosition(const QPointF &position, bool resetPhysics)
+{
     Q_D(MPhysics2DPanning);
-
     if (QPointF(d->posX, d->posY) != position) {
-
         if (d->panDirection.testFlag(Qt::Horizontal))
             d->posX = position.x();
         if (d->panDirection.testFlag(Qt::Vertical))
@@ -364,8 +367,10 @@ void MPhysics2DPanning::setPosition(const QPointF &position)
         if (inMotion()) {
             // If we are in the middle of the movement, we should reduce the speed
             // but not stop because we might be outside bounds.
-            d->velX = 0.0;
-            d->velY = 0.0;
+            if (resetPhysics) {
+                d->velX = 0.0;
+                d->velY = 0.0;
+            }
         } else {
             // Starts the physics in case the position is set to border
             // and it needs to slide back into range
@@ -373,7 +378,6 @@ void MPhysics2DPanning::setPosition(const QPointF &position)
         }
     }
 }
-
 
 QPointF MPhysics2DPanning::position() const
 {
