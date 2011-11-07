@@ -278,6 +278,7 @@ void MTextSelectionOverlay::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void MTextSelectionOverlay::cancelEvent(MCancelEvent *event)
 {
     Q_UNUSED(event);
+    mouseIsPressed = false;
     ungrabMouse();
     ungrabGesture(Qt::PanGesture);
     handleA.enable();
@@ -289,5 +290,4 @@ void MTextSelectionOverlay::cancelEvent(MCancelEvent *event)
 
     setFocusProxy(0);
     setFocusPolicy(Qt::NoFocus);
-    mouseIsPressed = false;
 }
