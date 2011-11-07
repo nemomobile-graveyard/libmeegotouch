@@ -598,6 +598,34 @@ public:
     QString decimalPoint() const;
 
     /*!
+     * \brief join a list of strings according to the conventions of the locale
+     *
+     * \param texts the texts to be joined
+     *
+     * This method is intended to join a list of strings with commas
+     * according to the conventions of the locale. For example, if you
+     * want to join a list of names like
+     *
+     * “John Doe”, “Judy Roe”, “James Doe”
+     *
+     * the result might be “John Doe, Judy Roe, James Doe” in
+     * English and many other locales, but for example in Arabic locales
+     * or Chinese locales, different versions of the comma may be used.
+     *
+     * On top of that, if the list contains both texts in
+     * left-to-right scripts <b>and</b> texts right-to-left scripts,
+     * texts which have a different direction then the firsts text
+     * maybe reordered strangely if all texts are only joined with
+     * some separator. Especially if the texts to be joined contain
+     * symbols, for example parentheses, weird bidi reordering may
+     * happen. To prevent nonsensical bidi reordering, the direction
+     * of each text in the list is checked and directional markers
+     * are inserted to make sure each individual text is reordered
+     * correctly.
+     */
+    QString joinStringList(const QStringList &texts) const;
+
+    /*!
      * \brief Returns the list of scripts used by the locale
      *
      * This returns the scripts used by the locale, in form of <a

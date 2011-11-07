@@ -1542,6 +1542,63 @@ void Ft_Locales::testMLocaleToUpper()
     QCOMPARE(resultQt, expectedQt);
 }
 
+void Ft_Locales::testMLocaleJoinStringList_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QStringList>("texts");
+    QTest::addColumn<QString>("expectedResult");
+
+    QTest::newRow("en_GB")
+        << QString("en_GB")
+        << (QStringList() << "a (b)" << "ش (ت)" << "c (d)" << "中")
+        << QString("‪a (b)‬, ‫ش (ت)‬, ‪c (d)‬, ‪中‬")
+        ;
+    QTest::newRow("ar_EG")
+        << QString("ar_EG")
+        << (QStringList() << "a (b)" << "ش (ت)" << "c (d)" << "中")
+        << QString("‪a (b)‬، ‫ش (ت)‬، ‪c (d)‬، ‪中‬")
+        ;
+    QTest::newRow("fa_IR")
+        << QString("fa_IR")
+        << (QStringList() << "a (b)" << "ش (ت)" << "c (d)" << "中")
+        << QString("‪a (b)‬، ‫ش (ت)‬، ‪c (d)‬، ‪中‬")
+        ;
+    QTest::newRow("zh_CN")
+        << QString("zh_CN")
+        << (QStringList() << "a (b)" << "ش (ت)" << "c (d)" << "中")
+        << QString("‪a (b)‬、‫ش (ت)‬、‪c (d)‬、‪中‬")
+        ;
+    QTest::newRow("zh_TW")
+        << QString("zh_TW")
+        << (QStringList() << "a (b)" << "ش (ت)" << "c (d)" << "中")
+        << QString("‪a (b)‬、‫ش (ت)‬、‪c (d)‬、‪中‬")
+        ;
+    QTest::newRow("ja_JP")
+        << QString("ja_JP")
+        << (QStringList() << "a (b)" << "ش (ت)" << "c (d)" << "中")
+        << QString("‪a (b)‬、‫ش (ت)‬、‪c (d)‬、‪中‬")
+        ;
+}
+
+void Ft_Locales::testMLocaleJoinStringList()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QStringList, texts);
+    QFETCH(QString, expectedResult);
+
+    MLocale locale(localeName);
+    QString result = locale.joinStringList(texts);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "localeName= " << localeName << "\n"
+        << " expectedResult= [" << expectedResult << "]\n"
+        << " result=         [" << result << "]\n";
+    debugStream.flush();
+#endif
+    QCOMPARE(result, expectedResult);
+}
 
 void Ft_Locales::testMLocaleIndexBucket_data()
 {

@@ -3719,6 +3719,28 @@ QString MLocale::decimalPoint() const
 }
 
 #ifdef HAVE_ICU
+QString MLocale::joinStringList(const QStringList &texts) const
+{
+    QStringList textsWithBidiMarkers;
+    QString separator(QLatin1String(", "));
+    if (localeScripts()[0] == QLatin1String("Arab"))
+        separator = QString::fromUtf8("، "); // U+060C ARABIC COMMA + space
+    else if (localeScripts().contains(QLatin1String("Hani"))) {
+        separator = QString::fromUtf8("、"); // U+3001 IDEOGRAPHIC COMMA, no space
+    }
+    foreach (const QString &text, texts) {
+        if (MLocale::directionForText(text) == Qt::RightToLeft)
+            // RIGHT-TO-LEFT EMBEDDING + text + POP DIRECTIONAL FORMATTING
+            textsWithBidiMarkers << QChar(0x202B) + text + QChar(0x202C);
+        else
+            // LEFT-TO-RIGHT EMBEDDING + text + POP DIRECTIONAL FORMATTING
+            textsWithBidiMarkers << QChar(0x202A) + text + QChar(0x202C);
+    }
+    return textsWithBidiMarkers.join(separator);
+}
+#endif
+
+#ifdef HAVE_ICU
 QStringList MLocale::exemplarCharactersIndex() const
 {
     Q_D(const MLocale);
