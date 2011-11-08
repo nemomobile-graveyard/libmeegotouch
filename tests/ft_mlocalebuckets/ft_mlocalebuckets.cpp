@@ -688,6 +688,12 @@ void Ft_MLocaleBuckets::sortTestFiles_data()
     QTest::newRow("ar_EG@numbers=arab")
         << "ar_EG@numbers=arab"
         << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("fa_IR@numbers=arabext")
+        << "fa_IR@numbers=arabext"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("fa_IR@numbers=latn")
+        << "fa_IR@numbers=latn"
+        << "ft_mlocalebuckets_test-input.txt";
     QTest::newRow("hi_IN@numbers=deva")
         << "hi_IN@numbers=deva"
         << "ft_mlocalebuckets_test-input.txt";
