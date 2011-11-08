@@ -108,6 +108,7 @@ private slots:
     void testPageExposedContentRectAfterTwoOrientationChanges();
 
     void testRotatingPageAndShowingStatusBarDoesNotCrash();
+    void testDisableStatusBarDuringCall();
 
 private:
     MApplicationWindow *m_subject;

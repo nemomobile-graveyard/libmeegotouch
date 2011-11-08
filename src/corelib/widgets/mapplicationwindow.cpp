@@ -63,6 +63,7 @@
 #include <QDBusMessage>
 #endif //M_OS_MAEMO5
 
+const char* MApplicationWindowPrivate::disableStatusBarEnforcementDuringCallProperty = "disableStatusBarEnforcementDuringCall";
 namespace {
     // TODO: this may be moved to some header if needed elsewhere
     // Returns the longest length variant of a translated string.
@@ -208,6 +209,13 @@ void MApplicationWindowPrivate::init()
     navigationBarIsEmptyPropertyWatcher->setPropertyName("isEmpty");
     q->connect(navigationBarIsEmptyPropertyWatcher, SIGNAL(propertyChanged()),
                SLOT(_q_scheduleNavigationBarVisibilityUpdate()));
+
+    MDynamicPropertyWatcher *disableStatusBarEnforcementDuringCall = new MDynamicPropertyWatcher(q);
+    disableStatusBarEnforcementDuringCall->watch(q);
+    disableStatusBarEnforcementDuringCall->setPropertyName(disableStatusBarEnforcementDuringCallProperty);
+    q->setProperty(disableStatusBarEnforcementDuringCallProperty,false);
+    q->connect(disableStatusBarEnforcementDuringCall, SIGNAL(propertyChanged()),
+               SLOT(_q_updateStatusBarVisibility()));
 
     updateStyleNames();
 
@@ -386,7 +394,7 @@ void MApplicationWindowPrivate::_q_updateStatusBarVisibility()
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
     // Status bar should always be appeared while a phone call is ongoing.
-    if (callStatusProperty.value().toString() == "active") {
+    if ((callStatusProperty.value().toString() == "active") && (!q->property(disableStatusBarEnforcementDuringCallProperty).toBool())) {
         statusBar->appear(q);
         return;
     }

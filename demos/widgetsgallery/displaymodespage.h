@@ -59,6 +59,7 @@ public slots:
     void changeFullScreenMode(bool fullScreen);
     void changeRoundedCorners(bool enable);
     void changeNavigationBarTransparency(bool transparent);
+    void changeStatusBarEnforcementDuringCall(bool transparent);
 
 protected:
     virtual void retranslateUi();
@@ -76,6 +77,7 @@ private:
     MContainer *ctnWindowState;
     LabeledCheckbox *fullScreenCheckbox;
     LabeledCheckbox *navigationBarTransparencyCheckbox;
+    LabeledCheckbox *statusBarEnforcementDuringCallCheckbox;
     LabeledCheckbox *roundedCornersCheckbox;
 };
 
