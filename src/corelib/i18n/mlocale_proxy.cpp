@@ -511,6 +511,11 @@ QString MLocale::indexBucket(const QString &str) const
     return d_ptr->pLocale->indexBucket( str );
 }
 
+QString MLocale::joinStringList(const QStringList &texts) const
+{
+    return d_ptr->pLocale->joinStringList( texts );
+}
+
 QStringList MLocale::localeScripts() const
 {
     return d_ptr->pLocale->localeScripts();
