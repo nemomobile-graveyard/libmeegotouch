@@ -1,8 +1,12 @@
-libmeegotouch (0.24.9~1) unstable; urgency=low
+libmeegotouch (0.24.9-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#287978 - Slider text/icons are not visible after changing from using text to icons and similar.
+  * Fixes: NB#287328 - Search field is not visible in the following scenario
+  * Fixes: NB#286974 - Visual pressed down feedback of status area is not shown always
+  * Fixes: NB#284824 - M*LayoutPolicy needs to activate() its engine
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 03 Nov 2011 15:08:23 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 08 Nov 2011 16:30:40 +0200
 
 libmeegotouch (0.24.8-1) unstable; urgency=low
 
