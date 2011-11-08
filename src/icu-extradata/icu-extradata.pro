@@ -114,7 +114,8 @@ greaterThan(ICUVERSION, 4.4) {
                  data/coll/sk.txt \
                  data/coll/sr.txt \
                  data/coll/sr_Latn.txt
-    CURRTXT    = data/curr/en_HK.txt \
+    CURRTXT    = data/curr/ar.txt \
+                 data/curr/en_HK.txt \
                  data/curr/zh_HK.txt \
                  data/curr/zh_Hans_HK.txt \
                  data/curr/zh_Hant_HK.txt
