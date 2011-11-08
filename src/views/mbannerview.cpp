@@ -115,8 +115,15 @@ MLabel *MBannerViewPrivate::prefixTimeStamp()
 
 MImageWidget *MBannerViewPrivate::pixmap()
 {
+
     if (!pixmapBanner) {
+        Q_Q(MBannerView);
         pixmapBanner = new MImageWidget(controller);
+        QSizePolicy policy(pixmapBanner->sizePolicy());
+        policy.setHorizontalPolicy(QSizePolicy::Fixed);
+        policy.setVerticalPolicy(QSizePolicy::Fixed);
+        pixmapBanner->setSizePolicy(policy);
+        pixmapBanner->setPreferredSize(q->style()->iconSize());
     }
 
     return pixmapBanner;
@@ -242,8 +249,8 @@ void MBannerViewPrivate::layoutShortEventBanner()
         pixmap()->setStyleName("ShortEventBannerIcon");
         icon()->setVisible(false);
         pixmap()->setVisible(true);
-        landscapePolicy->addItem(icon(), Qt::AlignTop);
-        portraitPolicy->addItem(icon(), Qt::AlignTop);
+        landscapePolicy->addItem(pixmap(), Qt::AlignTop);
+        portraitPolicy->addItem(pixmap(), Qt::AlignTop);
     } else if (!q->model()->iconID().isEmpty()) {
         icon()->setStyleName("ShortEventBannerIcon");
         icon()->setVisible(true);
@@ -318,8 +325,8 @@ void MBannerViewPrivate::layoutSystemBanner()
         pixmap()->setStyleName("SystemBannerTitleIcon");
         icon()->setVisible(false);
         pixmap()->setVisible(true);
-        landscapePolicy->addItem(icon(), Qt::AlignTop);
-        portraitPolicy->addItem(icon(), Qt::AlignTop);
+        landscapePolicy->addItem(pixmap(), Qt::AlignTop);
+        portraitPolicy->addItem(pixmap(), Qt::AlignTop);
     } else if (!q->model()->iconID().isEmpty()) {
         icon()->setStyleName("SystemBannerTitleIcon");
         icon()->setVisible(true);
@@ -358,8 +365,8 @@ void MBannerViewPrivate::layoutGenericBanner(){
         pixmap()->setStyleName("GenericBannerIcon");
         icon()->setVisible(false);
         pixmap()->setVisible(true);
-        landscapePolicy->addItem(icon(), Qt::AlignTop);
-        portraitPolicy->addItem(icon(), Qt::AlignTop);
+        landscapePolicy->addItem(pixmap(), Qt::AlignTop);
+        portraitPolicy->addItem(pixmap(), Qt::AlignTop);
     } else if (!q->model()->iconID().isEmpty()) {
         icon()->setStyleName("GenericBannerIcon");
         icon()->setVisible(true);
@@ -369,17 +376,6 @@ void MBannerViewPrivate::layoutGenericBanner(){
     } else {
         icon()->setVisible(false);
         pixmap()->setVisible(false);
-    }
-
-    if (!q->model()->pixmap().isNull()) {
-        if (!q->model()->iconID().isEmpty()) {
-            icon()->setVisible(false);
-            layout->removeItem(icon());
-        }
-        pixmap()->setStyleName("GenericBannerIcon");
-        pixmap()->setVisible(true);
-        landscapePolicy->addItem(pixmap(), Qt::AlignTop);
-        portraitPolicy->addItem(pixmap(), Qt::AlignTop);
     }
 
     if (!q->model()->title().isEmpty()) {
