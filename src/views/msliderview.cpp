@@ -264,9 +264,11 @@ MSliderIndicator::MSliderIndicator(bool isMinMax, QGraphicsItem *parent) :
         label->setObjectName("MSliderMinMaxLabel");
     else
         label->setObjectName("MSliderHandleLabel");
+    label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     image = new MImageWidget;
     image->setObjectName("MSliderImage");
+    image->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     layout->addAnchor(layout, Qt::AnchorVerticalCenter, label, Qt::AnchorVerticalCenter);
     layout->addAnchor(layout, Qt::AnchorHorizontalCenter, label, Qt::AnchorHorizontalCenter);
@@ -287,53 +289,12 @@ void MSliderIndicator::setLabelStyleName(const QString &stylename)
 
 void MSliderIndicator::setText(const QString &text)
 {
-    bool sizeHintChanged = false;
     label->setVisible(!text.isEmpty());
-
     label->setText(text);
-
-    QSizeF preferredSize = label->sizeHint(Qt::PreferredSize);
-
-    if (text.isEmpty()) {
-        QSizeF emptySize(0, 0);
-
-        if (emptySize != label->minimumSize()) {
-            label->setMinimumSize(0, 0);
-            sizeHintChanged = true;
-        }
-        if (emptySize != label->preferredSize()) {
-            label->setPreferredSize(0, 0);
-            sizeHintChanged = true;
-        }
-        if (emptySize != label->maximumSize()) {
-            label->setMaximumSize(0, 0);
-            sizeHintChanged = true;
-        }
-    } else {
-        if (preferredSize != label->minimumSize()) {
-            label->setMinimumSize(preferredSize);
-            sizeHintChanged = true;
-        }
-        if (preferredSize != label->preferredSize()) {
-            label->setPreferredSize(preferredSize);
-            sizeHintChanged = true;
-        }
-        if (preferredSize != label->maximumSize()) {
-            label->setMaximumSize(preferredSize);
-            sizeHintChanged = true;
-        }
-    }
-
-    if (preferredSize != label->size())
-        label->resize(preferredSize);
-
-    if (sizeHintChanged)
-        updateGeometry();
 }
 
 void MSliderIndicator::setImage(const QString &id)
 {
-    bool sizeHintChanged = false;
     image->setVisible(!id.isEmpty());
 
     imageName = id;
@@ -348,44 +309,6 @@ void MSliderIndicator::setImage(const QString &id)
         image->setPixmap(*pixmap);
         delete pixmap;
     }
-
-    QSizeF preferredSize = image->sizeHint(Qt::PreferredSize);
-
-    if (id.isEmpty()) {
-        QSizeF emptySize(0, 0);
-
-        if (emptySize != image->minimumSize()) {
-            image->setMinimumSize(0, 0);
-            sizeHintChanged = true;
-        }
-        if (emptySize != image->preferredSize()) {
-            image->setPreferredSize(0, 0);
-            sizeHintChanged = true;
-        }
-        if (emptySize != image->maximumSize()) {
-            image->setMaximumSize(0, 0);
-            sizeHintChanged = true;
-        }
-    } else {
-        if (preferredSize != image->minimumSize()) {
-            image->setMinimumSize(preferredSize);
-            sizeHintChanged = true;
-        }
-        if (preferredSize != image->preferredSize()) {
-            image->setPreferredSize(preferredSize);
-            sizeHintChanged = true;
-        }
-        if (preferredSize != image->maximumSize()) {
-            image->setMaximumSize(preferredSize);
-            sizeHintChanged = true;
-        }
-    }
-
-    if (preferredSize != label->size())
-        image->resize(preferredSize);
-
-    if (sizeHintChanged)
-        updateGeometry();
 }
 
 bool MSliderIndicator::isEmpty() const
