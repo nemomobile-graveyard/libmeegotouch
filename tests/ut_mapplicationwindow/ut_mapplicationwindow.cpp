@@ -373,7 +373,7 @@ void Ut_MApplicationWindow::testStatusBarVisibility_data()
     QTest::newRow("Maximize page area while fullscreen1") << (OpList() << MakeFullScreen << MaximizePageArea) << MSceneWindow::Disappeared;
     QTest::newRow("Maximize page area while fullscreen2") << (OpList() << MakeFullScreen << MaximizePageArea << MakeNormal) << MSceneWindow::Disappeared;
     QTest::newRow("Fullscreen OFF, Hide display mode") << (OpList() << PageAppearWithStatusBarHideDisplayMode  << MakeNormal) << MSceneWindow::Disappeared;
-    QTest::newRow("Fullscreen ON, Show display mode") << (OpList() << PageAppearWithStatusBarHideDisplayMode  << MakeNormal) << MSceneWindow::Disappeared;
+    QTest::newRow("Fullscreen ON, Show display mode") << (OpList() << PageAppearWithStatusBarShowDisplayMode  << MakeFullScreen) << MSceneWindow::Disappeared;
 }
 
 void Ut_MApplicationWindow::testStatusBarVisibility()
@@ -389,8 +389,8 @@ void Ut_MApplicationWindow::testStatusBarVisibility()
         QSKIP("No status bar used so skipping test.", SkipSingle);
     }
 
-    m_subject->sceneManager()->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
-    QVERIFY(m_subject->orientationAngle() == M::Angle0);
+    m_subject->setOrientationAngleLocked(true);
+    m_subject->setLandscapeOrientation();
 
     QApplication::processEvents();
     m_subject->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
@@ -433,10 +433,7 @@ void Ut_MApplicationWindow::testStatusBarVisibility()
         m_subject->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
     }
 
-    // OBS: statis_cast to int is needed so that error messages displays the
-    //      expected and actual values
-    QCOMPARE(static_cast<int>(statusBar->sceneWindowState()),
-             static_cast<int>(expectedState));
+    STATE_COMPARE(statusBar->sceneWindowState(), expectedState);
 
     // Restore original MInputMethodState state since it's a singleton and
     // will therefore preserve its state beyond this test method.
@@ -1183,11 +1180,11 @@ void Ut_MApplicationWindow::testRotatingPageAndShowingStatusBarDoesNotCrash()
     sceneManager->appearSceneWindowNow(rootPage);
 
     m_subject->show();
-    // Force paint event to be processed.
-    // That will cause MWindowPrivate::beforeFirstPaintEvent to be set
-    // to false, causing status bar [dis]appearances to be animated as
-    // defined in MApplicationWindowPrivate::_q_updateStatusBarVisibility()
-    QApplication::processEvents();
+
+    // Set MWindowPrivate::beforeFirstPaintEvent to false, causing status bar [dis]appearances
+    // to be animated as defined in MApplicationWindowPrivate::_q_updateStatusBarVisibility()
+    MWindow *w = dynamic_cast<MWindow *>(m_subject);
+    w->d_func()->beforeFirstPaintEvent = false;
 
     STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Disappeared)
 

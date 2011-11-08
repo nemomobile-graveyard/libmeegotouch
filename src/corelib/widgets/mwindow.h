@@ -647,6 +647,8 @@ private:
 
     // to access LogicallyClosedPropertyName
     friend class Ut_MApplication;
+    // to access beforeFirstPaintEven
+    friend class Ut_MApplicationWindow;
 #endif
 };
 
