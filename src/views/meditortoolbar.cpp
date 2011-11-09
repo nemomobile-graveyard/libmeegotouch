@@ -73,13 +73,13 @@ void MEditorToolbar::setPosition(const QPointF &pos,
 void MEditorToolbar::appear()
 {
     Q_D(MEditorToolbar);
-    d->appear();
+    d->appear(MEditorToolbarPrivate::Animated);
 }
 
 void MEditorToolbar::disappear()
 {
     Q_D(MEditorToolbar);
-    d->disappear();
+    d->disappear(MEditorToolbarPrivate::Animated);
 }
 
 bool MEditorToolbar::isAppeared() const
@@ -214,7 +214,8 @@ void MEditorToolbarPrivate::init()
 
     hideAnimation.setStartValue(1.0);
     hideAnimation.setEndValue(0.0);
-    QObject::connect(&hideAnimation, SIGNAL(finished()), q, SLOT(disappear()));
+    hideAnimation.setEasingCurve(QEasingCurve::InOutQuad);
+    QObject::connect(&hideAnimation, SIGNAL(finished()), q, SLOT(_q_onAnimationFinished()));
 
     eatMButtonGestureFilter = new EatMButtonGestureFilter(q);
 
@@ -229,6 +230,8 @@ void MEditorToolbarPrivate::init()
     QObject::connect(followWidget->sceneManager(),
                      SIGNAL(orientationChangeFinished(M::Orientation)),
                      q, SLOT(_q_reappearAfterOrientationChange()));
+
+    disappearedForOrientationChange = false;
 }
 
 void MEditorToolbarPrivate::setPosition(const QPointF &pos,
@@ -251,9 +254,14 @@ void MEditorToolbarPrivate::setPosition(const QPointF &pos,
     }
 }
 
-void MEditorToolbarPrivate::appear()
+void MEditorToolbarPrivate::appear(TransitionMode transition)
 {
     Q_Q(MEditorToolbar);
+
+    if (overlay->isVisible() && hideAnimation.state() == QAbstractAnimation::Stopped
+        && qFuzzyCompare(q->opacity(), static_cast<qreal>(1.0f))) {
+        return;
+    }
 
     overlay->show();
     updateEditorItemVisibility();
@@ -261,8 +269,16 @@ void MEditorToolbarPrivate::appear()
     // then cancel currently pending actions and set new ones is necessary
     // (this function is called only by controller directly)
     stopAutoHideTimer();
-    hideAnimation.stop();
-    q->setOpacity(1.0);
+    hideAnimation.setDirection(QAbstractAnimation::Backward);
+    if (transition == Animated) {
+        if (hideAnimation.state() == QAbstractAnimation::Stopped) {
+            hideAnimation.start();
+        }
+    } else {
+        hideAnimation.stop();
+        q->setOpacity(hideAnimation.startValue().toReal());
+        _q_onAnimationFinished();
+    }
 
     if (autoHideEnabled) {
         startAutoHideTimer();
@@ -274,17 +290,21 @@ void MEditorToolbarPrivate::appear()
     }
 }
 
-void MEditorToolbarPrivate::disappear()
+void MEditorToolbarPrivate::disappear(TransitionMode transition)
 {
     Q_Q(MEditorToolbar);
 
-    hideEditorItem();
-    overlay->hide();
-
-    // Hide animation is only used on auto-hide.
     stopAutoHideTimer();
-    hideAnimation.stop();
-    q->setOpacity(1.0);
+    if (transition == Animated) {
+        hideAnimation.setDirection(QAbstractAnimation::Forward);
+        if (hideAnimation.state() == QAbstractAnimation::Stopped) {
+            hideAnimation.start();
+        }
+    } else {
+        hideAnimation.stop();
+        q->setOpacity(hideAnimation.endValue().toReal());
+        _q_onAnimationFinished();
+    }
 
     disappearedForOrientationChange = false;
 }
@@ -515,11 +535,14 @@ void MEditorToolbarPrivate::updateWidgetOrigin()
                                               -widgetOrigin.y()));
 }
 
-void MEditorToolbarPrivate::_q_startAnimatedHide()
+void MEditorToolbarPrivate::_q_startAutomaticHide()
 {
     Q_Q(MEditorToolbar);
     hideAnimation.setDuration(q->style()->hideAnimationDuration());
-    hideAnimation.start(QAbstractAnimation::KeepWhenStopped);
+    hideAnimation.setDirection(QAbstractAnimation::Forward);
+    if (hideAnimation.state() == QAbstractAnimation::Stopped) {
+        hideAnimation.start();
+    }
 }
 
 void MEditorToolbarPrivate::_q_updateAvailableButtons()
@@ -561,7 +584,7 @@ void MEditorToolbarPrivate::_q_updateAvailableButtons()
 void MEditorToolbarPrivate::_q_disappearForOrientationChange()
 {
     if (isAppeared()) {
-        disappear();
+        disappear(Immediate);
         disappearedForOrientationChange = true;
     }
 }
@@ -569,7 +592,17 @@ void MEditorToolbarPrivate::_q_disappearForOrientationChange()
 void MEditorToolbarPrivate::_q_reappearAfterOrientationChange()
 {
     if (!isAppeared() && disappearedForOrientationChange) {
-        appear();
+        disappearedForOrientationChange = false;
+        appear(Immediate);
+    }
+}
+
+void MEditorToolbarPrivate::_q_onAnimationFinished()
+{
+    Q_Q(MEditorToolbar);
+    if (qFuzzyIsNull(q->opacity())) {
+        hideEditorItem();
+        overlay->hide();
     }
 }
 
@@ -614,11 +647,11 @@ void MEditorToolbarPrivate::startAutoHideTimer()
     Q_Q(MEditorToolbar);
     int interval = q->style()->hideTimeout();
     if (interval > 0) {
-        QObject::connect(&autohideTimer, SIGNAL(timeout()), q, SLOT(_q_startAnimatedHide()));
+        QObject::connect(&autohideTimer, SIGNAL(timeout()), q, SLOT(_q_startAutomaticHide()));
         autohideTimer.setInterval(interval);
         autohideTimer.start();
     } else if (interval == 0) {
-        disappear();
+        disappear(Immediate);
     }
 }
 

@@ -48,8 +48,14 @@ public:
     void init();
     void setPosition(const QPointF &pos,
                      MEditorToolbarArrow::ArrowDirection arrowDirection);
-    void appear();
-    void disappear();
+
+    enum TransitionMode {
+        Animated, // apply normal transition
+        Immediate // skip transition and change value instantly
+    };
+
+    void appear(TransitionMode transition);
+    void disappear(TransitionMode transition);
     bool isAppeared() const;
     void handleActionAdded(QActionEvent *actionEvent);
     void handleActionRemoved(QActionEvent *actionEvent);
@@ -66,9 +72,10 @@ public:
 
 private:
     void _q_updateAvailableButtons();
-    void _q_startAnimatedHide();
+    void _q_startAutomaticHide();
     void _q_disappearForOrientationChange();
     void _q_reappearAfterOrientationChange();
+    void _q_onAnimationFinished();
 
     MEditorToolbar * const q_ptr;
 

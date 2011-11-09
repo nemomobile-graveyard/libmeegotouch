@@ -145,9 +145,10 @@ private:
     QScopedPointer<MEditorToolbarPrivate> d_ptr;
 
     Q_PRIVATE_SLOT(d_func(), void _q_updateAvailableButtons())
-    Q_PRIVATE_SLOT(d_func(), void _q_startAnimatedHide())
+    Q_PRIVATE_SLOT(d_func(), void _q_startAutomaticHide())
     Q_PRIVATE_SLOT(d_func(), void _q_disappearForOrientationChange())
     Q_PRIVATE_SLOT(d_func(), void _q_reappearAfterOrientationChange())
+    Q_PRIVATE_SLOT(d_func(), void _q_onAnimationFinished())
 
     //! Prevent default construction.
     MEditorToolbar();

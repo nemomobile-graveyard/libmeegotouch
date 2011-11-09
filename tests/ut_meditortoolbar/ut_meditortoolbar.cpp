@@ -77,9 +77,11 @@ void Ut_MEditorToolbar::testAppear()
 
     // Show the widget.
     subject->appear();
+    QTest::qWait(200);
     QCOMPARE(subject->isAppeared(), true);
 
     subject->disappear();
+    QTest::qWait(200);
     QCOMPARE(subject->isAppeared(), false);
 }
 
@@ -107,6 +109,7 @@ void Ut_MEditorToolbar::testItemVisibility()
     QCOMPARE(subject->isVisible(), true);
 
     subject->disappear();
+    QTest::qWait(200);
     QCOMPARE(subject->isVisible(), false);
 }
 
@@ -243,7 +246,7 @@ void Ut_MEditorToolbar::testAutoHide_data()
     QTest::newRow("3") << (Operations() << Appear << AutoHideEnable << AutoHideDisable) << true << true;
     QTest::newRow("4") << (Operations() << Appear << AutoHideEnable << AutoHideDisable << AutoHideEnable) << true << false;
     QTest::newRow("5") << (Operations() << AutoHideEnable << Appear) << true << false;
-    QTest::newRow("6") << (Operations() << AutoHideEnable << Appear << Disappear) << false << false;
+    QTest::newRow("6") << (Operations() << AutoHideEnable << Appear << Disappear) << true << false;
     QTest::newRow("7") << (Operations() << AutoHideEnable << Appear << Disappear << Appear) << true << false;
 }
 
