@@ -1,8 +1,13 @@
-libmeegotouch (0.24.10~1) unstable; urgency=low
+libmeegotouch (0.24.10-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#288460 - Other text selection handle is not showing in arabic
+  * Fixes: NB#279163 - Contacts; Unable to input special characters into email field for domain names in Finnish
+  * Fixes: NB#288327 - Text selection handles are appearing even though no text is selected in a scenario
+  * Fixes: NB#288313 - Text selection handles are shown over style settings dialog.
+  * Fixes: NB#289523 - Some of the Persian letters are missing from Alphabetical search bar
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 08 Nov 2011 16:31:36 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 09 Nov 2011 17:20:53 +0200
 
 libmeegotouch (0.24.9-1) unstable; urgency=low
 
