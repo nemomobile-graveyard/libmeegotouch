@@ -87,6 +87,21 @@ public:
 
     void showSelectionOverlay();
 
+    //! The following methods are to be used instead of accessing
+    //! (active)document's width and textWidth properties. These enclose
+    //! a workaround for bug NB#289538. The idea is to use width + cursorWidth
+    //! instead of width because cursor is otherwise drawn outside of clipping
+    //! rectangle, in certain situations.
+    //! Once the bug is fixed, these should be removed and real width used instead.
+    QSizeF activeDocumentSize() const;
+    QSizeF documentSize() const;
+    qreal activeDocumentTextWidth() const;
+    qreal documentTextWidth() const;
+
+    //! \brief calculate real document text width based on view's width
+    //! \param viewWidth Width of view. If -1, current width will be used.
+    qreal realDocumentTextWidth(qreal viewWidth = -1) const;
+
 protected slots:
     void scrolling();
     void hideUnmaskedText();

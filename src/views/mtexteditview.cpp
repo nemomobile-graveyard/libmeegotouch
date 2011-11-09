@@ -387,6 +387,39 @@ void MTextEditViewPrivate::checkScroll()
     }
 }
 
+QSizeF MTextEditViewPrivate::activeDocumentSize() const
+{
+    return activeDocument()->size() + QSizeF(cursorWidth(), 0);
+}
+
+QSizeF MTextEditViewPrivate::documentSize() const
+{
+    // Report larger width by the amount of cursorWidth().
+    // Reserve this extra space as a workaround so that QTextDocumentLayout
+    // does not draw cursor outside its area when RTL + cursor at position/index 0.
+    return document()->size() + QSizeF(cursorWidth(), 0);
+}
+
+qreal MTextEditViewPrivate::activeDocumentTextWidth() const
+{
+    return activeDocument()->textWidth() + cursorWidth();
+}
+
+qreal MTextEditViewPrivate::documentTextWidth() const
+{
+    // Report larger width by the amount of cursorWidth().
+    return document()->textWidth() + cursorWidth();
+}
+
+qreal MTextEditViewPrivate::realDocumentTextWidth(qreal width) const
+{
+    Q_Q(const MTextEditView);
+    if (width < 0.0) {
+        width = q->size().width();
+    }
+    // Real document textWidth is one cursorWidth less than the available space for text.
+    return width - q->style()->paddingLeft() - q->style()->paddingRight() - cursorWidth();
+}
 
 //! sets the mouse target point making sure it's inside the widget
 void MTextEditViewPrivate::setMouseTarget(const QPointF &point)
