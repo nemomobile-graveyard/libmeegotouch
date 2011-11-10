@@ -119,7 +119,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       timeOnMove(QElapsedTimer()),
       previousHorizontalScroll(0.0),
       viewScrolled(false),
-      previousSelectionCursorPosition(0)
+      previousSelectionCursorPosition(0),
+      panningStarted(false)
 {
     selectionFormat.setForeground(Qt::white);
     selectionFormat.setBackground(Qt::black);
@@ -156,6 +157,10 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
     delaySelection.setSingleShot(true);
     QObject::connect(&delaySelection, SIGNAL(timeout()),
                      this, SLOT(setSelection()));
+
+    showMovedToolbar.setSingleShot(true);
+    QObject::connect(&showMovedToolbar, SIGNAL(timeout()),
+                     this, SLOT(restoreEditorToolbar()), Qt::UniqueConnection);
 }
 
 
@@ -601,38 +606,44 @@ void MTextEditViewPrivate::showEditorToolbar()
 
         MTextEditPrivate &controllerD(*static_cast<MTextEditPrivate *>(controller->d_func()));
         connect(&controllerD.signalEmitter, SIGNAL(scenePositionChanged()),
-                this, SLOT(updateEditorToolbarPosition()), Qt::UniqueConnection);
+                this, SLOT(onEditorMoved()), Qt::UniqueConnection);
     }
 
     editorToolbar->setAutoHideEnabled(!controller->hasSelectedText());
     editorToolbar->appear();
     updateEditorToolbarPosition();
+    lastScenePos = controller->scenePos();
+    movementTime.start();
 }
 
 
 void MTextEditViewPrivate::hideEditorToolbar()
 {
+    MTextEditPrivate &controllerD(*static_cast<MTextEditPrivate *>(controller->d_func()));
+    disconnect(&controllerD.signalEmitter, SIGNAL(scenePositionChanged()),
+               this, SLOT(onEditorMoved()));
+    showMovedToolbar.stop();
+
     if (!editorToolbar) {
         return;
     }
+
     editorToolbar->disappear();
-    MTextEditPrivate &controllerD(*static_cast<MTextEditPrivate *>(controller->d_func()));
-    disconnect(&controllerD.signalEmitter, SIGNAL(scenePositionChanged()),
-               this, SLOT(updateEditorToolbarPosition()));
     editorToolbar.reset();
 }
 
 void MTextEditViewPrivate::hideEditorToolbarTemporarily()
 {
-    if (editorToolbar) {
+    if (editorToolbar && editorToolbar->isAppeared()) {
         editorToolbar->disappear();
     }
 }
 
 void MTextEditViewPrivate::restoreEditorToolbar()
 {
-    // If editorToolbar is created, then restore it.
-    if (editorToolbar) {
+    // If editorToolbar exists and is disappeared then assume it was hidden
+    // only temporarily. Restore it.
+    if (editorToolbar && !editorToolbar->isAppeared()) {
         editorToolbar->setAutoHideEnabled(!controller->hasSelectedText());
         editorToolbar->appear();
         updateEditorToolbarPosition();
@@ -1194,6 +1205,24 @@ void MTextEditViewPrivate::scrollSelectSlot()
 void MTextEditViewPrivate::onScenePositionChanged()
 {
     viewScrolled = true;
+}
+
+void MTextEditViewPrivate::onEditorMoved()
+{
+    Q_Q(MTextEditView);
+    panningStarted = true;
+    if (editorToolbar) {
+        const qreal elapsed = movementTime.restart();
+        const qreal distance = (lastScenePos - controller->scenePos()).manhattanLength();
+        const qreal speed = elapsed ? distance / elapsed : 0;
+        if (speed > q->style()->toolbarSpeedLimit()) {
+            showMovedToolbar.start();
+            hideEditorToolbarTemporarily();
+            lastScenePos = controller->scenePos();
+        } else {
+            updateEditorToolbarPosition();
+        }
+    }
 }
 
 void MTextEditViewPrivate::mapSelectionChange()
@@ -2494,7 +2523,7 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
         }
     }
 
-    if (!d->selectionOverlay.isNull() && d->selectionOverlay.data()->isVisible()) {
+    if (!d->selectionOverlay.isNull() && d->selectionOverlay->isVisible()) {
         emit selectionChanged(0, QRect(), false, 0, QRect(), false);
     }
 
@@ -2583,6 +2612,8 @@ void MTextEditView::applyStyle()
     }
 
     d->delaySelection.setInterval(s->selectionDelay());
+
+    d->showMovedToolbar.setInterval(s->toolbarShowDelay());
 
     MWidgetView::applyStyle();
 }

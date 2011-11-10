@@ -35,7 +35,6 @@ class MTextEdit;
 class MTextMagnifier;
 class QGraphicsSceneMouseEvent;
 class QTextDocument;
-class QTimer;
 class MBanner;
 class MTextSelectionOverlay;
 
@@ -119,6 +118,8 @@ protected slots:
     void startFocusAnimation();
     void scrollSelectSlot();
     void onScenePositionChanged();
+
+    void onEditorMoved();
 
     void mapSelectionChange();
     void onSelectionHandleMoved(const QPointF &position);
@@ -236,6 +237,11 @@ protected:
     qreal previousHorizontalScroll;
     bool viewScrolled;
     int previousSelectionCursorPosition;
+
+    QTimer showMovedToolbar;
+    bool panningStarted;
+    QPointF lastScenePos; // last controller position in scene coordinates
+    QElapsedTimer movementTime;
 
 #ifdef UNIT_TEST
     friend class Ut_MTextEditView;

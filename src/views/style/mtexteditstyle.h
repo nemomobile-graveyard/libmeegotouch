@@ -145,6 +145,18 @@ class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
         \brief When finger is moved over this speed while selecting or magnifying there will be no feedback (in mm/s)
       */
     M_STYLE_ATTRIBUTE(int, feedbackSpeedLimit, FeedbackSpeedLimit)
+
+    /*!
+        \property MTextEditStyle::toolbarSpeedLimit
+        \brief If text entry is panned over this speed then editor toopbar will be hidden (in pixel/ms)
+     */
+    M_STYLE_ATTRIBUTE(qreal, toolbarSpeedLimit, toolbarSpeedLimit)
+
+    /*!
+        \property MTextEditStyle::toolbarShowDelay
+        \brief This delay defines how quickly toolbar will be shown after panning (in ms)
+     */
+    M_STYLE_ATTRIBUTE(int, toolbarShowDelay, ToolbarShowDelay)
 };
 
 class M_VIEWS_EXPORT MTextEditStyleContainer : public MWidgetStyleContainer
