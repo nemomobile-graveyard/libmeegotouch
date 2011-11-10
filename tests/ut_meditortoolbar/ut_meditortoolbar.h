@@ -54,6 +54,8 @@ private slots:
     void testItemVisibility();
     void testPositionMapping_data();
     void testPositionMapping();
+    void testForbiddenRegion_data();
+    void testForbiddenRegion();
     void testVerticalPositioning();
     void testActionTextChange();
     void testAutoHide_data();

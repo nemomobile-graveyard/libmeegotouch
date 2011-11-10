@@ -3,6 +3,7 @@
 
 #include <QGraphicsWidget>
 #include <QPointer>
+#include <QRegion>
 #include <mtexteditview.h>
 
 class MSceneManager;
@@ -28,6 +29,11 @@ public:
 
     void skipTransitions()
     {
+    }
+
+    QRegion region()
+    {
+        return QRegion();
     }
 
 Q_SIGNALS:

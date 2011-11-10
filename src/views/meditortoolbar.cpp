@@ -27,6 +27,7 @@
 #include <MSceneManager>
 #include <MWidget>
 #include <QAction>
+#include <MInputMethodState>
 
 #include <QtAlgorithms>
 #include <QApplication>
@@ -46,6 +47,19 @@ MEditorToolbar::MEditorToolbar(MWidget *followWidget)
 
 MEditorToolbar::~MEditorToolbar()
 {
+}
+
+void MEditorToolbar::setForbiddenRegion(const QRegion &forbiddenRegion)
+{
+    Q_D(MEditorToolbar);
+    QRegion overlayRegion;
+
+    if (d->followWidget && d->overlay) {
+        foreach (const QRect &rect, forbiddenRegion.rects()) {
+            overlayRegion |= d->overlay->mapRectFromItem(d->followWidget, rect).toRect();
+        }
+    }
+    d->forbiddenRegion = overlayRegion;
 }
 
 void MEditorToolbar::setPosition(const QPointF &pos,
@@ -448,8 +462,8 @@ void MEditorToolbarPrivate::updateWidgetOrigin()
     const QRectF screenRectInOverlay(
         overlay->mapRectFromScene(QRectF(QPointF(), q->sceneManager()->visibleSceneSize(M::Landscape))));
 
-    QSizeF size(q->size());
-    QPointF pos(q->pos());
+    const QSizeF size(q->size());
+    const QPointF pos(q->pos());
 
     // Avoid editor toolbar clipping when possible
     if (size.width() < screenRectInOverlay.width()) {
@@ -466,9 +480,36 @@ void MEditorToolbarPrivate::updateWidgetOrigin()
     // widgetOrigin.x() is for example 75.5, in portrait mode with German language with
     // Cut, Copy & Paste buttons visible the one pixel thick button separator lines cannot
     // be seen.
-    const QPoint widgetOrigin(QPointF(translateX,
-                                      arrow->direction() == MEditorToolbarArrow::ArrowUp
-                                      ? 0.0f : size.height()).toPoint());
+
+    QPoint widgetOrigin(QPointF(translateX,
+                                arrow->direction() == MEditorToolbarArrow::ArrowUp
+                                ? 0.0f : size.height()).toPoint());
+    const QRect candidateGeometry = QRectF(pos - widgetOrigin, size).toRect();
+
+    if (forbiddenRegion.intersects(candidateGeometry)) {
+
+        // Map input panel rectangle to overlay coordinates and remove it
+        // from visible scene rectangle. It is assumed that input panel
+        // is always at the bottom of the sreen.
+        QRectF visibleSceneRect(screenRectInOverlay);
+        const QRect sipRect = MInputMethodState::instance()->inputMethodArea();
+        if (!sipRect.isNull()) {
+            const QRect mappedPanelRect(overlay->mapRectFromScene(sipRect).toRect());
+
+            visibleSceneRect.setBottom(qMin<qreal>(mappedPanelRect.top(),
+                                                   visibleSceneRect.bottom()));
+        }
+
+        const QRectF forbiddenRect = forbiddenRegion.boundingRect();
+
+        if (arrow->direction() == MEditorToolbarArrow::ArrowUp
+            && (forbiddenRect.bottom() + size.height()) < visibleSceneRect.bottom()) {
+            widgetOrigin.setY(pos.y() - forbiddenRect.bottom());
+        } else if (arrow->direction() == MEditorToolbarArrow::ArrowDown
+                   && (forbiddenRect.top() - size.height()) > visibleSceneRect.top()) {
+            widgetOrigin.setY(pos.y() - (forbiddenRect.top() - size.height()));
+        }
+    }
 
     q->setTransform(QTransform::fromTranslate(-widgetOrigin.x(),
                                               -widgetOrigin.y()));

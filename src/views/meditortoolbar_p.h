@@ -27,6 +27,7 @@
 #include <QPropertyAnimation>
 #include <QSizeF>
 #include <QTimer>
+#include <QRegion>
 
 class EatMButtonGestureFilter;
 class MButton;
@@ -91,6 +92,8 @@ private:
     bool positionUpdatePending;
     QPointF pendingPosition;
     MEditorToolbarArrow::ArrowDirection pendingArrowDirection;
+
+    QRegion forbiddenRegion;
 
 #ifdef UNIT_TEST
     friend class Ut_MEditorToolbar;

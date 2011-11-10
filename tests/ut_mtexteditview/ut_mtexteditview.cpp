@@ -98,8 +98,8 @@ private:
 
 void Ut_MTextEditView::initTestCase()
 {
-    static int dummyArgc = 2;
-    static char *dummyArgv[2] = { (char *) "./ut_mtexteditview"};
+    static int dummyArgc = 1;
+    static char *dummyArgv[1] = { (char *) "./ut_mtexteditview"};
     MApplication::setLoadMInputContext(false);
     m_app = new MApplication(dummyArgc, dummyArgv);
     m_appWindow = new MApplicationWindow;

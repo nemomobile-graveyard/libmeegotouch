@@ -23,6 +23,7 @@
 #include "meditortoolbarstyle.h"
 
 class MEditorToolbarPrivate;
+class QRegion;
 
 /*! \brief Cut/Copy/Paste etc. popup-toolbar for MTextEdit[View]
  *
@@ -68,6 +69,14 @@ public:
      */
     explicit MEditorToolbar(MWidget *actionSource);
     virtual ~MEditorToolbar();
+
+    /*!
+     * \brief Define which region should  not be covered by toolbar,
+     * if it is possible.
+     *
+     * \param forbiddenRegion Region which sould be avoided by toolbar.
+     */
+    void setForbiddenRegion(const QRegion &forbiddenRegion);
 
     /*! \brief Set position of the toolbar
      *

@@ -1633,6 +1633,12 @@ void MTextEditViewPrivate::updateEditorToolbarPosition()
     targetRect.moveTop(visibleRect.top());
     const int targetX(visibleRect.intersected(targetRect).center().x());
 
+    if (selectionOverlay) {
+        editorToolbar->setForbiddenRegion(selectionOverlay->region());
+    } else {
+        editorToolbar->setForbiddenRegion(QRegion());
+    }
+
     editorToolbar->setPosition(QPointF(targetX, targetY), placement);
 }
 

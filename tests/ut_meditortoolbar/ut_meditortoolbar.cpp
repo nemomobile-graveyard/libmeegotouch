@@ -143,6 +143,48 @@ void Ut_MEditorToolbar::testPositionMapping()
     QCOMPARE(mappedActualPos, position);
 }
 
+void Ut_MEditorToolbar::testForbiddenRegion_data()
+{
+    QTest::addColumn<QPointF>("fakeParentPos");
+    QTest::addColumn<QPointF>("position");
+    QTest::addColumn<QRegion>("forbiddenRegion");
+    QTest::addColumn<bool>("actionIsVisible");
+    QTest::addColumn<qreal>("m32"); // QTransform::m32 is vertical translation
+
+    QTest::newRow("no forbidden area, action is invisible")
+            << QPointF(2.0, 5.0) << QPointF() << QRegion() << false << static_cast<qreal>(0.0f); // use static_cast to qreal to work on x86
+    QTest::newRow("use forbidden area, action is invisible")
+            << QPointF(2.0, 5.0) << QPointF() << QRegion(QRect(-10, -10, 20, 20)) << false << static_cast<qreal>(10.0f);
+
+    QTest::newRow("no forbidden area, action is visible")
+            << QPointF(2.0, 5.0) << QPointF() << QRegion() << true << static_cast<qreal>(0.0f);
+    QTest::newRow("use forbidden area, action is visible")
+            << QPointF(2.0, 5.0) << QPointF() << QRegion(QRect(-10, -10, 20, 20)) << true << static_cast<qreal>(10.0f);
+}
+void Ut_MEditorToolbar::testForbiddenRegion()
+{
+    QFETCH(QPointF, fakeParentPos);
+    QFETCH(QPointF, position);
+    QFETCH(QRegion, forbiddenRegion);
+    QFETCH(bool,    actionIsVisible);
+    QFETCH(qreal, m32);
+
+    QAction action("zorro", 0);
+    action.setVisible(actionIsVisible);
+    subject->addAction(&action);
+    qApp->processEvents(); // Allow subject to react.
+
+    fakeParent->setPos(fakeParentPos);
+    subject->appear();
+    subject->setForbiddenRegion(forbiddenRegion);
+    subject->setPosition(position, MEditorToolbar::BelowPointOfInterest);
+
+    QPointF mappedActualPos = subject->parentItem()->mapToItem(fakeParent,
+                                                               subject->pos());
+    // chack vertical translation
+    QCOMPARE(subject->transform().m32(), m32);
+}
+
 void Ut_MEditorToolbar::testVerticalPositioning()
 {
     QAction action("hero", 0);

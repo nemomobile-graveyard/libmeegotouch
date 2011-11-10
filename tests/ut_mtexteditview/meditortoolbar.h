@@ -30,6 +30,7 @@ public:
 
     bool isAutoHideEnabled() const { return autohide; }
     void setAutoHideEnabled(bool enable) { autohide = enable; }
+    void setForbiddenRegion(const QRegion &) {}
 
 signals:
     void sizeChanged();
