@@ -25,6 +25,7 @@
 class MLabel;
 class MTextEdit;
 class MLabelHighlighter;
+class CustomSelectableLabel;
 
 class LabelPage : public TemplatePage
 {
@@ -53,6 +54,7 @@ private:
     MLabel *richLabel;
     MButton *ignoreClickAndLongPressCheckbox;
     MLabel *ignoreClickAndLongPressLabel;
+    CustomSelectableLabel *selectableLabel;
 
     MLabelHighlighter *phoneHighlighter;
     MLabelHighlighter *urlHighlighter;

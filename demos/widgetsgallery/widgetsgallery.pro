@@ -103,6 +103,7 @@ SOURCES += main.cpp \
     labeledcheckbox.cpp \
     systemwidesheetpage.cpp \
     transparentheadersheet.cpp \
+    customselectablelabel.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -167,6 +168,7 @@ HEADERS += templatepage.h \
     labeledcheckbox.h \
     systemwidesheetpage.h \
     transparentheadersheet.h \
+    customselectablelabel.h \
 
 contains(DEFINES, HAVE_DBUS) {
     HEADERS += accessmanager.h \

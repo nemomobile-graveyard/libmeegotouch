@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "labelpage.h"
+#include "customselectablelabel.h"
 
 #include <MLabel>
 #include <MLayout>
@@ -36,6 +37,7 @@ LabelPage::LabelPage()
       richLabel(0),
       ignoreClickAndLongPressCheckbox(0),
       ignoreClickAndLongPressLabel(0),
+      selectableLabel(0),
       phoneHighlighter(0),
       urlHighlighter(0),
       emailHighlighter(0),
@@ -124,6 +126,15 @@ void LabelPage::createContent()
     richLabel->addHighlighter(phoneHighlighter);
     richLabel->addHighlighter(urlHighlighter);
 
+    selectableLabel = new CustomSelectableLabel;
+    selectableLabel->setObjectName("customselectablelabel");
+    selectableLabel->setStyleName(inv("CommonBodyText"));
+    containerPolicy->addItem(selectableLabel);
+
+    selectableLabel->addHighlighter(emailHighlighter);
+    selectableLabel->addHighlighter(phoneHighlighter);
+    selectableLabel->addHighlighter(urlHighlighter);
+
     retranslateUi();
 }
 
@@ -149,6 +160,12 @@ void LabelPage::retranslateUi()
 
     //% "Handle click and long press events:"
     ignoreClickAndLongPressLabel->setText(qtTrId("xx_label_page_handle_click_and_long_press_events"));
+
+    //% "This is a custom label that combines performance and highlighters (like links: http://www.nokia.com) "
+    //% "of <i>MLabel</i> and selection & copy support of <i>MTextEdit</i>.\n"
+    //% "Selection is started by long tapping a word and the word will be preselected and selection adjustment handles and "
+    //% "Copy-button appears."
+    selectableLabel->setText(qtTrId("xx_label_page_selectablelabel"));
 
     update();
 }

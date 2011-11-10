@@ -172,3 +172,29 @@ MApplicationWindowStyle#LabelTabsTop {
     tab-bar-style-name: "TabsTopWithLabel";
 }
 
+MTextEditStyle#LikeLabelCommonBodyText {
+    background-image: none;
+    text-color: $COLOR_FOREGROUND;
+    font: $FONT_FAMILY_LIGHT 24;
+    minimum-size: -1 -1;
+    selection-text-color: $COLOR_INVERTED_FOREGROUND;
+    selection-background-color: $COLOR_LINK;
+
+    padding-top: $PADDING_LARGE;
+    padding-bottom: $PADDING_LARGE;
+    padding-left: $INDENT_DEFAULT;
+    padding-right: $INDENT_DEFAULT;
+
+    reactive-margin-top: $MARGIN_LARGE;
+    reactive-margin-bottom: $MARGIN_LARGE;
+
+    text-clipping-top: 0;
+    text-clipping-bottom: 0;
+    text-clipping-left: 0;
+    text-clipping-right: 0;
+}
+
+MTextEditStyle#LikeLabelCommonBodyText:selected {
+    background-image: none;
+}
+
