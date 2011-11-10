@@ -132,8 +132,6 @@ void MSpinnerViewPrivate::_q_pauseOrResumeAnimation()
             if (mWindow->isOnDisplay() && !mWindow->isInSwitcher()) {
                 resumeAnimation = true;
             }
-        } else {
-            resumeAnimation = true;
         }
     }
 

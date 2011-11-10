@@ -133,6 +133,13 @@ void Ut_MProgressIndicatorSpinnerView::testAnimationState()
     // Emulate displayExited (it resumes animation)
     view->d_func()->_q_pauseAnimation();
     QCOMPARE(view->d_func()->positionAnimation->state(), QPropertyAnimation::Paused);
+
+    // Check animation when asked to pause or resume but there is no window assigned
+    pi->setVisible(true);
+    view->d_func()->_q_pauseOrResumeAnimation();
+    QVERIFY(view->d_func()->positionAnimation->state() == QPropertyAnimation::Paused ||
+            view->d_func()->positionAnimation->state() == QPropertyAnimation::Stopped);
+
     delete pi;
 }
 
