@@ -608,33 +608,31 @@ void Ut_MTextEditView::testEditorToolbarReappearanceAfterFocusLost_data()
 {
     QTest::addColumn<Qt::FocusReason>("focusLostReason");
     QTest::addColumn<Qt::FocusReason>("focusGainedReason");
-    QTest::addColumn<bool>("expectedToReappear");
 
     QTest::newRow("focus lost by clicking")
         << Qt::MouseFocusReason
-        << Qt::MouseFocusReason << false;
+        << Qt::MouseFocusReason;
     QTest::newRow("window system removed focus")
         << Qt::ActiveWindowFocusReason
-        << Qt::ActiveWindowFocusReason << true;
+        << Qt::ActiveWindowFocusReason;
     QTest::newRow("focus removed by popup")
         << Qt::PopupFocusReason
-        << Qt::PopupFocusReason << true;
+        << Qt::PopupFocusReason;
     QTest::newRow("window system removed focus, gained with mouse")
         << Qt::ActiveWindowFocusReason
-        << Qt::MouseFocusReason << false;
+        << Qt::MouseFocusReason;
     QTest::newRow("focus removed by popup, gained with mouse")
         << Qt::PopupFocusReason
-        << Qt::MouseFocusReason << false;
+        << Qt::MouseFocusReason;
     QTest::newRow("focus lost by clicking, gained by window system")
         << Qt::MouseFocusReason
-        << Qt::ActiveWindowFocusReason << false;
+        << Qt::ActiveWindowFocusReason;
 }
 
 void Ut_MTextEditView::testEditorToolbarReappearanceAfterFocusLost()
 {
     QFETCH(Qt::FocusReason, focusLostReason);
     QFETCH(Qt::FocusReason, focusGainedReason);
-    QFETCH(bool, expectedToReappear);
 
     // large enough for selecting to be possible
     m_controller->setText("to be selected");
@@ -675,7 +673,7 @@ void Ut_MTextEditView::testEditorToolbarReappearanceAfterFocusLost()
     QMetaObject::invokeMethod(m_controller, "gainedFocus",
                               Q_ARG(Qt::FocusReason, focusGainedReason));
 
-    QCOMPARE(editorAppeared(), expectedToReappear);
+    QCOMPARE(editorAppeared(), true);
 }
 
 void Ut_MTextEditView::testEditorToolbarAutoHide()
