@@ -823,6 +823,9 @@ void MTextEditViewPrivate::hideSelectionMagnifier()
 
 void MTextEditViewPrivate::showSelectionOverlay()
 {
+    if (activeDocument() == maskedTextDocument)
+        return;
+
     Q_Q(MTextEditView);
     if (selectionOverlay.isNull() && controller->sceneManager()) {
         selectionOverlay.reset(new MTextSelectionOverlay(controller, q));
