@@ -22,11 +22,18 @@
 
 #include "mlocale_proxy_p.h"
 
+static bool g_mLocaleInited = false;
+
 class MStringSearchPrivate
 {
 public:
     MStringSearchPrivate() : pStringSearch( 0 )
         {
+            if ( ! g_mLocaleInited )
+            {
+                MLocale::initMLocale();
+                g_mLocaleInited = true;
+            }
         }
     ~MStringSearchPrivate()
         {

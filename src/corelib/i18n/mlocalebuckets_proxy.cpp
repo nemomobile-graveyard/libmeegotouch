@@ -19,12 +19,20 @@
 
 #include "mlocalebuckets.h"
 #include "mlocale/mlocalebuckets.h"
+#include "mlocale.h"
+
+static bool g_mLocaleInited = false;
 
 class MLocaleBucketsPrivate
 {
 public:
     MLocaleBucketsPrivate() : pBuckets( 0 )
         {
+            if ( ! g_mLocaleInited )
+            {
+                MLocale::initMLocale();
+                g_mLocaleInited = true;
+            }
         }
     ~MLocaleBucketsPrivate()
         {

@@ -22,8 +22,15 @@
 #include "mlocale_proxy_p.h"
 #include "mcollator_proxy_p.h"
 
+static bool g_mLocaleInited = false;
+
 MCollatorPrivate::MCollatorPrivate() : pCollator( 0 )
 {
+    if ( ! g_mLocaleInited )
+    {
+        MLocale::initMLocale();
+        g_mLocaleInited = true;
+    }
 }
 
 MCollatorPrivate::~MCollatorPrivate()

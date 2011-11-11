@@ -20,9 +20,17 @@
 #include "mcountry.h"
 #include "mlocale/mcountry.h"
 #include "mcountry_proxy_p.h"
+#include "mlocale.h"
+
+static bool g_mLocaleInited = false;
 
 MCountryPrivate::MCountryPrivate() : pCountry( 0 )
 {
+    if ( ! g_mLocaleInited )
+    {
+        MLocale::initMLocale();
+        g_mLocaleInited = true;
+    }
 }
 
 MCountryPrivate::~MCountryPrivate()

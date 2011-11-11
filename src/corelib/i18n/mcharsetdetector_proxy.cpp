@@ -22,12 +22,20 @@
 #include "mcharsetmatch.h"
 #include "mlocale/mcharsetmatch.h"
 #include "mcharsetmatch_proxy_p.h"
+#include "mlocale.h"
+
+static bool g_mLocaleInited = false;
 
 class MCharsetDetectorPrivate
 {
 public:
     MCharsetDetectorPrivate() : pDetector( 0 )
         {
+            if ( ! g_mLocaleInited )
+            {
+                MLocale::initMLocale();
+                g_mLocaleInited = true;
+            }
         }
     ~MCharsetDetectorPrivate()
         {

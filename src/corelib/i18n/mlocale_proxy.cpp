@@ -67,9 +67,12 @@ MLocalePrivate::~MLocalePrivate()
 
 void MLocale::initMLocale()
 {
-    // now we set the gconf config item factory.
-    ML10N::MLocale::setConfigItemFactory( new MLocaleGConfConfigItemFactory );
-    g_configItemFactorySet = true;
+    if ( ! g_configItemFactorySet )
+    {
+        // now we set the gconf config item factory.
+        ML10N::MLocale::setConfigItemFactory( new MLocaleGConfConfigItemFactory );
+        g_configItemFactorySet = true;
+    }
 }
 
 void MLocale::clearSystemDefault()

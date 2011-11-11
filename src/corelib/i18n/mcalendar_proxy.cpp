@@ -25,9 +25,15 @@
 #include "mlocale_proxy_p.h"
 #include "mcalendar_proxy_p.h"
 
+static bool g_mLocaleInited = false;
 
 MCalendarPrivate::MCalendarPrivate() : pCalendar( 0 )
 {
+    if ( ! g_mLocaleInited )
+    {
+        MLocale::initMLocale();
+        g_mLocaleInited = true;
+    }
 }
 
 MCalendarPrivate::~MCalendarPrivate()

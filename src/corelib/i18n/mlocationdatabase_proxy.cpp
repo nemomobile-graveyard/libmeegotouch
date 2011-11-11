@@ -21,12 +21,20 @@
 #include "mlocale/mlocationdatabase.h"
 #include "mcity_proxy_p.h"
 #include "mcountry_proxy_p.h"
+#include "mlocale.h"
+
+static bool g_mLocaleInited = false;
 
 class MLocationDatabasePrivate
 {
 public:
     MLocationDatabasePrivate() : pDatabase( new ML10N::MLocationDatabase() )
         {
+            if ( ! g_mLocaleInited )
+            {
+                MLocale::initMLocale();
+                g_mLocaleInited = true;
+            }
         }
     ~MLocationDatabasePrivate()
         {

@@ -23,11 +23,18 @@
 
 #include "mlocale_proxy_p.h"
 
+static bool g_mLocaleInited = false;
+
 class MBreakIteratorPrivate
 {
 public:
     MBreakIteratorPrivate() : pIterator( 0 )
         {
+            if ( ! g_mLocaleInited )
+            {
+                MLocale::initMLocale();
+                g_mLocaleInited = true;
+            }
         }
     ~MBreakIteratorPrivate()
         {
