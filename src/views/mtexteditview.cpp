@@ -1253,8 +1253,8 @@ void MTextEditViewPrivate::onSelectionHandlePressed(const QPointF &position)
     previousPosition = viewPos;
     currentPosition = viewPos;
 
-    showSelectionMagnifier();
     setMouseTarget(viewPos);
+    showSelectionMagnifier();
 
     lastHandlePos = QPointF();
     handleTime.start();
@@ -1270,7 +1270,6 @@ void MTextEditViewPrivate::onSelectionHandlePressed(const QPointF &position)
         controller->setSelection(cursorPos, anchorPos - cursorPos, false);
         mapSelectionChange();
     }
-
 }
 
 void MTextEditViewPrivate::onSelectionHandleReleased()
