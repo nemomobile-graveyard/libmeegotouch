@@ -1,3 +1,9 @@
+libmeegotouch (0.24.12~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 11 Nov 2011 13:57:18 +0200
+
 libmeegotouch (0.24.11-1) unstable; urgency=low
 
   * New version
