@@ -47,7 +47,7 @@ DisplayModesPage::DisplayModesPage()
       ctnWindowState(0),
       fullScreenCheckbox(0),
       navigationBarTransparencyCheckbox(0),
-      statusBarEnforcementDuringCallCheckbox(0),
+      disableStatusBarEnforcementDuringCallCheckbox(0),
       roundedCornersCheckbox(0)
 {
 }
@@ -129,7 +129,7 @@ void DisplayModesPage::createContent()
     lytDisplayMode->addItem(comboHomeButtonDisplayMode);
     lytDisplayMode->addItem(comboEscapeButtonDisplayMode);
     lytDisplayMode->addItem(comboStatusBarDisplayMode);
-    lytDisplayMode->addItem(statusBarEnforcementDuringCallCheckbox);
+    lytDisplayMode->addItem(disableStatusBarEnforcementDuringCallCheckbox);
 
     lytWindowState->addItem(fullScreenCheckbox);
     lytWindowState->addItem(roundedCornersCheckbox);
@@ -173,10 +173,11 @@ void DisplayModesPage::createWindowStateWidgets()
     navigationBarTransparencyCheckbox->setObjectName("navigationBarTransparencyCheckbox");
     connect(navigationBarTransparencyCheckbox->button, SIGNAL(toggled(bool)), SLOT(changeNavigationBarTransparency(bool)));
 
-    statusBarEnforcementDuringCallCheckbox = new LabeledCheckbox;
-    statusBarEnforcementDuringCallCheckbox->setParent(ctnDisplayMode);
-    statusBarEnforcementDuringCallCheckbox->setObjectName("statusBarTransparencyCheckbox");
-    connect(statusBarEnforcementDuringCallCheckbox->button, SIGNAL(toggled(bool)), SLOT(changeStatusBarEnforcementDuringCall(bool)));
+    disableStatusBarEnforcementDuringCallCheckbox = new LabeledCheckbox;
+    disableStatusBarEnforcementDuringCallCheckbox->setParent(ctnDisplayMode);
+    disableStatusBarEnforcementDuringCallCheckbox->setObjectName("statusBarTransparencyCheckbox");
+    connect(disableStatusBarEnforcementDuringCallCheckbox->button,
+            SIGNAL(toggled(bool)), SLOT(changeStatusBarEnforcementDuringCall(bool)));
 }
 
 void DisplayModesPage::addExampleActions()
@@ -232,8 +233,8 @@ void DisplayModesPage::retranslateUi()
     //% "Navigation Bar Transparency"
     navigationBarTransparencyCheckbox->label->setText(qtTrId("xx_displaymodes_navigation_bar_transparency"));
 
-    //% "Status Bar Enforcement During Call"
-    statusBarEnforcementDuringCallCheckbox->label->setText(qtTrId("xx_displaymode_status_bar_enforcement_during_call"));
+    //% "Disable Status Bar Enforcement During Call"
+    disableStatusBarEnforcementDuringCallCheckbox->label->setText(qtTrId("xx_displaymode_status_bar_enforcement_during_call"));
 
     retranslateDisplayModeComboBox(comboNavigationBarDisplayMode);
     retranslateDisplayModeComboBox(comboHomeButtonDisplayMode);
@@ -347,16 +348,13 @@ void DisplayModesPage::changeNavigationBarTransparency(bool transparent)
     animation->setEndValue(transparent ? 0.5 : 1.0);
     animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
-void DisplayModesPage::changeStatusBarEnforcementDuringCall(bool transparent)
+
+void DisplayModesPage::changeStatusBarEnforcementDuringCall(bool disable)
 {
     MWindow *window = MApplication::activeWindow();
+
     if (!window)
         return;
-    if (transparent) {
-        window->showFullScreen();
-        window->setProperty("disableStatusBarEnforcementDuringCall", true);
-    } else {
-        window->showNormal();
-        window->setProperty("disableStatusBarEnforcementDuringCall", false);
-    }
+
+    window->setProperty("disableStatusBarEnforcementDuringCall", disable);
 }
