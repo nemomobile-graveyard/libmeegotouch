@@ -2160,6 +2160,9 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
 
     d->commitPreedit();
 
+    d->doubleClick = false;
+    d->doubleClickSelectionTime = QTime();
+
     Qt::FocusReason reason = event->reason();
     if (reason != Qt::ActiveWindowFocusReason && reason != Qt::PopupFocusReason && reason != Qt::OtherFocusReason)
         deselect();
