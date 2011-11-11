@@ -1,8 +1,12 @@
-libmeegotouch (0.24.11~1) unstable; urgency=low
+libmeegotouch (0.24.11-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#289395 - China Variant: All strings in Mail application are shown in English.
+  * Fixes: NB#290014, Text selection handles are hidden or shown behind Cut/Copy/Paste/etc pop-up
+  * Fixes: NB#289968 - Fenix causes high number of wake-ups after boot
+  * Fixes: NB#275500 - Selected text does not have any rich-text-editor
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 09 Nov 2011 17:48:41 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 11 Nov 2011 13:56:29 +0200
 
 libmeegotouch (0.24.10-1) unstable; urgency=low
 
