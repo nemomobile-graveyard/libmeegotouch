@@ -108,7 +108,10 @@ private slots:
     void testPageExposedContentRectAfterTwoOrientationChanges();
 
     void testRotatingPageAndShowingStatusBarDoesNotCrash();
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
     void testDisableStatusBarDuringCall();
+#endif
 
 private:
     MApplicationWindow *m_subject;
@@ -117,6 +120,11 @@ private:
     void initToolbarLocationTC(M::OrientationAngle angle, const QString &viewType);
     bool isToolBarFloating();
     void processEventsAndFastForwardDisappearAppearAnimations(MSceneWindow* sceneWindow);
+
+    // Helper methods
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    void setPhoneCallIsActive(bool active);
+#endif
 };
 
 

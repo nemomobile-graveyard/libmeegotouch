@@ -1224,7 +1224,6 @@ void Ut_MApplicationWindow::testDisableStatusBarDuringCall()
 {
     MApplicationPage *page = new MApplicationPage;
     MSceneWindow *statusBar = m_subject->d_func()->statusBar;
-    gContextPropertyStubMap->createStub("Phone.Call")->stubSetReturnValue("value", QVariant("inactive"));
 
     if (!statusBar) {
         QSKIP("No status bar used so skipping test.", SkipSingle);
@@ -1239,39 +1238,58 @@ void Ut_MApplicationWindow::testDisableStatusBarDuringCall()
 
     QApplication::processEvents();
 
-    // Check the state of the statusbar
     STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Appeared);
     m_subject->showFullScreen();
 
-    //statusbar now hidden , if phone call is active and disableStatusBarEnforcementDuringCall property is true , statusbar should be disappeared
-    gContextPropertyStubMap->findStub("Phone.Call")->stubReset();
-    gContextPropertyStubMap->findStub("Phone.Call")->stubSetReturnValue("value", QVariant("active"));
-    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("Phone.Call")->getProxy(), "valueChanged");
+    // statusbar now hidden, if phone call is active and disableStatusBarEnforcementDuringCall property is true,
+    // statusbar should be in Disappeared state
+    setPhoneCallIsActive(true);
+
+    m_subject->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
+    STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Appeared);
 
     m_subject->setProperty("disableStatusBarEnforcementDuringCall", true);
 
     QApplication::processEvents();
+    m_subject->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
     STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Disappeared);
-    m_subject->showFullScreen();
 
-    //statusbar now hidden , if phone call is inactive and disableStatusBarEnforcementDuringCall property is false , statusbar should be disappeared
-    gContextPropertyStubMap->findStub("Phone.Call")->stubReset();
-    gContextPropertyStubMap->findStub("Phone.Call")->stubSetReturnValue("value", QVariant("inactive"));
-    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("Phone.Call")->getProxy(), "valueChanged");
-
+    // statusbar now hidden, if phone call is inactive and disableStatusBarEnforcementDuringCall property is false,
+    // statusbar should be in Disappeared state
+    setPhoneCallIsActive(false);
     m_subject->setProperty("disableStatusBarEnforcementDuringCall", false);
+
     QApplication::processEvents();
+    m_subject->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
+
     STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Disappeared);
-    m_subject->showFullScreen();
 
-    //statusbar now hidden , if phone call is active and disableStatusBarEnforcementDuringCall property is false , statusbar should be appeared
-    gContextPropertyStubMap->findStub("Phone.Call")->stubReset();
-    gContextPropertyStubMap->findStub("Phone.Call")->stubSetReturnValue("value", QVariant("active"));
-    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("Phone.Call")->getProxy(), "valueChanged");
-
+    // statusbar now hidden, if phone call is active and disableStatusBarEnforcementDuringCall
+    // property is false, statusbar should be in Appeared state
+    setPhoneCallIsActive(true);
     m_subject->setProperty("disableStatusBarEnforcementDuringCall", false);
+
     QApplication::processEvents();
+    m_subject->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
+
     STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Appeared);
+}
+#endif
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void Ut_MApplicationWindow::setPhoneCallIsActive(bool active) {
+
+    QString value;
+
+    if (active) {
+        value = "active";
+    } else {
+        value = "inactive";
+    }
+
+    gContextPropertyStubMap->findStub("Phone.Call")->stubReset();
+    gContextPropertyStubMap->findStub("Phone.Call")->stubSetReturnValue("value", QVariant(value));
+    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("Phone.Call")->getProxy(), "valueChanged");
 }
 #endif
 QTEST_MAIN(Ut_MApplicationWindow)
