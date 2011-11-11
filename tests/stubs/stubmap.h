@@ -93,9 +93,9 @@ int StubMap<K, T>::deleteStub(const T *proxy)
 
     if (!stubs.value(proxy)->hasProxies()) {
         StubType *stub = stubs.value(proxy);
-        stubs.remove(proxy);
         delete stub;
     }
+    stubs.remove(proxy);
     return 0;
 }
 
