@@ -39,7 +39,8 @@ MRichTextEditDialogsManager *MRichTextEditDialogsManager::dialogsManager = 0;
 MRichTextEditDialogsManager::MRichTextEditDialogsManager()
     : fontFamilyCombo(0),
       fontSizeCombo(0),
-      fontColorCombo(0)
+      fontColorCombo(0),
+      selectedFontSize(-1)
 {
     //Maximum 64pt see NB#274753
     for (int i = 8; i <= 64; i++ ) {
@@ -66,6 +67,10 @@ MRichTextEditDialogsManager *MRichTextEditDialogsManager::instance()
 
 void MRichTextEditDialogsManager::initTextStylingDialog()
 {
+    selectedFontSize = -1;
+    selectedFontFamily = QString();
+    selectedFontColor = QColor();
+
     if (dialogs.textStyles.first) {
         return;
     }
@@ -94,7 +99,7 @@ void MRichTextEditDialogsManager::initTextStylingDialog()
     policy->addItem(fontFamilyCombo);
 
     connect(fontFamilyCombo, SIGNAL(activated(QString)),
-            this, SIGNAL(fontFamilySelected(QString)));
+            this, SLOT(rememberFontFamily(QString)));
 
     // Initialize Font Size combo box
     fontSizeCombo = new MComboBox(centralWidget);
@@ -104,7 +109,7 @@ void MRichTextEditDialogsManager::initTextStylingDialog()
     fontSizeCombo->setItemModel(sizeModel);
     policy->addItem(fontSizeCombo);
     connect(fontSizeCombo, SIGNAL(activated(QString)),
-            this, SLOT(setFontSize()));
+            this, SLOT(rememberFontSize()));
 
     // Initialize Font Color item
     fontColorCombo = new MColorComboBox(centralWidget);
@@ -112,11 +117,15 @@ void MRichTextEditDialogsManager::initTextStylingDialog()
     fontColorCombo->setTitle(qtTrId("qtn_comm_font_color_combobox"));
     policy->addItem(fontColorCombo);
     connect(fontColorCombo, SIGNAL(colorPicked(QColor)),
-            this, SIGNAL(fontColorSelected(QColor)));
+            this, SLOT(rememberFontColor(QColor)));
+
+    // Selections are applied at pressing button "Done"
+    connect(dialogs.textStyles.first, SIGNAL(accepted()),
+            this, SLOT(applySelection()));
 }
 
 
-void MRichTextEditDialogsManager::setFontSize()
+void MRichTextEditDialogsManager::rememberFontSize()
 {
     Q_ASSERT(fontSizeCombo);
 
@@ -130,7 +139,30 @@ void MRichTextEditDialogsManager::setFontSize()
         Q_ASSERT(false);
     }
 
-    emit fontSizeSelected(size);
+    selectedFontSize = size;
+}
+
+void MRichTextEditDialogsManager::rememberFontColor(const QColor &color)
+{
+    selectedFontColor = color;
+}
+
+void MRichTextEditDialogsManager::rememberFontFamily(const QString &family)
+{
+    selectedFontFamily = family;
+}
+
+void MRichTextEditDialogsManager::applySelection()
+{
+    if (!selectedFontFamily.isNull()) {
+        emit fontFamilySelected(selectedFontFamily);
+    }
+    if (selectedFontSize != -1) {
+        emit fontSizeSelected(selectedFontSize);
+    }
+    if (selectedFontColor.isValid()) {
+        emit fontColorSelected(selectedFontColor);
+    }
 }
 
 void MRichTextEditDialogsManager::setTextStyleValues(const QString &fontfamily, int fontPointSize,

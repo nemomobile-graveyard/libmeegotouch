@@ -65,7 +65,13 @@ Q_SIGNALS:
 
 private Q_SLOTS:
 
-    void setFontSize();
+    void rememberFontSize();
+
+    void rememberFontColor(const QColor& color);
+
+    void rememberFontFamily(const QString& family);
+
+    void applySelection();
 
 private:
     // QPointer<MDialog> in ActiveDialog will hold a dialog
@@ -115,11 +121,14 @@ private:
     MComboBox *fontSizeCombo;
     MColorComboBox *fontColorCombo;
 
+    QString selectedFontFamily;
+    int selectedFontSize;
+    QColor selectedFontColor;
+
 #ifdef UNIT_TEST
     // Test unit is defined as a friend of production code to access private members
     friend class Ut_MRichTextEditDialogsManager;
 #endif
-
 };
 
 #endif
