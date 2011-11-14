@@ -39,6 +39,7 @@
 #include <QTimer>
 #include <QStyleOptionGraphicsItem>
 #include <QPanGesture>
+#include <QInputContext>
 
 #include "mtextedit.h"
 #include "mtextedit_p.h"
@@ -1592,6 +1593,17 @@ void MTextEditViewPrivate::playFocusAnimation(QAbstractAnimation::Direction dire
     }
 }
 
+void MTextEditViewPrivate::icUpdate()
+{
+    QInputContext *ic = qApp->inputContext();
+
+    if (!ic || !controller->hasFocus()) {
+        return;
+    }
+
+    ic->update();
+}
+
 void MTextEditViewPrivate::updateEditorToolbarPosition()
 {
     if (!editorToolbar || !editorToolbar->isAppeared()) {
@@ -1990,6 +2002,17 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             d->focusingTap = false;
         }
         return;
+    }
+
+    // In case magnifier was hidden the codepath above didn't lead to controller's handleMouseRelease()
+    // which means input context was not updated even though cursor position changed. Therefore, we
+    // call QInputContext::update() directly to notify about changed properties such as surrounding
+    // text and cursor rectangle.
+    // In case selection was made or updated this has already been called.
+    // TODO: Logic here is too complex. The above handleMouseRelease should probably be called
+    // anyways and pre-edit activation should be prevented by other means.
+    if (magnifierHidden) {
+        d->icUpdate();
     }
 
     if ((magnifierHidden

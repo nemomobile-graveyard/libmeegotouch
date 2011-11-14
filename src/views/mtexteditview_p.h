@@ -161,6 +161,8 @@ private:
     void playFocusAnimation(QAbstractAnimation::Direction direction,
                             qreal endValue);
 
+    void icUpdate();
+
     //! \brief map item coordinates to view coordinates
     QPointF fromItem(const QPointF &point) const;
 
