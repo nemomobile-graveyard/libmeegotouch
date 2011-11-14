@@ -850,6 +850,11 @@ void MTextEditViewPrivate::showSelectionOverlay()
         QObject::connect(controller, SIGNAL(selectionChanged()),
                          this, SLOT(mapSelectionChange()),
                          Qt::UniqueConnection);
+        QObject::connect(MInputMethodState::instance(),
+                         SIGNAL(inputMethodAreaChanged(const QRect &)),
+                         this, SLOT(mapSelectionChange()),
+                         Qt::UniqueConnection);
+
         mapSelectionChange();
         q->model()->setIsSelecting(true);
     }
@@ -1292,6 +1297,9 @@ void MTextEditViewPrivate::onSelectionOverlayVisibleChanged()
                             this, SLOT(mapSelectionChange()));
         QObject::disconnect(controller, SIGNAL(selectionChanged()),
                             this, SLOT(mapSelectionChange()));
+        QObject::disconnect(MInputMethodState::instance(),
+                         SIGNAL(inputMethodAreaChanged(const QRect &)),
+                         this, SLOT(mapSelectionChange()));
 
         MTextEditPrivate *textWidgetPtr
             = static_cast<MTextEditPrivate *>(controller->d_func());
