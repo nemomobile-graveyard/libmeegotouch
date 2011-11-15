@@ -88,20 +88,36 @@ void PanningBenchmark::pan()
         timingStarted = true;
         formerPosition = pannableViewport->physics()->position();
         timer.start();
+        pannableViewport->physics()->pointerPress(QPointF());
+        totalDisplacement = 0;
+        panDown = true;
     }
 
     QPointF currentPosition = pannableViewport->physics()->position();
     QRectF range = pannableViewport->physics()->range();
 
     if (!timedemo->currentBenchmarkRuntimeReached()) {
-        if (currentPosition.y() >= range.height())
-            formerPosition = currentPosition;
-        else if (currentPosition.y() <= 0)
-            formerPosition = currentPosition;
+        //if panning reaches range boundaries stop it and begin new panning
+        //in opposite direction
 
-        doPan(formerPosition.y() < range.height());
+        //panDown value checking is to make sure release and press is called
+        //only once when displacement values are big
+        if (currentPosition.y() > range.height() + range.y() && panDown) {
+            pannableViewport->physics()->pointerRelease();
+            pannableViewport->physics()->pointerPress(currentPosition);
+            panDown = false;
+        }
+        else if (currentPosition.y() < range.y() && !panDown) {
+            pannableViewport->physics()->pointerRelease();
+            pannableViewport->physics()->pointerPress(currentPosition);
+            panDown = true;
+        }
+
+        doPan(panDown);
     }
     else {
+        pannableViewport->physics()->pointerRelease();
+        pannableViewport->physics()->stop();
         terminateBenchmark();
     }
 }
@@ -110,9 +126,8 @@ void PanningBenchmark::doPan(bool panDown)
 {
     qreal displacement = ySpeed * timer.elapsed();
 
-    QPointF currentPosition = pannableViewport->physics()->position();
-    pannableViewport->physics()->setPosition(currentPosition +
-            QPointF(0., panDown ? displacement : -displacement));
+    totalDisplacement += (panDown ? -displacement : displacement);
+    pannableViewport->physics()->pointerMove(QPointF(0, totalDisplacement));
     timer.start();
     QTimer::singleShot(updateInterval, this, SLOT(pan()));
 }
