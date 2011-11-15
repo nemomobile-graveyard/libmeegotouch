@@ -96,8 +96,13 @@ void MWidgetViewPrivate::setSelected(bool selected)
 {
     if (selected)
         styleContainer->setModeSelected();
-    else
-        styleContainer->setModeDefault();
+    else {
+        if (controller->isEnabled()) {
+            styleContainer->setModeDefault();
+        } else {
+            styleContainer->setModeDisabled();
+        }
+    }
 
     // Apply style mode recursively to child items
     foreach(QGraphicsItem *item, controller->childItems()) {
@@ -118,15 +123,24 @@ void MWidgetViewPrivate::setPressed(bool pressed)
 {
     if (pressed)
         styleContainer->setModePressed();
-    else
-        styleContainer->setModeDefault();
+    else {
+        if (controller->isEnabled()) {
+            if (controller->isSelected()) {
+                styleContainer->setModeSelected();
+            } else {
+                styleContainer->setModeDefault();
+            }
+        } else {
+            styleContainer->setModeDisabled();
+        }
+    }
 
     // Apply style mode recursively to child items
     foreach(QGraphicsItem *item, controller->childItems()) {
         MWidgetController *widget = dynamic_cast<MWidgetController*>(item);
         if (widget && widget->view()) {
             MWidgetViewPrivate *viewPrivate = const_cast<MWidgetViewPrivate*>(widget->view()->d_func());
-            viewPrivate->setPressed(pressed);
+            viewPrivate->setPressed(pressed && widget->isEnabled());
         }
     }
 
