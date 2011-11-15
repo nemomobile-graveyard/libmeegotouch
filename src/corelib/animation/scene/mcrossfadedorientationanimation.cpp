@@ -23,6 +23,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsWidget>
 #include <QPropertyAnimation>
+#include <MDeviceProfile>
 
 #include <mwindow.h>
 #include <mscenelayereffect.h>
@@ -33,78 +34,74 @@ void MCrossFadedOrientationAnimationPrivate::init(const QRectF &visibleSceneRect
 {
     Q_Q(MCrossFadedOrientationAnimation);
 
-    snapshot = 0;
+    sourceSnapshot = 0;
+    targetSnapshot = 0;
+    backgroundLayerParentItem = 0;
     this->visibleSceneRect = visibleSceneRect;
 
-    rootElementRotationAnimation = new QPropertyAnimation(0, "rotation", q);
-    rootElementRotationAnimation->setDuration(q->style()->duration());
-    rootElementRotationAnimation->setEasingCurve(q->style()->rotationEasingCurve());
+    targetSnapshotRotationAnimation = new QPropertyAnimation(0, "rotation", q);
+    targetSnapshotRotationAnimation->setDuration(q->style()->duration());
+    targetSnapshotRotationAnimation->setEasingCurve(q->style()->rotationEasingCurve());
 
-    rootElementFadeInAnimation = new QPropertyAnimation(0, "opacity", q);
+    targetSnapshotFadeInAnimation = new QPropertyAnimation(0, "opacity", q);
     // QT doesn’t try to draw QGraphicsItems with opacity 0.
     // This is an undocummented behavior (QTBUG-18267).
     // root element must always be drawn because there might be
     // a scene layer effect in there that ignores the parent's opacity, so
     // it will always be drawn.
-    rootElementFadeInAnimation->setStartValue(0.001);
-    rootElementFadeInAnimation->setEndValue(1.0);
-    rootElementFadeInAnimation->setDuration(q->style()->duration());
-    rootElementFadeInAnimation->setEasingCurve(q->style()->fadingEasingCurve());
+    targetSnapshotFadeInAnimation->setStartValue(0.001);
+    targetSnapshotFadeInAnimation->setEndValue(1.0);
+    targetSnapshotFadeInAnimation->setDuration(q->style()->duration());
+    targetSnapshotFadeInAnimation->setEasingCurve(q->style()->fadingEasingCurve());
 
-    rootElementPositionAnimation = new QPropertyAnimation(0, "pos", q);
-    rootElementPositionAnimation->setDuration(q->style()->duration());
-    rootElementPositionAnimation->setEasingCurve(q->style()->translationEasingCurve());
+    targetSnapshotPositionAnimation = new QPropertyAnimation(0, "pos", q);
+    targetSnapshotPositionAnimation->setDuration(q->style()->duration());
+    targetSnapshotPositionAnimation->setEasingCurve(q->style()->translationEasingCurve());
 
-    snapshotRotationAnimation = new QPropertyAnimation(0, "rotation", q);
-    snapshotRotationAnimation->setDuration(q->style()->duration());
-    snapshotRotationAnimation->setEasingCurve(q->style()->rotationEasingCurve());
+    sourceSnapshotRotationAnimation = new QPropertyAnimation(0, "rotation", q);
+    sourceSnapshotRotationAnimation->setDuration(q->style()->duration());
+    sourceSnapshotRotationAnimation->setEasingCurve(q->style()->rotationEasingCurve());
 
-    snapshotFadeOutAnimation = new QPropertyAnimation(0, "opacity", q);
-    snapshotFadeOutAnimation->setStartValue(1.0);
-    snapshotFadeOutAnimation->setEndValue(0.0);
-    snapshotFadeOutAnimation->setDuration(q->style()->duration());
-    snapshotFadeOutAnimation->setEasingCurve(q->style()->fadingEasingCurve());
+    sourceSnapshotFadeOutAnimation = new QPropertyAnimation(0, "opacity", q);
+    sourceSnapshotFadeOutAnimation->setStartValue(1.0);
+    sourceSnapshotFadeOutAnimation->setEndValue(0.0);
+    sourceSnapshotFadeOutAnimation->setDuration(q->style()->duration());
+    sourceSnapshotFadeOutAnimation->setEasingCurve(q->style()->fadingEasingCurve());
 
-    snapshotPositionAnimation = new QPropertyAnimation(0, "pos", q);
-    snapshotPositionAnimation->setDuration(q->style()->duration());
-    snapshotPositionAnimation->setEasingCurve(q->style()->translationEasingCurve());
+    sourceSnapshotPositionAnimation = new QPropertyAnimation(0, "pos", q);
+    sourceSnapshotPositionAnimation->setDuration(q->style()->duration());
+    sourceSnapshotPositionAnimation->setEasingCurve(q->style()->translationEasingCurve());
 
+    dirtyTargetSnapshot = false;
 }
 
-void MCrossFadedOrientationAnimationPrivate::createRootElementSnapshot()
+void MCrossFadedOrientationAnimationPrivate::createSourceSnapshot()
 {
-    Q_Q(MCrossFadedOrientationAnimation);
-    QGraphicsScene *scene = q->rootElement()->scene();
+    Q_ASSERT(sourceSnapshot == 0);
 
-    Q_ASSERT(snapshot == 0);
+    sourceSnapshot = createSnapshot();
+    sourceSnapshot->setTransformOriginPoint(sourceSnapshotRotationPoint);
 
-    // Since we want a snapshot only from the root element, we have to
-    // temporarily hide the scene background.
-
-    // hide scene background
-    snapshot = new MSnapshotItem(visibleSceneRect);
-    // show scene background
-
-    scene->addItem(snapshot);
-    snapshot->updateSnapshot();
-    snapshot->setPos(0.0, 0.0);
-    snapshot->setTransformOriginPoint(snapshotRotationPoint);
-
-    snapshotRotationAnimation->setTargetObject(snapshot);
-    snapshotFadeOutAnimation->setTargetObject(snapshot);
-    snapshotPositionAnimation->setTargetObject(snapshot);
+    sourceSnapshotRotationAnimation->setTargetObject(sourceSnapshot);
+    sourceSnapshotFadeOutAnimation->setTargetObject(sourceSnapshot);
+    sourceSnapshotPositionAnimation->setTargetObject(sourceSnapshot);
 }
 
-void MCrossFadedOrientationAnimationPrivate::destroyRootElementSnapshot()
+void MCrossFadedOrientationAnimationPrivate::destroySnapshots()
 {
-    snapshotRotationAnimation->setTargetObject(0);
-    snapshotFadeOutAnimation->setTargetObject(0);
-    snapshotPositionAnimation->setTargetObject(0);
+    sourceSnapshotRotationAnimation->setTargetObject(0);
+    sourceSnapshotFadeOutAnimation->setTargetObject(0);
+    sourceSnapshotPositionAnimation->setTargetObject(0);
 
-    if (snapshot) {
-        delete snapshot;
-        snapshot = 0;
-    }
+    targetSnapshotRotationAnimation->setTargetObject(0);
+    targetSnapshotFadeInAnimation->setTargetObject(0);
+    targetSnapshotPositionAnimation->setTargetObject(0);
+
+    delete sourceSnapshot;
+    sourceSnapshot = 0;
+
+    delete targetSnapshot;
+    targetSnapshot = 0;
 }
 
 void MCrossFadedOrientationAnimationPrivate::setSnapshotRotationAnimationValues(
@@ -114,7 +111,7 @@ void MCrossFadedOrientationAnimationPrivate::setSnapshotRotationAnimationValues(
     // Therefore we have to translate the root element rotation angles to snapshot
     // rotation angles.
 
-    snapshotRotationAnimation->setStartValue(0.0);
+    sourceSnapshotRotationAnimation->setStartValue(0.0);
 
     qreal snapshotEndAngle;
     if (startAngle == M::Angle0) {
@@ -145,11 +142,11 @@ void MCrossFadedOrientationAnimationPrivate::setSnapshotRotationAnimationValues(
             snapshotEndAngle = 0.0;
         }
     }
-    snapshotRotationAnimation->setEndValue(snapshotEndAngle);
+    sourceSnapshotRotationAnimation->setEndValue(snapshotEndAngle);
 }
 
-void MCrossFadedOrientationAnimationPrivate::calculateSnapshotRotationPoint(
-        M::OrientationAngle startAngle)
+QPointF MCrossFadedOrientationAnimationPrivate::calculateSnapshotRotationPoint(
+        M::OrientationAngle startAngle) const
 {
     // The snapshot item always begin its rotation from 0 degrees, unlike the root
     // element, which begins from startAngle.
@@ -160,83 +157,96 @@ void MCrossFadedOrientationAnimationPrivate::calculateSnapshotRotationPoint(
     // The style option "rotation point" is in local root element coordinates.
     // Here we translate it into snapshot local coordinates.
 
-    Q_Q(MCrossFadedOrientationAnimation);
+    Q_Q(const MCrossFadedOrientationAnimation);
 
     // rotation point of the root element in its local coordinate system.
     QPointF rootElementRotationPoint = q->style()->rotationPoint();
 
+    QPointF rotationPoint;
+
     switch (startAngle) {
         case M::Angle0:
-            snapshotRotationPoint = rootElementRotationPoint;
+            rotationPoint = rootElementRotationPoint;
             break;
         case M::Angle90:
-            snapshotRotationPoint.rx() = visibleSceneRect.width() - rootElementRotationPoint.y();
-            snapshotRotationPoint.ry() = rootElementRotationPoint.x();
+            rotationPoint.rx() = visibleSceneRect.width() - rootElementRotationPoint.y();
+            rotationPoint.ry() = rootElementRotationPoint.x();
             break;
         case M::Angle180:
-            snapshotRotationPoint.rx() = visibleSceneRect.width() - rootElementRotationPoint.x();
-            snapshotRotationPoint.ry() = visibleSceneRect.height() - rootElementRotationPoint.y();
+            rotationPoint.rx() = visibleSceneRect.width() - rootElementRotationPoint.x();
+            rotationPoint.ry() = visibleSceneRect.height() - rootElementRotationPoint.y();
             break;
         default: // M::Angle270:
-            snapshotRotationPoint.rx() = rootElementRotationPoint.y();
-            snapshotRotationPoint.ry() = visibleSceneRect.height() - rootElementRotationPoint.x();
+            rotationPoint.rx() = rootElementRotationPoint.y();
+            rotationPoint.ry() = visibleSceneRect.height() - rootElementRotationPoint.x();
             break;
     }
+
+    return rotationPoint;
 }
 
 void MCrossFadedOrientationAnimationPrivate::setSnapshotPositionAnimationValues(
         M::OrientationAngle startAngle, M::OrientationAngle endAngle)
 {
-    snapshotPositionAnimation->setStartValue(
-            calculateRotationPointSceneCoords(startAngle) - snapshotRotationPoint);
+    sourceSnapshotPositionAnimation->setStartValue(
+            calculateRotationPointSceneCoords(startAngle) - sourceSnapshotRotationPoint);
 
-    snapshotPositionAnimation->setEndValue(
-            calculateRotationPointSceneCoords(endAngle) - snapshotRotationPoint);
+    sourceSnapshotPositionAnimation->setEndValue(
+            calculateRotationPointSceneCoords(endAngle) - sourceSnapshotRotationPoint);
 }
 
-void MCrossFadedOrientationAnimationPrivate::setRootElementPositionAnimationValues(
+void MCrossFadedOrientationAnimationPrivate::setTargetSnapshotPositionAnimationValues(
         M::OrientationAngle startAngle, M::OrientationAngle endAngle)
 {
-    Q_Q(MCrossFadedOrientationAnimation);
+    Q_UNUSED(endAngle);
 
-    // rotation point in local item coordinates.
-    QPointF rotationPointLocal = q->style()->rotationPoint();
-
-    rootElementPositionAnimation->setStartValue(
-            calculateRotationPointSceneCoords(startAngle) - rotationPointLocal);
-
-    rootElementPositionAnimation->setEndValue(
-            calculateRotationPointSceneCoords(endAngle) - rotationPointLocal);
+    targetSnapshotPositionAnimation->setEndValue(QPointF());
+    targetSnapshotPositionAnimation->setStartValue(
+            calculateRotationPointSceneCoords(startAngle) - targetSnapshotRotationPoint);
 }
 
-void MCrossFadedOrientationAnimationPrivate::setRootElementRotationAnimationValues(
+void MCrossFadedOrientationAnimationPrivate::setTargetSnapshotRotationAnimationValues(
         M::OrientationAngle startAngle, M::OrientationAngle endAngle)
 {
-    if (startAngle == M::Angle270 && endAngle == M::Angle90) {
-        // 180 degrees rotation. Do it clockwise like the snapshot item.
-        rootElementRotationAnimation->setStartValue(-90);
-        rootElementRotationAnimation->setEndValue(endAngle);
-
-    } else if (startAngle == M::Angle180 && endAngle == M::Angle0) {
-        // 180 degrees rotation. Do it clockwise like the snapshot item.
-        rootElementRotationAnimation->setStartValue(-180);
-        rootElementRotationAnimation->setEndValue(endAngle);
-    } else if (startAngle == M::Angle270 && endAngle == M::Angle0) {
-        // Do it clockwise, which is the shortest rotation.
-        rootElementRotationAnimation->setStartValue(-90);
-        rootElementRotationAnimation->setEndValue(endAngle);
+    if (startAngle == M::Angle180 && endAngle == M::Angle270) {
+        targetSnapshotRotationAnimation->setStartValue(-90);
+    } else if (startAngle == M::Angle270 && endAngle == M::Angle180) {
+        targetSnapshotRotationAnimation->setStartValue(90);
     } else if (startAngle == M::Angle0 && endAngle == M::Angle270) {
-        // Do it counterclockwise, which is the shortest rotation.
-        rootElementRotationAnimation->setStartValue(startAngle);
-        rootElementRotationAnimation->setEndValue(-90);
-    } else {
-        // Easy cases. No tweaks needed.
-        rootElementRotationAnimation->setStartValue(startAngle);
-        rootElementRotationAnimation->setEndValue(endAngle);
+        targetSnapshotRotationAnimation->setStartValue(90);
+    } else if (startAngle == M::Angle270 && endAngle == M::Angle0) {
+        targetSnapshotRotationAnimation->setStartValue(-90);
+    } else if (startAngle == M::Angle0 && endAngle == M::Angle90) {
+        targetSnapshotRotationAnimation->setStartValue(-90);
+    } else if (startAngle == M::Angle90 && endAngle == M::Angle0) {
+        targetSnapshotRotationAnimation->setStartValue(90);
+    } else if (startAngle == M::Angle90 && endAngle == M::Angle180) {
+        targetSnapshotRotationAnimation->setStartValue(-90);
+    } else if (startAngle == M::Angle180 && endAngle == M::Angle90) {
+        targetSnapshotRotationAnimation->setStartValue(90);
+    } else if (startAngle == M::Angle0 && endAngle == M::Angle180){
+        targetSnapshotRotationAnimation->setStartValue(-180);
+    } else if (startAngle == M::Angle180 && endAngle == M::Angle0) {
+        targetSnapshotRotationAnimation->setStartValue(-180);
+    } else if (startAngle == M::Angle90 && endAngle == M::Angle270){
+        targetSnapshotRotationAnimation->setStartValue(-180);
+    } else if (startAngle == M::Angle270 && endAngle == M::Angle90) {
+        targetSnapshotRotationAnimation->setStartValue(-180);
     }
+
+    // animated snapshot has target orientation already so end value always = 0
+    targetSnapshotRotationAnimation->setEndValue(0);
 }
 
-QPointF MCrossFadedOrientationAnimationPrivate::calculateRotationPointSceneCoords(M::OrientationAngle angle)
+void MCrossFadedOrientationAnimationPrivate::setSnapshotRotationPoints(
+        M::OrientationAngle startAngle, M::OrientationAngle endAngle)
+{
+    sourceSnapshotRotationPoint = calculateSnapshotRotationPoint(startAngle);
+    targetSnapshotRotationPoint = calculateSnapshotRotationPoint(endAngle);
+}
+
+QPointF MCrossFadedOrientationAnimationPrivate::calculateRotationPointSceneCoords(
+        M::OrientationAngle angle)
 {
     Q_Q(MCrossFadedOrientationAnimation);
 
@@ -330,6 +340,49 @@ void MCrossFadedOrientationAnimationPrivate::fetchBackgroundLayerEffect()
     backgroundLayerEffectPointer = layerEffect;
 }
 
+void MCrossFadedOrientationAnimationPrivate::connectToGeometryChanges()
+{
+    Q_Q(MCrossFadedOrientationAnimation);
+    Q_ASSERT(rootElementWidgets.isEmpty());
+    watchGeometryChanges(q->rootElement());
+}
+
+void MCrossFadedOrientationAnimationPrivate::disconnectFromGeometryChanges()
+{
+    Q_Q(MCrossFadedOrientationAnimation);
+
+    foreach (const QWeakPointer<QGraphicsWidget> &widget, rootElementWidgets) {
+        if (!widget.isNull()) {
+            QObject::disconnect(widget.data(), SIGNAL(geometryChanged()), q, SLOT(_q_onGeometryChanged()));
+        }
+    }
+
+    rootElementWidgets.clear();
+}
+
+void MCrossFadedOrientationAnimationPrivate::watchGeometryChanges(QGraphicsWidget* widget)
+{
+    Q_Q(MCrossFadedOrientationAnimation);
+    if (!widget) {
+        return;
+    }
+
+    QObject::connect(widget, SIGNAL(geometryChanged()), q, SLOT(_q_onGeometryChanged()));
+    rootElementWidgets.append(widget);
+
+    const QList<QGraphicsItem*> items = widget->childItems();
+    foreach (QGraphicsItem* item, items) {
+        if (item->isWidget()) {
+            watchGeometryChanges(static_cast<QGraphicsWidget*>(item));
+        }
+    }
+}
+
+void MCrossFadedOrientationAnimationPrivate::_q_onGeometryChanged()
+{
+    dirtyTargetSnapshot = true;
+}
+
 MCrossFadedOrientationAnimation::MCrossFadedOrientationAnimation(
         const QRectF &visibleSceneRect, QObject *parent) :
     MOrientationAnimation(new MCrossFadedOrientationAnimationPrivate, parent)
@@ -342,7 +395,7 @@ MCrossFadedOrientationAnimation::~MCrossFadedOrientationAnimation()
 {
     Q_D(MCrossFadedOrientationAnimation);
 
-    d->destroyRootElementSnapshot();
+    d->destroySnapshots();
 }
 
 void MCrossFadedOrientationAnimation::addSceneWindow(MSceneWindow *sceneWindow)
@@ -360,20 +413,25 @@ void MCrossFadedOrientationAnimation::setTargetRotationAngle(
 {
     Q_D(MCrossFadedOrientationAnimation);
 
-    d->setRootElementRotationAnimationValues(startAngle, endAngle);
-    d->setRootElementPositionAnimationValues(startAngle, endAngle);
+    d->endAngle = endAngle;
+
+    d->setTargetSnapshotRotationAnimationValues(startAngle, endAngle);
     d->setSnapshotRotationAnimationValues(startAngle, endAngle);
 
-    d->calculateSnapshotRotationPoint(startAngle);
+    d->setSnapshotRotationPoints(startAngle, endAngle);
+
+    d->setTargetSnapshotPositionAnimationValues(startAngle, endAngle);
     d->setSnapshotPositionAnimationValues(startAngle, endAngle);
 }
 
 void MCrossFadedOrientationAnimation::rootElementChanged()
 {
     Q_D(MCrossFadedOrientationAnimation);
-    d->rootElementRotationAnimation->setTargetObject(rootElement());
-    d->rootElementFadeInAnimation->setTargetObject(rootElement());
-    d->rootElementPositionAnimation->setTargetObject(rootElement());
+    // disconnect from the geometryChanged() signals of the old root element's
+    // children and reconnect to new root element's children
+    d->disconnectFromGeometryChanges();
+    d->connectToGeometryChanges();
+    d->dirtyTargetSnapshot = true;
 }
 
 void MCrossFadedOrientationAnimation::updateState(
@@ -389,38 +447,140 @@ void MCrossFadedOrientationAnimation::updateState(
             // That will improve the visual quality of the animation.
             d->fetchBackgroundLayerEffect();
         }
+
+        // Since we want a snapshot only from the root element, we have to
+        // temporarily hide the scene background.
         QGraphicsWidget *backgroundLayerEffect = d->backgroundLayerEffectPointer.data();
 
         if (backgroundLayerEffect) {
             // we don't want it to show up in the snapshot
             backgroundLayerEffect->hide();
-
-            // don't let the animation affect his opacity.
-            backgroundLayerEffect->setFlag(QGraphicsItem::ItemIgnoresParentOpacity, true);
         }
 
-        d->createRootElementSnapshot();
+        d->createSourceSnapshot();
+
+        rotateRootElement(d->endAngle);
+
+        d->createTargetSnapshot();
+
+        // hide so the snapshot will be used instead
+        rootElement()->setVisible(false);
+
 
         if (backgroundLayerEffect) {
             // bring it back, now that the snapshot has been taken
             backgroundLayerEffect->show();
+
+            // Remove it from the root element since it's hidden.
+            // Otherwise the layer effect won't show up
+            d->backgroundLayerParentItem = backgroundLayerEffect->parentItem();
+            backgroundLayerEffect->setParentItem(0);
         }
 
-        // Let the scene windows and widgets have their final sizes and positions
-        // within the root element.
-        emit orientationChanged();
-
-        rootElement()->setTransformOriginPoint(style()->rotationPoint());
-
+        // add to scene so they are rendered
+        rootElement()->scene()->addItem(d->targetSnapshot);
+        rootElement()->scene()->addItem(d->sourceSnapshot);
     } else if (newState == QAbstractAnimation::Stopped) {
-        d->destroyRootElementSnapshot();
+        d->disconnectFromGeometryChanges();
+        d->destroySnapshots();
 
         QGraphicsWidget *backgroundLayerEffect = d->backgroundLayerEffectPointer.data();
         if (backgroundLayerEffect) {
-            // bring the flag back to its default value
-            backgroundLayerEffect->setFlag(QGraphicsItem::ItemIgnoresParentOpacity, false);
+            //remove item from scene and add it to its original parent
+            rootElement()->scene()->removeItem(backgroundLayerEffect);
+            if (d->backgroundLayerParentItem) {
+                backgroundLayerEffect->setParentItem(d->backgroundLayerParentItem);
+                d->backgroundLayerParentItem = 0;
+            }
         }
+
+        rootElement()->setVisible(true);
     }
 
     MParallelAnimationGroup::updateState(newState, oldState);
 }
+
+void MCrossFadedOrientationAnimation::updateCurrentTime(int currentTime)
+{
+    Q_D(MCrossFadedOrientationAnimation);
+    MOrientationAnimation::updateCurrentTime(currentTime);
+
+    if (d->dirtyTargetSnapshot) {
+        // the layout of a widget in the root element has been changed
+        // and an update of the snapshot is necessary
+        d->dirtyTargetSnapshot = false;
+
+        rootElement()->scene()->removeItem(d->sourceSnapshot);
+        rootElement()->show();
+
+        QGraphicsWidget *backgroundLayerEffect = d->backgroundLayerEffectPointer.data();
+        if (backgroundLayerEffect) {
+            //hide effect so it doesn't appear on snapshot
+            backgroundLayerEffect->hide();
+        }
+
+        d->targetSnapshot->updateSnapshot();
+
+        if (backgroundLayerEffect) {
+            // bring effect back, now that the snapshot has been updated
+            backgroundLayerEffect->show();
+        }
+
+        rootElement()->hide();
+        rootElement()->scene()->addItem(d->sourceSnapshot);
+    }
+}
+
+void MCrossFadedOrientationAnimationPrivate::createTargetSnapshot()
+{
+    Q_ASSERT(targetSnapshot == 0);
+
+    targetSnapshot = createSnapshot();
+    targetSnapshot->setTransformOriginPoint(targetSnapshotRotationPoint);
+
+    targetSnapshotRotationAnimation->setTargetObject(targetSnapshot);
+    targetSnapshotFadeInAnimation->setTargetObject(targetSnapshot);
+    targetSnapshotPositionAnimation->setTargetObject(targetSnapshot);
+
+    connectToGeometryChanges();
+}
+
+void MCrossFadedOrientationAnimation::rotateRootElement(M::OrientationAngle orientation)
+{
+    const QSize nativeScreenSize = MDeviceProfile::instance()->resolution();
+    const M::Orientation nativeOrientation = MDeviceProfile::instance()->orientationFromAngle(M::Angle0);
+
+    const M::OrientationAngle newAngle = orientation;
+    rootElement()->setRotation(newAngle);
+    if (MDeviceProfile::instance()->orientationFromAngle(newAngle) == nativeOrientation) {
+        rootElement()->setPos(0, 0);
+        rootElement()->setTransformOriginPoint(nativeScreenSize.width() / 2,
+                                               nativeScreenSize.height() / 2);
+    } else {
+        rootElement()->setPos((nativeScreenSize.width() - nativeScreenSize.height()) / 2,
+                              (nativeScreenSize.height() - nativeScreenSize.width()) / 2);
+        rootElement()->setTransformOriginPoint(nativeScreenSize.height() / 2,
+                                               nativeScreenSize.width() / 2);
+    }
+
+    // Let the scene windows and widgets have their final sizes and positions
+    // within the root element.
+    emit orientationChanged();
+}
+
+MSnapshotItem* MCrossFadedOrientationAnimationPrivate::createSnapshot()
+{
+    Q_Q(MCrossFadedOrientationAnimation);
+    QGraphicsScene *scene = q->rootElement()->scene();
+
+    MSnapshotItem *snapshotItem = new MSnapshotItem(visibleSceneRect);
+
+    scene->addItem(snapshotItem);
+    snapshotItem->updateSnapshot();
+    snapshotItem->setPos(0.0, 0.0);
+    scene->removeItem(snapshotItem);
+
+    return snapshotItem;
+}
+
+#include "moc_mcrossfadedorientationanimation.cpp"

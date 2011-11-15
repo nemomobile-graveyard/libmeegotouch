@@ -33,8 +33,10 @@ class MCrossFadedOrientationAnimationPrivate : public MOrientationAnimationPriva
 
 public:
     void init(const QRectF &visibleSceneRect);
-    void createRootElementSnapshot();
-    void destroyRootElementSnapshot();
+    void createSourceSnapshot();
+    void createTargetSnapshot();
+
+    void destroySnapshots();
 
     void setSnapshotRotationAnimationValues(
             M::OrientationAngle startAngle, M::OrientationAngle endAngle);
@@ -42,13 +44,16 @@ public:
     void setSnapshotPositionAnimationValues(
         M::OrientationAngle startAngle, M::OrientationAngle endAngle);
 
-    void setRootElementRotationAnimationValues(
+    void setTargetSnapshotRotationAnimationValues(
         M::OrientationAngle startAngle, M::OrientationAngle endAngle);
 
-    void setRootElementPositionAnimationValues(
+    void setTargetSnapshotPositionAnimationValues(
         M::OrientationAngle startAngle, M::OrientationAngle endAngle);
 
-    void calculateSnapshotRotationPoint(M::OrientationAngle startAngle);
+    void setSnapshotRotationPoints(
+        M::OrientationAngle startAngle, M::OrientationAngle endAngle);
+
+    QPointF calculateSnapshotRotationPoint(M::OrientationAngle startAngle) const;
 
     // Calculates the rotation point in scene coordinates.
     QPointF calculateRotationPointSceneCoords(M::OrientationAngle angle);
@@ -57,25 +62,49 @@ public:
     static QGraphicsWidget *findLayerEffect(QGraphicsItem *currentItem, int currentLevel);
     void fetchBackgroundLayerEffect();
 
-    MSnapshotItem *snapshot;
+    // Connects to the geometryChanged() signal of all widgets inside the
+    // root-element. The available widgets are remembered in rootElementWidgets.
+    void connectToGeometryChanges();
+
+    // Disconnects from the geometryChanged() signal of all
+    // widgets of rootElementWidgets and clears rootElementWidgets.
+    void disconnectFromGeometryChanges();
+
+    // Helper method for connectToGeometryChanges() to recursively
+    // connect to the geometryChanged() signal of all children.
+    void watchGeometryChanges(QGraphicsWidget* widget);
+    void _q_onGeometryChanged();
+
+    MSnapshotItem *sourceSnapshot;
+    MSnapshotItem *targetSnapshot;
 
     // visible scene rect, in scene coordinates.
     // This is the rectangle of the scene that is rendered by MWindow.
     // Equals to the bounding rectangle of the root element in scene coordinates.
     QRectF visibleSceneRect;
 
-    QPropertyAnimation *rootElementRotationAnimation;
-    QPropertyAnimation *rootElementFadeInAnimation;
-    QPropertyAnimation *rootElementPositionAnimation;
+    QPropertyAnimation *targetSnapshotRotationAnimation;
+    QPropertyAnimation *targetSnapshotFadeInAnimation;
+    QPropertyAnimation *targetSnapshotPositionAnimation;
 
-    QPropertyAnimation *snapshotRotationAnimation;
-    QPropertyAnimation *snapshotFadeOutAnimation;
-    QPropertyAnimation *snapshotPositionAnimation;
+    QPropertyAnimation *sourceSnapshotRotationAnimation;
+    QPropertyAnimation *sourceSnapshotFadeOutAnimation;
+    QPropertyAnimation *sourceSnapshotPositionAnimation;
 
     // The rotation point of the snapshot item, in its local coordinates.
-    QPointF snapshotRotationPoint;
+    QPointF sourceSnapshotRotationPoint;
+    QPointF targetSnapshotRotationPoint;
 
     QWeakPointer<QGraphicsWidget> backgroundLayerEffectPointer;
+    QGraphicsItem *backgroundLayerParentItem;
+
+    M::OrientationAngle endAngle;
+
+    bool dirtyTargetSnapshot;
+    QList<QWeakPointer<QGraphicsWidget> > rootElementWidgets;
+
+private:
+    MSnapshotItem* createSnapshot();
 };
 
 #endif

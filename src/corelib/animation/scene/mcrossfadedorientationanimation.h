@@ -58,6 +58,12 @@ protected:
     //! \reimp_end
 
     void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
+    void updateCurrentTime(int currentTime);
+
+private:
+    void rotateRootElement(M::OrientationAngle orientation);
+
+    Q_PRIVATE_SLOT(d_func(), void _q_onGeometryChanged())
 };
 
 #endif
