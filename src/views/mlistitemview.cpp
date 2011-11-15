@@ -71,7 +71,7 @@ void MListItemViewPrivate::_q_applyReleasedStyle()
 {
     Q_Q(MListItemView);
 
-    setSelected(controller->isSelected());
+    setPressed(false);
 
     if (!tapAndHoldStarted && controller->graphicsEffect())
         controller->setGraphicsEffect(NULL);
