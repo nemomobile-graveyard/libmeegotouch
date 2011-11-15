@@ -855,9 +855,6 @@ void MTextEditViewPrivate::showSelectionOverlay()
                              Qt::UniqueConnection);
         }
 
-        QObject::connect(controller, SIGNAL(textChanged()),
-                         this, SLOT(mapSelectionChange()),
-                         Qt::UniqueConnection);
         QObject::connect(controller, SIGNAL(selectionChanged()),
                          this, SLOT(mapSelectionChange()),
                          Qt::UniqueConnection);
@@ -1027,6 +1024,12 @@ void MTextEditViewPrivate::handleDocumentUpdated()
         QTextOption option = maskedTextDocument->defaultTextOption();
         option.setTextDirection(dir);
         maskedTextDocument->setDefaultTextOption(option);
+    }
+
+    // New selection has to be notified because both changed text and changed formatting may
+    // change starting and ending position of selection.
+    if (!selectionOverlay.isNull()) {
+        mapSelectionChange();
     }
 }
 
@@ -1322,8 +1325,6 @@ void MTextEditViewPrivate::onSelectionOverlayVisibleChanged()
 {
     Q_Q(MTextEditView);
     if (!selectionOverlay.isNull() && !selectionOverlay.data()->isVisible()) {
-        QObject::disconnect(controller, SIGNAL(textChanged()),
-                            this, SLOT(mapSelectionChange()));
         QObject::disconnect(controller, SIGNAL(selectionChanged()),
                             this, SLOT(mapSelectionChange()));
         QObject::disconnect(MInputMethodState::instance(),
