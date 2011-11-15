@@ -52,6 +52,8 @@ private:
     bool timingStarted;
     QPointF formerPosition;
     QTime timer;
+    bool panDown;
+    qreal totalDisplacement;
 
 private:
     M::OrientationAngle targetOrientationAngle;
