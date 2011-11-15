@@ -72,23 +72,27 @@ void Ut_MEditorToolbar::cleanup()
 
 void Ut_MEditorToolbar::testAppear()
 {
+    MEditorToolbarStyle *style = const_cast<MEditorToolbarStyle *>(subject->style().operator ->());
+    style->setHideAnimationDuration(1);
+    style->setShowAnimationDuration(1);
+
     // After creation, it should be disappeared.
     QCOMPARE(subject->isAppeared(), false);
 
     // Show the widget.
     subject->appear();
-    QTest::qWait(200);
     // Immediately the state is appeared.
     QCOMPARE(subject->isAppeared(), true);
 
     // After appearance animation the state is appeared
+    QTest::qWait(100);
     QCOMPARE(subject->isAppeared(), true);
 
     subject->disappear();
-    QTest::qWait(200);
     // Immediately the state is disappeared
     QCOMPARE(subject->isAppeared(), false);
 
+    QTest::qWait(100);
     // After disappearance animation the state is disappeared
     QCOMPARE(subject->isAppeared(), false);
 }
@@ -267,6 +271,7 @@ void Ut_MEditorToolbar::testAutoHide()
     MEditorToolbarStyle *style = const_cast<MEditorToolbarStyle *>(subject->style().operator ->());
     style->setHideTimeout(1);
     style->setHideAnimationDuration(1);
+    style->setShowAnimationDuration(1);
 
     foreach (Operation op, ops) {
         switch (op) {

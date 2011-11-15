@@ -36,8 +36,14 @@ class M_VIEWS_EXPORT MEditorToolbarStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(int, hideTimeout, HideTimeout)
 
     /*! \brief Hide animation duration, in milliseconds.
+     *
+     *  Used both in disappearance animation and autohide.
      */
     M_STYLE_ATTRIBUTE(int, hideAnimationDuration, HideAnimationDuration)
+
+    /*! \brief Show animation duration, in milliseconds.
+     */
+    M_STYLE_ATTRIBUTE(int, showAnimationDuration, ShowAnimationDuration)
 };
 
 class M_VIEWS_EXPORT MEditorToolbarStyleContainer : public MWidgetStyleContainer

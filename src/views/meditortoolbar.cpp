@@ -269,6 +269,7 @@ void MEditorToolbarPrivate::appear(TransitionMode transition)
     // then cancel currently pending actions and set new ones is necessary
     // (this function is called only by controller directly)
     stopAutoHideTimer();
+    hideAnimation.setDuration(q->style()->showAnimationDuration());
     hideAnimation.setDirection(QAbstractAnimation::Backward);
     if (transition == Animated) {
         if (hideAnimation.state() == QAbstractAnimation::Stopped) {
