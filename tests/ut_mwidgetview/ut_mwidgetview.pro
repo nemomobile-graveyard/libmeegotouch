@@ -1,6 +1,6 @@
 include(../common_top.pri)
 
-INCLUDEPATH += $$MSRCDIR/corelib/widgets $$MSRCDIR/corelib/style
+INCLUDEPATH += $$MSRCDIR/corelib/widgets $$MSRCDIR/corelib/widgets/core $$MSRCDIR/corelib/style
 
 TARGET = ut_mwidgetview
 

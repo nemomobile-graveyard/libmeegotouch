@@ -25,6 +25,7 @@
 #include <QGraphicsView>
 
 #include <mwidgetview.h>
+#include <mwidgetview_p.h>
 
 #include "ut_mwidgetview.h"
 
@@ -339,6 +340,74 @@ void Ut_MWidgetView::testDrawBackground()
     delete parent;
     delete window;
     delete scene;
+}
+
+void Ut_MWidgetView::testDisabledChildKeepsStyleModeThroughoutTap()
+{
+    MWidgetController *child = new MWidgetController(m_controller);
+    MWidgetView *childView = new MyMWidgetView(child);
+    child->setView(childView);
+
+    // Define style parameter in default-mode style
+    MWidgetStyleContainer &container = childView->style();
+    setBottomMarginParameter(container, 2);
+    QCOMPARE(container->marginBottom(), 2);
+
+    // Define style parameter in disabled-mode style
+    container.setModeDisabled();
+    setBottomMarginParameter(container, 5);
+    QCOMPARE(container->marginBottom(), 5);
+
+    // Reset the style container to default mode
+    container.setModeDefault();
+
+    child->setEnabled(false);
+
+    // Verify that disabled style is used
+    QCOMPARE(childView->style()->marginBottom(), 5);
+
+    m_subject->d_ptr->setPressed(true);
+
+    // Verify that disabled style is kept
+    QCOMPARE(childView->style()->marginBottom(), 5);
+
+    m_subject->d_ptr->setPressed(false);
+
+    // Verify that disabled style is kept
+    QCOMPARE(childView->style()->marginBottom(), 5);
+}
+
+void Ut_MWidgetView::testPressedModePropagatesToChildren()
+{
+    MWidgetController *child = new MWidgetController(m_controller);
+    MWidgetView *childView = new MyMWidgetView(child);
+    child->setView(childView);
+
+    // Define style parameter in default-mode style
+    MWidgetStyleContainer &container = childView->style();
+    setBottomMarginParameter(container, 2);
+    QCOMPARE(container->marginBottom(), 2);
+
+    // Define style parameter in pressed-mode style
+    container.setModePressed();
+    setBottomMarginParameter(container, 5);
+    QCOMPARE(container->marginBottom(), 5);
+
+    // Reset the style container to default mode
+    container.setModeDefault();
+
+    // Verify that default style is used
+    QCOMPARE(childView->style()->marginBottom(), 2);
+
+    m_subject->d_ptr->setPressed(true);
+
+    // Verify that pressed style is used
+    QCOMPARE(childView->style()->marginBottom(), 5);
+
+    m_subject->d_ptr->setPressed(false);
+
+    // Verify that we go back to default style
+    QCOMPARE(childView->style()->marginBottom(), 2);
 }
 
 QTEST_APPLESS_MAIN(Ut_MWidgetView)
