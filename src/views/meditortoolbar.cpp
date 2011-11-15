@@ -311,7 +311,10 @@ void MEditorToolbarPrivate::disappear(TransitionMode transition)
 
 bool MEditorToolbarPrivate::isAppeared() const
 {
-    return overlay->isVisible();
+    const bool hiding = hideAnimation.state() == QAbstractAnimation::Running
+                        && hideAnimation.direction() == QAbstractAnimation::Forward;
+
+    return overlay->isVisible() && !hiding;
 }
 
 void MEditorToolbarPrivate::handleActionAdded(QActionEvent *actionEvent)
