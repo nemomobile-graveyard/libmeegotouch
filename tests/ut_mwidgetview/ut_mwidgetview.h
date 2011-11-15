@@ -51,6 +51,9 @@ private slots:
     void testDrawBackground_data();
     void testDrawBackground();
 
+    void testDisabledChildKeepsStyleModeThroughoutTap();
+    void testPressedModePropagatesToChildren();
+
 private:
     void setBottomMarginParameter(MWidgetStyleContainer &container, int param);
 
