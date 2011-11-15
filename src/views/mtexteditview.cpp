@@ -956,7 +956,12 @@ void MTextEditViewPrivate::handleDocumentUpdate(int position, int charsRemoved, 
         focusAnimationDelay->stop();
     } else if (!isPromptVisible && !hasText && hasPrompt) {
         isPromptVisible = true;
-        promptShowHideAnimation.setStartValue(q->style()->focusedPromptOpacity());
+
+        if (focused)
+            promptShowHideAnimation.setStartValue(q->style()->focusedPromptOpacity());
+        else
+            promptShowHideAnimation.setStartValue(q->style()->unfocusedPromptOpacity());
+
         promptShowHideAnimation.setDirection(QAbstractAnimation::Backward);
         promptShowHideAnimation.start();
         promptFocusAnimation.stop();
