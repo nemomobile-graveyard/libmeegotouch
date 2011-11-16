@@ -1,8 +1,14 @@
-libmeegotouch (0.24.12~1) unstable; urgency=low
+libmeegotouch (0.24.12-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes: NB#288880, Text selection handles are not shown when device orientation changes from landscape to portrait
+  * Fixes: NB#286600, Text gets selected with first tap, if text was selected before out-of-focus.
+  * Fixes: wrong magnifier position for text selection
+  * Fixes: NB#290096, Pressing backspace after setting cursor with magnifier replaces text with already written text
+  * Fixes: NB#288563 - application specific icon is not scalable in notification banner
+  * Fixes: NB#282839 - [TASK] Unable to hide the status bar in call-ui
+  * Fixes: StubMap would crash in multiple stubs with same key case.
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 11 Nov 2011 13:57:18 +0200
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Wed, 16 Nov 2011 12:59:21 +0200
 
 libmeegotouch (0.24.11-1) unstable; urgency=low
 
