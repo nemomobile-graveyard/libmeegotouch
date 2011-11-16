@@ -178,7 +178,8 @@ void MCompleterViewPrivate::createContents()
     Q_Q(MCompleterView);
 
     if (controller->widget() && q->model()->matchedModel()) {
-        //add controller to scence when first time to show, it is neccessary for later setFocusProxy
+        // Add controller to scene when first time to show, it is neccessary for later setFocusProxy.
+        // MSceneWindow's should not be added to scene this way normally.
         if (!controller->widget()->scene()->items().contains(controller))
             controller->widget()->scene()->addItem(controller);
 
