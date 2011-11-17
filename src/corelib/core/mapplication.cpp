@@ -79,7 +79,10 @@ void MApplicationPrivate::setWindowVisibility(MWindow * window, bool visible)
     // (managed by MeegoTouch Home). Emitting will be canceled if VisibilityUnobscured
     // is received during the delay. Rationale for this is to prevent oscillation
     // of displayEntered / displayExited signals.
-    if (visible) {
+    // But we send displayExited immediately when onDisplay hasn't been set yet
+    // (by OnDisplayChangeEvent handlers) - this handles case when window is opened while
+    // screensaver is active.
+    if (visible || !window->d_ptr->onDisplaySet) {
         MOnDisplayChangeEvent ev(visible, QRectF(QPointF(0, 0), window->visibleSceneSize()));
         MApplication::instance()->sendEvent(window, &ev);
     } else {

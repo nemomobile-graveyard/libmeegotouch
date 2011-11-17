@@ -27,7 +27,7 @@
 #include <MSceneManager>
 
 class MWindow;
-class MApplication;
+class MyApplication;
 
 #define MAX_PARAMS 10
 class Ut_MWindow: public QObject
@@ -85,6 +85,10 @@ private slots:
 
     void testInvalidOrientationAngle();
 
+#ifdef Q_WS_X11
+    void testDisplayExitedWithoutDelayWhenWindowIsCoveredOnStartup();
+#endif //Q_WS_X11
+
 public slots:
     void onDisplayTestSlot();
 
@@ -97,7 +101,7 @@ public:
     M::OrientationAngle m_invertedLandscapeAngle;
 
 private:
-    MComponentData* m_componentData;
+    MyApplication* app;
 };
 
 #endif

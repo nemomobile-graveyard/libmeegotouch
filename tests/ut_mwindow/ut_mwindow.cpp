@@ -27,7 +27,21 @@
 
 #include "ut_mwindow.h"
 
+#ifdef Q_WS_X11
+#include <X11/Xlib.h>
+#endif //Q_WS_X11
+
 Q_DECLARE_METATYPE(MSceneManager::TransitionMode)
+
+class MyApplication : public MApplication
+{
+public:
+    MyApplication(int &argc, char **argv) : MApplication(argc,argv) {}
+#ifdef Q_WS_X11
+    // make x11EventFilter public
+    using MApplication::x11EventFilter;
+#endif Q_WS_X11
+};
 
 bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const
 {
@@ -58,12 +72,10 @@ void MWindow::exitDisplayEvent()
 // Test class implementation
 void Ut_MWindow::initTestCase()
 {
-    if(MComponentData::instance() == 0) {
-        static int argc = 1;
-        static char *argv[ 1 ];
-        argv[ 0 ] = (char*)"./ut_mwindow";
-        m_componentData = MComponentData::createInstance(argc, argv);
-    }
+    static int argc = 1;
+    static char *argv[ 1 ];
+    argv[ 0 ] = (char*)"./ut_mwindow";
+    app = new MyApplication(argc, argv);
 
     m_portraitAngle = (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Portrait) ? M::Angle0 : M::Angle270;
     m_invertedPortraitAngle = (M::OrientationAngle)((m_portraitAngle + 180)%360);
@@ -606,4 +618,22 @@ void Ut_MWindow::testInvalidOrientationAngle()
     QCOMPARE(static_cast<int>(win->orientationAngle()), 90);
 }
 
-QTEST_MAIN(Ut_MWindow);
+#ifdef Q_WS_X11
+void Ut_MWindow::testDisplayExitedWithoutDelayWhenWindowIsCoveredOnStartup()
+{
+    win->show();
+
+    XEvent event;
+    memset(&event, 0, sizeof(event));
+    event.xvisibility.type = VisibilityNotify;
+    event.xvisibility.state = VisibilityFullyObscured;
+    event.xvisibility.window = win->winId();
+    event.xvisibility.send_event = true;
+
+    app->x11EventFilter(&event);
+
+    QCOMPARE(win->isOnDisplay(), false);
+}
+#endif //Q_WS_X11
+
+QTEST_APPLESS_MAIN(Ut_MWindow);
