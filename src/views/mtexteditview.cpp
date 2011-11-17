@@ -1223,6 +1223,9 @@ void MTextEditViewPrivate::onScenePositionChanged()
 void MTextEditViewPrivate::onEditorMoved()
 {
     Q_Q(MTextEditView);
+    if (!focused) {
+        return;
+    }
     panningStarted = true;
     if (editorToolbar) {
         const qreal elapsed = movementTime.restart();
@@ -2555,6 +2558,8 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
     }
     d->focused = false;
     d->editActive = false;
+
+    d->showMovedToolbar.stop();
 
     d->playFocusAnimation(QAbstractAnimation::Backward, d->currentPromptOpacity);
 
