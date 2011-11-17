@@ -24,6 +24,7 @@
 #include <QAction>
 #include <QMimeData>
 #include <QTextDocumentFragment>
+#include <QTextCharFormat>
 #include "mtextedit_p.h"
 #include "mrichtextedit.h"
 
@@ -176,6 +177,10 @@ public:
      */
     void _q_toggleFontUnderline();
 
+    /*!
+     * \brief Returns current character format taking in to account text selection
+     */
+    QTextCharFormat currentCharFormat() const;
 
 private:
 

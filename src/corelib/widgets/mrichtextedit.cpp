@@ -236,8 +236,8 @@ void MRichTextEditPrivate::_q_toggleFontBold()
 {
     Q_Q(MRichTextEdit);
 
-    QFont curFont = q->currentFont();
-    bool boldStyle = !curFont.bold();
+    QTextCharFormat currentFormat = currentCharFormat();
+    bool boldStyle = !currentFormat.font().bold();
     // set current bold style option
     q->setFontBold(boldStyle);
 }
@@ -246,8 +246,8 @@ void MRichTextEditPrivate::_q_toggleFontItalic()
 {
     Q_Q(MRichTextEdit);
 
-    QFont curFont = q->currentFont();
-    bool italicStyle = !curFont.italic();
+    QTextCharFormat currentFormat = currentCharFormat();
+    bool italicStyle = !currentFormat.font().italic();
     // set current italic style option
     q->setFontItalic(italicStyle);
 }
@@ -257,10 +257,32 @@ void MRichTextEditPrivate::_q_toggleFontUnderline()
     Q_Q(MRichTextEdit);
 
     // As a workaround to NB#223092 we don't use currentFont() and QFont::underline().
-    const QTextCharFormat format(isPreediting() ? currentPreeditCharFormat() : q->textCursor().charFormat());
+    const QTextCharFormat format = currentCharFormat();
     const bool underlineStyle = format.underlineStyle() == QTextCharFormat::NoUnderline;
     // set current underline style option
     q->setFontUnderline(underlineStyle);
+}
+
+QTextCharFormat MRichTextEditPrivate::currentCharFormat() const
+{
+    Q_Q(const MRichTextEdit);
+
+    QTextCharFormat format;
+    if (isPreediting() == true) {
+        format = currentPreeditCharFormat();
+    } else {
+        QTextCursor textcursor = q->textCursor();
+        // QTextCursor::charFormat() returns the format of the character
+        // immediately before the cursor position regardless if there is
+        // a selection or not. In case of selection we want to know the
+        // format of the first character of the selected text.
+        if (textcursor.hasSelection() == true) {
+            textcursor.setPosition(qMin(textcursor.position(), textcursor.anchor()) + 1);
+        }
+        format = textcursor.charFormat();
+    }
+
+    return format;
 }
 
 bool MRichTextEditPrivate::insertFromMimeData(const QMimeData *source)
@@ -334,15 +356,7 @@ bool MRichTextEditPrivate::copy()
 
 void MRichTextEditPrivate::_q_updateStyle()
 {
-    Q_Q(MRichTextEdit);
-
-    QTextCursor cursor = q->textCursor();
-    QTextCharFormat format;
-    if (isPreediting()) {
-        format = currentPreeditCharFormat();
-    } else {
-        format = cursor.charFormat();
-    }
+    QTextCharFormat format = currentCharFormat();
 
     boldAction.setChecked(format.fontWeight() > QFont::Normal);
     underlineAction.setChecked(format.fontUnderline());
