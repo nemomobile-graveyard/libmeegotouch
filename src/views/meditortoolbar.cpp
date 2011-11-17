@@ -285,6 +285,11 @@ void MEditorToolbarPrivate::appear(TransitionMode transition)
         startAutoHideTimer();
     }
 
+    if (buttonUpdateQueued) {
+        // the update was blocked during animation
+        _q_updateAvailableButtons();
+    }
+
     if (positionUpdatePending) {
         positionUpdatePending = false;
         setPosition(pendingPosition, pendingArrowDirection);
@@ -553,6 +558,12 @@ void MEditorToolbarPrivate::_q_updateAvailableButtons()
 {
     Q_Q(MEditorToolbar);
 
+    if (isHiding()) {
+        // the toolbar is hiding, and button update would make it flicker uselessly
+        // buttons will be updated in appear()
+        return;
+    }
+
     buttonUpdateQueued = false;
 
     while (buttonLayoutPolicy->count() > 0) {
@@ -664,6 +675,12 @@ void MEditorToolbarPrivate::stopAutoHideTimer()
     Q_Q(MEditorToolbar);
     autohideTimer.disconnect(q);
     autohideTimer.stop();
+}
+
+bool MEditorToolbarPrivate::isHiding()
+{
+    return hideAnimation.state() != QAbstractAnimation::Stopped
+            && hideAnimation.direction() == QAbstractAnimation::Forward;
 }
 
 EatMButtonGestureFilter::EatMButtonGestureFilter(QObject *parent)

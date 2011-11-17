@@ -69,6 +69,7 @@ public:
     void hideEditorItem();
     void startAutoHideTimer();
     void stopAutoHideTimer();
+    bool isHiding();
 
 private:
     void _q_updateAvailableButtons();
