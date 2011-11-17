@@ -1,5 +1,6 @@
 MTextEditStyle {
     toolbar-style-name: "TestToolbarStyleName";
+    toolbar-show-delay: 25;
 }
 
 MTextEditStyle#Ut_MTextEditView_MTextEdit {

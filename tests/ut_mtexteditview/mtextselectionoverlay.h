@@ -37,11 +37,9 @@ public:
     }
 
 Q_SIGNALS:
-    void anchorHandleMoved(const QPointF &position);
+    void selectionHandlePressed(const QPointF &position);
 
-    void cursorHandleMoved(const QPointF &position);
-
-    void selectionHandlePressed();
+    void selectionHandleMoved(const QPointF &position);
 
     void selectionHandleReleased();
 

@@ -60,11 +60,14 @@ private slots:
     void testFirstTapOnAlreadyFocused();
     void testEditorToolbarReappearanceAfterFocusLost_data();
     void testEditorToolbarReappearanceAfterFocusLost();
+    void testEditorToolbarReappearanceAfterFocusLostAndMovement_data();
+    void testEditorToolbarReappearanceAfterFocusLostAndMovement();
+    void testEditorToolbarReappearanceAfterMovement();
     void testEditorToolbarAutoHide();
     void testSelectionOverlay();
 
 private:
-    bool editorAppeared() const;
+    bool editorToolbarAppeared() const;
 
 private:
     AutoActivatedScene *sc;

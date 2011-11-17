@@ -98,8 +98,9 @@ private:
 
 void Ut_MTextEditView::initTestCase()
 {
-    static int dummyArgc = 1;
-    static char *dummyArgv[1] = { (char *) "./ut_mtexteditview"};
+    static int dummyArgc = 2;
+    static char *dummyArgv[2] = { (char *) "./ut_mtexteditview",
+                                  (char *)"-software" };
     MApplication::setLoadMInputContext(false);
     m_app = new MApplication(dummyArgc, dummyArgv);
     m_appWindow = new MApplicationWindow;
@@ -661,19 +662,154 @@ void Ut_MTextEditView::testEditorToolbarReappearanceAfterFocusLost()
     m_subject->mouseMoveEvent(&move2);
     m_subject->mouseReleaseEvent(&release);
     QVERIFY(m_controller->hasSelectedText());
-    QVERIFY(editorAppeared());
+    QVERIFY(editorToolbarAppeared());
 
     QMetaObject::invokeMethod(m_controller, "lostFocus",
                               Q_ARG(Qt::FocusReason, focusLostReason));
 
     // Lost focus always dismisses editor.
-    QVERIFY(!editorAppeared());
+    QVERIFY(!editorToolbarAppeared());
 
     // Give focus again.
     QMetaObject::invokeMethod(m_controller, "gainedFocus",
                               Q_ARG(Qt::FocusReason, focusGainedReason));
 
-    QCOMPARE(editorAppeared(), true);
+    QCOMPARE(editorToolbarAppeared(), true);
+}
+
+void Ut_MTextEditView::testEditorToolbarReappearanceAfterFocusLostAndMovement_data()
+{
+    QTest::addColumn<Qt::FocusReason>("focusLostReason");
+    QTest::addColumn<Qt::FocusReason>("focusGainedReason");
+
+    QTest::newRow("focus lost by clicking")
+        << Qt::MouseFocusReason
+        << Qt::MouseFocusReason;
+    QTest::newRow("window system removed focus")
+        << Qt::ActiveWindowFocusReason
+        << Qt::ActiveWindowFocusReason;
+    QTest::newRow("focus removed by popup")
+        << Qt::PopupFocusReason
+        << Qt::PopupFocusReason;
+    QTest::newRow("window system removed focus, gained with mouse")
+        << Qt::ActiveWindowFocusReason
+        << Qt::MouseFocusReason;
+    QTest::newRow("focus removed by popup, gained with mouse")
+        << Qt::PopupFocusReason
+        << Qt::MouseFocusReason;
+    QTest::newRow("focus lost by clicking, gained by window system")
+        << Qt::MouseFocusReason
+        << Qt::ActiveWindowFocusReason;
+}
+
+void Ut_MTextEditView::testEditorToolbarReappearanceAfterFocusLostAndMovement()
+{
+    QFETCH(Qt::FocusReason, focusLostReason);
+    QFETCH(Qt::FocusReason, focusGainedReason);
+
+    m_controller->setParentItem(sc->window()->box());
+    sc->window()->show();
+    QTest::qWaitForWindowShown(sc->window());
+
+    // large enough for selecting to be possible
+    m_controller->setText("to be selected");
+    m_controller->resize(500, 50);
+
+    QGraphicsSceneMouseEvent press(QEvent::GraphicsSceneMousePress);
+    QGraphicsSceneMouseEvent move1(QEvent::GraphicsSceneMouseMove);
+    QGraphicsSceneMouseEvent move2(QEvent::GraphicsSceneMouseMove);
+    QGraphicsSceneMouseEvent release(QEvent::GraphicsSceneMouseRelease);
+
+    press.setPos(QPointF());
+    release.setPos(QPointF(1000, 0));
+    move1.setPos(press.pos());
+    move2.setPos(release.pos());
+
+    move1.setButtons(Qt::LeftButton);
+    move2.setButtons(Qt::LeftButton);
+
+    // Give focus, with whatever reason.
+    QMetaObject::invokeMethod(m_controller, "gainedFocus",
+                              Q_ARG(Qt::FocusReason, Qt::OtherFocusReason));
+
+    // Show editor toolbar by selecting text
+    m_subject->mousePressEvent(&press);
+    m_subject->mouseMoveEvent(&move1);
+    m_subject->mouseMoveEvent(&move2);
+    m_subject->mouseReleaseEvent(&release);
+    QVERIFY(m_controller->hasSelectedText());
+    QVERIFY(editorToolbarAppeared());
+
+    m_controller->translate(10, 10);
+    QTest::qWait(10); // motion detection needs for small delay between steps
+    m_controller->translate(10, 10);
+    QVERIFY(m_controller->scene());
+    QVERIFY(!editorToolbarAppeared());
+
+    QMetaObject::invokeMethod(m_controller, "lostFocus",
+                              Q_ARG(Qt::FocusReason, focusLostReason));
+
+    QVERIFY(!editorToolbarAppeared());
+    QTest::qWait(10);
+    m_controller->translate(-20, -20);
+
+    QTest::qWait(m_subject->style()->toolbarShowDelay() + 15);
+    QVERIFY(!editorToolbarAppeared());
+
+    // Give focus again.
+    QMetaObject::invokeMethod(m_controller, "gainedFocus",
+                              Q_ARG(Qt::FocusReason, focusGainedReason));
+
+    QCOMPARE(editorToolbarAppeared(), true);
+}
+
+void Ut_MTextEditView::testEditorToolbarReappearanceAfterMovement()
+{
+    m_controller->setParentItem(sc->window()->box());
+    sc->window()->show();
+    QTest::qWaitForWindowShown(sc->window());
+
+    // large enough for selecting to be possible
+    m_controller->setText("to be selected");
+    m_controller->resize(500, 50);
+
+    // Give focus, with whatever reason.
+    QMetaObject::invokeMethod(m_controller, "gainedFocus",
+                              Q_ARG(Qt::FocusReason, Qt::OtherFocusReason));
+
+    QGraphicsSceneMouseEvent press(QEvent::GraphicsSceneMousePress);
+    QGraphicsSceneMouseEvent move1(QEvent::GraphicsSceneMouseMove);
+    QGraphicsSceneMouseEvent move2(QEvent::GraphicsSceneMouseMove);
+    QGraphicsSceneMouseEvent release(QEvent::GraphicsSceneMouseRelease);
+
+    press.setPos(QPointF());
+    release.setPos(QPointF(1000, 0));
+    move1.setPos(press.pos());
+    move2.setPos(release.pos());
+
+    move1.setButtons(Qt::LeftButton);
+    move2.setButtons(Qt::LeftButton);
+
+    // Show editor toolbar by selecting text
+    m_subject->mousePressEvent(&press);
+    m_subject->mouseMoveEvent(&move1);
+    m_subject->mouseMoveEvent(&move2);
+    m_subject->mouseReleaseEvent(&release);
+    QVERIFY(m_controller->hasSelectedText());
+    QVERIFY(editorToolbarAppeared());
+
+    m_controller->translate(10, 10);
+    QTest::qWait(10); // motion detection needs for small delay between steps
+    m_controller->translate(10, 10);
+    QVERIFY(m_controller->scene());
+    QVERIFY(!editorToolbarAppeared());
+
+    QTest::qWait(10);
+    m_controller->translate(-20, -20);
+
+    QTest::qWait(m_subject->style()->toolbarShowDelay() + 15);
+
+    QCOMPARE(editorToolbarAppeared(), true);
 }
 
 void Ut_MTextEditView::testEditorToolbarAutoHide()
@@ -689,7 +825,7 @@ void Ut_MTextEditView::testEditorToolbarAutoHide()
     QCOMPARE(m_subject->d_func()->editorToolbar->isAutoHideEnabled(), false);
 }
 
-bool Ut_MTextEditView::editorAppeared() const
+bool Ut_MTextEditView::editorToolbarAppeared() const
 {
     return m_subject->d_func()->editorToolbar
            && m_subject->d_func()->editorToolbar->isAppeared();
