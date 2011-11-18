@@ -79,7 +79,9 @@ void MSceneLayerEffectDimView::paint(QPainter *painter, const QStyleOptionGraphi
     if(style()->backgroundImage()) {
         style()->backgroundImage()->draw(boundingRect(), painter);
     } else {
-        painter->fillRect(boundingRect(), QColor(0, 0, 0));
+        // we need to adjust rect a little to prevent flickering on edges
+        // which is visible when scene below layereffect has bright colors
+        painter->fillRect(boundingRect().adjusted(-1,-1, 1, 1), QColor(0, 0, 0));
     }
 
     painter->setOpacity(oldOpacity);
