@@ -141,7 +141,7 @@ Q_SIGNALS:
     void pressed(const MTextSelectionHandle *handle);
 
     //! \brief Emitted when handle is released.
-    void released();
+    void released(const MTextSelectionHandle *handle);
 
 protected:
     //! \reimp

@@ -37,11 +37,9 @@ public:
     }
 
 Q_SIGNALS:
-    void selectionHandlePressed(const QPointF &position);
-
-    void selectionHandleMoved(const QPointF &position);
-
-    void selectionHandleReleased();
+    void selectionHandlePressed(const QPointF &);
+    void selectionHandleMoved(const QPointF &);
+    void selectionHandleReleased(const QPointF &);
 
 private Q_SLOTS:
     void onSelectionChange(int newAnchor, const QRectF &, bool,

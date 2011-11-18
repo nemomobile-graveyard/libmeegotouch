@@ -143,6 +143,7 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
     controller->grabGesture(Qt::PanGesture);
 
     QObject::connect(longPressTimer, SIGNAL(timeout()), q, SLOT(handleLongPress()));
+    scrollTimer->setSingleShot(true);
     QObject::connect(scrollTimer, SIGNAL(timeout()), this, SLOT(scrolling()));
     QObject::connect(maskTimer, SIGNAL(timeout()), this, SLOT(hideUnmaskedText()));
     QObject::connect(control, SIGNAL(cursorPositionChanged()),
@@ -277,18 +278,19 @@ void MTextEditViewPrivate::scrolling()
 //! \brief Overloaded method introduced for convenience.
 void MTextEditViewPrivate::scrollingTestAndStart(QGraphicsSceneMouseEvent *event)
 {
-    scrollingTestAndStart(event->pos());
+    scrollingTestAndStart(event->pos(), true);
 }
 
 /*!
  * \brief checks if event is on text entry edge and sets scrolling speed accordingly.
  * actual scrolling happens in scrolling()
  */
-void MTextEditViewPrivate::scrollingTestAndStart(const QPointF &pos)
+void MTextEditViewPrivate::scrollingTestAndStart(const QPointF &position, bool useTimer)
 {
     Q_Q(MTextEditView);
-    QRectF rect = q->geometry();
+    const QRectF editRect = q->geometry();
     int paddingLeft, paddingRight;
+    const int maxScroll(activeDocumentSize().width() - activeDocumentTextWidth());
 
     const MTextEditStyle *s = static_cast<const MTextEditStyle *>(q->style().operator ->());
 
@@ -304,26 +306,48 @@ void MTextEditViewPrivate::scrollingTestAndStart(const QPointF &pos)
     // this could be changed to determine some scrolling speed depending on the position.
     if (q->model()->textInteractionFlags() == Qt::NoTextInteraction) {
         scrollSpeedHorizontal = 0;
-    } else if (pos.x() < (ScrollMargin + paddingLeft) && hscroll > 0) {
-        scrollSpeedHorizontal = -ScrollStep;
-    } else if (pos.x() > (rect.width() - (ScrollMargin + paddingRight))
-               && hscroll < (activeDocumentSize().width() - activeDocumentTextWidth())) {
-        scrollSpeedHorizontal = ScrollStep;
+    } else if (position.x() < (ScrollMargin + paddingLeft) && hscroll > 0) {
+        if (useTimer) {
+            scrollSpeedHorizontal = -ScrollStep;
+        } else {
+            scrollSpeedHorizontal = position.x() - (ScrollMargin + paddingLeft);
+        }
+    } else if (position.x() > (editRect.width() - (ScrollMargin + paddingRight))
+               && hscroll < maxScroll) {
+        if (useTimer) {
+            scrollSpeedHorizontal = ScrollStep;
+        } else {
+            scrollSpeedHorizontal = position.x()
+                                    - (editRect.width() - (ScrollMargin + paddingRight));
+        }
     } else {
         scrollSpeedHorizontal = 0;
     }
 
-    if (scrollSpeedHorizontal != 0) {
-        // will do actual scrolling on timer interval
-        if (scrollTimer->isActive() == false) {
-            scrollTimer->start(ScrollingTimeDuration);
+    if (useTimer) {
+        // use timer to start scrolling
+        if (scrollSpeedHorizontal != 0) {
+            // will do actual scrolling on timer interval
+            if (scrollTimer->isActive() == false) {
+                scrollTimer->start(ScrollingTimeDuration);
+            }
+        } else {
+            scrollTimer->stop();
         }
     } else {
-        scrollTimer->stop();
+        // scroll directly to the destination
+        hscroll += scrollSpeedHorizontal;
+
+        // check horizontal scrolling limits
+        if (hscroll < 0) {
+            hscroll = 0;
+        } else if (hscroll > maxScroll) {
+            hscroll = maxScroll;
+        }
+        q->doUpdate(); // need to redraw, widget supposedly changed.
+        emit q->contentScrolled();
     }
 }
-
-
 
 
 //! validates hscroll and vscroll values so cursor stays visible
@@ -836,8 +860,10 @@ void MTextEditViewPrivate::showSelectionOverlay()
 
         QObject::connect(selectionOverlay.data(), SIGNAL(selectionHandlePressed(const QPointF)),
                          this, SLOT(onSelectionHandlePressed(const QPointF)));
-        QObject::connect(selectionOverlay.data(), SIGNAL(selectionHandleReleased()),
-                         this, SLOT(onSelectionHandleReleased()));
+        QObject::connect(selectionOverlay.data(),
+                         SIGNAL(selectionHandleReleased(const QPointF)),
+                         this,
+                         SLOT(onSelectionHandleReleased(const QPointF)));
 
         QObject::connect(controller->sceneManager(),
                          SIGNAL(orientationChanged(const M::Orientation &)),
@@ -1315,11 +1341,31 @@ void MTextEditViewPrivate::onSelectionHandlePressed(const QPointF &position)
     }
 }
 
-void MTextEditViewPrivate::onSelectionHandleReleased()
+void MTextEditViewPrivate::onSelectionHandleReleased(const QPointF &position)
 {
     Q_Q(MTextEditView);
     selectionHandleIsPressed = false;
+
+    QTextCursor cursor = controller->textCursor();
+    const QPointF viewPos = fromItem(position);
+    anchorPos = cursor.anchor();
+    cursorPos = cursorPosition(viewPos);
+    currentPosition = viewPos;
+
+    lastHandlePos = viewPos;
+    // if delay selection timer is active, update the selection and stop timer.
+    if (delaySelection.isActive()){
+        delaySelection.stop();
+        setSelection();
+    }
+
+    scrollingTestAndStart(lastHandlePos, false);
     scrollTimer->stop();
+
+    if (controller->sceneManager()) {
+        controller->sceneManager()->ensureCursorVisible();
+    }
+
     restoreEditorToolbar();
     controller->setCacheMode(QGraphicsItem::NoCache);
     q->model()->setInputContextUpdateEnabled(true);
@@ -1779,7 +1825,7 @@ void MTextEditViewPrivate::restoreSelectionOverlay()
 void MTextEditViewPrivate::setSelection()
 {
     controller->setSelection(anchorPos, cursorPos - anchorPos, false);
-    scrollingTestAndStart(lastHandlePos);
+    scrollingTestAndStart(lastHandlePos, true);
 }
 
 //////////////////////

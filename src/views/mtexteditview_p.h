@@ -124,7 +124,7 @@ protected slots:
     void mapSelectionChange();
     void onSelectionHandleMoved(const QPointF &position);
     void onSelectionHandlePressed(const QPointF &position);
-    void onSelectionHandleReleased();
+    void onSelectionHandleReleased(const QPointF &position);
     void onSelectionOverlayVisibleChanged();
     void hideSelectionOverlayTemporarily();
     void restoreSelectionOverlay();
@@ -132,7 +132,12 @@ protected slots:
 
 private:
     void scrollingTestAndStart(QGraphicsSceneMouseEvent *event);
-    void scrollingTestAndStart(const QPointF &pos);
+    /*!
+     * Test and start scroll to ensue the cursor at \a pos to be visible.
+     * If useTimer equal true then the scroll is repeated with a fixed speed,
+     * otherwise scroll direction to the \a pos
+     */
+    void scrollingTestAndStart(const QPointF &pos, bool useTimer = true);
     void checkStartOfSelection(QGraphicsSceneMouseEvent *event);
     void startSelection(QGraphicsSceneMouseEvent *event);
     void stopSelection();
