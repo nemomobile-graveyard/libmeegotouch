@@ -178,8 +178,8 @@ void MCrossFadedOrientationAnimationPrivate::calculateSnapshotRotationPoint(
             snapshotRotationPoint.ry() = visibleSceneRect.height() - rootElementRotationPoint.y();
             break;
         default: // M::Angle270:
-            snapshotRotationPoint.rx() = rootElementRotationPoint.x();
-            snapshotRotationPoint.ry() = visibleSceneRect.height() - rootElementRotationPoint.y();
+            snapshotRotationPoint.rx() = rootElementRotationPoint.y();
+            snapshotRotationPoint.ry() = visibleSceneRect.height() - rootElementRotationPoint.x();
             break;
     }
 }
@@ -255,16 +255,16 @@ QPointF MCrossFadedOrientationAnimationPrivate::calculateRotationPointSceneCoord
             rotationPointScene.ry() += rotationPointLocal.y();
             break;
         case M::Angle90:
-            rotationPointScene.rx() += visibleSceneRect.width() - rotationPointLocal.x();
-            rotationPointScene.ry() += rotationPointLocal.y();
+            rotationPointScene.rx() += visibleSceneRect.width() - rotationPointLocal.y();
+            rotationPointScene.ry() += rotationPointLocal.x();
             break;
         case M::Angle180:
             rotationPointScene.rx() += visibleSceneRect.width() - rotationPointLocal.x();
             rotationPointScene.ry() += visibleSceneRect.height() - rotationPointLocal.y();
             break;
         default: // M::Angle270:
-            rotationPointScene.rx() += rotationPointLocal.x();
-            rotationPointScene.ry() += visibleSceneRect.height() - rotationPointLocal.y();
+            rotationPointScene.rx() += rotationPointLocal.y();
+            rotationPointScene.ry() += visibleSceneRect.height() - rotationPointLocal.x();
             break;
     }
 
