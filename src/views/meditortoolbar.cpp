@@ -462,13 +462,13 @@ void MEditorToolbarPrivate::updateArrow(MEditorToolbarArrow::ArrowDirection dire
     if (q->size().width() < screenRectInOverlay.width()) {
         // The widget won't be off the screen from both ends at the same time.
         // Width is restricted to screen width.
-        x = center - arrow->size().width() / 2.0f
+        x = center - arrow->preferredSize().width() / 2.0f
             - offscreenLeft + offscreenRight;
         x = qBound<qreal>(contentsRectangle.left(),
                           x,
-                          contentsRectangle.right() - arrow->size().width());
+                          contentsRectangle.right() - arrow->preferredSize().width());
     } else {
-        x = q->geometry().center().x() - screenRectInOverlay.center().x() - arrow->size().width() / 2.0f;
+        x = q->geometry().center().x() - screenRectInOverlay.center().x() - arrow->preferredSize().width() / 2.0f;
     }
 
     // Update vertically. Arrow graphics are designed to be aligned to either
@@ -480,7 +480,7 @@ void MEditorToolbarPrivate::updateArrow(MEditorToolbarArrow::ArrowDirection dire
         arrow->setPos(x, contentsRectangle.top());
         break;
     case MEditorToolbarArrow::ArrowDown:
-        arrow->setPos(x, contentsRectangle.bottom() - arrow->size().height());
+        arrow->setPos(x, contentsRectangle.bottom() - arrow->preferredSize().height());
         break;
     }
 
@@ -493,7 +493,7 @@ void MEditorToolbarPrivate::updateWidgetOrigin()
     Q_Q(MEditorToolbar);
 
     // We include margin to arrow tip position.
-    QPointF arrowTip(arrow->size().width() / 2.0f, 0);
+    QPointF arrowTip(arrow->preferredSize().width() / 2.0f, 0);
     arrowTip = q->mapFromItem(arrow, arrowTip);
 
     qreal translateX = arrowTip.x();
