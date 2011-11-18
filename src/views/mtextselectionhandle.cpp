@@ -152,7 +152,7 @@ void MTextSelectionHandle::setPressed(bool press)
     if (m_pressed) {
         emit pressed(this);
     } else {
-        emit released();
+        emit released(this);
     }
 }
 

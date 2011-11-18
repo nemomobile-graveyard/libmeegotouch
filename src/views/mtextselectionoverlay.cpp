@@ -72,10 +72,10 @@ MTextSelectionOverlay::MTextSelectionOverlay(MWidgetController *newController,
             this, SLOT(onSelectionHandlePressed(const MTextSelectionHandle *)));
     connect(&handleB, SIGNAL(pressed(const MTextSelectionHandle *)),
             this, SLOT(onSelectionHandlePressed(const MTextSelectionHandle *)));
-    connect(&handleA, SIGNAL(released()),
-            this, SLOT(onHandleReleased()));
-    connect(&handleB, SIGNAL(released()),
-            this, SLOT(onHandleReleased()));
+    connect(&handleA, SIGNAL(released(const MTextSelectionHandle *)),
+            this, SLOT(onHandleReleased(const MTextSelectionHandle *)));
+    connect(&handleB, SIGNAL(released(const MTextSelectionHandle *)),
+            this, SLOT(onHandleReleased(const MTextSelectionHandle *)));
 
     QVariant fontVariant = view->property("inputMethodFont");
     if (fontVariant.isValid()) {
@@ -174,12 +174,17 @@ void MTextSelectionOverlay::onHandleMoved(MTextSelectionHandle *handle)
     emit selectionHandleMoved(position);
 }
 
-void MTextSelectionOverlay::onHandleReleased()
+void MTextSelectionOverlay::onHandleReleased(const MTextSelectionHandle *handle)
 {
     // we do not use multitouch, so both handles are
     // released now
     handleSelectionUpdate();
-    emit selectionHandleReleased();
+
+    if (!handle) {
+        return;
+    }
+    const QPointF position = mapToItem(controller, handle->hotSpot());
+    emit selectionHandleReleased(position);
 }
 
 void MTextSelectionOverlay::onTextScrolled()

@@ -76,7 +76,7 @@ Q_SIGNALS:
     void selectionHandleMoved(const QPointF &position);
 
     //! \brief Emitted selection handle is released.
-    void selectionHandleReleased();
+    void selectionHandleReleased(const QPointF &position);
 
 protected:
     //! \reimp
@@ -117,7 +117,7 @@ private Q_SLOTS:
      *
      * Updates status of selection handles and emits selectionHandleReleased() signal.
      */
-    void onHandleReleased();
+    void onHandleReleased(const MTextSelectionHandle *handle);
 
     /*!
      * \brief Moves selection handles when selected text is moved across the screen.
