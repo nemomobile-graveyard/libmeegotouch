@@ -95,7 +95,7 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       hscroll(0.0),
       hscrollSnapRight(false),
       vscroll(0.0),
-      scrollSpeedVertical(0),
+      scrollSpeedHorizontal(0),
       longPressTimer(new QTimer(this)),
       scrollTimer(new QTimer(this)),
       maskTimer(new QTimer(this)),
@@ -246,7 +246,7 @@ void MTextEditViewPrivate::scrolling()
 
     const int maxScroll(activeDocumentSize().width() - activeDocumentTextWidth());
 
-    hscroll += scrollSpeedVertical;
+    hscroll += scrollSpeedHorizontal;
 
     // test if we reach scrolling limits and stop if it happens
     if (hscroll < 0) {
@@ -303,17 +303,17 @@ void MTextEditViewPrivate::scrollingTestAndStart(const QPointF &pos)
     // event inside scrolling margin creates constant speed scrolling.
     // this could be changed to determine some scrolling speed depending on the position.
     if (q->model()->textInteractionFlags() == Qt::NoTextInteraction) {
-        scrollSpeedVertical = 0;
+        scrollSpeedHorizontal = 0;
     } else if (pos.x() < (ScrollMargin + paddingLeft) && hscroll > 0) {
-        scrollSpeedVertical = -ScrollStep;
+        scrollSpeedHorizontal = -ScrollStep;
     } else if (pos.x() > (rect.width() - (ScrollMargin + paddingRight))
                && hscroll < (activeDocumentSize().width() - activeDocumentTextWidth())) {
-        scrollSpeedVertical = ScrollStep;
+        scrollSpeedHorizontal = ScrollStep;
     } else {
-        scrollSpeedVertical = 0;
+        scrollSpeedHorizontal = 0;
     }
 
-    if (scrollSpeedVertical != 0) {
+    if (scrollSpeedHorizontal != 0) {
         // will do actual scrolling on timer interval
         if (scrollTimer->isActive() == false) {
             scrollTimer->start(ScrollingTimeDuration);
