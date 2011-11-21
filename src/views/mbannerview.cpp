@@ -94,7 +94,7 @@ MLabel *MBannerViewPrivate::bannerTimeStamp()
 
     if (!bannerTimeStampLabel) {
         bannerTimeStampLabel = new MLabel(controller);
-	//Banners can't have html
+        //Banners can't have html
         bannerTimeStampLabel->setTextFormat(Qt::PlainText);
     }
 
@@ -192,20 +192,20 @@ void MBannerViewPrivate::updateDateFormat() const
         dayPassed = true;
         if (q->style()->timestampSeparator().isEmpty()) {
             formattedDateTime = QString("%1 %2")
-                .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
-                .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
+                    .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
+                    .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
         } else {
             formattedDateTime = QString("%1 %2 %3")
-                .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
-                .arg(q->style()->timestampSeparator())
-                .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
+                    .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
+                    .arg(q->style()->timestampSeparator())
+                    .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
         }
         bannerTimeStampLabel->setText(formattedDateTime);
     } else {
         dayPassed = false;
         bannerTimeStampLabel->setText(MLocale().formatDateTime(
-                    q->model()->bannerTimeStamp(), MLocale::DateNone,
-                    MLocale::TimeShort));
+                                          q->model()->bannerTimeStamp(), MLocale::DateNone,
+                                          MLocale::TimeShort));
     }
 }
 
@@ -445,7 +445,7 @@ void MBannerViewPrivate::layoutFullEventBanner()
         title()->setVisible(true);
         title()->setWordWrap(true);
         title()->setTextElide(true);
-	title()->setAlignment(Qt::AlignTop);
+        title()->setAlignment(Qt::AlignTop);
         gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
     } else {
         title()->setVisible(false);
@@ -455,8 +455,13 @@ void MBannerViewPrivate::layoutFullEventBanner()
         subtitle()->setStyleName("FullEventBannerSubtitle");
         subtitle()->setVisible(true);
         subtitle()->setWordWrap(false);
-	subtitle()->setAlignment(Qt::AlignTop);
-        gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
+        subtitle()->setAlignment(Qt::AlignTop);
+        if (!q->model()->title().isEmpty()) {
+            gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
+        }else {
+            subtitle()->setStyleName("FullEventBannerSubtitleIsolated");
+            gridBanner->addItem(subtitle(), 0, 1, Qt::AlignTop);
+        }
     } else {
         subtitle()->setVisible(false);
     }
@@ -467,10 +472,10 @@ void MBannerViewPrivate::layoutFullEventBanner()
         layoutStamp->setContentsMargins(0,0,0,0);
         layoutStamp->setSpacing(0);
         prefixTimeStamp()->setStyleName("FullEventBannerPrefixTimeStamp");
-	prefixTimeStamp()->setAlignment(Qt::AlignTop);
+        prefixTimeStamp()->setAlignment(Qt::AlignTop);
         prefixTimeStamp()->setVisible(true);
         bannerTimeStamp()->setStyleName("FullEventBannerTimeStamp");
-	bannerTimeStamp()->setAlignment(Qt::AlignTop);
+        bannerTimeStamp()->setAlignment(Qt::AlignTop);
         bannerTimeStamp()->setVisible(true);
         layoutStamp->addItem(prefixTimeStamp());
         layoutStamp->addItem(bannerTimeStamp());
@@ -484,7 +489,7 @@ void MBannerViewPrivate::layoutFullEventBanner()
     } else if (q->model()->bannerTimeStamp().isValid()) {
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setStyleName("FullEventBannerTimeStampIsolated");
-	bannerTimeStamp()->setAlignment(Qt::AlignTop);
+        bannerTimeStamp()->setAlignment(Qt::AlignTop);
         if (q->model()->subtitle().isEmpty()) {
             gridBanner->addItem(bannerTimeStamp(), 1, 1, Qt::AlignTop);
         } else {
@@ -524,7 +529,7 @@ void MBannerViewPrivate::layoutLockScreenEventBanner()
         title()->setVisible(true);
         title()->setWordWrap(true);
         title()->setTextElide(true);
-	title()->setAlignment(Qt::AlignTop);
+        title()->setAlignment(Qt::AlignTop);
         gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
     } else {
         title()->setVisible(false);
@@ -534,8 +539,13 @@ void MBannerViewPrivate::layoutLockScreenEventBanner()
         subtitle()->setStyleName("LockScreenEventBannerSubtitle");
         subtitle()->setVisible(true);
         subtitle()->setWordWrap(false);
-	subtitle()->setAlignment(Qt::AlignTop);
-        gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
+        subtitle()->setAlignment(Qt::AlignTop);
+        if (!q->model()->title().isEmpty()) {
+            gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
+        }else {
+            subtitle()->setStyleName("LockScreenEventBannerSubtitleIsolated");
+            gridBanner->addItem(subtitle(), 0, 1, Qt::AlignTop);
+        }
     } else {
         subtitle()->setVisible(false);
     }
@@ -546,10 +556,10 @@ void MBannerViewPrivate::layoutLockScreenEventBanner()
         layoutStamp->setContentsMargins(0,0,0,0);
         layoutStamp->setSpacing(0);
         prefixTimeStamp()->setStyleName("LockScreenEventBannerPrefixTimeStamp");
-	prefixTimeStamp()->setAlignment(Qt::AlignTop);
+        prefixTimeStamp()->setAlignment(Qt::AlignTop);
         prefixTimeStamp()->setVisible(true);
         bannerTimeStamp()->setStyleName("LockScreenEventBannerTimeStamp");
-	bannerTimeStamp()->setAlignment(Qt::AlignTop);
+        bannerTimeStamp()->setAlignment(Qt::AlignTop);
         bannerTimeStamp()->setVisible(true);
         layoutStamp->addItem(prefixTimeStamp());
         layoutStamp->addItem(bannerTimeStamp());
@@ -563,7 +573,7 @@ void MBannerViewPrivate::layoutLockScreenEventBanner()
     } else if (q->model()->bannerTimeStamp().isValid()) {
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setStyleName("LockScreenEventBannerTimeStampIsolated");
-	bannerTimeStamp()->setAlignment(Qt::AlignTop);
+        bannerTimeStamp()->setAlignment(Qt::AlignTop);
         if (q->model()->subtitle().isEmpty()) {
             gridBanner->addItem(bannerTimeStamp(), 1, 1, Qt::AlignTop);
         } else {
@@ -600,7 +610,7 @@ void MBannerViewPrivate::layoutPrivateEventBanner()
         gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
     } else {
         icon()->setVisible(false);
-	pixmap()->setVisible(false);
+        pixmap()->setVisible(false);
     }
 
     if (!q->model()->title().isEmpty()) {
@@ -624,10 +634,10 @@ void MBannerViewPrivate::layoutPrivateEventBanner()
         layoutStamp->setContentsMargins(0,0,0,0);
         layoutStamp->setSpacing(0);
         prefixTimeStamp()->setStyleName("PrivateEventBannerPrefixTimeStamp");
-	prefixTimeStamp()->setAlignment(Qt::AlignTop);
+        prefixTimeStamp()->setAlignment(Qt::AlignTop);
         prefixTimeStamp()->setVisible(true);
         bannerTimeStamp()->setStyleName("PrivateEventBannerTimeStamp");
-	bannerTimeStamp()->setAlignment(Qt::AlignTop);
+        bannerTimeStamp()->setAlignment(Qt::AlignTop);
         bannerTimeStamp()->setVisible(true);
         layoutStamp->addItem(prefixTimeStamp());
         layoutStamp->addItem(bannerTimeStamp());
@@ -636,7 +646,7 @@ void MBannerViewPrivate::layoutPrivateEventBanner()
     } else if (q->model()->bannerTimeStamp().isValid()) {
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setStyleName("PrivateEventBannerTimeStampIsolated");
-	bannerTimeStamp()->setAlignment(Qt::AlignTop);
+        bannerTimeStamp()->setAlignment(Qt::AlignTop);
         gridBanner->addItem(bannerTimeStamp(), 1, 1, Qt::AlignTop);
     } else {
         prefixTimeStamp()->setVisible(false);
