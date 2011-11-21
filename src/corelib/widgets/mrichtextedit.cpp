@@ -383,17 +383,6 @@ void MRichTextEditPrivate::_q_showTextStylingOptions()
 
     textStyleValues(&fontFamily, &fontPointSize, &fontColor);
 
-    int startPos = -1;
-    int endPos  = -1;
-    const bool hasSelectedText = q->hasSelectedText();
-    // removing the focus from the text entry widget is removing the text selection, so
-    // retain the selection
-    if (hasSelectedText) {
-        QTextCursor textcursor = q->textCursor();
-        startPos = textcursor.selectionStart();
-        endPos  = textcursor.selectionEnd();
-    }
-
     // The appearing styling dialog should grab focus with Qt::PopupFocusReason. But
     // because MRichTextEdit can't access the styling dialog, so below is a workaround
     // way by calling MTextEdit::FocusOutEvent() with Qt::PopupFocusReason and then
