@@ -40,7 +40,7 @@ public:
 #ifdef Q_WS_X11
     // make x11EventFilter public
     using MApplication::x11EventFilter;
-#endif Q_WS_X11
+#endif // Q_WS_X11
 };
 
 bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const
