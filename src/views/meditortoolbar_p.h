@@ -96,7 +96,7 @@ private:
     bool autoHideEnabled;
     bool disappearedForOrientationChange;
 
-    bool positionUpdatePending;
+    bool positionUpdateQueued;
     QPointF pendingPosition;
     MEditorToolbarArrow::ArrowDirection pendingArrowDirection;
 
