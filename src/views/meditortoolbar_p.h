@@ -46,8 +46,7 @@ public:
     virtual ~MEditorToolbarPrivate();
 
     void init();
-    void setPosition(const QPointF &pos,
-                     MEditorToolbarArrow::ArrowDirection arrowDirection);
+    void _q_setPosition();
 
     enum TransitionMode {
         Animated, // apply normal transition

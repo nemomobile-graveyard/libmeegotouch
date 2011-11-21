@@ -66,8 +66,17 @@ void MEditorToolbar::setPosition(const QPointF &pos,
                                  ToolbarPlacement placement)
 {
     Q_D(MEditorToolbar);
-    d->setPosition(pos, placement == BelowPointOfInterest ? MEditorToolbarArrow::ArrowUp
-                                                          : MEditorToolbarArrow::ArrowDown);
+    d->positionUpdatePending = true;
+    d->pendingPosition = pos;
+    if (placement == BelowPointOfInterest) {
+        d->pendingArrowDirection = MEditorToolbarArrow::ArrowUp;
+    } else {
+        d->pendingArrowDirection = MEditorToolbarArrow::ArrowDown;
+    }
+    // hiding animation is started by the same event
+    // and _q_setPosition() must work differently then
+    // so run it queued to make sure it will be the latest
+    QMetaObject::invokeMethod(this, "_q_setPosition", Qt::QueuedConnection);
 }
 
 void MEditorToolbar::appear()
@@ -234,23 +243,25 @@ void MEditorToolbarPrivate::init()
     disappearedForOrientationChange = false;
 }
 
-void MEditorToolbarPrivate::setPosition(const QPointF &pos,
-                                        MEditorToolbarArrow::ArrowDirection arrowDirection)
+void MEditorToolbarPrivate::_q_setPosition()
 {
     Q_Q(MEditorToolbar);
+    if (!positionUpdatePending) {
+        return;
+    }
 
     // Position should not be set unless overlay's orientation is the same
     // as followWidget's. Because of this, always post-pone setting the
     // position in case we are disappeared. Which we are during orientation
     // change.
 
-    if (isAppeared()) {
-        q->setPos(followWidget->mapToItem(overlay, pos));
-        updateArrow(arrowDirection);
-    } else {
-        positionUpdatePending = true;
-        pendingPosition = pos;
-        pendingArrowDirection = arrowDirection;
+    // Also, do not reposition while hiding animation is playing
+    // Because it looks bad.
+    if (isAppeared() && !isHiding()) {
+        positionUpdatePending = false;
+        // the position is set by controller in its coordinates
+        q->setPos(followWidget->mapToItem(q->parentItem(), pendingPosition));
+        updateArrow(pendingArrowDirection);
     }
 }
 
@@ -290,10 +301,7 @@ void MEditorToolbarPrivate::appear(TransitionMode transition)
         _q_updateAvailableButtons();
     }
 
-    if (positionUpdatePending) {
-        positionUpdatePending = false;
-        setPosition(pendingPosition, pendingArrowDirection);
-    }
+    _q_setPosition();
 }
 
 void MEditorToolbarPrivate::disappear(TransitionMode transition)
