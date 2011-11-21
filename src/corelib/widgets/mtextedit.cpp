@@ -439,7 +439,7 @@ void MTextEditPrivate::init()
     pasteAction.setVisible(!QApplication::clipboard()->text().isEmpty());
 
     QObject::connect(&cutAction, SIGNAL(triggered(bool)), q, SLOT(cut()));
-    QObject::connect(&copyAction, SIGNAL(triggered(bool)), q, SLOT(copy()));
+    QObject::connect(&copyAction, SIGNAL(triggered(bool)), q, SLOT(_q_copyAndDeselect()));
     QObject::connect(&pasteAction, SIGNAL(triggered(bool)), q, SLOT(_q_pasteAndClear()));
 
     cutAction.setObjectName("cutAction");
@@ -1668,6 +1668,16 @@ void  MTextEditPrivate::disconnectCompleter()
         QObject::disconnect(completer, 0, q, 0);
         QObject::disconnect(q, 0, completer, 0);
     }
+}
+
+void MTextEditPrivate::_q_copyAndDeselect()
+{
+    Q_Q(MTextEdit);
+    // * copy failure is highly unlikely here
+    // * deselecting without copying is not fatal
+    // so just don't check the copy result
+    (void)q->copy();
+    q->deselect();
 }
 
 void MTextEditPrivate::_q_pasteAndClear()
