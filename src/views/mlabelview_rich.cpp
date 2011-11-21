@@ -58,11 +58,13 @@ struct CursorAndFormat {
 
 MLabelViewRich::MLabelViewRich(MLabelViewPrivate *viewPrivate) :
     MLabelViewSimple(viewPrivate), textDocumentDirty(true), mouseDownCursorPos(-1),
-    tileHeight(-1), tileCacheKey(), tiles(), highlightersChanged(false), isElided(false),
-    minHeightCache(-1)
+    tileHeight(-1), tileCacheKey(), tiles(), highlightersChanged(false), isElided(false)
 {
     textDocument.setDocumentMargin(0);
     tileCacheKey.sprintf("%p", static_cast<void*>(this));
+
+    const QSize resolution = MDeviceProfile::instance()->resolution();
+    tileHeight = qMax(resolution.width(), resolution.height());
 }
 
 
@@ -127,9 +129,6 @@ void MLabelViewRich::ensureDocumentIsReady()
         isElided = false;
         updateHighlighters();
         //textDocument.setHtml(wrapTextWithSpanTag(viewPrivate->model()->text()));
-
-        tileHeight = -1;
-        minHeightCache = -1;
     }
 }
 
@@ -141,7 +140,6 @@ bool MLabelViewRich::resizeEvent(QGraphicsSceneResizeEvent *event)
     // However users can optionally disable heightForWidth to get a slightly different
     // behavior, getting a tight bounding box.
 
-    tileHeight = -1;
     textDocumentDirty = true;
 
     if (viewPrivate->controller->sizePolicy().hasHeightForWidth()) {
@@ -437,12 +435,6 @@ void MLabelViewRich::longPressEvent(QGestureEvent *event, QTapAndHoldGesture* ge
     }
 }
 
-void MLabelViewRich::orientationChangeEvent(MOrientationChangeEvent *event)
-{
-    Q_UNUSED(event);
-    tileHeight = -1;
-}
-
 /**
  * Find cursor position of last visible character of document.
  * It starts from the bottom right corner, goes up until finds
@@ -685,14 +677,6 @@ int MLabelViewRich::cursorPosition(const QPointF& pos)
 
 void MLabelViewRich::initTiles()
 {
-    if (tileHeight < 0) {
-        QSize resolution = MDeviceProfile::instance()->resolution();
-        tileHeight = qMax(resolution.width(), resolution.height());
-        dirty = true;
-    }
-
-    QSize size = QSize(viewPrivate->controller->size().width(), tileHeight);
-
     if (dirty || textDocumentDirty || highlightersChanged) {
         cleanupTiles();
         dirty = false;
@@ -722,7 +706,7 @@ void MLabelViewRich::initTiles()
     updateHighlighting();
 
     int tileCount = 2;
-    QSize tileSize = size;
+    QSize tileSize(viewPrivate->controller->size().width(), tileHeight);
 
     const MLabelStyle *style = viewPrivate->style();
     const int requiredHeight = qMin(viewPrivate->controller->size().height() + style->reactiveMarginTop() + style->reactiveMarginBottom(),

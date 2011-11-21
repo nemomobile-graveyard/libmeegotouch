@@ -173,7 +173,6 @@ public:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void cancelEvent(MCancelEvent *event);
     virtual void longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
-    virtual void orientationChangeEvent(MOrientationChangeEvent *event);
 
     virtual void applyStyle();
     virtual QString renderedText() const;
@@ -305,7 +304,6 @@ public:
 
     bool highlightersChanged;
     bool isElided;
-    qreal minHeightCache;
 };
 
 class MLabelViewPrivate : public MWidgetViewPrivate
