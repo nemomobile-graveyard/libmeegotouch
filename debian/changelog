@@ -1,3 +1,11 @@
+libmeegotouch (0.24.13-1) unstable; urgency=low
+
+  * Fixes: NB#291442, text selection widget appears on top of model dialog when rotating
+  * Fixes: NB#289060, Text selection handles are not shown at correct position when text is selected in password field
+  * Fixes: NB#291040, Text selection handles not in correct location after bolding/unbolding
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Mon, 21 Nov 2011 14:52:42 +0200
+
 libmeegotouch (0.24.12-1) unstable; urgency=low
 
   * Fixes: NB#288880, Text selection handles are not shown when device orientation changes from landscape to portrait
