@@ -57,11 +57,11 @@ CustomSelectableLabel::CustomSelectableLabel(QString const &text, QGraphicsItem 
       editPolicy(0),
       hitTimer(0)
 {
-    label = new MLabel;
+    label = new MLabel(this);
     label->setWordWrap(true);
     label->setWrapMode(QTextOption::WordWrap);
 
-    edit = new CustomEdit;
+    edit = new CustomEdit(this);
     edit->setReadOnly(true);
 
     QTextDocument *document = edit->document();
