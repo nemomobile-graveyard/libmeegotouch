@@ -21,6 +21,7 @@
 #define CUSTOMSELECTABLELABEL_H
 
 #include <MRichTextEdit>
+#include <MTextEditView>
 #include <MWidget>
 
 class MLabel;
@@ -30,15 +31,30 @@ class MLinearLayoutPolicy;
 class MLabelHighlighter;
 class QTimer;
 
+class CustomEditView : public MTextEditView
+{
+    Q_OBJECT
+
+public:
+    explicit CustomEditView(MTextEdit *controller) : MTextEditView(controller) {}
+    virtual ~CustomEditView() {}
+
+    int cursorPosition(const QPointF &hitPoint) { return MTextEditView::cursorPosition(hitPoint); }
+};
+
 class CustomEdit : public MRichTextEdit
 {
     Q_OBJECT
 
 public:
-    CustomEdit(QGraphicsItem *parent = 0) : MRichTextEdit(MTextEditModel::MultiLine, QString(), parent) {}
+    CustomEdit(QGraphicsItem *parent = 0) : MRichTextEdit(MTextEditModel::MultiLine, QString(), parent) { setView(new CustomEditView(this)); }
     virtual ~CustomEdit() {}
 
     bool startSelection(const QPointF &hitPoint);
+
+protected:
+    QPointF startPoint(const QPointF &hitPoint) const;
+    int cursorPosition(const QPointF &hitPoint) const;
 };
 
 class CustomSelectableLabel : public MWidget
