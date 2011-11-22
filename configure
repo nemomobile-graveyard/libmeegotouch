@@ -97,6 +97,8 @@ OPT_SHADOW=maybe
 
 IS_ARMEL=no
 
+DBUS_DEPENDENCY=""
+
 # initalize variables used for installation
 M_INSTALL_PREFIX=/usr/local
 M_INSTALL_SYSCONFDIR=/etc
@@ -455,6 +457,7 @@ if [ $? -eq 0 ]; then
         pkg-config --exists QtDBus
         if [ $? -eq 0 ]; then
 	    HAVE_DBUS=yes
+            DBUS_DEPENDENCY=QtDBus
         fi
         if [ "$CFG_DBUS" = "yes" -a "$HAVE_DBUS" = "no" ]; then
             echo "You specified  -dbus  but dbus was not found."
@@ -842,6 +845,7 @@ do
    cat "$pc_in" \
    | sed -e "s,@@M_UNIX_INSTALL_PREFIX@@,$M_INSTALL_PREFIX,g" \
    | sed "s/@@M_VERSION@@/$M_VERSION/g" \
+   | sed "s/@@DBUS_DEPENDENCY@@/$DBUS_DEPENDENCY/g" \
    > "$pc_file.tmp"
 
   # replace meegotouch_defines.prf if it differs from the newly created temp file

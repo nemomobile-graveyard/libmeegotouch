@@ -6,6 +6,6 @@ includedir=${prefix}/include/meegotouch
 Name: meegotouchcore
 Description: MeeGo Touch UI Framework core module
 Version: @@M_VERSION@@
-Requires: QtGui
+Requires: QtGui @@DBUS_DEPENDENCY@@
 Cflags: -I${includedir}
 Libs: -L${libdir} -lmeegotouchcore
