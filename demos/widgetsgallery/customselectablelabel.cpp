@@ -22,13 +22,14 @@
 #include <MLinearLayoutPolicy>
 #include <MLabel>
 #include <MLabelHighlighter>
+#include <MBreakIterator>
 #include <QGraphicsSceneMouseEvent>
 #include <QTimer>
 #include <QTapAndHoldGesture>
 
 bool CustomEdit::startSelection(const QPointF &hitPoint)
 {
-    QPointF startSelectionPoint = hitPoint;
+    QPointF startSelectionPoint = startPoint(hitPoint);
 
     //fake double click to activate selection on text edit
     QGraphicsSceneMouseEvent event;
@@ -44,6 +45,38 @@ bool CustomEdit::startSelection(const QPointF &hitPoint)
     mouseReleaseEvent(&event);
 
     return hasSelectedText();
+}
+
+QPointF CustomEdit::startPoint(const QPointF &hitPoint) const
+{
+    // Prefer to select something even though the tap hit between words
+
+    MBreakIterator breakIterator(text());
+    if (breakIterator.isBoundary(cursorPosition(hitPoint))) {
+        // Hit the boundary -> try to find a word nearby
+        QList<QPoint> baseOffsets;
+        baseOffsets << QPoint(3,0) << QPoint(-3,0) << QPoint(0,-3) << QPoint(0,3);
+        for (int i=1; i<=4; i++) { // Check each direction at 3,6,9 and 12 pixel distances -> a change to get the closest one
+            Q_FOREACH(QPoint offset, baseOffsets) {
+                QPointF checkPoint = hitPoint + i*offset;
+                int checkPos = cursorPosition(checkPoint);
+                if (checkPos >= 0 && !breakIterator.isBoundary(checkPos)) {
+                    return checkPoint;
+                }
+            }
+        }
+    }
+
+    return hitPoint;
+}
+
+int CustomEdit::cursorPosition(const QPointF &hitPoint) const
+{
+    const CustomEditView *editView = qobject_cast<const CustomEditView *>(view());
+    if (editView)
+        return const_cast<CustomEditView *>(editView)->cursorPosition(hitPoint);
+
+    return -1;
 }
 
 CustomSelectableLabel::CustomSelectableLabel(QString const &text, QGraphicsItem *parent)
