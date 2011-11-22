@@ -306,6 +306,9 @@ void MBannerViewPrivate::layoutInformationBanner()
         title()->setTextElide(true);
         landscapePolicy->addItem(title(), Qt::AlignTop);
         portraitPolicy->addItem(title(), Qt::AlignTop);
+        if (MLocale::directionForText(q->model()->title()) == Qt::RightToLeft) {
+            title()->setAlignment(Qt::AlignAbsolute | Qt::AlignRight | Qt::AlignVCenter);
+        }
     }
 
     icon()->setVisible(false);
@@ -343,6 +346,9 @@ void MBannerViewPrivate::layoutSystemBanner()
         title()->setVisible(true);
         title()->setWordWrap(true);
         title()->setTextElide(true);
+        if (MLocale::directionForText(q->model()->title()) == Qt::RightToLeft) {
+            title()->setAlignment(Qt::AlignAbsolute | Qt::AlignRight | Qt::AlignVCenter);
+        }
         landscapePolicy->addItem(title(), Qt::AlignTop);
         portraitPolicy->addItem(title(), Qt::AlignTop);
     }
