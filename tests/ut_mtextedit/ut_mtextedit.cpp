@@ -42,7 +42,6 @@
 #include <stdlib.h>
 
 #include <mtextedit.h>
-#include <mtexteditview.h>
 #include <mwidgetmodel.h>
 
 #include <mscenemanager.h>
