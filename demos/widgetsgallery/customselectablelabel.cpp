@@ -133,9 +133,6 @@ void CustomSelectableLabel::removeAllHighlighters()
 
 void CustomSelectableLabel::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
 {
-    if (selecting)
-        return;
-
     event->accept(gesture);
 
     if (gesture->state() == Qt::GestureFinished) {
