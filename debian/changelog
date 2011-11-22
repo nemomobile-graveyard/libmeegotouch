@@ -1,8 +1,18 @@
-libmeegotouch (0.25.0~1) unstable; urgency=low
+libmeegotouch (0.25.0-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#291104 -Unable to format part of word to the same format as symbol before selection
+  * Fixes: NB#291442 -text selection widget appears on top of model dialog when rotating
+  * Fixes: NB#291505 - all lines in mms event banner are too high
+  * Fixes: NB#291528 - A blue bar flickers at the right edge of the message sort screen while switching device between landscape mode and portrait mode.
+  * Fixes: NB#290602 -MTextEdit uses focused-prompt-opacity when the text edit doesn't have focus
+  * Fixes: NB#284847 - MMessageBox::isVisible() and ::isOnDisplay() returns true even if black screensaver is on top of it
+  * Fixes: NB#289060 -Text selection handles are not shown at correct position when text is selected in password field
+  * Fixes: NB#291040 -Text selection handles not in correct location after bolding/unbolding
+  * Fixes: NB#288756 - Panning is not possible if started on a disabled text edit.
+  * Fixes: NB#254862 - Fast Scroll indicator is not truncated properly in Availability mode
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Wed, 16 Nov 2011 13:07:21 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 22 Nov 2011 15:01:10 +0200
 
 libmeegotouch (0.24.12-1) unstable; urgency=low
 
