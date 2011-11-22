@@ -295,8 +295,8 @@ void Ut_MTextEdit::initTestCase()
     MApplication::setLoadMInputContext(false);
     unsetenv("QT_IM_MODULE");
 
-    m_app = new MApplication(dummyArgc, dummyArgv);
-    m_appWindow = new MApplicationWindow;
+    m_app.reset(new MApplication(dummyArgc, dummyArgv));
+    m_appWindow.reset(new MApplicationWindow);
     m_sic = 0;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -314,8 +314,6 @@ void Ut_MTextEdit::initTestCase()
  */
 void Ut_MTextEdit::cleanupTestCase()
 {
-    delete m_appWindow;
-    delete m_app;
 }
 
 
@@ -3149,14 +3147,16 @@ void Ut_MTextEdit::testArrowKeyNavigation()
     QFETCH(Qt::KeyboardModifiers, modifiers);
 
     // Not using m_subject => clash of ownership ...
+    // All MTextEdits created in this test are destroyed by scene.
     MTextEdit *subject = new MTextEdit;
-    MTextEdit *target = (expectedTarget == -1) ? 0
-                                               : targets.at(expectedTarget).edit;
+    MTextEdit *finalTarget = (expectedTarget == -1)
+                             ? 0 : targets.at(expectedTarget).edit;
 
     // Heap-allocated because of http://bugreports.qt.nokia.com/browse/QTBUG-14283
-    QSignalSpy *subjectSpy = new QSignalSpy(subject, SIGNAL(gainedFocus(Qt::FocusReason)));
-    QSignalSpy *targetSpy = target ? new QSignalSpy(target, SIGNAL(gainedFocus(Qt::FocusReason)))
-                                   : 0;
+    QScopedPointer<QSignalSpy> subjectSpy(new QSignalSpy(subject, SIGNAL(gainedFocus(Qt::FocusReason))));
+    QScopedPointer<QSignalSpy> targetSpy(finalTarget
+                                         ? new QSignalSpy(finalTarget, SIGNAL(gainedFocus(Qt::FocusReason)))
+                                         : 0);
 
     AutoActivatedScene sc;
     sc.adjustTextEdit(subject, subjectPosition);
@@ -3167,11 +3167,10 @@ void Ut_MTextEdit::testArrowKeyNavigation()
     subject->setCursorPosition(subjectCursorPosition);
     sc.setFocusItem(subject);
 
-    for (PositionedTextEditList::iterator iter = targets.begin();
-         iter != targets.end();
-         ++iter) {
-        PositionedTextEdit target(*iter);
-        sc.adjustTextEdit(target.edit, target.pos);
+    for (PositionedTextEditList::iterator target = targets.begin();
+         target != targets.end();
+         ++target) {
+        sc.adjustTextEdit(target->edit, target->pos);
     }
 
     foreach (Qt::Key key, sequence) {
@@ -3184,16 +3183,13 @@ void Ut_MTextEdit::testArrowKeyNavigation()
         }
     }
 
-    if (!target) {
+    if (!finalTarget) {
         Ut_Utils::waitForSignal(*subjectSpy);
         QVERIFY(subject->hasFocus());
     } else {
         Ut_Utils::waitForSignal(*targetSpy);
-        QVERIFY(target->hasFocus());
+        QVERIFY(finalTarget->hasFocus());
     }
-
-    delete subjectSpy;
-    delete targetSpy;
 }
 
 void Ut_MTextEdit::setupSipEnv(MTextEdit *edit)

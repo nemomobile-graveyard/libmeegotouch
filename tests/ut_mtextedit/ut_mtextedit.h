@@ -59,9 +59,12 @@ private:
     void requestSip(MTextEdit *edit, Qt::FocusReason fr);
     MTextEdit *createFromSipHandling(AutoActivatedScene *scene, bool isSipRequested = true);
 
-    MApplication *m_app;
-    MApplicationWindow* m_appWindow;
+    // For some reason subject has to be destroyed before application.
+    // Therefore declare here after m_app.
+    std::auto_ptr<MApplication> m_app;
+    std::auto_ptr<MApplicationWindow> m_appWindow;
     std::auto_ptr<MTextEdit> m_subject;
+
     SimpleInputContext *m_sic;
 
     QStringList validStrings;
