@@ -14,7 +14,6 @@ contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
 }
 
 SOURCES += \
-    ../stubs/stubbase.cpp \
     ut_mapplicationwindow.cpp \
     testpage.cpp
 

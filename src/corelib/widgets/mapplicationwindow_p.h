@@ -211,8 +211,6 @@ public:
     void updateChainTaskData();
     void applyWindowBackground();
     void setSceneWindowVisibility(MSceneWindow *sceneWindow, bool visible);
-
-    static const char* disableStatusBarEnforcementDuringCallProperty;
 };
 
 #endif
