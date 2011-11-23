@@ -386,7 +386,7 @@ void MApplicationWindowPrivate::_q_updateStatusBarVisibility()
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
     // Status bar should always be appeared while a phone call is ongoing.
-    if (callStatusProperty.value().toString() == "active") {
+    if (callStatusProperty.value().toString() == "active" && q->windowTitle() != "call-ui") {
         statusBar->appear(q);
         return;
     }
