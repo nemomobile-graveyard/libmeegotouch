@@ -96,6 +96,8 @@ my @engineeringEnglishPackagesBroken = (
     "duicontrolpanel-keyboardlanguageapplet-l10n-engineering-english",
     # this one is empty. Why?:
     "libvideodolbysettings-l10n-engineering-english",
+    # this one is empty. Why?:
+    "webupload-service-dropbox-l10n-engineering-english",
    );
 
 my @engineeringEnglishPackages = ();
