@@ -47,7 +47,6 @@ DisplayModesPage::DisplayModesPage()
       ctnWindowState(0),
       fullScreenCheckbox(0),
       navigationBarTransparencyCheckbox(0),
-      disableStatusBarEnforcementDuringCallCheckbox(0),
       roundedCornersCheckbox(0)
 {
 }
@@ -129,7 +128,6 @@ void DisplayModesPage::createContent()
     lytDisplayMode->addItem(comboHomeButtonDisplayMode);
     lytDisplayMode->addItem(comboEscapeButtonDisplayMode);
     lytDisplayMode->addItem(comboStatusBarDisplayMode);
-    lytDisplayMode->addItem(disableStatusBarEnforcementDuringCallCheckbox);
 
     lytWindowState->addItem(fullScreenCheckbox);
     lytWindowState->addItem(roundedCornersCheckbox);
@@ -172,12 +170,6 @@ void DisplayModesPage::createWindowStateWidgets()
     navigationBarTransparencyCheckbox->setParent(ctnDisplayMode);
     navigationBarTransparencyCheckbox->setObjectName("navigationBarTransparencyCheckbox");
     connect(navigationBarTransparencyCheckbox->button, SIGNAL(toggled(bool)), SLOT(changeNavigationBarTransparency(bool)));
-
-    disableStatusBarEnforcementDuringCallCheckbox = new LabeledCheckbox;
-    disableStatusBarEnforcementDuringCallCheckbox->setParent(ctnDisplayMode);
-    disableStatusBarEnforcementDuringCallCheckbox->setObjectName("statusBarTransparencyCheckbox");
-    connect(disableStatusBarEnforcementDuringCallCheckbox->button,
-            SIGNAL(toggled(bool)), SLOT(changeStatusBarEnforcementDuringCall(bool)));
 }
 
 void DisplayModesPage::addExampleActions()
@@ -232,9 +224,6 @@ void DisplayModesPage::retranslateUi()
 
     //% "Navigation Bar Transparency"
     navigationBarTransparencyCheckbox->label->setText(qtTrId("xx_displaymodes_navigation_bar_transparency"));
-
-    //% "Disable Status Bar Enforcement During Call"
-    disableStatusBarEnforcementDuringCallCheckbox->label->setText(qtTrId("xx_displaymode_status_bar_enforcement_during_call"));
 
     retranslateDisplayModeComboBox(comboNavigationBarDisplayMode);
     retranslateDisplayModeComboBox(comboHomeButtonDisplayMode);
@@ -347,14 +336,4 @@ void DisplayModesPage::changeNavigationBarTransparency(bool transparent)
     animation->setStartValue(applicationWindow()->navigationBarOpacity());
     animation->setEndValue(transparent ? 0.5 : 1.0);
     animation->start(QAbstractAnimation::DeleteWhenStopped);
-}
-
-void DisplayModesPage::changeStatusBarEnforcementDuringCall(bool disable)
-{
-    MWindow *window = MApplication::activeWindow();
-
-    if (!window)
-        return;
-
-    window->setProperty("disableStatusBarEnforcementDuringCall", disable);
 }

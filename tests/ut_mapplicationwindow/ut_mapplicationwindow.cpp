@@ -39,9 +39,7 @@
 
 #include <QSignalSpy>
 #include <QEvent>
-#ifdef HAVE_CONTEXTSUBSCRIBER
-#include "contextproperty_stub.h"
-#endif
+
 #include "testpage.h"
 
 // QCOMPARE doesn't know MSceneWindow::SceneWindowSate enum. Thus it won't
@@ -1215,81 +1213,4 @@ void Ut_MApplicationWindow::testRotatingPageAndShowingStatusBarDoesNotCrash()
     STATE_COMPARE(rootPage->sceneWindowState(), MSceneWindow::Appeared)
 }
 
-/*
-  Regression test for the following bug:
-  https://projects.maemo.org/bugzilla/show_bug.cgi?id=282839
- */
-#ifdef HAVE_CONTEXTSUBSCRIBER
-void Ut_MApplicationWindow::testDisableStatusBarDuringCall()
-{
-    MApplicationPage *page = new MApplicationPage;
-    MSceneWindow *statusBar = m_subject->d_func()->statusBar;
-
-    if (!statusBar) {
-        QSKIP("No status bar used so skipping test.", SkipSingle);
-    }
-
-    // We don't want MOrientationTracker to mess up with
-    // the orientation angle of our subject.
-    m_subject->setOrientationAngleLocked(true);
-    m_subject->setPortraitOrientation();
-
-    page->appear(m_subject);
-
-    QApplication::processEvents();
-
-    STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Appeared);
-    m_subject->showFullScreen();
-
-    // statusbar now hidden, if phone call is active and disableStatusBarEnforcementDuringCall property is true,
-    // statusbar should be in Disappeared state
-    setPhoneCallIsActive(true);
-
-    m_subject->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
-    STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Appeared);
-
-    m_subject->setProperty("disableStatusBarEnforcementDuringCall", true);
-
-    QApplication::processEvents();
-    m_subject->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
-    STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Disappeared);
-
-    // statusbar now hidden, if phone call is inactive and disableStatusBarEnforcementDuringCall property is false,
-    // statusbar should be in Disappeared state
-    setPhoneCallIsActive(false);
-    m_subject->setProperty("disableStatusBarEnforcementDuringCall", false);
-
-    QApplication::processEvents();
-    m_subject->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
-
-    STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Disappeared);
-
-    // statusbar now hidden, if phone call is active and disableStatusBarEnforcementDuringCall
-    // property is false, statusbar should be in Appeared state
-    setPhoneCallIsActive(true);
-    m_subject->setProperty("disableStatusBarEnforcementDuringCall", false);
-
-    QApplication::processEvents();
-    m_subject->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
-
-    STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Appeared);
-}
-#endif
-
-#ifdef HAVE_CONTEXTSUBSCRIBER
-void Ut_MApplicationWindow::setPhoneCallIsActive(bool active) {
-
-    QString value;
-
-    if (active) {
-        value = "active";
-    } else {
-        value = "inactive";
-    }
-
-    gContextPropertyStubMap->findStub("Phone.Call")->stubReset();
-    gContextPropertyStubMap->findStub("Phone.Call")->stubSetReturnValue("value", QVariant(value));
-    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("Phone.Call")->getProxy(), "valueChanged");
-}
-#endif
 QTEST_MAIN(Ut_MApplicationWindow)
