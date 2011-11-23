@@ -165,7 +165,12 @@ private:
         QGraphicsItem *nextItem = 0;
         int distance = INT_MAX;
 
-        const QPoint center = focusItem->mapToScene(focusItem->boundingRect().center()).toPoint();
+        // If parent scene window exists, map coordinates to its rotated coordinate system.
+        // If it does not exist, use scene coordinates.
+
+        const QPoint center = sm
+                              ? focusItem->mapToItem(sm, focusItem->boundingRect().center()).toPoint()
+                              : focusItem->mapToScene(focusItem->boundingRect().center()).toPoint();
 
         foreach (QGraphicsItem *item, focusItem->scene()->items()) {
 
@@ -174,8 +179,9 @@ private:
                 item->flags().testFlag(QGraphicsItem::ItemAcceptsInputMethod) &&
                 isChildOfSceneWindow(dynamic_cast<QGraphicsWidget *>(item), sm)) {
                 bool found = false;
-                const QPoint targetCenter = item->mapToScene(item->boundingRect().center())
-                                            .toPoint();
+                const QPoint targetCenter = sm
+                                            ? item->mapToItem(sm, item->boundingRect().center()).toPoint()
+                                            : item->mapToScene(item->boundingRect().center()).toPoint();
 
                 switch(key) {
                 case Qt::Key_Left:
