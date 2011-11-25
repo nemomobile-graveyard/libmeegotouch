@@ -141,7 +141,7 @@ public:
     void insertTextWithPreeditStyling(const QString &text, int &currentListIndex, int &currentCount);
     void clearUnusedPreeditStyling(int currentListIndex, int currentCount);
     int currentPreeditStylingIndex(int &currentStyleLastCharIndex) const;
-    virtual bool copy();
+    virtual bool checkingCopy();
     QString replaceLineBreaks(QString text, QString replacement);
     void _q_confirmCompletion(const QString &);
     void _q_updatePasteActionState();

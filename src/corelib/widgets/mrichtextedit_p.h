@@ -107,10 +107,11 @@ public:
     bool insertFromMimeData(const QMimeData *source);
 
     /*!
-     * \brief copy the text cursor's selection to the clipbaord.
+     * \brief copy the text cursor's selection to the clipboard with ability to report failure.
+     * Reimplements MTextEditPrivate::checkingCopy().
      * \return True if operation compeled successfully.
      */
-    virtual bool copy();
+    virtual bool checkingCopy();
 
     /*!
      * \brief Update the style button(Bold, Italics, Underline) depending on

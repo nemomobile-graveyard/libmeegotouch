@@ -1553,7 +1553,7 @@ void MTextEditPrivate::_q_confirmCompletion(const QString &completion)
     updateMicroFocus();
 }
 
-bool MTextEditPrivate::copy()
+bool MTextEditPrivate::checkingCopy()
 {
     Q_Q(MTextEdit);
     QClipboard *clipboard = QApplication::clipboard();
@@ -1673,10 +1673,7 @@ void  MTextEditPrivate::disconnectCompleter()
 void MTextEditPrivate::_q_copyAndDeselect()
 {
     Q_Q(MTextEdit);
-    // * copy failure is highly unlikely here
-    // * deselecting without copying is not fatal
-    // so just don't check the copy result
-    (void)q->copy();
+    q->copy();
     q->deselect();
 }
 
@@ -2523,7 +2520,7 @@ void MTextEdit::copy()
 {
     Q_D(MTextEdit);
 
-    d->copy();
+    (void)d->checkingCopy();
 }
 
 
@@ -2583,7 +2580,7 @@ void MTextEdit::cut()
     Q_D(MTextEdit);
     QValidator::State result = QValidator::Acceptable;
 
-    if (isReadOnly() || !d->copy()) {
+    if (isReadOnly() || !d->checkingCopy()) {
         return;
     }
 

@@ -337,7 +337,7 @@ QMimeData *MRichTextEditPrivate::createMimeDataFromSelection()
 }
 
 
-bool MRichTextEditPrivate::copy()
+bool MRichTextEditPrivate::checkingCopy()
 {
     Q_Q(MRichTextEdit);
 
@@ -610,7 +610,7 @@ void MRichTextEdit::copy()
 {
     Q_D(MRichTextEdit);
 
-    d->copy();
+    (void)d->checkingCopy();
 }
 
 
