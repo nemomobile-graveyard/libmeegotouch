@@ -1386,9 +1386,19 @@ void doChainTaskHandling( QString &line, bool& inChainTask, QTextStream& newProx
                 newProxyHeaderStream << "\
         Qt::HANDLE windowId = 0;\n\
 \n\
-        MWindow *win = MApplication::instance()->activeWindow();\n\
-        if (win) {\n\
-            windowId = win->effectiveWinId();\n\
+        if ( MApplication::instance() )\n\
+        {\n\
+            MWindow *win = MApplication::instance()->activeWindow();\n\
+            if ( win ) {\n\
+                windowId = win->effectiveWinId();\n\
+            }\n\
+        }\n\
+        else\n\
+        {\n\
+            QWidget *widget = qApp->activeWindow();\n\
+            if ( widget ) {\n\
+                windowId = widget->effectiveWinId();\n\
+            }\n\
         }\n\
 \n\
 " + line + "\n\
