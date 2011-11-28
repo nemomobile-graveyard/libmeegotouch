@@ -19,6 +19,7 @@
 
 #include <QObject>
 #include <QGraphicsSceneMouseEvent>
+#include <QSignalSpy>
 #include <mapplication.h>
 #include <qpixmap.h>
 #include <mbutton.h>
@@ -249,5 +250,18 @@ void Ut_MContentItem::testProgressBar()
     QVERIFY( m_subject->additionalItem() != NULL );
 }
 
+void Ut_MContentItem::testClicked()
+{
+    QSignalSpy clickedSpy(m_subject, SIGNAL(clicked()));
+    m_subject->click();
+    QCOMPARE(clickedSpy.count(), 1);
+}
+
+void Ut_MContentItem::testLongTapped()
+{
+    QSignalSpy longTappedSpy(m_subject, SIGNAL(longTapped()));
+    m_subject->longTap(QPointF(0, 0));
+    QCOMPARE(longTappedSpy.count(), 1);
+}
 
 QTEST_APPLESS_MAIN(Ut_MContentItem)
