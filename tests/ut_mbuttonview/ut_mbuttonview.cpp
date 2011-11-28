@@ -295,6 +295,48 @@ void Ut_MButtonView::testSwitchView()
     QVERIFY(img1 != img2);
 }
 
+void Ut_MButtonView::testMouseEventsSwitchView()
+{
+    MButtonSwitchView *view = new MButtonSwitchView(m_button);
+    m_button->setView(view);
+    m_button->setCheckable(true);
+
+    QRectF rect = QRectF(0, 0, 200, 100);
+    m_button->setGeometry(rect);
+
+    //press
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    view->mousePressEvent(&pressEvent);
+    QVERIFY(m_button->isDown() == true);
+    QVERIFY(m_button->isChecked() == false);
+    view->mousePressEvent(&pressEvent);
+
+    //release
+    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
+    view->mouseReleaseEvent(&releaseEvent);
+    QVERIFY(m_button->isDown() == false);
+    QTest::qWait(510);
+    QVERIFY(m_button->isChecked() == true);
+
+    //cancel
+    view->mousePressEvent(&pressEvent);
+    MCancelEvent event;
+    view->cancelEvent(&event);
+    QVERIFY(m_button->isDown() == false);
+    view->cancelEvent(&event);
+
+    //move
+    view->mousePressEvent(&pressEvent);
+    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
+    moveEvent.setPos(QPointF(300,300));
+    QVERIFY(m_button->isDown() == true);
+    view->mouseReleaseEvent(&releaseEvent);
+    // wait for animation
+    QTest::qWait(510);
+    // should be unchecked because it was checked before
+    QVERIFY(m_button->isChecked() == false);
+}
+
 void Ut_MButtonView::testLabelInSwitchView()
 {
     QVERIFY(m_subject->d_func()->label == 0); //No text -> no label

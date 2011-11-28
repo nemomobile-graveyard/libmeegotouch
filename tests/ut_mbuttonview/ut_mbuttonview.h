@@ -49,6 +49,7 @@ private slots:
     void testMouseEvents();
 
     void testSwitchView();
+    void testMouseEventsSwitchView();
     void testLabelInSwitchView();
     void testCheckboxView();
 
