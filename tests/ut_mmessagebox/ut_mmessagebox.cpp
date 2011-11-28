@@ -23,6 +23,7 @@
 
 #include <mdismissevent.h>
 #include <mmessagebox.h>
+#include <mmessageboxview.h>
 #include <mapplication.h>
 #include <mbuttonmodel.h>
 
@@ -82,6 +83,17 @@ void Ut_MMessageBox::testSetText()
     QString myText("myText");
     m_subject->setText(myText);
     QCOMPARE( m_subject->text(), myText );
+
+    QString emptyText;
+    m_subject->setText(emptyText);
+    QCOMPARE( m_subject->text().length(), 0);
+}
+
+void Ut_MMessageBox::testSetTitle()
+{
+    QString myTitle("myTitle");
+    m_subject->setTitle(myTitle);
+    QCOMPARE( m_subject->title(), myTitle );
 }
 
 void Ut_MMessageBox::testIconId()
@@ -98,6 +110,12 @@ void Ut_MMessageBox::testIconPixmap()
     QVERIFY(!pixmap.isNull());
     m_subject->setIconPixmap(pixmap);
     QCOMPARE(m_subject->iconPixmap(), pixmap);
+
+    QPixmap otherPixmap(30, 30);
+    otherPixmap.fill();
+    QVERIFY(!otherPixmap.isNull());
+    m_subject->setIconPixmap(otherPixmap);
+    QCOMPARE(m_subject->iconPixmap(), otherPixmap);
 }
 
 void Ut_MMessageBox::testDismissEvent()
