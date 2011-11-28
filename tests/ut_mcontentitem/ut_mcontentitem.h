@@ -63,6 +63,8 @@ private slots:
     void testSubtitle();
     void testItemMode();
     void testProgressBar();
+    void testClicked();
+    void testLongTapped();
 
 private:
     MContentItem *m_subject;
