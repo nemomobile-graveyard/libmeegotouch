@@ -65,6 +65,10 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_showPopup())
     Q_PRIVATE_SLOT(d_func(), void _q_colorPicked())
     Q_PRIVATE_SLOT(d_func(), void _q_popupDisappeared())
+
+#ifdef UNIT_TEST
+    friend class Ut_MColorComboBoxView;
+#endif
 };
 
 #endif

@@ -77,6 +77,10 @@ private:
     MLayout *layout;
 
     MGridLayoutPolicy *policy;
+
+#ifdef UNIT_TEST
+    friend class Ut_MColorComboBoxView;
+#endif
 };
 
 //! \internal_end
