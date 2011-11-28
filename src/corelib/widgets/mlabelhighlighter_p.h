@@ -27,7 +27,8 @@ public:
     virtual ~MLabelHighlighterPrivate();
 
 private:
-    bool ignoreEvents;
+    bool ignoreClickEvents;
+    bool ignoreLongPressEvents;
 
     friend class MLabelHighlighter;
 };

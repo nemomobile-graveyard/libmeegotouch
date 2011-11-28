@@ -60,6 +60,7 @@ private:
     MLabelHighlighter *urlHighlighter;
     MLabelHighlighter *emailHighlighter;
     MLabelHighlighter *commonHighlighter;
+    MLabelHighlighter *selectableUrlHighlighter;
 };
 
 #endif // LABELPAGE_H

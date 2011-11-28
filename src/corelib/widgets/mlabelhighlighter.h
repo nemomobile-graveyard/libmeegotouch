@@ -75,6 +75,7 @@ public:
         \brief Returns the value that was previously set with a call to setIgnoreClickAndLongPressEvents() method.
 
         Method will return false by default.
+        \deprecated Use isIngoringClickEvents() or isIgnoringLongPressEvents();
     */
     bool ignoreClickAndLongPressEvents() const;
 
@@ -83,8 +84,38 @@ public:
 
         If enabled, the click and long press events are received through the
         click() and longPress() callback methods.
+
+        \deprecated Use setIngoreClickEvents() or setIgnoreLongPressEvents();
     */
     void setIgnoreClickAndLongPressEvents(bool ignore);
+
+    /*!
+        \brief Returns the value that was previously set with a call to setIgnoreClickEvent() method.
+
+        Method will return false by default.
+    */
+    bool isIgnoringClickEvents() const;
+
+    /*!
+        \brief Enable/disable processing of click event.
+
+        If enabled, the click event are received through the click() callback methods.
+    */
+    void setIgnoreClickEvents(bool ignore);
+
+    /*!
+        \brief Returns the value that was previously set with a call to setIgnoreLongPressEvent() method.
+
+        Method will return false by default.
+    */
+    bool isIgnoringLongPressEvents() const;
+
+    /*!
+        \brief Enable/disable processing of long press event.
+
+        If enabled, the long press event are received through the longPress() callback methods.
+    */
+    void setIgnoreLongPressEvents(bool ignore);
 };
 
 /*!

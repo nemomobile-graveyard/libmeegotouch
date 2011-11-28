@@ -47,7 +47,7 @@ namespace {
 }
 
 MLabelHighlighterPrivate::MLabelHighlighterPrivate() :
-    ignoreEvents(false)
+    ignoreClickEvents(false), ignoreLongPressEvents(false)
 {
 }
 
@@ -68,13 +68,35 @@ MLabelHighlighter::~MLabelHighlighter()
 
 void MLabelHighlighter::setIgnoreClickAndLongPressEvents(bool ignore)
 {
-    d(this)->ignoreEvents = ignore;
+    setIgnoreClickEvents(ignore);
+    setIgnoreLongPressEvents(ignore);
 }
 
 bool MLabelHighlighter::ignoreClickAndLongPressEvents() const
 {
-    return d(this)->ignoreEvents;
+    return isIgnoringClickEvents() && isIgnoringLongPressEvents();
 }
+
+bool MLabelHighlighter::isIgnoringClickEvents() const
+{
+    return d(this)->ignoreClickEvents;
+}
+
+void MLabelHighlighter::setIgnoreClickEvents(bool ignore)
+{
+    d(this)->ignoreClickEvents = ignore;
+}
+
+bool MLabelHighlighter::isIgnoringLongPressEvents() const
+{
+    return d(this)->ignoreLongPressEvents;
+}
+
+void MLabelHighlighter::setIgnoreLongPressEvents(bool ignore)
+{
+     d(this)->ignoreLongPressEvents = ignore;
+}
+
 
 bool MLabelHighlighter::validate(QString &item) const
 {

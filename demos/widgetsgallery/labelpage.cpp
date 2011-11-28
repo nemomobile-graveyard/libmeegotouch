@@ -41,7 +41,8 @@ LabelPage::LabelPage()
       phoneHighlighter(0),
       urlHighlighter(0),
       emailHighlighter(0),
-      commonHighlighter(0)
+      commonHighlighter(0),
+      selectableUrlHighlighter(0)
 {
 }
 
@@ -51,6 +52,7 @@ LabelPage::~LabelPage()
     delete emailHighlighter;
     delete urlHighlighter;
     delete commonHighlighter;
+    delete selectableUrlHighlighter;
 }
 
 QString LabelPage::timedemoTitle()
@@ -106,6 +108,9 @@ void LabelPage::createContent()
     email->setObjectName("emailLabelHighlighter");
     MCommonLabelHighlighter *url = new MCommonLabelHighlighter(urlregexp);
     url->setObjectName("urlLabelHighlighter");
+    MCommonLabelHighlighter *selectableUrl = new MCommonLabelHighlighter(urlregexp);
+    selectableUrl->setObjectName("selectableUrlLabelHighlighter");
+    selectableUrl->setIgnoreLongPressEvents(true);
 
     connect(phone, SIGNAL(longPressed(QString)), this, SLOT(phoneNumberLongPressed(QString)));
     connect(phone, SIGNAL(clicked(QString)), this, SLOT(phoneNumberClicked(QString)));
@@ -116,11 +121,14 @@ void LabelPage::createContent()
     connect(url, SIGNAL(longPressed(QString)), this, SLOT(urlLongPressed(QString)));
     connect(url, SIGNAL(clicked(QString)), this, SLOT(urlClicked(QString)));
 
+    connect(selectableUrl, SIGNAL(clicked(QString)), this, SLOT(urlClicked(QString)));
+
     connect(ignoreClickAndLongPressCheckbox, SIGNAL(toggled(bool)), this, SLOT(enableOrDisableClickAndLongPressHandling(bool)));
 
     phoneHighlighter = phone;
     emailHighlighter = email;
     urlHighlighter = url;
+    selectableUrlHighlighter = selectableUrl;
 
     richLabel->addHighlighter(emailHighlighter);
     richLabel->addHighlighter(phoneHighlighter);
@@ -131,9 +139,7 @@ void LabelPage::createContent()
     selectableLabel->setStyleName(inv("CommonBodyText"));
     containerPolicy->addItem(selectableLabel);
 
-    selectableLabel->addHighlighter(emailHighlighter);
-    selectableLabel->addHighlighter(phoneHighlighter);
-    selectableLabel->addHighlighter(urlHighlighter);
+    selectableLabel->addHighlighter(selectableUrlHighlighter);
 
     retranslateUi();
 }
@@ -202,7 +208,14 @@ void LabelPage::urlClicked(const QString &link)
 
 void LabelPage::enableOrDisableClickAndLongPressHandling(bool checked)
 {
-    phoneHighlighter->setIgnoreClickAndLongPressEvents(!checked);
-    emailHighlighter->setIgnoreClickAndLongPressEvents(!checked);
-    urlHighlighter->setIgnoreClickAndLongPressEvents(!checked);
+    phoneHighlighter->setIgnoreClickEvents(!checked);
+    phoneHighlighter->setIgnoreLongPressEvents(!checked);
+
+    emailHighlighter->setIgnoreClickEvents(!checked);
+    emailHighlighter->setIgnoreLongPressEvents(!checked);
+
+    urlHighlighter->setIgnoreClickEvents(!checked);
+    urlHighlighter->setIgnoreLongPressEvents(!checked);
+
+    selectableUrlHighlighter->setIgnoreClickEvents(!checked);
 }

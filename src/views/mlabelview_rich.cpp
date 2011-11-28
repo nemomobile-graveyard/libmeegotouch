@@ -368,7 +368,7 @@ void MLabelViewRich::mousePressEvent(QGraphicsSceneMouseEvent *event)
         //handle the press only if it is happening to standard anchor
         //or if our own highlighter does not want to ignore it
         MLabelHighlighter* h = extractHighlighter(format);
-        if (!(h && h->ignoreClickAndLongPressEvents())) {
+        if (!(h && h->isIgnoringClickEvents())) {
             event->accept();
             viewPrivate->style()->pressFeedback().play();
             mouseDownCursorPos = cursorPos;
@@ -383,7 +383,7 @@ void MLabelViewRich::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     if (format.isValid() && format.isAnchor()) {
         //highlighted anchor is released
         MLabelHighlighter* h = extractHighlighter(format);
-        if (h && !h->ignoreClickAndLongPressEvents()) {
+        if (h && !h->isIgnoringClickEvents()) {
             h->click(format.anchorHref());
             viewPrivate->style()->releaseFeedback().play();
         }
@@ -418,7 +418,7 @@ void MLabelViewRich::longPressEvent(QGestureEvent *event, QTapAndHoldGesture* ge
     QTextCharFormat format = charFormat(gesturePos);
     if (format.isValid()) {
         MLabelHighlighter* h = extractHighlighter(format);
-        if (h && !h->ignoreClickAndLongPressEvents()) {
+        if (h && !h->isIgnoringLongPressEvents()) {
             event->accept(gesture);
             if(gesture->state() == Qt::GestureFinished ) {
                 h->longPress(format.anchorHref());
