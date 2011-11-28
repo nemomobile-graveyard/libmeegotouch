@@ -259,7 +259,7 @@ void Ut_MContentItem::testClicked()
 
 void Ut_MContentItem::testLongTapped()
 {
-    QSignalSpy longTappedSpy(m_subject, SIGNAL(longTapped()));
+    QSignalSpy longTappedSpy(m_subject, SIGNAL(longTapped(QPointF)));
     m_subject->longTap(QPointF(0, 0));
     QCOMPARE(longTappedSpy.count(), 1);
 }

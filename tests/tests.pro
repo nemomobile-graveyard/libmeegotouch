@@ -219,7 +219,8 @@ SUBDIRS     =  \
     ut_mpreloader \
     ut_mlistindex \
     ut_mtextselectionoverlay\
-    ut_mcomponentdata
+    ut_mcomponentdata \
+    ut_mrichtexteditdialogsmanager \
 
 # enable only when we have icu available
 
