@@ -150,7 +150,7 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
     QObject::connect(control, SIGNAL(cursorPositionChanged()),
                      this, SLOT(updateEditorToolbarPosition()));
     QObject::connect(control, SIGNAL(selectionChanged()),
-                     this, SLOT(updateEditorToolbarPosition()));
+                     this, SLOT(handleSelectionChanged()));
     QObject::connect(control, SIGNAL(enabledChanged()),
                      this, SLOT(updateGestureGrab()));
     QObject::connect(focusAnimationDelay, SIGNAL(timeout()),
@@ -887,9 +887,6 @@ void MTextEditViewPrivate::showSelectionOverlay()
                              Qt::UniqueConnection);
         }
 
-        QObject::connect(controller, SIGNAL(selectionChanged()),
-                         this, SLOT(mapSelectionChange()),
-                         Qt::UniqueConnection);
         QObject::connect(MInputMethodState::instance(),
                          SIGNAL(inputMethodAreaChanged(const QRect &)),
                          this, SLOT(mapSelectionChange()),
@@ -1385,8 +1382,6 @@ void MTextEditViewPrivate::onSelectionOverlayVisibleChanged()
 {
     Q_Q(MTextEditView);
     if (!selectionOverlay.isNull() && !selectionOverlay.data()->isVisible()) {
-        QObject::disconnect(controller, SIGNAL(selectionChanged()),
-                            this, SLOT(mapSelectionChange()));
         QObject::disconnect(MInputMethodState::instance(),
                          SIGNAL(inputMethodAreaChanged(const QRect &)),
                          this, SLOT(mapSelectionChange()));
@@ -1872,6 +1867,23 @@ void MTextEditViewPrivate::setSelection()
     scrollingTestAndStart(lastHandlePos, true);
 }
 
+void MTextEditViewPrivate::handleSelectionChanged()
+{
+    Q_Q(MTextEditView);
+
+    if (controller->hasSelectedText() && !q->model()->isSelecting()) {
+        if (!q->style()->disableToolbar()) {
+            showEditorToolbar();
+        }
+        showSelectionOverlay();
+    } else {
+        updateEditorToolbarPosition();
+        if (q->model()->isSelecting()) {
+            mapSelectionChange();
+        }
+    }
+}
+
 void MTextEditViewPrivate::updateGestureGrab()
 {
     if (controller->isEnabled())
@@ -2142,8 +2154,7 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     }
 
     if ((magnifierHidden
-         || !insideCurrentPreedit
-         || d->controller->hasSelectedText())
+         || !insideCurrentPreedit)
         && !style()->disableToolbar()) {
         d->showEditorToolbar();
     }
@@ -2153,10 +2164,6 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     d->inAutoSelectionClick = false;
     d->longPressTimer->stop();
     d->scrollTimer->stop();
-
-    if (d->controller->hasSelectedText()) {
-        d->showSelectionOverlay();
-    }
 }
 
 
@@ -2586,8 +2593,7 @@ void MTextEditView::setFocused(Qt::FocusReason reason)
     d->playFocusAnimation(QAbstractAnimation::Forward, style()->focusedPromptOpacity());
 
     if (d->controller->hasSelectedText()) {
-        d->showEditorToolbar();
-        d->showSelectionOverlay();
+        d->handleSelectionChanged();
     } else {
         // Try restoring editor toolbar if window is no longer minimized,
         // or if a popup window has disappeared.
