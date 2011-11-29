@@ -129,6 +129,7 @@ protected slots:
     void hideSelectionOverlayTemporarily();
     void restoreSelectionOverlay();
     void setSelection();
+    void handleSelectionChanged();
 
 private:
     void scrollingTestAndStart(QGraphicsSceneMouseEvent *event);
