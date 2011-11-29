@@ -17,56 +17,30 @@
 **
 ****************************************************************************/
 
-#ifndef MCOLORLISTVEIW_H
-#define MCOLORLISTVEIW_H
+#ifndef UT_MCOLORLIST_H
+#define UT_MCOLORLIST_H
 
-#include <MWidgetView>
+#include <QtTest/QtTest>
 #include <QObject>
 
-#include "mcolorlistmodel.h"
-#include "mcolorliststyle.h"
-
-class MButton;
 class MColorList;
-class MColorListViewPrivate;
 
-/**
- * \brief View class for MColorList.
- */
-class M_VIEWS_EXPORT MColorListView : public MWidgetView
+class Ut_MColorList : public QObject
 {
     Q_OBJECT
-    MColorListViewPrivate *d_ptr;
-    M_VIEW(MColorListModel, MColorListStyle)
-    Q_DISABLE_COPY(MColorListView)
-    Q_DECLARE_PRIVATE(MColorListView)
-
-public:
-
-    MColorListView(MColorList *controller);
-
-    virtual ~MColorListView();
-
-protected:
-
-    //! \reimp
-
-    virtual void applyStyle();
-
-    virtual void setupModel();
-
-    virtual void updateData(const QList<const char*> &modifications);
-
-    //! \reimp_end
 
 private slots:
+    void initTestCase();
+    void cleanupTestCase();
 
-    void buttonClicked(MButton *button);
+    void init();
+    void cleanup();
 
-#ifdef UNIT_TEST
-    friend class Ut_MColorListView;
-#endif
+    void testSelectedColor();
 
+private:
+    MColorList *m_subject;
 };
 
-#endif
+#endif // UT_MCOLORLIST_H
+

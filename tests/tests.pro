@@ -203,6 +203,8 @@ SUBDIRS     =  \
     ut_mgles2renderer \
     ut_mgraphicsclipeffect \
     ut_mwidgetanimation \
+    ut_mcolorlist \
+    ut_mcolorlistview \
     ut_mcolorcombobox \
     ut_mcolorcomboboxview \
     ut_mcolorcomboboxbutton \
