@@ -122,6 +122,10 @@ protected Q_SLOTS:
 
 private:
     Q_DECLARE_PRIVATE(MInfoBannerEventView)
+
+#ifdef UNIT_TEST
+    friend class Ut_MInfoBannerView;
+#endif
 };
 
 #endif
