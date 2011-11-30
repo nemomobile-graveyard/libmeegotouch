@@ -1,8 +1,21 @@
-libmeegotouch (0.25.1~1) unstable; urgency=low
+libmeegotouch (0.25.1-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#285637 - Notes application crashes while launching in memory full condition
+  * Fixes: NB#287018 - MListView crash
+  * Fixes: NB#291403 - Crash in CameraInterface::showCamera called from QML application
+  * Fixes: NB#292564 - Long tap on a link in a label doesn't start text selection.
+  * Fixes: NB#289259 - Text handler is not shown in the phone number or number field in a scenario
+  * Fixes: NB#292677 - When a window is animated on top the window shows content from some other window
+  * Fixes: NB#291403 - Crash in CameraInterface::showCamera called from QML application
+  * Fixes: NB#289536 - [TASK] Page content visible outside viewport during CrossFadedOrientationAnimation
+  * Fixes: NB#282858 - Status area:Ongoing call indicator remains in pressed down state doesn't reset its state in certain scenario
+  * Fixes: NB#282839 - [TASK] Unable to hide the status bar in call-ui.
+  * Fixes: NB#274617 - libmeegotouch requires QtDBus and this is not reflected in pkg-config configuration
+  * Fixes: NB#289472
+  * Fixes: NB#288568 - [TASK] Banner texts to be right-aligned in RTL languages
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 22 Nov 2011 15:02:54 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 30 Nov 2011 14:49:07 +0200
 
 libmeegotouch (0.25.0-1) unstable; urgency=low
 
