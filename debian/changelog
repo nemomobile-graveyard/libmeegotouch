@@ -1,3 +1,12 @@
+libmeegotouch (0.24.15-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#289259, Text handler is not shown in the phone number or number field in a scenario
+  * Fixes: NB#292677 - When a window is animated on top the window shows content from some other window
+  * Fixes: NB#291403 - Crash in CameraInterface::showCamera called from QML application
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 30 Nov 2011 14:53:14 +0200
+
 libmeegotouch (0.24.14-1) unstable; urgency=low
 
   * Fixes: NB#282839 - [TASK] Unable to hide the status bar in call-ui.
