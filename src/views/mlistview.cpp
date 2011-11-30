@@ -220,9 +220,9 @@ void MListView::relayoutItemsInViewportRect()
     }
 
     if (d_ptr->model && model()->cellCreator()) {
-        int rowCount = d_ptr->rowCount;
+        d_ptr->rowCount = d_ptr->model->rowCount();
 
-        if (rowCount) {
+        if (d_ptr->rowCount) {
             QModelIndex firstVisibleIndex = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y());
             d_ptr->updateFirstVisibleRow(firstVisibleIndex);
             QModelIndex lastVisibleIndex = d_ptr->locateLastVisibleIndexInRowAt(d_ptr->viewportTopLeft.y() + d_ptr->viewportVisibleHeight);
