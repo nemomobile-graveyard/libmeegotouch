@@ -29,6 +29,7 @@
 #include <QElapsedTimer>
 
 #include "mtexteditview.h"
+#include "melidedtext.h"
 
 class MEditorToolbar;
 class MTextEdit;
@@ -82,7 +83,7 @@ public:
     qreal promptOpacity() const;
     void setPromptOpacity(qreal opacity);
 
-    QRectF clippingRect();
+    QRectF clippingRect() const;
 
     void showSelectionOverlay();
 
@@ -174,6 +175,12 @@ private:
     //! \brief map item coordinates to view coordinates
     QPointF fromItem(const QPointF &point) const;
 
+    //! \brief Return text option for prompt drawing.
+    QTextOption promptOption() const;
+
+    //! \brief Elide prompt if it does not fit into current geometry.
+    QString elidedPrompt(const QTextOption &textOption) const;
+
 protected:
     MTextEditView *q_ptr;
 
@@ -249,6 +256,8 @@ protected:
     bool panningStarted;
     QPointF lastScenePos; // last controller position in scene coordinates
     QElapsedTimer movementTime;
+
+    MElidedText shortPrompt;
 
 #ifdef UNIT_TEST
     friend class Ut_MTextEditView;

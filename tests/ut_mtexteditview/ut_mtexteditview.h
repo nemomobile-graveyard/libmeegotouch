@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QtTest/QtTest>
 #include <QString>
-
+#include <QImage>
 
 class MApplication;
 class MApplicationWindow;
@@ -65,9 +65,11 @@ private slots:
     void testEditorToolbarReappearanceAfterMovement();
     void testEditorToolbarAutoHide();
     void testSelectionOverlay();
+    void testPromptEliding();
 
 private:
     bool editorToolbarAppeared() const;
+    QImage captureImage(MWidget *widget);
 
 private:
     AutoActivatedScene *sc;

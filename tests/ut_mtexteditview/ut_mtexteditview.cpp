@@ -852,5 +852,57 @@ void Ut_MTextEditView::testSelectionOverlay()
     QCOMPARE(m_controller->model()->isSelecting(), false);
 }
 
+void Ut_MTextEditView::testPromptEliding()
+{
+    m_controller->setParentItem(sc->window()->box());
+    m_controller->setFocus();
+    sc->window()->show();
+    QTest::qWaitForWindowShown(sc->window());
+
+    const QString shortWord("A");
+    const QString longWord(1024, QChar('B'));
+    const QChar separatorChar(0x9c, 0);
+    const QString separator(separatorChar);
+
+    const QString shortAndShort = shortWord + separator + shortWord;
+    const QString longAndShort = longWord + separator + shortWord;
+    const QString superLong = longWord + " " + shortWord;
+
+    m_controller->setPrompt(shortAndShort);
+    const QImage shortAndShortCapture = captureImage(m_controller);
+    QCOMPARE(m_subject->d_ptr->elidedPrompt(m_subject->d_ptr->promptOption()), shortWord);
+
+    m_controller->setPrompt(shortWord);
+    const QImage shortCapture = captureImage(m_controller);
+    QCOMPARE(m_subject->d_ptr->elidedPrompt(m_subject->d_ptr->promptOption()), shortWord);
+
+    QCOMPARE(shortCapture.isNull(), false);
+    QCOMPARE(shortAndShortCapture.isNull(), false);
+    QCOMPARE(shortCapture, shortAndShortCapture);
+
+    m_controller->setPrompt(longAndShort);
+    const QImage longAndShortCapture = captureImage(m_controller);
+    QCOMPARE(m_subject->d_ptr->elidedPrompt(m_subject->d_ptr->promptOption()), shortWord);
+
+    QCOMPARE(shortCapture, longAndShortCapture);
+
+    m_controller->setPrompt(superLong);
+    const QString elidedPrompt = m_subject->d_ptr->elidedPrompt(m_subject->d_ptr->promptOption());
+    QVERIFY(elidedPrompt.length() < superLong.length());
+}
+
+QImage Ut_MTextEditView::captureImage(MWidget *widget)
+{
+    QPixmap pixmap(widget->size().toSize());
+    pixmap.fill(Qt::transparent);
+
+    {
+        QPainter painter(&pixmap);
+        widget->paint(&painter, NULL, NULL);
+    }
+
+    return pixmap.toImage();
+}
+
 QTEST_APPLESS_MAIN(Ut_MTextEditView)
 

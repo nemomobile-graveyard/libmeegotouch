@@ -3,7 +3,8 @@ TARGET = ut_mtexteditview
 
 SOURCES += \
     ut_mtexteditview.cpp \
-    $$MSRCDIR/views/mtexteditview.cpp
+    $$MSRCDIR/views/mtexteditview.cpp \
+    $$MSRCDIR/views/melidedtext.cpp \
 
 HEADERS += \
     ut_mtexteditview.h \
@@ -11,6 +12,7 @@ HEADERS += \
     meditortoolbar.h \
     $$MSRCDIR/views/mtexteditview.h \
     $$MSRCDIR/views/mtexteditview_p.h \
+    $$MSRCDIR/views/melidedtext.h \
     mtextselectionoverlay.h
 
 OTHER_FILES += ut_mtexteditview.css

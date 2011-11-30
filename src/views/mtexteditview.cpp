@@ -22,6 +22,7 @@
 #include "mtextmagnifier.h"
 #include "meditortoolbar.h"
 #include "mcompleter.h"
+#include "melidedtext.h"
 
 #include <MSceneManager>
 #include <MApplicationPage>
@@ -689,9 +690,9 @@ void MTextEditViewPrivate::setPromptOpacity(qreal opacity)
     q->doUpdate();
 }
 
-QRectF MTextEditViewPrivate::clippingRect()
+QRectF MTextEditViewPrivate::clippingRect() const
 {
-    Q_Q(MTextEditView);
+    Q_Q(const MTextEditView);
 
     qreal paddingLeft, paddingRight, marginLeft, marginRight;
 
@@ -1410,6 +1411,42 @@ QPointF MTextEditViewPrivate::fromItem(const QPointF &point) const
     return (point - QPointF(leftMargin, q->marginTop()));
 }
 
+QTextOption MTextEditViewPrivate::promptOption() const
+{
+    QTextOption promptOptions = document()->defaultTextOption();
+    // direction of document is used for internal purposes after fix of
+    // NB#282904 - Arabic text starts from the left side of the text field when using only special characters or numerals
+    // take the intended direction from the controller's property
+    promptOptions.setTextDirection(controller->layoutDirection());
+    if (promptOptions.textDirection() == Qt::LayoutDirectionAuto) {
+        // QPainter::drawText() does not consider LayoutDirectionAuto properly
+        // so we take the direction from contents ourself
+        foreach (QChar c, controller->model()->prompt()) {
+            QChar::Direction d = c.direction();
+            if (d == QChar::DirL) {
+                promptOptions.setTextDirection(Qt::LeftToRight);
+                break;
+            } else if (d == QChar::DirR || d == QChar::DirAL) {
+                promptOptions.setTextDirection(Qt::RightToLeft);
+                break;
+            }
+        }
+    }
+
+    return promptOptions;
+}
+
+QString MTextEditViewPrivate::elidedPrompt(const QTextOption &textOption) const
+{
+    Q_Q(const MTextEditView);
+
+    QString elided = shortPrompt.elided(clippingRect().size(),
+                                        q->style()->promptFont(),
+                                        textOption);
+
+    return elided;
+}
+
 /*!
  * \brief Method to handle mouse movement
  * \param event mouse event information (like position)
@@ -1893,7 +1930,9 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
                                             topClipping,
                                             -rightClipping,
                                             -bottomClipping));
-    clipping = clipping.intersected(option->exposedRect);
+    if (option) {
+        clipping = clipping.intersected(option->exposedRect);
+    }
 
     // If text does not fit inside widget, it may have to be scrolled
     const qreal dx = -d->hscroll + paddingLeft;
@@ -1919,25 +1958,7 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         && d->activeDocument()->blockCount() > 0 // this is in fact always so, even if text is empty
                                                  // checking just to prevent segfault by activeDocument()->begin()
         ) {
-        QTextOption promptOptions = d->document()->defaultTextOption();
-        // direction of document is used for internal purposes after fix of
-        // NB#282904 - Arabic text starts from the left side of the text field when using only special characters or numerals
-        // take the intended direction from the controller's property
-        promptOptions.setTextDirection(d->controller->layoutDirection());
-        if (promptOptions.textDirection() == Qt::LayoutDirectionAuto) {
-            // QPainter::drawText() does not consider LayoutDirectionAuto properly
-            // so we take the direction from contents ourself
-            foreach (QChar c, model()->prompt()) {
-                QChar::Direction d = c.direction();
-                if (d == QChar::DirL) {
-                    promptOptions.setTextDirection(Qt::LeftToRight);
-                    break;
-                } else if (d == QChar::DirR || d == QChar::DirAL) {
-                    promptOptions.setTextDirection(Qt::RightToLeft);
-                    break;
-                }
-            }
-        }
+        const QTextOption promptOptions = d->promptOption();
         
         // The document layout is the most proper box for drawing the prompt
         QRectF promptClipping = d->activeDocument()->documentLayout()->blockBoundingRect(d->activeDocument()->begin());
@@ -1953,7 +1974,8 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         painter->setPen(s->promptColor());
         QFont saveFont = painter->font();
         painter->setFont(s->promptFont());
-        painter->drawText(promptClipping, model()->prompt(), promptOptions);
+
+        painter->drawText(promptClipping, d->elidedPrompt(promptOptions), promptOptions);
         painter->setPen(savePen);
         painter->setFont(saveFont);
         painter->setOpacity(opacity);
@@ -1961,7 +1983,7 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
 
     // normal painting, also draw cursor when prompt is visible
     QAbstractTextDocumentLayout::PaintContext paintContext = d->paintContext();
-    paintContext.clip = option->exposedRect;
+    paintContext.clip = option ? option->exposedRect : boundingRect();
     paintContext.clip.translate(-dx, -dy);
     d->activeDocument()->documentLayout()->draw(painter, paintContext);
 
@@ -2416,6 +2438,8 @@ void MTextEditView::updateData(const QList<const char *> &modifications)
             if (d->document()->isEmpty() == true) {
                 viewChanged = true;
             }
+            d->shortPrompt.setText(model()->prompt());
+
         } else if ((member == MTextEditModel::PreeditCursor)
                    || (member == MTextEditModel::AdditionalFormats)) {
             doUpdate(); // no need for checking sizes just for these
@@ -2517,6 +2541,8 @@ void MTextEditView::setupModel()
 
     d->checkSize();
     d->checkScroll();
+
+    d->shortPrompt.setText(model()->prompt());
 
     MWidgetView::setupModel();
 }
