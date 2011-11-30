@@ -81,6 +81,10 @@ protected slots:
 private:
     Q_DISABLE_COPY(MApplicationMenuButtonView)
     Q_DECLARE_PRIVATE(MApplicationMenuButtonView)
+
+#ifdef UNIT_TEST
+    friend class Ut_MApplicationMenuButtonView;
+#endif
 };
 //! \internal_end
 

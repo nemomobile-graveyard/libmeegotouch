@@ -58,6 +58,8 @@ SUBDIRS     =  \
      ut_mlinearlayoutpolicy \
      ut_mapplicationmenu \
      ut_mapplicationmenuview \
+     ut_mapplicationmenubutton \
+     ut_mapplicationmenubuttonview \
      ut_mobjectmenu \
      ut_mobjectmenuview \
      ut_moverlay \
