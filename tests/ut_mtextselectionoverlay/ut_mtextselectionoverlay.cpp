@@ -174,9 +174,9 @@ void Ut_MTextSelectionOverlay::testSelectionPressAndMove()
                                           SIGNAL(pressed(const MTextSelectionHandle *)));
 
     QSignalSpy selectionHanldeAReleasedSpy(&(subject->handleA),
-                                          SIGNAL(released()));
+                                          SIGNAL(released(const MTextSelectionHandle *)));
     QSignalSpy selectionHanldeBReleasedSpy(&(subject->handleB),
-                                          SIGNAL(released()));
+                                          SIGNAL(released(const MTextSelectionHandle *)));
 
     QSignalSpy selectionHanldeMovedSpy(subject,
                                        SIGNAL(selectionHandleMoved(const QPointF &)));
