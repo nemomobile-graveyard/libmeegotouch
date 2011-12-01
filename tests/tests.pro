@@ -72,6 +72,7 @@ SUBDIRS     =  \
      ut_mprogressindicatorspinnerview \
      ut_mprogressindicatorbarview \
      ut_mrichtextedit \
+     ut_mrichtexteditdialogsmanager \
      ut_mscenemanager \
      ut_mseparator \
      ut_mseparatorview \

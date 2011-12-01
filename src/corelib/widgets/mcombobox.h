@@ -434,7 +434,7 @@ private:
 
 #ifdef UNIT_TEST
     friend class Ut_MComboBox;
-    friend class Ut_MRichTextEditDialogsManager;
+    friend class Ut_MRichTextEditDialogsManager_callbacks;
 #endif
 };
 

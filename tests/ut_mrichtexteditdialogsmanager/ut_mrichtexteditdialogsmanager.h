@@ -21,10 +21,12 @@
 #define UT_MRICHTEXTEDITDIALOGSMANAGER_H
 
 #include <QObject>
-#include <QtTest/QtTest>
-#include <QString>
+#include <QtTest>
 
+class MApplication;
+class MApplicationWindow;
 class MRichTextEditDialogsManager;
+class Ut_MRichTextEditDialogsManager_callbacks;
 
 Q_DECLARE_METATYPE(MRichTextEditDialogsManager *);
 
@@ -37,11 +39,32 @@ private slots:
     void cleanup();
     void initTestCase();
     void cleanupTestCase();
+
+    void testSettingTextStyle_data();
     void testSettingTextStyle();
 
 private:
+    MApplication *m_app;
+    MApplicationWindow *m_appWin;
     MRichTextEditDialogsManager *m_subject;
+
+    friend class Ut_MRichTextEditDialogsManager_callbacks;
 };
 
+class Ut_MRichTextEditDialogsManager_callbacks : public QObject
+{
+    Q_OBJECT
+
+public:
+    Ut_MRichTextEditDialogsManager_callbacks(Ut_MRichTextEditDialogsManager *ut, bool accept);
+    virtual ~Ut_MRichTextEditDialogsManager_callbacks();
+
+public slots:
+    void testSettingTextStyle_callback();
+
+private:
+    Ut_MRichTextEditDialogsManager *m_ut;
+    bool accept;
+};
 
 #endif

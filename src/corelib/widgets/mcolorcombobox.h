@@ -68,7 +68,7 @@ protected slots:
     //! \reimp_end
 
 #ifdef UNIT_TEST
-    friend class Ut_MRichTextEditDialogsManager;
+    friend class Ut_MRichTextEditDialogsManager_callbacks;
 #endif
 };
 //! \internal_end
