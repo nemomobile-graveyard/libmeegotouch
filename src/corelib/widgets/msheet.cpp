@@ -82,16 +82,16 @@ void MSheetPrivate::_q_makeSystemSheetDisappearImmediately()
 {
     Q_Q(MSheet);
 
-    Q_ASSERT(standAloneWindow->scene() == q->scene());
-    q->sceneManager()->disappearSceneWindowNow(q);
+    if (q->sceneManager())
+        q->sceneManager()->disappearSceneWindowNow(q);
 }
 
 void MSheetPrivate::_q_dismissSystemSheetImmediately()
 {
     Q_Q(MSheet);
 
-    Q_ASSERT(standAloneWindow->scene() == q->scene());
-    q->sceneManager()->dismissSceneWindowNow(q);
+    if (q->sceneManager())
+        q->sceneManager()->dismissSceneWindowNow(q);
 }
 
 void MSheetPrivate::_q_onCentralWidgetDestroyed()
