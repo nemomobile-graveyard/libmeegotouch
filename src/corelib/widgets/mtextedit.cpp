@@ -3104,22 +3104,6 @@ QVariant MTextEdit::itemChange(GraphicsItemChange change, const QVariant &value)
     Q_D(MTextEdit);
 
     switch (change) {
-
-    case QGraphicsItem::ItemVisibleHasChanged:
-        // Workaround for NB#186087 -  QGraphicsItem never gets focusOutEvent on hide:
-        if (!value.toBool() &&
-            d->focusEventState == MTextEditPrivate::FocusInEventReceived) {
-
-            // Hidden (but focused) MTextEdit (please don't ask what it means
-            // to hide a controller) does not need a VKB:
-            d->closeAutoSip();
-            d->disconnectCompleter();
-
-            // Need to notify the view, too:
-            emit lostFocus(Qt::OtherFocusReason);
-        }
-        break;
-
     case QGraphicsItem::ItemScenePositionHasChanged:
         // notify widgets (completer or magnifier) that the scene position has changed.
         emit d->signalEmitter.scenePositionChanged();
