@@ -707,6 +707,11 @@ void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
 
         if (allWindowsLogicallyClosed) {
             MApplication::setPrestarted(true);
+#ifdef Q_WS_X11
+            if (MApplication::softwareRendering() || MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
+                applyStartupWindowBackground();
+            }
+#endif //Q_WS_X11
         }
 
         if (!q->closeOnLazyShutdown()) {
