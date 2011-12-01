@@ -19,6 +19,8 @@ case "$1" in
         # create cache directory
         mkdir -p -m a+w /var/cache/meegotouch
         mkdir -p -m a+w /var/cache/meegotouch/css
+        rmdir /usr/share/meegotouch/icu
+        ln -s /usr/share/mlocale/icu /usr/share/meegotouch/icu
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

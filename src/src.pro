@@ -13,7 +13,10 @@ macx:SUBDIRS -= settings extensions
 include(../mkspecs/common.pri)
 
 contains(DEFINES, HAVE_ICU) {
-    SUBDIRS += icu-extradata
+    # only install data files if we do not use the ones from libmlocale
+    !contains(DEFINES, HAVE_LIBMLOCALE) {
+        SUBDIRS += icu-extradata
+    }
 }
 
 #install device configuration file
