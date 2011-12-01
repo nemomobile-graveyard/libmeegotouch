@@ -184,6 +184,10 @@ void MWindowPrivate::init()
         q->setWindowState(q->windowState() | Qt::WindowFullScreen);
 
 #ifdef Q_WS_X11
+    if (MApplication::softwareRendering() || MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
+        applyStartupWindowBackground();
+    }
+
     MGraphicsSystemHelper::enableSwitchEvents();
 #endif //Q_WS_X11
 
@@ -1518,10 +1522,6 @@ void MWindow::setVisible(bool visible)
         }
 
         if (!isVisible()) {
-            if (MApplication::softwareRendering() || MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
-                d->applyStartupWindowBackground();
-            }
-
             d->isAboutToBeShown = true;
 
             // Ensure that window is in a proper orientation angle before
@@ -1580,6 +1580,16 @@ bool MWindow::closeOnLazyShutdown() const
     Q_D(const MWindow);
 
     return d->closeOnLazyShutdown;
+}
+
+void MWindow::prestartedInit()
+{
+#ifdef Q_WS_X11
+    Q_D(MWindow);
+    if (MApplication::softwareRendering() || MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
+        d->applyStartupWindowBackground();
+    }
+#endif //Q_WS_X11
 }
 
 int MWindow::orientationChangeTransitionMode()
