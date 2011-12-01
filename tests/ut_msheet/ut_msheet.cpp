@@ -193,6 +193,21 @@ void Ut_MSheet::testMakingSheetDisappearClosesStandAloneWindow()
     STATE_COMPARE(subject->sceneWindowState(), MSceneWindow::Disappeared);
 }
 
+void Ut_MSheet::testDismissingSheetTwoTimesDoesNotCrash()
+{
+    subject->appearSystemwide(MSceneWindow::KeepWhenDone);
+
+    STATE_COMPARE(subject->sceneWindowState(), MSceneWindow::Appeared);
+
+    // being dismissed two times should not result in a crash when the event loop is reached
+    subject->dismiss();
+    subject->dismiss();
+
+    QApplication::processEvents(); // sheet disappearance comes on next event loop
+
+    STATE_COMPARE(subject->sceneWindowState(), MSceneWindow::Disappeared);
+}
+
 /*
   If user wants its centralWidget to be bigger than the area of the
   central slot he has to add a MPannableViewport himself.
