@@ -256,10 +256,21 @@ void MPannableViewportPrivate::_q_pannedWidgetWidthOutOfViewport()
     // If current position is bigger than new panned widget size (in panning direction) then
     // position should be updated to avoid unnecessary panning animation.
     if (q->panDirection().testFlag(Qt::Horizontal)) {
-        qreal updatedPosition = pannedWidget->size().width() - q->size().width();
-        if(updatedPosition < q->position().x())
-            q->setPosition(QPointF(qMax((qreal)0, updatedPosition), q->position().y()));
+
+        applyAutoRange();
+
+        const qreal rangeRightLimit = q->range().right();
+        if (rangeRightLimit < q->position().x()) {
+            q->setPosition(QPointF(rangeRightLimit, q->position().y()));
+        }
     }
+
+    // The widthChanged signal is called from an event handler. Singleshot timer
+    // will ensure that relocation will be triggered only after sizes of the viewport
+    // settle and correct microfocus is returned from scene. This is a workaround
+    // until we find out why we don't have the correct value of the microfocus rect
+    // returned while calling it from the width changed slot.
+    QTimer::singleShot(0, q, SLOT(_q_ensureFocusedPannedWidgetIsVisible()));
 }
 
 void MPannableViewportPrivate::_q_ensureFocusedPannedWidgetIsVisible()
