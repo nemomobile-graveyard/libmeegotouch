@@ -375,10 +375,17 @@ void Ut_MButtonView::testCheckboxView()
     m_button->setEnabled(false);
     QImage img2 = captureImage(m_button);
 
+    //down
+    m_button->setEnabled(true); // re-enable
+    m_button->setDown(true);
+    QImage img3 = captureImage(m_button);
+
     QVERIFY(img0 != img1);
     QVERIFY(img0 != img2);
+    QVERIFY(img0 != img3);
 
     QVERIFY(img1 != img2);
+    QVERIFY(img1 != img3);
 }
 
 void Ut_MButtonView::testSizeHint()
