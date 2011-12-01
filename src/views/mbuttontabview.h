@@ -79,6 +79,9 @@ private:
     Q_DISABLE_COPY(MButtonTabView)
     Q_DECLARE_PRIVATE(MButtonTabView)
 
+#ifdef UNIT_TEST
+    friend class Ut_MButtonTabView;
+#endif
 };
 
 #endif
