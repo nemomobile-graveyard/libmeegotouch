@@ -45,6 +45,7 @@ SOURCES += main.cpp \
     labelpage.cpp \
     debugpage.cpp \
     screenshotpage.cpp \
+    clipboardpage.cpp \
     pushbuttonpage.cpp \
     buttongrouppage.cpp \
     feedbackpage.cpp \
@@ -109,6 +110,7 @@ HEADERS += templatepage.h \
     mainpage.h \
     debugpage.h \
     screenshotpage.h \
+    clipboardpage.h \
     labelpage.h \
     pushbuttonpage.h \
     buttongrouppage.h \

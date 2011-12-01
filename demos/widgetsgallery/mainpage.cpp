@@ -54,6 +54,7 @@
 #include "customnavigationbarpage.h"
 #include "debugpage.h"
 #include "screenshotpage.h"
+#include "clipboardpage.h"
 #include "viewheaderpage.h"
 
 #include "../../benchmarks/performancebenchmark/emptymainloophelper.h"
@@ -129,6 +130,7 @@ public:
         FeedbackPageType,
         DebugPageType,
         ScreenshotPageType,
+        ClipboardPageType,
     };
 
 public:
@@ -228,6 +230,9 @@ public:
 
         //% "Take a screenshot"
         addGalleryPage(6, qtTrId("xx_wg_take_screenshot"), WidgetsGalleryDataModel::ScreenshotPageType);
+
+        //% "Copy content to clipboard"
+        addGalleryPage(6, qtTrId("xx_wg_debug_clipboard"), WidgetsGalleryDataModel::ClipboardPageType);
     }
 
     ~WidgetsGalleryDataModel() {
@@ -443,6 +448,9 @@ private:
                     page = new ScreenShotPage();
                     page->setObjectName("ScreenShotPage");
                     break;
+                case ClipboardPageType:
+                    page = new ClipboardPage();
+                    page->setObjectName("ClipboardPage");
                 default:
                     break;
                 }
