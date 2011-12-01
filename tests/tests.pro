@@ -32,6 +32,7 @@ SUBDIRS     =  \
      ut_mscrollchain \
      ut_mbutton \
      ut_mbuttonview \
+     ut_mbuttontabview \
      ut_mbuttongroup \
      ut_mbubbleitem \
      ut_mcombobox \
