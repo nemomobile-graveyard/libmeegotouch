@@ -104,6 +104,7 @@ PRIVATE_HEADERS += \
     mslotlayout.h \
     mtextselectionhandle.h \
     mtextselectionoverlay.h \
+    melidedtext.h \
 
 SOURCES += \
     mapplicationpageview.cpp \
@@ -177,4 +178,5 @@ SOURCES += \
     mslotlayout.cpp \
     mtextselectionhandle.cpp \
     mtextselectionoverlay.cpp \
+    melidedtext.cpp \
 
