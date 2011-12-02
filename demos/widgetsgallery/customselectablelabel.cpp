@@ -95,28 +95,6 @@ CustomSelectableLabel::CustomSelectableLabel(QString const &text, QGraphicsItem 
     label->setWordWrap(true);
     label->setWrapMode(QTextOption::WordWrap);
 
-    edit = new CustomEdit(this);
-    edit->setReadOnly(true);
-
-    QTextDocument *document = edit->document();
-    if (document) {
-        QTextOption textOptions;
-
-        if (label->wordWrap())
-            textOptions.setWrapMode(label->wrapMode());
-        else
-            textOptions.setWrapMode(QTextOption::ManualWrap);
-        textOptions.setAlignment(label->alignment());
-
-        document->setDefaultTextOption(textOptions);
-        document->setDefaultFont(label->font());
-    }
-
-    edit->setSizePolicy(label->sizePolicy());
-
-    editModel = dynamic_cast<MTextEditModel*>(edit->model());
-    connect(editModel, SIGNAL(modified(QList<const char*>)), this, SLOT(onEditModelModified(QList<const char *>)));
-
     layout = new MLayout;
     setLayout(layout);
 
@@ -124,10 +102,6 @@ CustomSelectableLabel::CustomSelectableLabel(QString const &text, QGraphicsItem 
     labelPolicy->setContentsMargins(0,0,0,0);
     labelPolicy->addItem(label);
     labelPolicy->activate();
-
-    editPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
-    editPolicy->setContentsMargins(0,0,0,0);
-    editPolicy->addItem(edit);
 
     grabGestureWithCancelPolicy(Qt::TapAndHoldGesture, Qt::GestureFlags(), MWidget::MouseEventCancelOnGestureFinished);
 
@@ -142,7 +116,8 @@ CustomSelectableLabel::~CustomSelectableLabel()
 void CustomSelectableLabel::setStyleName(const QString &name)
 {
     label->setStyleName(name);
-    edit->setStyleName(QString("LikeLabel") + name);
+    if (edit)
+        edit->setStyleName(QString("LikeLabel") + name);
 }
 
 void CustomSelectableLabel::setText(const QString &text)
@@ -190,7 +165,7 @@ void CustomSelectableLabel::tapAndHoldGestureEvent(QGestureEvent *event, QTapAnd
 
 void CustomSelectableLabel::hitTimeout()
 {
-    if (!edit->startSelection(edit->mapFromScene(hitPoint))) {
+    if (edit && !edit->startSelection(edit->mapFromScene(hitPoint))) {
         switchToLabel();
     }
 }
@@ -199,6 +174,35 @@ void CustomSelectableLabel::switchToEdit()
 {
     if (selecting)
         return;
+
+    if (!edit) {
+        edit = new CustomEdit(this);
+        edit->setReadOnly(true);
+        edit->setStyleName(QString("LikeLabel") + label->styleName());
+
+        QTextDocument *document = edit->document();
+        if (document) {
+            QTextOption textOptions;
+
+            if (label->wordWrap())
+                textOptions.setWrapMode(label->wrapMode());
+            else
+                textOptions.setWrapMode(QTextOption::ManualWrap);
+            textOptions.setAlignment(label->alignment());
+
+            document->setDefaultTextOption(textOptions);
+            document->setDefaultFont(label->font());
+        }
+
+        edit->setSizePolicy(label->sizePolicy());
+
+        editModel = dynamic_cast<MTextEditModel*>(edit->model());
+        connect(editModel, SIGNAL(modified(QList<const char*>)), this, SLOT(onEditModelModified(QList<const char *>)));
+
+        editPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+        editPolicy->setContentsMargins(0,0,0,0);
+        editPolicy->addItem(edit);
+    }
 
     if (label->textElide())
         edit->setText(label->renderedText()); //Elided text can be retrieved using renderedText() but it looses HTML-formatting
