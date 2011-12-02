@@ -1,3 +1,11 @@
+libmeegotouch (0.24.16-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#279399 - Some simplified Chinese characters are shown wrong stroke counts in Contacts when changing Regional format to Hong Kong(stroke no. sort).
+  * Fixes: NB#293464 - View blinks when VKB pops up after tapping on text edit
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 02 Dec 2011 15:54:50 +0200
+
 libmeegotouch (0.24.15-1) unstable; urgency=low
 
   * New version
