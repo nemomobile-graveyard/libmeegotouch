@@ -58,4 +58,17 @@ void Ut_MListIndex::testListConnections()
     QCOMPARE(groupTitlesChangedSpy.count(), 1);
 }
 
+void Ut_MListIndex::testVisibility()
+{
+    MList *list = new MList;
+    m_subject->setVisible(true);
+    m_subject->setList(list);
+    m_subject->updateGroupTitles();
+    QCOMPARE(m_subject->isVisible(), true);
+
+    // should be hidden like the list
+    list->hide();
+    QCOMPARE(m_subject->isVisible(), false);
+}
+
 QTEST_APPLESS_MAIN(Ut_MListIndex)
