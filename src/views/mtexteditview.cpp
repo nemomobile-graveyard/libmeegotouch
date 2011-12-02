@@ -664,6 +664,10 @@ void MTextEditViewPrivate::hideEditorToolbarTemporarily()
     if (editorToolbar && editorToolbar->isAppeared()) {
         editorToolbar->disappear();
     }
+
+    if (showMovedToolbar.isActive()) {
+        showMovedToolbar.stop();
+    }
 }
 
 void MTextEditViewPrivate::restoreEditorToolbar()
@@ -1256,8 +1260,10 @@ void MTextEditViewPrivate::onEditorMoved()
         const qreal distance = (lastScenePos - controller->scenePos()).manhattanLength();
         const qreal speed = elapsed ? distance / elapsed : 0;
         if (speed > q->style()->toolbarSpeedLimit()) {
-            showMovedToolbar.start();
             hideEditorToolbarTemporarily();
+            if (!magnifier || !magnifier->isAppeared()) {
+                showMovedToolbar.start();
+            }
             lastScenePos = controller->scenePos();
         } else {
             updateEditorToolbarPosition();
