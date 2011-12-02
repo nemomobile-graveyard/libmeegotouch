@@ -36,6 +36,7 @@ private slots:
     void cleanupTestCase();
 
     void testListConnections();
+    void testVisibility();
 
 private:
     MListIndex *m_subject;
