@@ -40,6 +40,7 @@ SUBDIRS     =  \
      ut_mdialog \
      ut_mdialogview \
      ut_mmessagebox \
+     ut_mmessageboxview \
      ut_mnavigationbar \
      ut_mnavigationbarview \
      ut_mlist \
