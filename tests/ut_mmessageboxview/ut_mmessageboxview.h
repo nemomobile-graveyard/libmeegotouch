@@ -17,41 +17,32 @@
 **
 ****************************************************************************/
 
-#ifndef MMESSAGEBOXVIEW_H
-#define MMESSAGEBOXVIEW_H
+#ifndef UT_MMESSAGEBOX_H
+#define UT_MMESSAGEBOX_H
 
-#include "mdialogview.h"
-#include "mmessageboxmodel.h"
-#include <mmessageboxstyle.h>
+#include <QtTest/QtTest>
+#include <QObject>
 
 class MMessageBox;
-class MMessageBoxViewPrivate;
+class MMessageBoxView;
 
-class M_VIEWS_EXPORT MMessageBoxView : public MDialogView
+class Ut_MMessageBoxView : public QObject
 {
     Q_OBJECT
-    M_VIEW(MMessageBoxModel, MMessageBoxStyle)
 
-public:
-    MMessageBoxView(MMessageBox *controller);
-    virtual ~MMessageBoxView();
+private slots:
+    void init();
+    void cleanup();
+    void initTestCase();
+    void cleanupTestCase();
 
-protected:
-    //! \reimp
-    virtual void setupModel();
-    //! \reimp_end
-
-protected Q_SLOTS:
-    virtual void updateData(const QList<const char *>& modifications);
-    virtual void applyStyle();
+    void testTitleLabel();
+    void testTextLabel();
+    void testIcon();
 
 private:
-    Q_DECLARE_PRIVATE(MMessageBoxView)
-
-#ifdef UNIT_TEST
-    friend class Ut_MMessageBoxView;
-#endif
+    MMessageBox *m_messageBox;
+    MMessageBoxView *m_subject;
 };
 
 #endif
-
