@@ -26,6 +26,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QTimer>
 #include <QTapAndHoldGesture>
+#include <MCancelEvent>
 
 bool CustomEdit::startSelection(const QPointF &hitPoint)
 {
@@ -169,6 +170,9 @@ void CustomSelectableLabel::tapAndHoldGestureEvent(QGestureEvent *event, QTapAnd
     event->accept(gesture);
 
     if (gesture->state() == Qt::GestureFinished) {
+        MCancelEvent cancelEvent;
+        QApplication::sendEvent(label, &cancelEvent);
+
         switchToEdit();
 
         hitPoint = gesture->position();
