@@ -277,7 +277,7 @@ public Q_SLOTS:
      */
     virtual void disappear();
 
-    /* !
+    /*!
      * \brief Dismisses the scene window.
      *
      * Returns true if the scene window was dismissed; otherwise returns false.
@@ -410,7 +410,7 @@ protected:
      */
     QPointF offset() const;
 
-    /* Add ! here
+    /*!
      * \brief Event handler for MDismissEvent
      *
      * This event handler can be reimplemented in a subclass to receive scene window
