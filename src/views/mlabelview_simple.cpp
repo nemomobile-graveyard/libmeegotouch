@@ -21,6 +21,7 @@
 #include "mlabelmodel.h"
 #include "mlabel.h"
 #include "mviewcreator.h"
+#include "melidedtext.h"
 
 #include <QPainter>
 #include <QTextDocument>
@@ -342,99 +343,13 @@ void MLabelViewSimple::updateStringVariants()
 
 QString MLabelViewSimple::textToRender(const QSizeF &renderSize, bool *isMultipleLines) const
 {
-    QFont font = viewPrivate->controller->font();
-    QFontMetricsF fm(font);
 
-    QTextLayout textLayout;
-    textLayout.setFont(font);
-    textLayout.setTextOption(viewPrivate->textOptions);
-
-    int elideAtLineNumber = -1;
-    const qreal leading = fm.leading();
-
-    QString text;
-    bool firstVariant = true;
-
-    if (isMultipleLines)
-        *isMultipleLines = false;
-    for (int i = 0; i < stringVariants.count(); ++i) {
-        qreal height = -leading;
-        int lineCount = 0;
-        elideAtLineNumber = -1;
-        text = stringVariants[i];
-        if (!firstVariant) {
-            textLayout.endLayout();
-            textLayout.clearLayout();
-        }
-        firstVariant = false;
-        textLayout.setText(text);
-        textLayout.beginLayout();
-        forever {
-            QTextLine line = textLayout.createLine();
-            if (!line.isValid())
-                break;
-            lineCount++;
-            if (isMultipleLines)
-                *isMultipleLines = (lineCount > 1);
-
-            height += leading;
-            if (height <= renderSize.height()) {
-                line.setLineWidth(renderSize.width());
-                height += line.height();
-                if (line.naturalTextWidth() > renderSize.width() &&
-                        (viewPrivate->model()->textElide() || i < stringVariants.count() - 1) ) {
-                    elideAtLineNumber = lineCount -1;
-                    // We've exceeded the maximum available width, so if we can elide, elide this string.
-                    // If we have an alternative variant
-                    // string, use that.  Else we have to just put up with the line being too long
-                    break;
-                }
-            }
-            if (height > renderSize.height() && lineCount > 1) {
-                // We've exceeded the maximum available space, so we need to elide the previous line
-                elideAtLineNumber = lineCount - 2;
-                break;
-            }
-        }
-        //If we don't need to elide, then the string fits, so no need to try the next string
-        //variant
-        if (elideAtLineNumber == -1)
-            break;
-    }
-
-    if (elideAtLineNumber >= 0) {
-        QTextLine line = textLayout.lineAt(elideAtLineNumber);
-        Q_ASSERT(line.isValid());
-
-        // The string might have a newline at the end, so it's important that we remove it
-        // before eliding etc.  Also remove any other spaces from the end.
-        int lineLength = line.textLength();
-        while (lineLength && text.at(line.textStart() + lineLength - 1).isSpace())
-            --lineLength;
-
-        /* We want to just truncate the text, and not actually elide */
-        if (!viewPrivate->model()->textElide())
-            return text.left(line.textStart() + lineLength);
-
-        // Get the text to elide, but here we use a little trick - we append the elide
-        // character and then send it to elidedText.  There are three possible cases:
-        //
-        // 1. The original line length was too long to fit on the line.  In this case, it
-        // doesn't matter that we've added an elide character, because it will be cut off
-        // anyway.
-        //
-        // 2. The original line length was far too too short to fit on the line.  In this case,
-        // elidedText will do nothing, and so the elide character that we've added is shown
-        // only.
-        //
-        // 3. The original line length was only just too short to fit on the line.  In this
-        // case, adding the additional elide character will make it just too long, and so
-        // elidedText will remove it, along with a few of the last characters, and use its own
-        // eliding mechanism.
-        QString textToElide = text.mid(line.textStart(), lineLength) + EllipsisChar;
-        return text.left(line.textStart()) + fm.elidedText(textToElide, Qt::ElideRight, renderSize.width(), /*We have no option for showing mnemonics*/0);
-    }
-    return text;
+    return MElidedText::doElideText(renderSize,
+                                    viewPrivate->controller->font(),
+                                    stringVariants,
+                                    viewPrivate->textOptions,
+                                    isMultipleLines,
+                                    viewPrivate->model()->textElide());
 }
 
 qreal MLabelViewSimple::restrictedTextWidth(const QString &text, qreal width) const
