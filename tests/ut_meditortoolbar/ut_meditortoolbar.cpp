@@ -152,6 +152,7 @@ void Ut_MEditorToolbar::testPositionMapping()
     fakeParent->setPos(fakeParentPos);
     subject->appear();
     subject->setPosition(position, MEditorToolbar::BelowPointOfInterest);
+    qApp->processEvents(); // Allow setPosition() to take effect
 
     QPointF mappedActualPos = subject->parentItem()->mapToItem(fakeParent,
                                                                subject->pos());
@@ -193,6 +194,7 @@ void Ut_MEditorToolbar::testForbiddenRegion()
     subject->appear();
     subject->setForbiddenRegion(forbiddenRegion);
     subject->setPosition(position, MEditorToolbar::BelowPointOfInterest);
+    qApp->processEvents(); // Allow setPosition() to take effect
 
     QPointF mappedActualPos = subject->parentItem()->mapToItem(fakeParent,
                                                                subject->pos());
@@ -211,6 +213,7 @@ void Ut_MEditorToolbar::testVerticalPositioning()
 
     subject->appear();
     subject->setPosition(QPointF(), MEditorToolbar::BelowPointOfInterest);
+    qApp->processEvents(); // Allow setPosition() to take effect
 
     // In parent coordinates
     QPointF subjectCenter = fakeParent->mapFromItem(subject,
@@ -223,6 +226,7 @@ void Ut_MEditorToolbar::testVerticalPositioning()
     // Test other way around.
 
     subject->setPosition(QPointF(), MEditorToolbar::AbovePointOfInterest);
+    qApp->processEvents(); // Allow setPosition() to take effect
 
     // In parent coordinates
     subjectCenter = fakeParent->mapFromItem(subject,
