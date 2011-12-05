@@ -60,6 +60,10 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void _q_buttonInteracted())
     Q_PRIVATE_SLOT(d_func(), void _q_fadeOutAnimationFinished())
+
+#ifdef UNIT_TEST
+    friend class Ut_MEscapeButtonPanelView;
+#endif
 };
 
 #endif // MESCAPEBUTTONPANELVIEW_P
