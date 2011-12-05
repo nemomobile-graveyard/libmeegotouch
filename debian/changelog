@@ -1,3 +1,10 @@
+libmeegotouch (0.24.16-2) unstable; urgency=low
+
+  * New version
+  * Changes: test whether /usr/share/meegotouch/icu/ exists before deleting it in the postinstall
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 05 Dec 2011 16:20:00 +0200
+
 libmeegotouch (0.24.16-1) unstable; urgency=low
 
   * New version
