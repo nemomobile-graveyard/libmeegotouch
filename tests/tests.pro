@@ -230,6 +230,8 @@ SUBDIRS     =  \
     ut_mtextselectionoverlay\
     ut_mcomponentdata \
     ut_mrichtexteditdialogsmanager \
+    ut_mescapebuttonpanel \
+    ut_mescapebuttonpanelview \
 
 # enable only when we have icu available
 

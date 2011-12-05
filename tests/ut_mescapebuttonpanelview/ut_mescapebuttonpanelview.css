@@ -1,0 +1,7 @@
+MEscapeButtonPanelStyle#noCloseButton {
+    has-close-button: false;
+}
+
+MEscapeButtonPanelStyle#closeButton {
+    has-close-button: true;
+}
