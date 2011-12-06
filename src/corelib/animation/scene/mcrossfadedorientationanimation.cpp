@@ -23,6 +23,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsWidget>
 #include <QPropertyAnimation>
+#include <QGraphicsOpacityEffect>
 #include <MDeviceProfile>
 
 #include <mwindow.h>
@@ -464,8 +465,11 @@ void MCrossFadedOrientationAnimation::updateState(
         d->createTargetSnapshot();
 
         // hide so the snapshot will be used instead
-        rootElement()->setVisible(false);
-
+        // opacity effect is used instead of simply call hide()
+        // to prevent clearing focus on currently focused item
+        QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect();
+        opacityEffect->setOpacity(0);
+        rootElement()->setGraphicsEffect(opacityEffect);
 
         if (backgroundLayerEffect) {
             // bring it back, now that the snapshot has been taken
@@ -494,7 +498,7 @@ void MCrossFadedOrientationAnimation::updateState(
             }
         }
 
-        rootElement()->setVisible(true);
+        rootElement()->setGraphicsEffect(0);
     }
 
     MParallelAnimationGroup::updateState(newState, oldState);
@@ -511,7 +515,7 @@ void MCrossFadedOrientationAnimation::updateCurrentTime(int currentTime)
         d->dirtyTargetSnapshot = false;
 
         rootElement()->scene()->removeItem(d->sourceSnapshot);
-        rootElement()->show();
+        rootElement()->graphicsEffect()->setEnabled(false);
 
         QGraphicsWidget *backgroundLayerEffect = d->backgroundLayerEffectPointer.data();
         if (backgroundLayerEffect) {
@@ -526,7 +530,7 @@ void MCrossFadedOrientationAnimation::updateCurrentTime(int currentTime)
             backgroundLayerEffect->show();
         }
 
-        rootElement()->hide();
+        rootElement()->graphicsEffect()->setEnabled(true);
         rootElement()->scene()->addItem(d->sourceSnapshot);
     }
 }
