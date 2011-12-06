@@ -850,6 +850,37 @@ void Ut_MLabel::testRichTextElide()
 
 }
 
+void Ut_MLabel::testImagesElide()
+{
+    const int imageSize = 24;
+
+    QFont font(label->font());
+    font.setPointSize(imageSize * 2); // The font height must be larger than the requested image size (see bug 288882)
+    label->setFont(font);
+
+    const QString imageText("<img src='invalid' width='"
+                            + QString::number(imageSize) + "' height='"
+                            + QString::number(imageSize) +"'>");
+    QString imagesText;
+    for (int i = 0; i < 100; ++i) {
+        imagesText += imageText;
+    }
+
+    label->setText(imagesText);
+    label->setTextElide(true);
+    label->setWordWrap(false);
+    label->resize(400, 400);
+
+    const QImage elidedImage = captureImage(label);
+    const QRect elidedRect = contentRect(elidedImage);
+
+    label->setText("...");
+    const QImage invalidImage = captureImage(label);
+    const QRect invalidRect = contentRect(invalidImage);
+
+    QVERIFY(elidedRect.width() > invalidRect.width());
+}
+
 void Ut_MLabel::testHighlighting()
 {
     label->setText("Label <b>rich</b>");

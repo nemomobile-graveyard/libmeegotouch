@@ -478,6 +478,11 @@ void MLabelViewRich::updateRichTextEliding()
         // need to only ever overestimate the charPositionForEllipsis value, never underestimate it.
         QPointF positionForEllipsis = QPointF(viewPrivate->boundingRect().width() - ellipsisSize.width()+1,
                 qMin(viewPrivate->boundingRect().height(), textDocument.documentLayout()->documentSize().height()) - ellipsisSize.height() + 1);
+        if (positionForEllipsis.y() < 0) {
+            // If the document does not contain any text but e.g. only images, the height of the ellipsis might
+            // be larger than the height of the document
+            positionForEllipsis.ry() = 0;
+        }
         int charPositionForEllipsis = textDocument.documentLayout()->hitTest(positionForEllipsis, Qt::FuzzyHit);
 
         // Now we have a pretty good guess where the ellipsis should be.  In practise this is almost

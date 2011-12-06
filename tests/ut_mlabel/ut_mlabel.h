@@ -89,6 +89,7 @@ private slots:
     void testTextElide();
     void testRichTextElide_data();
     void testRichTextElide();
+    void testImagesElide();
 
     void testHighlighting();
     void testHighlightingModel();
