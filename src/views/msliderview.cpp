@@ -378,18 +378,18 @@ void MSliderHandleIndicator::setOrientation(Qt::Orientation orientation)
 
     if (orientation == Qt::Horizontal) {
         indicator->setPos(0, 0);
-        qreal arrowX = qMax(qreal(0), arrowPos - indicatorArrow->rect().width() / 2);
-        indicatorArrow->setPos(arrowX, indicator->rect().bottom());
+        qreal arrowX = qMax(qreal(0), arrowPos - indicatorArrow->preferredWidth() / 2);
+        indicatorArrow->setPos(arrowX, indicator->preferredHeight());
     }
 
     if (orientation == Qt::Vertical) {
-        qreal arrowY = qMax(qreal(0), arrowPos - indicatorArrow->rect().height() / 2);
+        qreal arrowY = qMax(qreal(0), arrowPos - indicatorArrow->preferredHeight() / 2);
         if (!reverse) {
             indicatorArrow->setPos(0, arrowY);
-            indicator->setPos(indicatorArrow->rect().right(), 0);
+            indicator->setPos(indicatorArrow->preferredWidth(), 0);
         } else {
             indicator->setPos(0, 0);
-            indicatorArrow->setPos(indicator->rect().right(), arrowY);
+            indicatorArrow->setPos(indicator->preferredWidth(), arrowY);
         }
     }
     updateGeometry();
@@ -1058,10 +1058,12 @@ void MSliderGroove::updateHandleIndicatorPos()
         handleIndicatorPos.setY(handleIndicatorPos.y() - indicatorOffset);
     }
     if (orientation == Qt::Vertical) {
+        // Set the same gap between handle and its indicator as in horizontal orientation
+        qreal gap = indicatorOffset - sliderHandleIndicator->rect().height();
         if (!reverse)
-            handleIndicatorPos.setX(handleIndicatorPos.x() + indicatorOffset);
+            handleIndicatorPos.setX(handleIndicatorPos.x() + sliderHandle->rect().width() + gap);
         else
-            handleIndicatorPos.setX(handleIndicatorPos.x() - indicatorOffset);
+            handleIndicatorPos.setX(handleIndicatorPos.x() - sliderHandleIndicator->rect().width() - gap);
 
         handleIndicatorPos.setY(handleIndicatorPos.y() +
                                 (sliderHandle->rect().height() / 2) - (sliderHandleIndicator->rect().height() / 2));
