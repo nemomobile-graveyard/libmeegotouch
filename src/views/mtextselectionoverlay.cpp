@@ -243,10 +243,12 @@ void MTextSelectionOverlay::mousePressEvent(QGraphicsSceneMouseEvent *event)
     MTextSelectionHandle *selectionHandle = 0;
     MTextSelectionHandle *idleHandle = 0;
 
-    if (handleA.sceneBoundingRect().contains(event->scenePos())) {
+    if (handleA.isReady()
+        && handleA.sceneBoundingRect().contains(event->scenePos())) {
         selectionHandle = &handleA;
         idleHandle = &handleB;
-    } else if (handleB.sceneBoundingRect().contains(event->scenePos())) {
+    } else if (handleB.isReady()
+               && handleB.sceneBoundingRect().contains(event->scenePos())) {
         selectionHandle = &handleB;
         idleHandle = &handleA;
     }

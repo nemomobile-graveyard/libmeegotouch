@@ -47,6 +47,9 @@ private slots:
     void testRegion_data();
     void testRegion();
 
+    void testMouseInteraction_data();
+    void testMouseInteraction();
+
 private:
     MApplication *m_app;
     MApplicationWindow *m_appWindow;

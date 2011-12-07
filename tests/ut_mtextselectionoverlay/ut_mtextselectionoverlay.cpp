@@ -19,6 +19,7 @@
 
 #include "ut_mtextselectionoverlay.h"
 #include "testview.h"
+#include "../utils.h"
 #include "views/mtextselectionoverlay.h"
 #include "views/mtextselectionhandle.h"
 
@@ -52,6 +53,10 @@ Qt::GestureState QGesture::state() const
 
 void Ut_MTextSelectionOverlay::initTestCase()
 {
+#ifndef __arm__
+    QApplication::setGraphicsSystem("raster");
+#endif
+
     qRegisterMetaType<M::OrientationAngle>("M::OrientationAngle");
     qRegisterMetaType<const MTextSelectionHandle*>("const MTextSelectionHandle*");
 
@@ -309,6 +314,103 @@ void Ut_MTextSelectionOverlay::testRegion()
                                         newCursor, newCursorRect, newCursorVisible);
 
     QCOMPARE(subject->region().isEmpty(), isRegionEmpty);
+}
+
+void Ut_MTextSelectionOverlay::testMouseInteraction_data()
+{
+    QTest::addColumn<int>("angle");
+    QTest::addColumn<bool>("suddenlyHidden");
+    QTest::addColumn<int>("expectSignal");
+
+    QTest::newRow("landscape, visible") << int(M::Angle0)  << false << 1;
+    QTest::newRow("landscape, hiding")  << int(M::Angle0)  << true  << 0;
+    QTest::newRow("portrait, visible")  << int(M::Angle90) << false << 1;
+    QTest::newRow("portrait, hiding")   << int(M::Angle90) << true  << 0;
+}
+
+void Ut_MTextSelectionOverlay::testMouseInteraction()
+{
+    QFETCH(int, angle);
+    QFETCH(bool, suddenlyHidden);
+    QFETCH(int, expectSignal);
+
+    MApplication::activeWindow()->setOrientationAngle((M::OrientationAngle)angle);
+
+    QSignalSpy spyPressed(subject, SIGNAL(selectionHandlePressed(QPointF)));
+    QVERIFY(spyPressed.isValid());
+    QSignalSpy spyMoved(subject, SIGNAL(selectionHandleMoved(QPointF)));
+    QVERIFY(spyMoved.isValid());
+    QSignalSpy spyReleased(subject, SIGNAL(selectionHandleReleased(QPointF)));
+    QVERIFY(spyReleased.isValid());
+
+    // show overlay
+    emit selectedView->selectionChanged(0, QRectF(50, 50, 1, 10), true,
+                                        10, QRectF(300, 50, 1, 10), true);
+
+    QCOMPARE(subject->isVisible(), true);
+    QTest::qWait(50); // wait until transition will be finished
+
+    if (suddenlyHidden) {
+        emit selectedView->selectionChanged(0, QRectF(), false,
+                                            0, QRectF(), false);
+    }
+
+    const QPointF handleAOldPos = subject->handleA.scenePos();
+    const QPointF handleBOldPos = subject->handleB.scenePos();
+    const QPointF pressScenePos = subject->handleA.sceneBoundingRect().center();
+    const QPointF pressPos = subject->mapFromScene(pressScenePos);
+    QGraphicsSceneMouseEvent mousePressEvent(QEvent::GraphicsSceneMousePress);
+    mousePressEvent.setScenePos(pressScenePos);
+    mousePressEvent.setPos(pressPos);
+
+    subject->mousePressEvent(&mousePressEvent);
+
+    QCOMPARE(mousePressEvent.isAccepted(), !suddenlyHidden);
+    QCOMPARE(spyPressed.count(), expectSignal);
+    spyPressed.clear();
+    QCOMPARE(subject->handleA.isPressed(), !suddenlyHidden);
+    QVERIFY(!subject->handleB.isPressed());
+
+    if (!mousePressEvent.isAccepted()) {
+        //Nothing to test, because press event was ignored
+        return;
+    }
+
+    const QPointF moveScenePos = QRectF(subject->handleA.sceneBoundingRect().topLeft(),
+                                        subject->handleB.sceneBoundingRect().bottomRight()).center();
+    const QPointF movePos = subject->mapFromScene(moveScenePos);
+    const QPointF mouseDistance = moveScenePos - pressScenePos;
+
+    QGraphicsSceneMouseEvent mouseMoveEvent(QEvent::GraphicsSceneMouseMove);
+    mouseMoveEvent.setScenePos(moveScenePos);
+    mouseMoveEvent.setPos(movePos);
+
+    subject->mouseMoveEvent(&mouseMoveEvent);
+
+    QCOMPARE(subject->handleA.scenePos() - handleAOldPos, mouseDistance);
+    QCOMPARE(subject->handleB.scenePos(), handleBOldPos);
+    QVERIFY(subject->handleA.isPressed());
+    QVERIFY(!subject->handleB.isPressed());
+    QVERIFY(spyPressed.isEmpty());
+    QVERIFY(spyReleased.isEmpty());
+    QCOMPARE(spyMoved.count(), 1);
+    spyMoved.clear();
+
+    QGraphicsSceneMouseEvent mouseReleaseEvent(QEvent::GraphicsSceneMouseRelease);
+    subject->mouseReleaseEvent(&mouseReleaseEvent);
+
+    // handle A jumps back to initial position,
+    // because TestView does not update selecion when handle is moved
+    QCOMPARE(subject->handleA.scenePos(), handleAOldPos);
+
+    QCOMPARE(subject->handleB.scenePos(), handleBOldPos);
+    QVERIFY(!subject->handleA.isPressed());
+    QVERIFY(!subject->handleB.isPressed());
+
+    QVERIFY(spyPressed.isEmpty());
+    QVERIFY(spyMoved.isEmpty());
+    QCOMPARE(spyReleased.count(), expectSignal);
+    spyReleased.clear();
 }
 
 QTEST_APPLESS_MAIN(Ut_MTextSelectionOverlay)

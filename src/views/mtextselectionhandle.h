@@ -128,6 +128,17 @@ public:
      */
     QRectF region() const;
 
+    /*!
+     * \brief Return true if handle is ready to be pressed.
+     *
+     * Handle is ready if all following conditions are met:
+     * 1) handle is visible,
+     * 2) handle is not disabled,
+     * 3) there is no hiding transition at the moment,
+     * 4) handle is not pressed yet.
+     */
+    bool isReady() const;
+
 Q_SIGNALS:
     /*!
      * \brief Emitted when handle disappears from the screen.
@@ -156,6 +167,9 @@ private Q_SLOTS:
 
 private:
     Q_DISABLE_COPY(MTextSelectionHandle)
+
+    //! Return true if there is ongoing hiding transition.
+    bool isHideInProgress() const;
 
     QPropertyAnimation opacityAnimation;
     bool m_pressed;

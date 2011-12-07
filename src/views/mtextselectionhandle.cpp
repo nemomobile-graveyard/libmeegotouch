@@ -242,10 +242,7 @@ void MTextSelectionHandle::disable()
 
     disabled = true;
 
-    const bool isHideInProgress = (qFuzzyIsNull(opacityAnimation.endValue().toReal())
-                                   && opacityAnimation.state() == QAbstractAnimation::Running);
-
-    if (!isVisible() || isHideInProgress) {
+    if (!isVisible() || isHideInProgress()) {
         return;
     }
 
@@ -270,10 +267,7 @@ void MTextSelectionHandle::enable()
 
     disabled = false;
 
-    const bool isHideInProgress = (qFuzzyIsNull(opacityAnimation.endValue().toReal())
-                                   && opacityAnimation.state() == QAbstractAnimation::Running);
-
-    if (!isVisible() || isHideInProgress) {
+    if (!isVisible() || isHideInProgress()) {
         return;
     }
 
@@ -293,4 +287,16 @@ void MTextSelectionHandle::enable()
 QRectF MTextSelectionHandle::region() const
 {
     return geometry().adjusted(0, 0, 0, -style()->regionPadding());
+}
+
+bool MTextSelectionHandle::isReady() const
+{
+    return isVisible() && !disabled && !isHideInProgress() && !m_pressed;
+}
+
+bool MTextSelectionHandle::isHideInProgress() const
+{
+    return (qFuzzyIsNull(opacityAnimation.startValue().toReal())
+            && opacityAnimation.state() == QAbstractAnimation::Running
+            && opacityAnimation.direction() == QAbstractAnimation::Backward);
 }
