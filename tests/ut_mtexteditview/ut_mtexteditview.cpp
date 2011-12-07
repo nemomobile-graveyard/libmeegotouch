@@ -825,6 +825,78 @@ void Ut_MTextEditView::testEditorToolbarAutoHide()
     QCOMPARE(m_subject->d_func()->editorToolbar->isAutoHideEnabled(), false);
 }
 
+void Ut_MTextEditView::testEditorToolbarAutoHideWithSelectionMagnifier()
+{
+    m_controller->setParentItem(sc->window()->box());
+    sc->window()->show();
+    QTest::qWaitForWindowShown(sc->window());
+
+    // large enough for selecting to be possible
+    m_controller->setText("to be selected");
+    m_controller->resize(500, 50);
+
+    // Give focus, with whatever reason.
+    QMetaObject::invokeMethod(m_controller, "gainedFocus",
+                              Q_ARG(Qt::FocusReason, Qt::OtherFocusReason));
+
+    QGraphicsSceneMouseEvent press(QEvent::GraphicsSceneMousePress);
+    QGraphicsSceneMouseEvent move1(QEvent::GraphicsSceneMouseMove);
+    QGraphicsSceneMouseEvent move2(QEvent::GraphicsSceneMouseMove);
+    QGraphicsSceneMouseEvent release(QEvent::GraphicsSceneMouseRelease);
+
+    press.setPos(QPointF());
+    release.setPos(QPointF(1000, 0));
+    move1.setPos(press.pos());
+    move2.setPos(release.pos());
+
+    move1.setButtons(Qt::LeftButton);
+    move2.setButtons(Qt::LeftButton);
+
+    // Show editor toolbar by selecting text
+    m_subject->mousePressEvent(&press);
+    m_subject->mouseMoveEvent(&move1);
+    m_subject->mouseMoveEvent(&move2);
+    m_subject->mouseReleaseEvent(&release);
+    QCOMPARE(m_controller->hasSelectedText(), true);
+    QCOMPARE(editorToolbarAppeared(), true);
+
+    // Hide editor toolbar temporarily by scrolling
+    m_controller->translate(10, 10);
+    QTest::qWait(10); // motion detection needs for small delay between steps
+    m_controller->translate(10, 10);
+    QVERIFY(m_controller->scene());
+    QCOMPARE(editorToolbarAppeared(), false);
+
+    // Editor toolbar is about to appear
+    QCOMPARE(m_subject->d_func()->showMovedToolbar.isActive(), true);
+
+    // Press selection handle
+    m_subject->d_func()->onSelectionHandlePressed(QPointF());
+    QCOMPARE(editorToolbarAppeared(), false);
+
+    // Editor toolbar should not become visible until selection handle
+    // is released
+    QCOMPARE(m_subject->d_func()->showMovedToolbar.isActive(), false);
+    QTest::qWait(m_subject->style()->toolbarShowDelay() + 15);
+    QCOMPARE(editorToolbarAppeared(), false);
+
+    // Scroll again
+    m_controller->translate(10, 10);
+    QTest::qWait(10); // motion detection needs for small delay between steps
+    m_controller->translate(10, 10);
+    QVERIFY(m_controller->scene());
+    QCOMPARE(editorToolbarAppeared(), false);
+
+    // Editor toolbar should not be about to appear
+    QCOMPARE(m_subject->d_func()->showMovedToolbar.isActive(), false);
+
+    // Release selection handle
+    m_subject->d_func()->onSelectionHandleReleased(QPointF());
+
+    // Editor toolbar should be visible again
+    QCOMPARE(editorToolbarAppeared(), true);
+}
+
 bool Ut_MTextEditView::editorToolbarAppeared() const
 {
     return m_subject->d_func()->editorToolbar

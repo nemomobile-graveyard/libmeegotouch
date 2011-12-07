@@ -33,26 +33,33 @@ public:
         DestroyWhenDone
     };
     MTextMagnifier(const MWidget &, const QSizeF &)
+        : appeared(false)
     {
     }
     void appear()
     {
+        appeared = true;
     }
     void disappear(DeletionPolicy)
     {
+        appeared = false;
     }
     void setMagnifiedPosition(const QPointF &)
     {
     }
     bool isAppeared() const
     {
-        return false;
+        return appeared;
     }
 
     QRectF sceneBoundingRect() const
     {
         return QRectF();
     }
+
+public:
+    bool appeared;
+
 };
 
 #endif
