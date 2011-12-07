@@ -944,7 +944,7 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
             QRectF elapsedRect = grooveRect;
 
             if (value < maximum) {
-                elapsedRect.setTop(qMin(handle_center + elapsedOffset,
+                elapsedRect.setTop(qMax(handle_center + elapsedOffset,
                                         grooveRect.top()));
             }
 
