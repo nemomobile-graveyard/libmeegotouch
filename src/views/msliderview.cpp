@@ -1800,8 +1800,14 @@ void MSliderView::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
         QTransform itemTransform(d->controller->sceneTransform().inverted());
         QPointF itemSpaceOffset = gesture->offset() * itemTransform - QPointF(itemTransform.dx(),itemTransform.dy());
 
-        bool horizontalPan = qAbs(itemSpaceOffset.y()) <= qAbs(itemSpaceOffset.x());
-        if (!horizontalPan) {
+        bool acceptPan = true;
+        if (model()->orientation() == Qt::Horizontal) {
+            acceptPan = qAbs(itemSpaceOffset.y()) <= qAbs(itemSpaceOffset.x());
+        } else {
+            acceptPan = qAbs(itemSpaceOffset.x()) <= qAbs(itemSpaceOffset.y());
+        }
+
+        if (!acceptPan) {
             event->ignore(gesture);
             return;
         }
