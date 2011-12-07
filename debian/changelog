@@ -1,8 +1,16 @@
-libmeegotouch (0.25.2~1) unstable; urgency=low
+libmeegotouch (0.25.2-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#293084 - Handlers and copy text from text selection are missing after rotating the screen in read only field
+  * Fixes: NB#290512 - Closing the style settings dialog has effect of the style on the text
+  * Fixes: NB#292600 - Selection handles/copy-paste toolbar are not visible if hardware events ( by swype keyboard) are sent.
+  * Fixes: NB#274140 - [TASK] [feature] prompt text to support eliding
+  * Fixes: NB#279399 - Some simplified Chinese characters are shown wrong stroke counts in Contacts when changing Regional format to Hong Kong(stroke no. sort).
+  * Fixes: NB#293509 - no documentation for MSceneWindow::dismiss()
+  * Fixes: NB#293464 - View blinks when VKB pops up after tapping on text edit
+  * Fixes: NB#287619 - Presence UI crash appeared when Google is configured with Picasa and Youtube.
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 30 Nov 2011 14:54:24 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 07 Dec 2011 16:22:36 +0200
 
 libmeegotouch (0.25.1-1) unstable; urgency=low
 
