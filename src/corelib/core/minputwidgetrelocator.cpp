@@ -75,6 +75,10 @@ MInputWidgetRelocator::MInputWidgetRelocator(MSceneManager &sceneManager,
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
             this, SLOT(handleKeyboardStateChange()));
 
+    // Event filter will tell us notifications of focus lost events of previously known input widget.
+    connect(&focusLostFilter, SIGNAL(widgetLostFocus(QGraphicsWidget *)),
+            this, SLOT(handlePreviousInputWidgetLostFocus(QGraphicsWidget*)));
+
     // At this point, if there is no MComponenteData::activeWindow the style container will not use
     // correct orientation. Therefore we set scene manager for it which is used instead.
     // Do before initialize() so orientation gets updated right from the beginning.
@@ -130,7 +134,7 @@ void MInputWidgetRelocator::update()
     updatePending = false;
     relocating = true;
 
-    const QGraphicsWidget *inputWidget = focusedWidget();
+    QGraphicsWidget * const inputWidget = focusedWidget();
 
     // Always update screen space
     updateScreenArea();
@@ -138,6 +142,8 @@ void MInputWidgetRelocator::update()
     if (inputWidget
         && rootElement->isAncestorOf(inputWidget)
         && !widgetDoesNotWantToBeScrolled(inputWidget)) {
+
+        trackFocusLost(inputWidget);
 
         MScrollChain *newChain(new MScrollChain(inputWidget, rootElement));
         if (oldChain) {
@@ -586,4 +592,32 @@ void MInputWidgetRelocator::restoreScreenArea()
             }
         }
     }
+}
+
+void MInputWidgetRelocator::trackFocusLost(QGraphicsWidget *widget)
+{
+    // Remove first in order not to duplicate event filtering.
+    // No harm done if it wasn't installed.
+    widget->removeEventFilter(&focusLostFilter);
+    widget->installEventFilter(&focusLostFilter);
+}
+
+void MInputWidgetRelocator::handlePreviousInputWidgetLostFocus(QGraphicsWidget *widget)
+{
+    // If this slot is called with direct connection we know this widget is not destroyed.
+    // Remove event filter from it.
+    widget->removeEventFilter(&focusLostFilter);
+
+    // Do update but only after visiting event loop. Often a new input widget
+    // gets focused immediately after previous lost it. Queueing the call
+    // prevents unnecessary restoring of the chain.
+    QMetaObject::invokeMethod(this, "update", Qt::QueuedConnection);
+}
+
+bool FocusLostEventFilter::eventFilter(QObject *object, QEvent *event)
+{
+    if (event->type() == QEvent::FocusOut) {
+        emit widgetLostFocus(static_cast<const QGraphicsWidget *>(object));
+    }
+    return false; // false = never stop event propagation
 }

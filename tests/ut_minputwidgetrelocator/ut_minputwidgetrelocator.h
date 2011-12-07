@@ -71,8 +71,10 @@ private slots:
     void testDockBottom_data();
     void testDockBottom();
     void testTightFit();
+    void testRestoreOnFocusOut();
 
 private:
+    QPointF inputWidgetRootPos() const;
     QRect allowedZone(const QRect &exposedContentRect, M::Orientation orientation) const;
     qreal verticalAnchorPosition(M::Orientation) const;
     qreal topNoGoMargin(M::Orientation orientation) const;

@@ -40,6 +40,16 @@ enum PostponeRelocationFlag {
 };
 Q_DECLARE_FLAGS(PostponeRelocationFlags, PostponeRelocationFlag)
 
+
+class FocusLostEventFilter : public QObject
+{
+    Q_OBJECT
+public:
+    virtual bool eventFilter(QObject *object, QEvent *event);
+signals:
+    void widgetLostFocus(QGraphicsWidget *widget);
+};
+
 //! \internal
 
 /*!
@@ -104,6 +114,7 @@ public slots:
 private slots:
     void handleKeyboardStateChange();
     void handleInputMethodAreaChange(const QRect &rect);
+    void handlePreviousInputWidgetLostFocus(QGraphicsWidget *widget);
 
 private:
     const MRelocatorStyleContainer &style() const;
@@ -150,6 +161,8 @@ private:
 
     void clearPostponeRelocationFlag(PostponeRelocationFlag flag);
 
+    void trackFocusLost(QGraphicsWidget *widget);
+
 private:
     const QGraphicsScene * const scene;
     const QGraphicsItem * const rootElement;
@@ -168,6 +181,8 @@ private:
     int numOfAppearingSceneWindows;
 
     PostponeRelocationFlags postponeFlags;
+
+    FocusLostEventFilter focusLostFilter;
 
     QScopedPointer<MRelocatorStyleContainer> styleContainer;
 };

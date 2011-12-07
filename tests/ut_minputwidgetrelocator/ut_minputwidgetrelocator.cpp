@@ -366,7 +366,38 @@ void Ut_MInputWidgetRelocator::testTightFit()
     QCOMPARE(actualRectAfter.y(), expectedY); // Cannot have moved since there is no better place.
 }
 
+void Ut_MInputWidgetRelocator::testRestoreOnFocusOut()
+{
+    const QSize screenSize(MDeviceProfile::instance()->resolution());
+    const int sipHeight = screenSize.height() / 2;
+    const QRect landscapeSip(0, screenSize.height() - sipHeight,
+                             screenSize.width(), sipHeight);
+    setupOrientationAndSip(M::Landscape, landscapeSip);
+
+    // Move to somewhere where it will be relocated
+    inputWidget->setPos(QPoint(0, landscapeSip.top()));
+    const QPoint initialRootPos = inputWidgetRootPos().toPoint();
+
+    // Relocate
+    inputWidget->setFocus();
+    subject->update();
+
+    const QPoint relocatedRootPos = inputWidgetRootPos().toPoint();
+    QVERIFY(relocatedRootPos != initialRootPos);
+
+    inputWidget->clearFocus();
+    qApp->processEvents();
+    const QPoint restoredRootPos = inputWidgetRootPos().toPoint();
+
+    QCOMPARE(restoredRootPos, initialRootPos);
+}
+
 // Helper methods
+
+QPointF Ut_MInputWidgetRelocator::inputWidgetRootPos() const
+{
+    return rootElement->mapFromItem(inputWidget, inputWidget->pos());
+}
 
 QRect Ut_MInputWidgetRelocator::allowedZone(const QRect &exposedContentRect, M::Orientation orientation) const
 {
