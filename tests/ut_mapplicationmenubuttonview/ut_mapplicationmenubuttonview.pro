@@ -16,7 +16,7 @@ SOURCES += \
     $$MSRCDIR/views/mbuttontabtransition.cpp \
     $$MSRCDIR/views/mapplicationmenubuttonview.cpp \
     $$MSRCDIR/views/widgets/mapplicationmenubutton.cpp \
-    $${M_BUILD_TREE}/views/.gen/gen_mapplicationmenubuttonmodeldata.cpp \
+    $${M_BUILD_TREE}/src/views/.gen/gen_mapplicationmenubuttonmodeldata.cpp \
 
 HEADERS += \
     ut_mapplicationmenubuttonview.h \
