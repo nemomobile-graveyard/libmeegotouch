@@ -1203,8 +1203,6 @@ void MSliderViewPrivate::init(MSlider *controller)
     maxIndicator = new MSliderIndicator(controller);
     maxIndicator->setObjectName("MSliderHandleMinMaxIndicator");
 
-    bool reverse = qApp->isRightToLeft();
-
     MLayout *mainLayout = new MLayout;
     controller->setLayout(mainLayout);
 
@@ -1212,15 +1210,9 @@ void MSliderViewPrivate::init(MSlider *controller)
     horizontalPolicy->setSpacing(0);
     horizontalPolicy->setContentsMargins(0, 0, 0, 0);
 
-    if (!reverse) {
-        horizontalPolicy->addItem(minIndicator, Qt::AlignCenter);
-        horizontalPolicy->addItem(sliderGroove, Qt::AlignCenter);
-        horizontalPolicy->addItem(maxIndicator, Qt::AlignCenter);
-    } else {
-        horizontalPolicy->addItem(maxIndicator, Qt::AlignCenter);
-        horizontalPolicy->addItem(sliderGroove, Qt::AlignCenter);
-        horizontalPolicy->addItem(minIndicator, Qt::AlignCenter);
-    }
+    horizontalPolicy->addItem(minIndicator, Qt::AlignCenter);
+    horizontalPolicy->addItem(sliderGroove, Qt::AlignCenter);
+    horizontalPolicy->addItem(maxIndicator, Qt::AlignCenter);
 
     verticalPolicy = new MLinearLayoutPolicy(mainLayout, Qt::Vertical);
     verticalPolicy->setSpacing(0);
@@ -1264,17 +1256,9 @@ void MSliderViewPrivate::insertMinIndicatorToLayout()
         return;
     }
 
-    bool reverse = qApp->isRightToLeft();
-
-    if (!reverse) {
-        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(0);
-        if (firstItem != minIndicator)
-            horizontalPolicy->insertItem(0, minIndicator, Qt::AlignCenter);
-    } else {
-        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
-        if (lastItem != minIndicator)
-            horizontalPolicy->insertItem(horizontalPolicy->count(), minIndicator, Qt::AlignCenter);
-    }
+    QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(0);
+    if (firstItem != minIndicator)
+        horizontalPolicy->insertItem(0, minIndicator, Qt::AlignCenter);
 
     QGraphicsLayoutItem* lastItem = verticalPolicy->itemAt(verticalPolicy->count() - 1);
     if (lastItem != minIndicator)
@@ -1288,17 +1272,9 @@ void MSliderViewPrivate::insertMaxIndicatorToLayout()
         return;
     }
 
-    bool reverse = qApp->isRightToLeft();
-
-    if (!reverse) {
-        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
-        if (lastItem != maxIndicator)
-            horizontalPolicy->insertItem(horizontalPolicy->count(), maxIndicator, Qt::AlignCenter);
-    } else {
-        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(0);
-        if (firstItem != maxIndicator)
-            horizontalPolicy->insertItem(0, maxIndicator, Qt::AlignCenter);
-    }
+    QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
+    if (lastItem != maxIndicator)
+        horizontalPolicy->insertItem(horizontalPolicy->count(), maxIndicator, Qt::AlignCenter);
 
     QGraphicsLayoutItem* firstItem = verticalPolicy->itemAt(0);
     if (firstItem != maxIndicator)
@@ -1312,17 +1288,9 @@ void MSliderViewPrivate::removeMinIndicatorFromLayout()
         return;
     }
 
-    bool reverse = qApp->isRightToLeft();
-
-    if (!reverse) {
-        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(0);
-        if (firstItem == minIndicator)
-            horizontalPolicy->removeAt(0);
-    } else {
-        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
-        if (lastItem == minIndicator)
-            horizontalPolicy->removeAt(horizontalPolicy->count() - 1);
-    }
+    QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(0);
+    if (firstItem == minIndicator)
+        horizontalPolicy->removeAt(0);
 
     QGraphicsLayoutItem* lastItem = verticalPolicy->itemAt(verticalPolicy->count() - 1);
     if (lastItem == minIndicator)
@@ -1336,17 +1304,9 @@ void MSliderViewPrivate::removeMaxIndicatorFromLayout()
         return;
     }
 
-    bool reverse = qApp->isRightToLeft();
-
-    if (!reverse) {
-        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
-        if (lastItem == maxIndicator)
-            horizontalPolicy->removeAt(horizontalPolicy->count() - 1);
-    } else {
-        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(0);
-        if (firstItem == maxIndicator)
-            horizontalPolicy->removeAt(0);
-    }
+    QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
+    if (lastItem == maxIndicator)
+        horizontalPolicy->removeAt(horizontalPolicy->count() - 1);
 
     QGraphicsLayoutItem* firstItem = verticalPolicy->itemAt(0);
     if (firstItem == maxIndicator)

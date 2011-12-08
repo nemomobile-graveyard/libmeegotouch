@@ -35,11 +35,14 @@ public:
 private slots:
     void initTestCase();
     void cleanupTestCase();
+    void init();
+    void cleanup();
 
     void sliderResize();
     void sliderGrooveMargin();
     void sliderPositionByValue();
     void testSetValueWhileAnimation();
+    void testMinMaxIndicatorPosition();
 
 private:
     MSeekBar *m_seekbar;

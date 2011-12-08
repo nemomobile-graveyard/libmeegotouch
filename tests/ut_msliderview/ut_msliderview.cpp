@@ -48,6 +48,16 @@ void Ut_MSliderView::initTestCase()
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_msliderview" };
     app = new MApplication(argc, app_name);
+}
+
+void Ut_MSliderView::cleanupTestCase()
+{
+    delete app;
+}
+
+void Ut_MSliderView::init()
+{
+    app->setLayoutDirection(Qt::LeftToRight);
 
     m_seekbar = new MSeekBar();
     m_subject = new MSliderView(m_seekbar);
@@ -55,12 +65,10 @@ void Ut_MSliderView::initTestCase()
     m_seekbar->setRange(0, 100);
 }
 
-void Ut_MSliderView::cleanupTestCase()
+void Ut_MSliderView::cleanup()
 {
     delete m_seekbar;
     m_seekbar = 0;
-
-    delete app;
 }
 
 void Ut_MSliderView::sliderResize()
@@ -98,6 +106,9 @@ void Ut_MSliderView::sliderResize()
 
 void Ut_MSliderView::sliderGrooveMargin()
 {
+    QRectF rect = QRectF(0, 0, 400, 100);
+    m_seekbar->setGeometry(rect);
+
     MSliderGroove *groove = m_subject->d_func()->sliderGroove;
     qreal w = groove->sliderHandle->rect().width();
 
@@ -198,6 +209,59 @@ void Ut_MSliderView::testSetValueWhileAnimation()
     QVERIFY(subject->d_func()->positionAnimation->state() == QAbstractAnimation::Stopped);
     QCOMPARE(subject->model()->value(), 1);
     QCOMPARE(subject->d_func()->position, 1);
+}
+
+void Ut_MSliderView::testMinMaxIndicatorPosition()
+{
+    m_seekbar->setMaxLabel("max");
+    m_seekbar->setMinLabel("min");
+    m_seekbar->setMaxLabelVisible(true);
+    m_seekbar->setMinLabelVisible(true);
+
+    m_seekbar->setGeometry(QRectF(0, 0, 400, 100));
+    m_seekbar->setOrientation(Qt::Horizontal);
+    app->processEvents();
+
+    QPointF minIndicatorCenter = m_subject->d_func()->minIndicator->geometry().center();
+    QPointF maxIndicatorCenter = m_subject->d_func()->maxIndicator->geometry().center();
+    QPointF grooveCenter = m_subject->d_func()->sliderGroove->geometry().center();
+
+    //Minimum indicator is on the left side, groove is in the middle and maximum indicator is on the right
+    QVERIFY(minIndicatorCenter.x() < grooveCenter.x());
+    QVERIFY(grooveCenter.x() < maxIndicatorCenter.x());
+    QVERIFY(minIndicatorCenter.y() == grooveCenter.y());
+    QVERIFY(grooveCenter.y() == maxIndicatorCenter.y());
+
+    m_seekbar->setOrientation(Qt::Vertical);
+    app->processEvents();
+
+    minIndicatorCenter = m_subject->d_func()->minIndicator->geometry().center();
+    maxIndicatorCenter = m_subject->d_func()->maxIndicator->geometry().center();
+    grooveCenter = m_subject->d_func()->sliderGroove->geometry().center();
+
+    //Vertical slider has maximum indicator on the top, groove in the middle and minimum indicator at the bottom
+    QVERIFY(minIndicatorCenter.y() > grooveCenter.y());
+    QVERIFY(grooveCenter.y() > maxIndicatorCenter.y());
+    QVERIFY(minIndicatorCenter.x() == grooveCenter.x());
+    QVERIFY(grooveCenter.x() == maxIndicatorCenter.x());
+
+    app->setLayoutDirection(Qt::RightToLeft);
+    m_seekbar->setOrientation(Qt::Horizontal);
+
+    MSliderView *subject = new MSliderView(m_seekbar);
+    m_seekbar->setView(subject);
+    app->processEvents();
+
+    minIndicatorCenter = subject->d_func()->minIndicator->geometry().center();
+    maxIndicatorCenter = subject->d_func()->maxIndicator->geometry().center();
+    grooveCenter = subject->d_func()->sliderGroove->geometry().center();
+
+    //In the right-to-left layout minimum indicator is on the right side,
+    //groove is in the middle and maximum indicator is on the left
+    QVERIFY(minIndicatorCenter.x() < grooveCenter.x());
+    QVERIFY(grooveCenter.x() < maxIndicatorCenter.x());
+    QVERIFY(minIndicatorCenter.y() == grooveCenter.y());
+    QVERIFY(grooveCenter.y() == maxIndicatorCenter.y());
 }
 
 QTEST_APPLESS_MAIN(Ut_MSliderView)
