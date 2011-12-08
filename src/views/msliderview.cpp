@@ -759,9 +759,9 @@ QPointF MSliderGroove::valueToHandlePos(int value) const
             else
                 newPos.setX(valueRangeRect.left() + (maximum - value) * valueRangeRect.width() / range);
         } else if (orientation == Qt::Vertical) {
-            valueRangeRect.adjust(0, h/2.0, 0, - w / 2.0);
+            valueRangeRect.adjust(0, 0, 0, -h);
 
-            newPos.setX(valueRangeRect.top() + (maximum - value) * valueRangeRect.height() / range);
+            newPos.setY(valueRangeRect.top() + (maximum - value) * valueRangeRect.height() / range);
         }
     }
 

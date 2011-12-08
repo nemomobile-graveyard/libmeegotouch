@@ -139,6 +139,8 @@ void Ut_MSliderView::sliderPositionByValue()
     MSliderHandle *handle = m_subject->d_func()->sliderGroove->sliderHandle;
 
     m_seekbar->setOrientation(Qt::Horizontal);
+    app->processEvents();
+    qreal handleY = handle->geometry().y();
 
     for (int i = 0; i <= 10; i++)
     {
@@ -147,6 +149,21 @@ void Ut_MSliderView::sliderPositionByValue()
         // check that the handle is positioned correctly from the left edge
         QCOMPARE(handle->geometry().x(),
                  groove->geometry().x() + ((float)m_seekbar->value()/100) * (groove->geometry().width()-handle->geometry().width()));
+        QCOMPARE(handle->geometry().y(), handleY);
+    }
+
+    m_seekbar->setOrientation(Qt::Vertical);
+    app->processEvents();
+    qreal handleX = handle->geometry().x();
+
+    for (int i = 0; i <= 10; i++)
+    {
+        m_seekbar->setValue(i * 10);
+
+        // check that the handle is positioned correctly from the bottom edge
+        QCOMPARE(handle->geometry().bottom(),
+                 groove->geometry().height() - ((float)m_seekbar->value()/100) * (groove->geometry().height()-handle->geometry().height()));
+        QCOMPARE(handle->geometry().x(), handleX);
     }
 }
 
