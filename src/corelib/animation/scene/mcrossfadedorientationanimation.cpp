@@ -428,10 +428,14 @@ void MCrossFadedOrientationAnimation::setTargetRotationAngle(
 void MCrossFadedOrientationAnimation::rootElementChanged()
 {
     Q_D(MCrossFadedOrientationAnimation);
-    // disconnect from the geometryChanged() signals of the old root element's
-    // children and reconnect to new root element's children
+
+    // disconnect from the geometryChanged() signals of the old root element's children
     d->disconnectFromGeometryChanges();
-    d->connectToGeometryChanges();
+
+    // if animation is running reconnect to new root element's children
+    if (state() == Running)
+        d->connectToGeometryChanges();
+
     d->dirtyTargetSnapshot = true;
 }
 
@@ -463,6 +467,7 @@ void MCrossFadedOrientationAnimation::updateState(
         rotateRootElement(d->endAngle);
 
         d->createTargetSnapshot();
+        connectToGeometryChanges();
 
         // hide so the snapshot will be used instead
         // opacity effect is used instead of simply call hide()
@@ -545,8 +550,6 @@ void MCrossFadedOrientationAnimationPrivate::createTargetSnapshot()
     targetSnapshotRotationAnimation->setTargetObject(targetSnapshot);
     targetSnapshotFadeInAnimation->setTargetObject(targetSnapshot);
     targetSnapshotPositionAnimation->setTargetObject(targetSnapshot);
-
-    connectToGeometryChanges();
 }
 
 void MCrossFadedOrientationAnimation::rotateRootElement(M::OrientationAngle orientation)
