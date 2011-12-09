@@ -85,7 +85,7 @@ protected:
 
 private slots:
     void handleClicked();
-    void handleLineBreakSwitchClicked(bool checked);
+    void handleLineBreakSwitchToggled(bool checked);
 
 private:
     void copyContentToClipboard(const QString &clipboardText,

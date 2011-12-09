@@ -227,8 +227,8 @@ void CopyListItem::setCopyContent(const QString &newContent)
             lineBreakSwitch->setCheckable(true);
             layoutGrid->addItem(lineBreakSwitch, 1, 0);
 
-            connect(lineBreakSwitch, SIGNAL(clicked(bool)),
-                    this, SLOT(handleLineBreakSwitchClicked(bool)));
+            connect(lineBreakSwitch, SIGNAL(toggled(bool)),
+                    this, SLOT(handleLineBreakSwitchToggled(bool)));
         }
     } else {
         delete lineBreakSwitch;
@@ -277,8 +277,10 @@ void CopyListItem::retranslateUi()
     bannerTitle = qtTrId("xx_copybutton_banner_title");
 }
 
-void CopyListItem::handleLineBreakSwitchClicked(bool breakIntoLines)
+void CopyListItem::handleLineBreakSwitchToggled(bool checked)
 {
+    const bool breakIntoLines = checked;
+
     QString text = subtitleLabel->text();
 
     if (breakIntoLines) {
