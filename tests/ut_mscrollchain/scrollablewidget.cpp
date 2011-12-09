@@ -33,6 +33,7 @@ void ScrollableWidget::setContentItem(QGraphicsItem *item)
     mContentItem = item;
     item->setParentItem(this);
     item->setPos(QPointF());
+    currentScroll = QPoint();
 }
 
 const QGraphicsItem *ScrollableWidget::contentItem() const
@@ -44,13 +45,14 @@ void ScrollableWidget::scrollContents(const QPoint &offset)
 {
     if (mContentItem) {
         mContentItem->setPos(mContentItem->pos() + offset);
+        currentScroll += offset;
     }
 }
 
 void ScrollableWidget::clearScroll()
 {
     if (mContentItem) {
-        mContentItem->setPos(QPointF());
+        mContentItem->setPos(mContentItem->pos() - currentScroll);
     }
 }
 

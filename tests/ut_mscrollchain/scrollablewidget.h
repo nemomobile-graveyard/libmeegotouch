@@ -36,6 +36,7 @@ public:
 
 private:
     QGraphicsItem *mContentItem;
+    QPoint currentScroll;
 };
 
 #endif // SCROLLABLEWIDGET_H
