@@ -467,7 +467,7 @@ void MCrossFadedOrientationAnimation::updateState(
         rotateRootElement(d->endAngle);
 
         d->createTargetSnapshot();
-        connectToGeometryChanges();
+        d->connectToGeometryChanges();
 
         // hide so the snapshot will be used instead
         // opacity effect is used instead of simply call hide()
