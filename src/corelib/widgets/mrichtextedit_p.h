@@ -130,9 +130,18 @@ public:
     void  textStyleValues(QString *fontfamily, int *fontPointSize, QColor *fontColor);
 
     /*!
-     * \brief removes line breakes in rich text document
+     * \brief drop all properties which are not editable via UI
      */
-    QTextDocumentFragment replaceLineBreaks(const QTextDocumentFragment &fragment,const QString &replacement);
+    static QTextCharFormat filterFormat(const QTextCharFormat &QTextCharFormat);
+
+    /*!
+     * \brief parse html into document fragment
+     *
+     * Performs additional preparation of text - removes
+     * formatting that is not supported by MRichTextEdit UI
+     * and linebreaks if the control is single-line.
+     */
+    QTextDocumentFragment fragmentFromHtml(const QString &html) const;
 
      /*!
      * \brief Set new font family

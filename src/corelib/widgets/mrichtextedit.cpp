@@ -285,6 +285,91 @@ QTextCharFormat MRichTextEditPrivate::currentCharFormat() const
     return format;
 }
 
+QTextCharFormat MRichTextEditPrivate::filterFormat(const QTextCharFormat &originalFormat)
+{
+    QTextCharFormat newFormat;
+    static const QList<int> copyProperties =
+	QList<int>()
+	    << QTextFormat::FontFamily
+	    << QTextFormat::FontPointSize
+	    << QTextFormat::FontItalic
+	    << QTextFormat::FontUnderline
+	    << QTextFormat::ForegroundBrush;
+
+    const QMap<int, QVariant> originalProperties = originalFormat.properties();
+    foreach (int property, copyProperties) {
+	QMap<int, QVariant>::const_iterator propIterator = originalProperties.find(property);
+	if (propIterator != originalProperties.end()) {
+	    newFormat.setProperty(property, propIterator.value());
+	}
+    }
+
+    QMap<int, QVariant>::const_iterator weightIterator = originalProperties.find(QTextFormat::FontWeight);
+    if (weightIterator != originalProperties.end()) {
+	const int weight = weightIterator.value().toInt();
+	newFormat.setProperty(QTextFormat::FontWeight,
+			      QVariant(int((weight > QFont::Normal) ? QFont::Bold : QFont::Normal)));
+    }
+
+    return newFormat;
+}
+
+QTextDocumentFragment MRichTextEditPrivate::fragmentFromHtml(const QString &html) const
+{
+    Q_Q(const MRichTextEdit);
+
+    QTextDocument newDocument;
+    newDocument.setHtml(html);
+    QTextCursor newCursor(&newDocument);
+
+    // replace all newlines by spaces, if control is singleline
+    if (q->lineMode() == MTextEditModel::SingleLine) {
+	newCursor.movePosition(QTextCursor::Start);
+	while (newCursor.movePosition(QTextCursor::NextBlock)) {
+	    newCursor.deletePreviousChar();
+	    newCursor.insertText(QChar(' '));
+	}
+    }
+
+    // drop formatting options which are not editable in MRichTextEdit UI
+    newCursor.movePosition(QTextCursor::Start);
+    do {
+	// filter block-wide styles
+	newCursor.setBlockFormat(QTextBlockFormat());
+	newCursor.setBlockCharFormat(filterFormat(newCursor.blockCharFormat()));
+
+	// now filter styles of individual characters
+	// grouping them by sequences with same format
+	newCursor.movePosition(QTextCursor::StartOfBlock);
+	while (!newCursor.atBlockEnd()) {
+	    // this sets anchor to position, further moves will extend selection from here
+	    newCursor.clearSelection();
+
+	    // initialize format
+	    newCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+	    QTextCharFormat format = newCursor.charFormat();
+
+	    // find the end of same-formatted characters sequence
+	    while (true) {
+		newCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+		if (newCursor.atBlockEnd()) {
+		    break;
+		} else if (newCursor.charFormat() != format) {
+		    // charFormat() returns formatting of the previous character
+		    // so at this point position is already one character too far
+		    newCursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+		    break;
+		}
+	    }
+
+	    // modify format of selection
+	    newCursor.setCharFormat(filterFormat(format));
+	}
+    } while (newCursor.movePosition(QTextCursor::NextBlock));
+
+    return QTextDocumentFragment(&newDocument);
+}
+
 bool MRichTextEditPrivate::insertFromMimeData(const QMimeData *source)
 {
     Q_Q(MRichTextEdit);
@@ -293,12 +378,7 @@ bool MRichTextEditPrivate::insertFromMimeData(const QMimeData *source)
     bool updated = false;
 
     if (source->hasHtml()) {
-        // on single line newline are changed into spaces
-        if (q->lineMode() == MTextEditModel::SingleLine) {
-            fragment = replaceLineBreaks(QTextDocumentFragment::fromHtml(source->html()), QChar(' '));
-        } else {
-            fragment = QTextDocumentFragment::fromHtml(source->html());
-        }
+	fragment = fragmentFromHtml(source->html());
         updated = true;
     } else {
         QString text = source->text();
@@ -444,30 +524,6 @@ void MRichTextEditPrivate::textStyleValues(QString *fontfamily, int *fontPointSi
             break;
         }
     }
-}
-
-
-QTextDocumentFragment MRichTextEditPrivate::replaceLineBreaks(const QTextDocumentFragment &fragment,
-                                                              const QString &replacement)
-{
-    // Create temprorary document
-    QTextDocument document;
-    QTextCursor cursor(&document);
-    cursor.insertFragment(fragment);
-
-    // Remove all line breaks
-    cursor.movePosition(QTextCursor::Start);
-    while (cursor.movePosition(QTextCursor::NextBlock)) {
-        cursor.deletePreviousChar();
-        cursor.insertText(replacement);
-    }
-
-    // Set selection
-    cursor.movePosition(QTextCursor::Start);
-    cursor.movePosition(QTextCursor::End,QTextCursor::KeepAnchor);
-
-    // Construct new fragment
-    return QTextDocumentFragment(cursor);
 }
 
 
