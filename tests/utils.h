@@ -48,6 +48,22 @@ namespace Ut_Utils
             QTest::qWait(100);
         }
     }
+
+    /*! Wait for signal or timeout; use SIGNAL macro for signal
+     *
+     * How to use:
+     *
+     * QObject *obj = new QTimer;
+     * obj.start(200);
+     * Ut_Utils::waitForSignal(obj, SIGNAL(timeout()), 1000);
+     */
+    void waitForSignal(const QObject* object, const char* signal, int timeout)
+    {
+        QEventLoop eventLoop;
+        QObject::connect(object, signal, &eventLoop, SLOT(quit()));
+        QTimer::singleShot(timeout, &eventLoop, SLOT(quit()));
+        eventLoop.exec();
+    }
 }
 
 /*! An automated tester for common methods (and their expected behaviour),

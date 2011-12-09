@@ -28,6 +28,7 @@ class MApplicationWindow;
 class MTextSelectionOverlay;
 class MWidgetController;
 class TestView;
+class MTextSelectionHandle;
 
 class Ut_MTextSelectionOverlay : public QObject
 {
@@ -51,6 +52,8 @@ private slots:
     void testMouseInteraction();
 
 private:
+    void waitForTransition(MTextSelectionHandle* handle);
+
     MApplication *m_app;
     MApplicationWindow *m_appWindow;
     MTextSelectionOverlay *subject;

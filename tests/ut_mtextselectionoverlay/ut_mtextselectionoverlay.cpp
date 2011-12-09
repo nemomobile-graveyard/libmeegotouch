@@ -187,12 +187,13 @@ void Ut_MTextSelectionOverlay::testSelectionPressAndMove()
                                        SIGNAL(selectionHandleMoved(const QPointF &)));
 
     // press handleA
-    press.setScenePos(QPointF(300, 60));
-    press.setPos(QPointF(300, 60));
+    QPointF pressScenePos = subject->handleA.sceneBoundingRect().center();
+    press.setScenePos(pressScenePos);
+    press.setPos(subject->mapFromScene(pressScenePos));
     QVERIFY(subject->handleA.sceneBoundingRect().contains(press.scenePos()));
     subject->mousePressEvent(&press);
     QCOMPARE(press.isAccepted(), true);
-    QTest::qWait(60);
+    waitForTransition(&subject->handleA);
     QCOMPARE(subject->handleA.isVisible(), false);
     QCOMPARE(subject->handleA.isPressed(), true);
     QCOMPARE(subject->handleB.isPressed(), false);
@@ -200,24 +201,26 @@ void Ut_MTextSelectionOverlay::testSelectionPressAndMove()
     QCOMPARE(selectionHanldeAPressedSpy.count(), 1);
 
     // move handleA
-    move1.setScenePos(QPointF(400, 60));
-    move1.setPos(QPointF(400, 60));
+    pressScenePos += QPointF(100, 0);
+    move1.setScenePos(pressScenePos);
+    move1.setPos(subject->mapFromScene(pressScenePos));
     subject->mouseMoveEvent(&move1);
     QCOMPARE(move1.isAccepted(), true);
     QCOMPARE(selectionHanldeMovedSpy.count(), 1);
 
-    move2.setScenePos(QPointF(500, 60));
-    move2.setPos(QPointF(500, 60));
+    pressScenePos += QPointF(100, 0);
+    move2.setScenePos(pressScenePos);
+    move2.setPos(subject->mapFromScene(pressScenePos));
     subject->mouseMoveEvent(&move2);
     QCOMPARE(move2.isAccepted(), true);
     QCOMPARE(selectionHanldeMovedSpy.count(), 2);
 
     // release handleA
-    release.setScenePos(QPointF(500, 60));
-    release.setPos(QPointF(500, 60));
+    release.setScenePos(pressScenePos);
+    release.setPos(subject->mapFromScene(pressScenePos));
     subject->mouseReleaseEvent(&release);
     QCOMPARE(release.isAccepted(), true);
-    QTest::qWait(60);
+    waitForTransition(&subject->handleA);
     QCOMPARE(subject->handleA.isVisible(), true);
     QCOMPARE(subject->handleA.isPressed(), false);
     QCOMPARE(subject->handleB.isPressed(), false);
@@ -226,12 +229,13 @@ void Ut_MTextSelectionOverlay::testSelectionPressAndMove()
     QCOMPARE(selectionHanldeAReleasedSpy.count(), 1);
 
     // press handleB
-    press.setScenePos(QPointF(600, 60));
-    press.setPos(QPointF(600, 60));
+    pressScenePos = subject->handleB.sceneBoundingRect().center();
+    press.setScenePos(pressScenePos);
+    press.setPos(subject->mapFromScene(pressScenePos));
     QVERIFY(subject->handleB.sceneBoundingRect().contains(press.scenePos()));
     subject->mousePressEvent(&press);
     QCOMPARE(press.isAccepted(), true);
-    QTest::qWait(60);
+    waitForTransition(&subject->handleB);
     QCOMPARE(subject->handleA.isPressed(), false);
     QCOMPARE(subject->handleA.disabled, true);
     QCOMPARE(subject->handleB.isVisible(), false);
@@ -239,25 +243,27 @@ void Ut_MTextSelectionOverlay::testSelectionPressAndMove()
     QCOMPARE(selectionHanldeBPressedSpy.count(), 1);
 
     selectionHanldeMovedSpy.clear();
-    // move handleA
-    move1.setScenePos(QPointF(700, 60));
-    move1.setPos(QPointF(700, 60));
+    // move handle
+    pressScenePos += QPointF(0, 100);
+    move1.setScenePos(pressScenePos);
+    move1.setPos(subject->mapFromScene(pressScenePos));
     subject->mouseMoveEvent(&move1);
     QCOMPARE(move1.isAccepted(), true);
     QCOMPARE(selectionHanldeMovedSpy.count(), 1);
 
-    move2.setScenePos(QPointF(800, 60));
-    move2.setPos(QPointF(800, 60));
+    pressScenePos += QPointF(0, 100);
+    move2.setScenePos(pressScenePos);
+    move2.setPos(subject->mapFromScene(pressScenePos));
     subject->mouseMoveEvent(&move2);
     QCOMPARE(move2.isAccepted(), true);
     QCOMPARE(selectionHanldeMovedSpy.count(), 2);
 
     // release handleB
-    release.setScenePos(QPointF(800, 60));
-    release.setPos(QPointF(800, 60));
+    release.setScenePos(pressScenePos);
+    release.setPos(subject->mapFromScene(pressScenePos));
     subject->mouseReleaseEvent(&release);
     QCOMPARE(release.isAccepted(), true);
-    QTest::qWait(60);
+    waitForTransition(&subject->handleB);
     QCOMPARE(subject->handleA.isVisible(), true);
     QCOMPARE(subject->handleA.disabled, false);
     QCOMPARE(subject->handleA.isPressed(), false);
@@ -348,7 +354,7 @@ void Ut_MTextSelectionOverlay::testMouseInteraction()
                                         10, QRectF(300, 50, 1, 10), true);
 
     QCOMPARE(subject->isVisible(), true);
-    QTest::qWait(50); // wait until transition will be finished
+    waitForTransition(&subject->handleA); // wait until transition will be finished
 
     if (suddenlyHidden) {
         emit selectedView->selectionChanged(0, QRectF(), false,
@@ -411,6 +417,11 @@ void Ut_MTextSelectionOverlay::testMouseInteraction()
     QVERIFY(spyMoved.isEmpty());
     QCOMPARE(spyReleased.count(), expectSignal);
     spyReleased.clear();
+}
+
+void Ut_MTextSelectionOverlay::waitForTransition(MTextSelectionHandle* handle)
+{
+    Ut_Utils::waitForSignal(&handle->opacityAnimation, SIGNAL(finished()), 1000);
 }
 
 QTEST_APPLESS_MAIN(Ut_MTextSelectionOverlay)
