@@ -76,6 +76,9 @@ public slots:
 protected:
     virtual void retranslateUi();
 
+protected:
+    QList<MTextEdit *> Entries;
+
 private:
     QPointer<MLabel> pageTitleLabel;
     QPointer<MLabel> label0;
@@ -105,7 +108,7 @@ private:
     QPointer<MTextEdit> errorHighlightingTextEdit;
 
     QList<MLabel *> labels;
-    QList<MTextEdit *> Entries;
+
 
     int readOnlyEntryIndex;
 

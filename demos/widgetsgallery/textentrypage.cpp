@@ -269,7 +269,6 @@ TextEntryPage::TextEntryPage()
       labelHeader1(),
        button1(), button2(),
        labels(),
-       Entries(),
       m_autoCapitalisation(true),
       m_errorCorrection(true),
       m_completer(new MCompleter)

@@ -69,6 +69,8 @@ class Timedemo : public QObject
 public:
     Timedemo(MainPage *mainPage, const QStringList& demoPageTitles);
 
+    virtual ~Timedemo();
+
     void setOutputCsv(const QString &filename);
     void setFramelog(const QString &filename);
 
@@ -87,6 +89,8 @@ public:
     int currentBenchmarkRuntime() const;
 
     bool currentBenchmarkRuntimeReached() const;
+
+    TimedemoPage* findTimedemoSpecificPage(const QString &title);
 private:
     void saveFramelog();
 
@@ -110,6 +114,7 @@ private:
     bool timingStarted;
     bool timingStopped;
 
+    QList<TimedemoPage *> timedemoSpecificPages;
 
 private slots:
     void showFirstPage();
