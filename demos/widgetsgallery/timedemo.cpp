@@ -21,6 +21,7 @@
 #include "mainpage.h"
 #include "timedemobenchmark.h"
 #include "templatepage.h"
+#include "textentryvkbpage.h"
 
 #include <MApplication>
 #include <MWindow>
@@ -59,6 +60,13 @@ Timedemo::Timedemo(MainPage *mainPage, const QStringList& demoPageTitles)
     timingStopped(false)
 {
     connect(m_pFrontPage, SIGNAL(appeared()), this, SLOT(showFirstPage()));
+
+    timedemoSpecificPages.append(new TextEntryVkbPage());
+}
+
+Timedemo::~Timedemo() {
+    qDeleteAll(timedemoSpecificPages);
+    timedemoSpecificPages.clear();
 }
 
 void Timedemo::setOutputCsv(const QString &filename)
@@ -116,6 +124,9 @@ void Timedemo::showFirstPage()
                 page = m_pFrontPage;
             } else {
                 page = m_pFrontPage->findPageByTimedemoTitle(title);
+            }
+            if (!page) {
+                page = findTimedemoSpecificPage(title);
             }
             if (page) {
                 demoPages.append(page);
@@ -355,4 +366,15 @@ int Timedemo::currentBenchmarkRuntime() const
 bool Timedemo::currentBenchmarkRuntimeReached() const
 {
     return currentBenchmarkRuntime() >= BenchmarkMinimumRuntime;
+}
+
+TimedemoPage *Timedemo::findTimedemoSpecificPage(const QString &title)
+{
+    foreach(TimedemoPage *page, timedemoSpecificPages) {
+        if (page->timedemoTitle() == title) {
+            return page;
+        }
+    }
+
+    return 0;
 }

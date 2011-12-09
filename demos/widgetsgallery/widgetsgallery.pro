@@ -55,6 +55,7 @@ SOURCES += main.cpp \
     applicationmenupage.cpp \
     toolbarpage.cpp \
     textentrypage.cpp \
+    textentryvkbpage.cpp \
     textentrynavigationpage.cpp \
     textentryattributeextensionpage.cpp \
     textentrypanningpage.cpp \
@@ -121,6 +122,7 @@ HEADERS += templatepage.h \
     applicationmenupage.h \
     toolbarpage.h \
     textentrypage.h \
+    textentryvkbpage.h \
     textentrynavigationpage.h \
     textentryattributeextensionpage.h \
     textentrypanningpage.h \

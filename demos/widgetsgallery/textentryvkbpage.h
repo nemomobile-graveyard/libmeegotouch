@@ -17,37 +17,24 @@
 **
 ****************************************************************************/
 
-#ifndef ROTATIONBENCHMARK_H
-#define ROTATIONBENCHMARK_H
+#ifndef TEXTENTRYVKBPAGE_H
+#define TEXTENTRYVKBPAGE_H
 
-#include "timedemobenchmark.h"
+#include "textentrypage.h"
 
-#include <MNamespace>
-
-/**
-  * Rotate from the current angle to the given one and measures
-  * the FPS while doing the rotation.
-  */
-class RotationBenchmark : public TimedemoBenchmark
+class TextEntryVkbPage : public TextEntryPage
 {
     Q_OBJECT
 public:
-    RotationBenchmark(MApplicationPage *applicationPage, Timedemo *timedemo, M::OrientationAngle targetOrientationAngle);
+    TextEntryVkbPage();
+    virtual ~TextEntryVkbPage();
 
-    QString name();
-    void start();
-    void setMinimumRuntime(int msec);
+    virtual QString timedemoTitle();
 
-private slots:
-    void stabilizeFps();
-    void rotate();
-    void terminateBenchmark();
-    void terminate();
+    virtual void createBenchmarks(Timedemo *timedemo);
 
-private:
-    M::OrientationAngle targetOrientationAngle;
-
-    int minimumRuntime;
+public slots:
+    void showVirtualKeyboard();
 };
 
-#endif // ROTATIONBENCHMARK_H
+#endif // TEXTENTRYVKBPAGE_H

@@ -27,7 +27,8 @@
 
 RotationBenchmark::RotationBenchmark(MApplicationPage *applicationPage, Timedemo *timedemo, M::OrientationAngle targetOrientationAngle)
     : TimedemoBenchmark(applicationPage, timedemo),
-      targetOrientationAngle(targetOrientationAngle)
+      targetOrientationAngle(targetOrientationAngle),
+      minimumRuntime(0)
 {
 }
 
@@ -60,9 +61,23 @@ void RotationBenchmark::rotate()
     connect(MApplication::activeWindow(), SIGNAL(orientationChangeFinished(M::Orientation)), this, SLOT(terminateBenchmark()));
 }
 
+void RotationBenchmark::setMinimumRuntime(int msec)
+{
+    minimumRuntime = msec;
+}
+
 void RotationBenchmark::terminateBenchmark()
 {
-    timedemo->stopTiming(this);
     disconnect(MApplication::activeWindow(), SIGNAL(orientationChangeFinished(M::Orientation)), this, SLOT(terminateBenchmark()));
+    if (timedemo->currentBenchmarkRuntime() >= minimumRuntime) {
+        terminate();
+    } else {
+        QTimer::singleShot(minimumRuntime - timedemo->currentBenchmarkRuntime(), this, SLOT(terminate()));
+    }
+}
+
+void RotationBenchmark::terminate()
+{
+    timedemo->stopTiming(this);
     emit finished();
 }
