@@ -2677,7 +2677,8 @@ void MSceneManager::fastForwardPageSwitchAnimation()
 void MSceneManager::fastForwardOrientationChangeAnimation()
 {
     Q_D(MSceneManager);
-    d->orientationAnimation->setCurrentTime(d->orientationAnimation->duration());
+    if (d->orientationAnimation->state() == QAbstractAnimation::Running)
+        d->orientationAnimation->setCurrentTime(d->orientationAnimation->duration());
 }
 
 void MSceneManager::fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow)
