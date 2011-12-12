@@ -1683,16 +1683,17 @@ void MSliderView::cancelEvent(MCancelEvent *event)
     Q_UNUSED(event);
     Q_D(MSliderView);
 
-    d->controller->setState(MSliderModel::Released);
-
-    style()->cancelFeedback().play();
+    if (d->controller->state() == MSliderModel::Pressed) {
+        d->controller->setState(MSliderModel::Released);
+        style()->cancelFeedback().play();
+        model()->setValue(d->valueWhenPressed);
+    }
 
     if (d->pressTimerId) {
         killTimer(d->pressTimerId);
         d->pressTimerId = 0;
     }
 
-    model()->setValue(d->valueWhenPressed);
     d->sliderGroove->lowerHandleIndicator();
 }
 
@@ -1701,7 +1702,8 @@ void MSliderView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     Q_D(MSliderView);
 
     if (d->controller->isVisible() && d->controller->isOnDisplay()) {
-        style()->releaseFeedback().play();
+        if (d->controller->state() == MSliderModel::Pressed)
+            style()->releaseFeedback().play();
 
         if (d->isCollision(event))
             d->updateValue(event);
