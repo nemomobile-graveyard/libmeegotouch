@@ -254,6 +254,11 @@ void MThemeDaemonServer::clientDataAvailable()
         }
     }
 
+    // We must ensure that we have a client beyond this point.
+    if (!client) {
+        return;
+    }
+
     // client has registered, so we'll read all packets that are currently available from the socket
     while (socket->bytesAvailable()) {
 
