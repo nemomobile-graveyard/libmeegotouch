@@ -1315,8 +1315,10 @@ void MApplicationWindowPrivate::connectPage(MApplicationPage *newPage)
     // page->model()->statusBarDisplayMode()
     statusBarVisibilityUpdateTimer.start();
 
-    if (statusBar->sceneWindowState() != MSceneWindow::Appearing
-            && statusBar->sceneWindowState() != MSceneWindow::Disappearing) {
+    if (!statusBar.isNull()
+            && statusBar->sceneWindowState() != MSceneWindow::Appearing
+            && statusBar->sceneWindowState() != MSceneWindow::Disappearing)
+    {
         ok = q->connect(page, SIGNAL(geometryChanged()),
                         SLOT(_q_updatePageExposedContentRect()));
         if (!ok) qFatal("Signal connection failed!");
