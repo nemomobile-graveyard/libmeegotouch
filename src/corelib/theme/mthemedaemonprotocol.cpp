@@ -178,6 +178,11 @@ void writePacketData(QDataStream &stream, const M::MThemeDaemonProtocol::Packet 
 
 static bool waitForAvailableBytes(QDataStream &stream, quint32 count)
 {
+    // ensure we have a device to read from
+    if (!stream.device()) {
+        return false;
+    }
+
     while (stream.device()->bytesAvailable() < count) {
         if (!stream.device()->waitForReadyRead(SOCKET_DELAY_MS)) {
             return false;
