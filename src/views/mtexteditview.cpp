@@ -2055,7 +2055,10 @@ void MTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
         style()->pressFeedback().play();
     }
 
-    // Only proceed if this is not the focusing tap.
+    // Do not proceed if this is the focusing tap. First tap
+    // on previously unfocused text field only sets focus.
+    // Selecting and other interaction is possible only on already
+    // focused text field.
     if (d->focusingTap) {
         return;
     }
@@ -2096,6 +2099,18 @@ void MTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MTextEditView);
+
+    // Ignore focusing tap if finger is released outside of text field.
+    if (d->focusingTap) {
+        // Use scene coordinates to test. Note that event->pos() is translated
+        // by widget margin but not event->scenePos().
+        QPointF touch = event->scenePos();
+        QRectF rect = d->controller->sceneBoundingRect();
+        if (!rect.contains(touch)) {
+            return;
+        }
+    }
+
     d->scrollSelectTimer->stop();
 
     // Make sure cursor is visible. This is done here on release so
@@ -2141,6 +2156,9 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     // Only proceed if this is not the focusing tap.
     if (d->focusingTap) {
+        // Check that we really got focus.
+        // In both focus-on-press and focus-on-release, focus
+        // should be gained before associated press or release event.
         if (d->focused) {
             // Got focus. The next tap will not be focusing tap.
             d->focusingTap = false;
@@ -2378,7 +2396,7 @@ void MTextEditView::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
         QPointF itemSpaceOffset = gesture->offset() * itemTransform - QPointF(itemTransform.dx(),itemTransform.dy());
 
         bool horizontalPan = qAbs(itemSpaceOffset.y()) <= qAbs(itemSpaceOffset.x());
-        if (!horizontalPan) {
+        if (d->focusingTap || !horizontalPan) {
             event->ignore(gesture);
             return;
         }

@@ -235,6 +235,13 @@ protected:
     QTimer * const scrollSelectTimer;
     QPointF scrollSelectScenePosition;
 
+    /*! When receiving mouse events, this variable tells whether
+     *  ongoing tap is the one that gives this widget focus.
+     *
+     *  Note that this is different from whether the widget actually
+     *  has focus. It depends whether scene is using focus-on-press
+     *  or focus-on-release.
+     */
     bool focusingTap;
 
     QScopedPointer<MTextSelectionOverlay> selectionOverlay;
