@@ -75,11 +75,7 @@ void MSnapshotItem::updateSnapshot()
     }
 
     if (grabContent) {
-#if defined(Q_WS_MAC) || defined(Q_WS_WIN)
         pixmap = QPixmap::grabWidget(graphicsView);
-#else
-        pixmap = QPixmap::grabWindow(graphicsView->effectiveWinId());
-#endif
     }
 }
 
