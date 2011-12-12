@@ -102,6 +102,8 @@ public:
      * inactive area.
      *
      * Also used in cases where a Tap turns into another stroke.
+     * 
+     * \deprecated do not use
      */
     static const QString Cancel;
 
