@@ -198,3 +198,23 @@ MTextEditStyle#LikeLabelCommonBodyText:selected {
     background-image: none;
 }
 
+MSliderStyle#redSlider {
+    background-vertical-elapsed-image: "slider-bg-red" 4px 4px 4px 4px;
+    margin-left:     $MARGIN_DOUBLE;
+    margin-right:    $MARGIN_DOUBLE;
+    groove-preferred-length: 25mm;
+}
+
+MSliderStyle#greenSlider {
+    background-vertical-elapsed-image: "slider-bg-green" 4px 4px 4px 4px;
+    margin-left:     $MARGIN_DOUBLE;
+    margin-right:    $MARGIN_DOUBLE;
+    groove-preferred-length: 25mm;
+}
+
+MSliderStyle#blueSlider {
+    background-vertical-elapsed-image: "slider-bg-blue" 4px 4px 4px 4px;
+    margin-left:     $MARGIN_DOUBLE;
+    margin-right:    $MARGIN_DOUBLE;
+    groove-preferred-length: 25mm;
+}

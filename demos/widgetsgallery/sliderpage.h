@@ -62,6 +62,12 @@ private:
     MSlider *brightnessSlider;
     MContainer *brightnessContainer;
 
+    MSlider *redSlider;
+    MSlider *greenSlider;
+    MSlider *blueSlider;
+    MLabel *colorValueLabel;
+    MContainer *colorContainer;
+
 private slots:
     void modifyAgeSliderHandle(int newValue);
 
@@ -74,6 +80,9 @@ private slots:
     void playerOutOfLoadedContentRange();
 
     void modifyBrightnessSliderHandle(int newValue);
+
+    void modifyColorSliderHandle(int newValue);
+    void updateColorValueLabel();
 };
 
 #endif // SLIDERPAGE_H

@@ -49,7 +49,12 @@ SliderPage::SliderPage() :
     loadedContentMinimum(0),
     loadedContentMaximum(0),
     brightnessSlider(0),
-    brightnessContainer(0)
+    brightnessContainer(0),
+    redSlider(0),
+    greenSlider(0),
+    blueSlider(0),
+    colorValueLabel(0),
+    colorContainer(0)
 {
 }
 
@@ -186,6 +191,71 @@ void SliderPage::createContent()
 
     QObject::connect(brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(modifyBrightnessSliderHandle(int)));
 
+    MLayout *colorLayout = new MLayout;
+    MLinearLayoutPolicy *colorLayoutPolicy = new MLinearLayoutPolicy(colorLayout, Qt::Horizontal);
+    colorLayoutPolicy->setSpacing(0);
+    colorLayoutPolicy->setContentsMargins(0, 0, 0, 0);
+
+    redSlider = new MSlider;
+    redSlider->setObjectName("redSlider");
+    redSlider->setStyleName("redSlider");
+    redSlider->setOrientation(Qt::Vertical);
+    redSlider->setRange(0, 255);
+    redSlider->setValue(150);
+    redSlider->setMinLabel("0");
+    redSlider->setMinLabelVisible(true);
+    redSlider->setMaxLabel("255");
+    redSlider->setMaxLabelVisible(true);
+    redSlider->setHandleLabel(QString::number(redSlider->value()));
+    redSlider->setHandleLabelVisible(true);
+    colorLayoutPolicy->addItem(redSlider);
+    colorLayoutPolicy->setStretchFactor(redSlider, 1);
+    QObject::connect(redSlider, SIGNAL(valueChanged(int)), this, SLOT(modifyColorSliderHandle(int)));
+    connect(redSlider, SIGNAL(valueChanged(int)), SLOT(updateColorValueLabel()));
+
+    greenSlider = new MSlider;
+    greenSlider->setObjectName("greenSlider");
+    greenSlider->setStyleName("greenSlider");
+    greenSlider->setOrientation(Qt::Vertical);
+    greenSlider->setRange(0, 255);
+    greenSlider->setValue(210);
+    greenSlider->setMinLabel("0");
+    greenSlider->setMinLabelVisible(true);
+    greenSlider->setMaxLabel("255");
+    greenSlider->setMaxLabelVisible(true);
+    greenSlider->setHandleLabel(QString::number(greenSlider->value()));
+    greenSlider->setHandleLabelVisible(true);
+    colorLayoutPolicy->addItem(greenSlider);
+    QObject::connect(greenSlider, SIGNAL(valueChanged(int)), this, SLOT(modifyColorSliderHandle(int)));
+    connect(greenSlider, SIGNAL(valueChanged(int)), SLOT(updateColorValueLabel()));
+
+    blueSlider = new MSlider;
+    blueSlider->setObjectName("blueSlider");
+    blueSlider->setStyleName("blueSlider");
+    blueSlider->setOrientation(Qt::Vertical);
+    blueSlider->setRange(0, 255);
+    blueSlider->setValue(100);
+    blueSlider->setMinLabel("0");
+    blueSlider->setMinLabelVisible(true);
+    blueSlider->setMaxLabel("255");
+    blueSlider->setMaxLabelVisible(true);
+    blueSlider->setHandleLabel(QString::number(blueSlider->value()));
+    blueSlider->setHandleLabelVisible(true);
+    colorLayoutPolicy->addItem(blueSlider);
+    QObject::connect(blueSlider, SIGNAL(valueChanged(int)), this, SLOT(modifyColorSliderHandle(int)));
+    connect(blueSlider, SIGNAL(valueChanged(int)), SLOT(updateColorValueLabel()));
+
+    colorValueLabel = new MLabel;
+    colorValueLabel->setObjectName("colorValueLabel");
+    colorValueLabel->setStyleName(inv("CommonFieldLabel"));
+    colorLayoutPolicy->addItem(colorValueLabel, Qt::AlignCenter);
+
+    colorContainer = new MContainer;
+    colorContainer->setObjectName("colorContainer");
+    colorContainer->setStyleName(inv("CommonContainer"));
+    colorContainer->centralWidget()->setLayout(colorLayout);
+    containerPolicy->addItem(colorContainer);
+
     retranslateUi();
 }
 
@@ -284,6 +354,10 @@ void SliderPage::retranslateUi()
 
     modifyBrightnessSliderHandle(brightnessSlider->value());
 
+    //% "Color:"
+    colorContainer->setTitle(qtTrId("xx_slider_color"));
+    updateColorValueLabel();
+
     update();
 }
 
@@ -355,4 +429,25 @@ void SliderPage::playerOutOfLoadedContentRange()
 void SliderPage::modifyBrightnessSliderHandle(int newValue)
 {
     brightnessSlider->setHandleLabel(QString::number(newValue) + '%');
+}
+
+void SliderPage::modifyColorSliderHandle(int newValue)
+{
+    MSlider *slider = dynamic_cast<MSlider *>(sender());
+    if (!slider)
+        return;
+
+    if (slider == redSlider)
+        redSlider->setHandleLabel(QString::number(newValue));
+    else if (slider == greenSlider)
+        greenSlider->setHandleLabel(QString::number(newValue));
+    else if (slider == blueSlider)
+        blueSlider->setHandleLabel(QString::number(newValue));
+}
+
+void SliderPage::updateColorValueLabel()
+{
+    QColor color;
+    color.setRgb(redSlider->value(), greenSlider->value(), blueSlider->value());
+    colorValueLabel->setText("RGB: " + color.name());
 }
