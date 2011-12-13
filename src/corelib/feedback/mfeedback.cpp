@@ -20,8 +20,8 @@
 #include "mfeedback.h"
 #include "mfeedback_p.h"
 
-const QString MFeedback::Press = "priority2_press";
-const QString MFeedback::Release = "priority2_release";
+const QString MFeedback::Press = "priority2_static_press";
+const QString MFeedback::Release = "priority2_static_release";
 const QString MFeedback::Cancel = "";
 
 MFeedback::MFeedback(const MFeedback &feedback)
