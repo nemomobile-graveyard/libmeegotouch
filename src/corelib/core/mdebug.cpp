@@ -265,8 +265,31 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
             notes << "Not within the geometry of the parent";
         MLabel *label = dynamic_cast<MLabel*>(widget);
         if (label) {
-            if (label->wordWrap())
-                notes << "wordwrap";
+            if (label->wordWrap()) {
+                switch (label->wrapMode()) {
+                    case QTextOption::WordWrap:
+                        notes << "wordwrap (boundaries only)";
+                        break;
+                    case QTextOption::WrapAnywhere:
+                        notes << "wordwrap (anywhere)";
+                        break;
+                    case QTextOption::WrapAtWordBoundaryOrAnywhere:
+                        notes << "wordwrap";
+                        break;
+                    default:
+                        break;
+                }
+            }
+            switch (label->textFormat()) {
+                case Qt::PlainText:
+                    notes << "PlainText";
+                    break;
+                case Qt::RichText:
+                    notes << "RichText";
+                    break;
+                default:
+                    break;
+            }
             if (label->textElide())
                 notes << "elide";
             if (label->preferredLineCount() >= 0)
@@ -279,6 +302,11 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
                 notes << ("\"" + text.left(50) + "\" (cont..)");
             else
                 notes << ("\"" + text + "\"");
+
+            const QChar TextVariantSeparator(0x9c, 0);
+            int numberOfVariants = text.count(TextVariantSeparator) + 1;
+            if (numberOfVariants > 1)
+                notes << QString::number(numberOfVariants) + " variants";
 
             if (widget->testAttribute(Qt::WA_SetLayoutDirection)) {
                 if (widget->layoutDirection() == Qt::LeftToRight)
