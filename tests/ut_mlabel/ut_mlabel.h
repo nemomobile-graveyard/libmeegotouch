@@ -137,8 +137,14 @@ private slots:
 
     void testRichTextTiles();
 
+    void testRichTextWithoutPixmapCache();
+
     void testDiacritics_data();
     void testDiacritics();
+
+    // Regression test for bug 293511  - Thai vowel marks are not fully displayed
+    void testLeftMarginUsage_data();
+    void testLeftMarginUsage();
 
     void testLineBreakReplacement_data();
     void testLineBreakReplacement();

@@ -245,6 +245,16 @@ public:
     int bottomMargin() const;
 
     /**
+     * \return Sum of the style's left padding, margin and reactive margin.
+     */
+    int leftMargin() const;
+
+    /**
+     * \return Sum of the style's right padding, margin and reactive margin.
+     */
+    int rightMargin() const;
+
+    /**
      * Updates the pixmap of the tile with the content of the textdocument
      * from the position indicated by the tile.
      * \return False, if the updating has been failed because of a limited cache.

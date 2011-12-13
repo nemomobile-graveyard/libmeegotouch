@@ -43,6 +43,39 @@ MLabelStyle#margins {
     margin-top: 6;
     margin-bottom: 6;
 }
+MLabelStyle#paddings {
+    padding-left: 4;
+    padding-right: 4;
+    padding-top: 6;
+    padding-bottom: 6;
+}
+MLabelStyle#reactiveMargins {
+    margin-left: 4;
+    margin-right: 4;
+    margin-top: 6;
+    margin-bottom: 6;
+
+    reactive-margin-left: 20;
+    reactive-margin-right: 20;
+    reactive-margin-top: 20;
+    reactive-margin-bottom: 20;
+}
+MLabelStyle#marginsAndPaddings {
+    margin-left: 2;
+    margin-right: 2;
+    margin-top: 2;
+    margin-bottom: 2;
+
+    reactive-margin-left: 20;
+    reactive-margin-right: 20;
+    reactive-margin-top: 20;
+    reactive-margin-bottom: 20;
+
+    padding-left: 6;
+    padding-right: 6;
+    padding-top: 6;
+    padding-bottom: 6;
+}
 MLabelStyle {
     preferred-line-count: -1;
 }

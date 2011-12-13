@@ -41,6 +41,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGesture>
+#include <QPixmapCache>
 #include <QTextDocument>
 #include <QTextLayout>
 
@@ -1650,6 +1651,23 @@ void Ut_MLabel::testRichTextTiles()
     }
 }
 
+void Ut_MLabel::testRichTextWithoutPixmapCache()
+{
+    label->setFont(QFont("Nokia Pure Text", 30));
+    label->setStyleName("margins");
+    label->setText("<b>Text</b>");
+    label->resize(400, 400);
+
+    const QRect cachedTextRect = contentRect(captureImage(label));
+
+    const int cacheLimit = QPixmapCache::cacheLimit();
+    QPixmapCache::setCacheLimit(0);
+    const QRect uncachedTextRect = contentRect(captureImage(label));
+    QPixmapCache::setCacheLimit(cacheLimit);
+
+    QCOMPARE(cachedTextRect, uncachedTextRect);
+}
+
 void Ut_MLabel::testDiacritics_data()
 {
     QTest::addColumn<QString>("text");
@@ -1678,6 +1696,58 @@ void Ut_MLabel::testDiacritics()
     const QRect textWithDiacriticsRect = contentRect(captureImage(label));
 
     QVERIFY(textWithDiacriticsRect.height() >= textRect.height() + 6);
+}
+
+void Ut_MLabel::testLeftMarginUsage_data()
+{
+    QTest::addColumn<QString>("styleName");
+
+    QTest::newRow("margins") << "margins";
+    QTest::newRow("paddings") << "paddings";
+    QTest::newRow("reactive margins") << "reactiveMargins";
+    QTest::newRow("margins and paddings") << "marginsAndPaddings";
+}
+
+void Ut_MLabel::testLeftMarginUsage()
+{
+    QFETCH(QString, styleName);
+
+    const QString plainText = "A";
+    const QString plainThaiText = QString::fromUtf8("ใ");
+
+    const QString richText = "<qt>" + plainText;
+    const QString richThaiText = "<qt>" + plainThaiText;
+
+    label->setFont(QFont("Nokia Pure Text", 30));
+    label->setStyleName(styleName);
+    label->resize(400, 400);
+
+    label->setText(plainText);
+    const QRect plainTextRect = contentRect(captureImage(label));
+
+    label->setText(plainThaiText);
+    const QRect plainThaiTextRect = contentRect(captureImage(label));
+
+    label->setText(richText);
+    const QRect richTextRect = contentRect(captureImage(label));
+
+    label->setText(richThaiText);
+    const QRect richThaiTextRect = contentRect(captureImage(label));
+
+    // As workaround until bug 294572 has been fixed only the sizes
+    // and the x-positions are compared. This should be replaced by
+    // just comparing the rectangles.
+    QCOMPARE(plainTextRect.size(), richTextRect.size());
+    QCOMPARE(plainTextRect.x(), richTextRect.x());
+    QCOMPARE(plainThaiTextRect.size(), richThaiTextRect.size());
+    QCOMPARE(plainThaiTextRect.x(), richThaiTextRect.x());
+
+    const int plainDiff = plainTextRect.x() - plainThaiTextRect.x();
+    const int richDiff = richTextRect.x() - richThaiTextRect.x();
+
+    QVERIFY(plainDiff > 0);
+    QVERIFY(richDiff > 0);
+    QCOMPARE(plainDiff, richDiff);
 }
 
 void Ut_MLabel::testLineBreakReplacement_data()

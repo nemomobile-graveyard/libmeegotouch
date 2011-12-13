@@ -82,7 +82,8 @@ void MLabelViewRich::drawContents(QPainter *painter, const QSizeF &size)
     // the vertical alignment is not working, because the widget can be bigger in size when compared
     // to the text document. Therefore we need to do the vertical alignment manually in here.
     // Perform manual alignment for bottom alignment.
-    pixmapOffset = QPoint(0, viewPrivate->style()->paddingTop());
+    const MLabelStyle *style = viewPrivate->style();
+    pixmapOffset = QPoint(style->paddingLeft(), style->paddingTop());
     if (textDocument.size().height() < size.height()) {
         if (viewPrivate->textOptions.alignment() & Qt::AlignBottom) {
             pixmapOffset.setY(viewPrivate->style()->paddingTop() + size.height() - textDocument.size().height());
@@ -101,6 +102,7 @@ void MLabelViewRich::drawContents(QPainter *painter, const QSizeF &size)
             textDocument.drawContents(painter, textBounds);
         }
     } else {
+        pixmapOffset.rx() -= leftMargin();
         drawTiles(painter, pixmapOffset);
     }
 }
@@ -680,7 +682,7 @@ void MLabelViewRich::initTiles()
         dirty = true;
     }
 
-    QSize size = QSize(viewPrivate->boundingRect().width(), tileHeight);
+    QSize size = QSize(viewPrivate->controller->size().width(), tileHeight);
 
     if (dirty || textDocumentDirty || highlightersChanged) {
         cleanupTiles();
@@ -831,17 +833,29 @@ int MLabelViewRich::bottomMargin() const
     return style->paddingBottom() + style->marginBottom() + style->reactiveMarginBottom();
 }
 
+int MLabelViewRich::leftMargin() const
+{
+    const MLabelStyle *style = viewPrivate->style();
+    return style->paddingLeft() + style->marginLeft() + style->reactiveMarginLeft();
+}
+
+int MLabelViewRich::rightMargin() const
+{
+    const MLabelStyle *style = viewPrivate->style();
+    return style->paddingRight() + style->marginRight() + style->reactiveMarginRight();
+}
+
 bool MLabelViewRich::updateTilePixmap(const Tile &tile)
 {
     qreal x;
     QRectF textBounds = textBoundaries(&x);
-    textBounds = textBounds.intersected(QRectF(x, tile.y, tile.size.width(), tile.size.height()));
+    textBounds = textBounds.intersected(QRectF(textBounds.x(), tile.y, tile.size.width(), tile.size.height()));
     if (!textBounds.isEmpty()) {
         QPixmap pixmap(tile.size);
         pixmap.fill(Qt::transparent);
 
         QPainter painter(&pixmap);
-        painter.translate(viewPrivate->style()->paddingLeft() - x, -tile.y);
+        painter.translate(leftMargin() - x, -tile.y);
         textDocument.drawContents(&painter, textBounds);
 
         return QPixmapCache::insert(tile.pixmapCacheKey, pixmap);
@@ -880,12 +894,9 @@ QRectF MLabelViewRich::textBoundaries(qreal *x) const
     // the text wrap correctly, the vertical padding is added
     // when drawing the pixmap into the screen
     bounds.adjust(0, 0, viewPrivate->style()->paddingLeft(), 0);
-    // Include the top and bottom padding, margins and reactive margins, so that we can paint in
+    // Include the paddings, margins and reactive margins, so that we can paint in
     // them if necessary
-    const MLabelStyle *style = viewPrivate->style();
-    bounds.adjust(0, -style->paddingTop() - style->marginTop() - style->reactiveMarginTop(),
-                  0, style->paddingBottom() + style->marginBottom() + style->reactiveMarginBottom());
-
+    bounds.adjust(-leftMargin(), -topMargin(), rightMargin(), bottomMargin());
     Q_ASSERT(x);
     *x = 0.0;
 
