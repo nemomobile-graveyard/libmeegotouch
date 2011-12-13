@@ -2907,6 +2907,19 @@ void Ut_MTextEdit::testInsertMultiLineText_data()
                                        << QString("1 2 3 ") << QString("1 2 3")    << QString("1 2 3 ");
     QTest::newRow("multi line entry")  << MTextEditModel::MultiLine  << sampleText
                                        << QString("1\n2\n3\n") << QString("1\n2\n3\n") << QString("1 2 3 ");
+
+    // NB#294110, The text whose first line is blank can't be pasted correctly.
+    const QString sampleTextWithEmptyFirstLine(QChar('\n') + sampleText);
+    QTest::newRow("single line NB#294110") << MTextEditModel::SingleLine
+                                           << sampleTextWithEmptyFirstLine
+                                           << QString(" 1 2 3 ")
+                                           << QString(" 1 2 3")
+                                           << QString(" 1 2 3 ");
+    QTest::newRow("multi line NB#294110") << MTextEditModel::MultiLine
+                                          << sampleTextWithEmptyFirstLine
+                                          << QString("\n1\n2\n3\n")
+                                          << QString("\n1\n2\n3\n")
+                                          << QString(" 1 2 3 ");
 }
 
 void Ut_MTextEdit::testInsertMultiLineText()

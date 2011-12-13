@@ -861,9 +861,7 @@ bool MTextEditPrivate::doTextInsert(const QString &text, bool usePreeditStyling)
         if (snippetLength != -1) {
             snippetLength = snippetLength - textPosition;
         }
-
         QString textSnippet = filteredText.mid(textPosition, snippetLength);
-
         int cursorPosBefore = cursor()->position();
 
         if (usePreeditStyling == true) {
@@ -881,9 +879,12 @@ bool MTextEditPrivate::doTextInsert(const QString &text, bool usePreeditStyling)
             cursor()->removeSelectedText();
         }
 
-        textPosition += snippetLength;
-    } while (snippetLength != -1);
-
+        if (snippetLength > 0) {
+            textPosition += snippetLength;
+        } else {
+            textPosition = filteredTextLength;
+        }
+    } while (textPosition < filteredTextLength);
     return changed;
 }
 
@@ -2541,7 +2542,6 @@ void MTextEdit::paste()
     if (text.isEmpty()) {
         return;
     }
-
     // back to basic mode
     if (wasSelecting) {
         d->cursor()->removeSelectedText();
