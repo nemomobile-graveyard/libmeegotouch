@@ -2146,6 +2146,18 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
     Q_UNUSED(event);
     Q_D(MTextEdit);
 
+    if (d->focusEventState == MTextEditPrivate::FocusOutEventReceived) {
+	// NB#275500 - Selected text does not have any rich-text-editor
+	// NB#288313 - Text selection handles are shown over style settings dialog
+	// this event handler has been already manually called with proper reason
+	// not executing this second automatic call to avoid undesireable effect.
+	// NOTE: things may go wrong if focusing in failed to send focusInEvent()
+	// then subsequent focusOutEvent() would be ignored due to this;
+	// but it is a minor problem compared to other results of not receiving focusInEvent(),
+	// so not doing anything to avoid it
+        return;
+    }
+
     bool ok = true;
     ok &= disconnect(this, SIGNAL(cursorPositionChanged()),
                      this, SLOT(_q_updateTextDirection()));
@@ -2178,7 +2190,7 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
     d->doubleClickSelectionTime = QTime();
 
     Qt::FocusReason reason = event->reason();
-    if (reason != Qt::ActiveWindowFocusReason && reason != Qt::PopupFocusReason && reason != Qt::OtherFocusReason)
+    if (reason != Qt::ActiveWindowFocusReason && reason != Qt::PopupFocusReason)
         deselect();
 
 #if QT_VERSION >= 0x040702 // 4.7.1 was missing stopItem parameter
