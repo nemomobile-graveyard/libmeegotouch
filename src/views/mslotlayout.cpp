@@ -103,7 +103,13 @@ void MSlotLayout::setGeometry(const QRectF &rect)
         qreal newHeight;
         QSizePolicy::Policy horizontalPolicy;
         QSizePolicy::Policy verticalPolicy;
-        QSizeF preferredSize = widget->effectiveSizeHint(Qt::PreferredSize);
+        // Here we constrain the width as some widgets can have a different size preferrence
+        // depending on their maximum allowed width (known as height-for-width).
+        // E.g.: a word-wrapping label with a long text would like to have a size of (1000, 30)
+        // (all text in a single line). If it knows that its width will be limited to, say, 300,
+        // it will break the text in multiple lines therefore ending up with a preferred size
+        // of (300, 120).
+        QSizeF preferredSize = widget->effectiveSizeHint(Qt::PreferredSize, QSizeF(rect.width(), -1));
 
         if (ignoreSizePolicies) {
             horizontalPolicy = QSizePolicy::Ignored;
