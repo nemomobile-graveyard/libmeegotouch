@@ -62,6 +62,7 @@ SUBDIRS     =  \
      ut_mapplicationmenubuttonview \
      ut_mobjectmenu \
      ut_mobjectmenuview \
+     ut_mobjectmenubasicview \
      ut_moverlay \
      ut_mpannableviewport \
      ut_mpannablewidget \
