@@ -326,11 +326,16 @@ void Ut_MButtonView::testMouseEventsSwitchView()
     view->cancelEvent(&event);
 
     //move
+    QVERIFY(m_button->isChecked() == true);
     view->mousePressEvent(&pressEvent);
     QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
-    moveEvent.setPos(QPointF(300,300));
+    // Let's create a left movement to uncheck the button
+    moveEvent.setPos(QPointF(-100,0));
     QVERIFY(m_button->isDown() == true);
+    view->mouseMoveEvent(&moveEvent);
     view->mouseReleaseEvent(&releaseEvent);
+    QVERIFY(m_button->isChecked() == false);
+
     // wait for animation
     QTest::qWait(510);
     // should be unchecked because it was checked before
