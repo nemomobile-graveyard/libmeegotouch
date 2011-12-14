@@ -70,7 +70,7 @@ public:
     static QVector<backgroundFunc> backgroundFunctions;
 
     void _q_applyQueuedStyleModeChange();
-private:
+
     MContentItem *controller;
     MLabel *titleLabel;
     MLabel *subtitleLabel;

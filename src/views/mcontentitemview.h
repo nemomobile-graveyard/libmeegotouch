@@ -80,6 +80,10 @@ private:
     Q_DISABLE_COPY(MContentItemView)
     Q_DECLARE_PRIVATE(MContentItemView)
     Q_PRIVATE_SLOT(d_func(), void _q_applyQueuedStyleModeChange())
+
+#ifdef UNIT_TEST
+    friend class Ut_MContentItemView;
+#endif
 };
 
 #endif
