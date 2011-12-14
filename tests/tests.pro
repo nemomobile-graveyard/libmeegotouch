@@ -99,6 +99,7 @@ SUBDIRS     =  \
     ut_mextensionwatcher \
     ut_mcontainer \
     ut_mcontentitem \
+    ut_mcontentitemview \
     ut_minfobanner \
     ut_minfobannerview \
     ut_mbanner \
