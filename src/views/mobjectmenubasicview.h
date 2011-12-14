@@ -71,6 +71,10 @@ private:
     MGridLayoutPolicy *landscapePolicy;
 
     MObjectMenu *controller;
+
+#ifdef UNIT_TEST
+    friend class Ut_MObjectMenuBasicView;
+#endif
 };
 
 #endif
