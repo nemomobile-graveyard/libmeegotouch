@@ -156,7 +156,8 @@ void Ut_MSheetView::testCentralWidgetSizePolicyRespected_preferred()
     app->processEvents();
     app->processEvents();
 
-    QCOMPARE(centralWidget->size(), preferredSize);
+    QSizeF expectedSize(subject->d_func()->centralSlot->size().width(), 10.0f);
+    QCOMPARE(centralWidget->size(), expectedSize);
 }
 
 void Ut_MSheetView::testCentralWidgetSizePolicyRespected_expanding()
@@ -164,7 +165,7 @@ void Ut_MSheetView::testCentralWidgetSizePolicyRespected_expanding()
     QGraphicsWidget *centralWidget = new QGraphicsWidget;
     QSizeF preferredSize(20.0f, 10.0f);
     centralWidget->setPreferredSize(preferredSize);
-    centralWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    centralWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     sheet->setCentralWidgetSizePolicyRespected(true);
     sheet->setCentralWidget(centralWidget);
@@ -176,7 +177,7 @@ void Ut_MSheetView::testCentralWidgetSizePolicyRespected_expanding()
     app->processEvents();
 
     QSizeF expectedSize(subject->d_func()->centralSlot->size().width(), 10.0f);
-    QCOMPARE(centralWidget->size(), expectedSize);
+    QCOMPARE(centralWidget->size(), subject->d_func()->centralSlot->size());
 }
 
 void Ut_MSheetView::testCentralWidgetSizePolicyIgnored()
