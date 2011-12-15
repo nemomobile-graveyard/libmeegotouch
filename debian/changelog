@@ -1,8 +1,25 @@
-libmeegotouch (0.25.3~1) unstable; urgency=low
+libmeegotouch (0.25.3-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#294110, The text which first line is blank can't be pasted correctly.
+  * Fixes: NB#293506, Text magnifier can be seen/used when VKB is closed
+  * Fixes: Slider is set to outdated value on cancelEvent-handler when the initial press didn't hit the slider itself.
+  * Fixes: Horizontal slider min&max labels are at the wrong ends when the right-to-left layout orientation is in use.
+  * Fixes: Handle indicator of a vertical slider is positioned too close to the handle.
+  * Fixes: Vertical slider conflicts with vertical panning
+  * Fixes: Elapsed part of a vertical slider is always drawn full length.
+  * Fixes: NB#293665 - MSlider's handler always in horizontal position.
+  * Fixes: NB#293780 - [RARE] COREWEB: /usr/bin/mthemedaemon 'MThemeDaemonServer::clientDataAvailable'
+  * Fixes: Crash when statubar is disabled in configuration.
+  * Fixes: NB#291414
+  * Fixes: Orientation change animation in scratchbox/desktop.
+  * Fixes: NB#293293 - MPannableViewport does not keep position on rotation
+  * Fixes: NB#293276 - Some tests are crashing in mcrossfadedorientationanimation.cpp, line 346
+  * Fixes: NB#293469, CCP widget is shown while dragging text handles in a scenario.
+  * Fixes: NB#291117, Inconsistent toolbar behavior at Copy
+  * Fixes: NB#291125, Home screen contents go behind the status bar
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 07 Dec 2011 16:25:05 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 15 Dec 2011 12:00:40 +0200
 
 libmeegotouch (0.25.2-1) unstable; urgency=low
 
