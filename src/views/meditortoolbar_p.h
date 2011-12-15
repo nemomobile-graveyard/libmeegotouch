@@ -69,6 +69,7 @@ public:
     void startAutoHideTimer();
     void stopAutoHideTimer();
     bool isHiding();
+    void setButtonsEnabled(bool enabled);
 
 private:
     void _q_updateAvailableButtons();

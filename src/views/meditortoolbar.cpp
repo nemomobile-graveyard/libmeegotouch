@@ -281,6 +281,7 @@ void MEditorToolbarPrivate::appear(TransitionMode transition)
 
     overlay->show();
     updateEditorItemVisibility();
+    setButtonsEnabled(true);
 
     // then cancel currently pending actions and set new ones is necessary
     // (this function is called only by controller directly)
@@ -312,6 +313,7 @@ void MEditorToolbarPrivate::disappear(TransitionMode transition)
 
     stopAutoHideTimer();
     if (transition == Animated) {
+        setButtonsEnabled(false);
         hideAnimation.setDirection(QAbstractAnimation::Forward);
         hideAnimation.setDuration(q->style()->hideAnimationDuration());
         if (hideAnimation.state() == QAbstractAnimation::Stopped) {
@@ -558,6 +560,9 @@ void MEditorToolbarPrivate::updateWidgetOrigin()
 void MEditorToolbarPrivate::_q_startAutomaticHide()
 {
     Q_Q(MEditorToolbar);
+    // NB: No not use disappear() method for automated hiding!!!
+    // 1. it has different animation duration
+    // 2. it disables buttons, preventing user from pressing them
     hideAnimation.setDuration(q->style()->autoHideAnimationDuration());
     hideAnimation.setDirection(QAbstractAnimation::Forward);
     if (hideAnimation.state() == QAbstractAnimation::Stopped) {
@@ -695,6 +700,13 @@ bool MEditorToolbarPrivate::isHiding()
 {
     return hideAnimation.state() != QAbstractAnimation::Stopped
             && hideAnimation.direction() == QAbstractAnimation::Forward;
+}
+
+void MEditorToolbarPrivate::setButtonsEnabled(bool enabled)
+{
+    foreach (MButton *button, buttons) {
+        button->setEnabled(enabled);
+    }
 }
 
 EatMButtonGestureFilter::EatMButtonGestureFilter(QObject *parent)
