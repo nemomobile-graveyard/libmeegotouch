@@ -188,6 +188,10 @@ void MProgressIndicatorBarViewPrivate::setupAnimation()
 
     connect(animationTimer, SIGNAL(timeout()), this, SLOT(setAnimationCacheIndex()));
 
+    // force drawing the first image, in case we are in the switcher and
+    // the animation is stopped
+    setAnimationCacheIndex();
+
     animate(controller->isVisible());
 }
 
