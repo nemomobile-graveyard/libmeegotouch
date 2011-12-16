@@ -20,13 +20,15 @@
 #define MTEXTMAGNIFIER_H
 
 #include <QRectF>
+#include <QObject>
 
 class MWidget;
 class QSizeF;
 class QPointF;
 
 // Stub text magnifier
-class MTextMagnifier {
+class MTextMagnifier : public QObject {
+    Q_OBJECT
 public:
     enum DeletionPolicy {
         KeepWhenDone,

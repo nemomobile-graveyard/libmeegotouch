@@ -283,8 +283,8 @@ void Ut_MTextEditView::testBoundingRect()
 void Ut_MTextEditView::testStyleUpdated()
 {
     m_subject->d_func()->showEditorToolbar();
-    QVERIFY(m_subject->d_func()->editorToolbar != 0);
-    QCOMPARE(m_subject->d_func()->editorToolbar->styleName, QString("TestToolbarStyleName"));
+    QVERIFY(m_subject->d_func()->editorToolbar);
+    QCOMPARE(m_subject->d_func()->editorToolbar.data()->styleName, QString("TestToolbarStyleName"));
 }
 
 void Ut_MTextEditView::testResizeEvent()
@@ -817,12 +817,12 @@ void Ut_MTextEditView::testEditorToolbarAutoHide()
     // Toolbar is to set to autohide on show without selection.
     m_controller->setText("");
     m_subject->d_func()->showEditorToolbar();
-    QCOMPARE(m_subject->d_func()->editorToolbar->isAutoHideEnabled(), true);
+    QCOMPARE(m_subject->d_func()->editorToolbar.data()->isAutoHideEnabled(), true);
 
     m_controller->setText("test text");
     m_controller->setSelection(0, 5, false);
     m_subject->d_func()->showEditorToolbar();
-    QCOMPARE(m_subject->d_func()->editorToolbar->isAutoHideEnabled(), false);
+    QCOMPARE(m_subject->d_func()->editorToolbar.data()->isAutoHideEnabled(), false);
 }
 
 void Ut_MTextEditView::testEditorToolbarAutoHideWithSelectionMagnifier()
@@ -900,7 +900,7 @@ void Ut_MTextEditView::testEditorToolbarAutoHideWithSelectionMagnifier()
 bool Ut_MTextEditView::editorToolbarAppeared() const
 {
     return m_subject->d_func()->editorToolbar
-           && m_subject->d_func()->editorToolbar->isAppeared();
+           && m_subject->d_func()->editorToolbar.data()->isAppeared();
 }
 
 void Ut_MTextEditView::testSelectionOverlay()
@@ -916,11 +916,11 @@ void Ut_MTextEditView::testSelectionOverlay()
     m_subject->d_func()->showSelectionOverlay();
 
     QCOMPARE(m_subject->d_func()->selectionOverlay.isNull(), false);
-    QCOMPARE(m_subject->d_func()->selectionOverlay->isVisible(), true);
+    QCOMPARE(m_subject->d_func()->selectionOverlay.data()->isVisible(), true);
     QCOMPARE(m_controller->model()->isSelecting(), true);
 
     m_controller->setSelection(0, 0, false);
-    QCOMPARE(m_subject->d_func()->selectionOverlay->isVisible(), false);
+    QCOMPARE(m_subject->d_func()->selectionOverlay.data()->isVisible(), false);
     QCOMPARE(m_controller->model()->isSelecting(), false);
 }
 
