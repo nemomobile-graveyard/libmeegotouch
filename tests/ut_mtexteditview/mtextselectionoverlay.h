@@ -15,6 +15,11 @@ class MTextSelectionOverlay : public QGraphicsWidget
 {
     Q_OBJECT
 public:
+    enum HandleType {
+        Cursor,
+        Anchor
+    };
+
     explicit MTextSelectionOverlay(MTextEdit *,
                                    MTextEditView *view)
     {
@@ -37,7 +42,7 @@ public:
     }
 
 Q_SIGNALS:
-    void selectionHandlePressed(const QPointF &);
+    void selectionHandlePressed(const QPointF &, MTextSelectionOverlay::HandleType);
     void selectionHandleMoved(const QPointF &);
     void selectionHandleReleased(const QPointF &);
 

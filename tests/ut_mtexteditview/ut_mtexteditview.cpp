@@ -871,7 +871,7 @@ void Ut_MTextEditView::testEditorToolbarAutoHideWithSelectionMagnifier()
     QCOMPARE(m_subject->d_func()->showMovedToolbar.isActive(), true);
 
     // Press selection handle
-    m_subject->d_func()->onSelectionHandlePressed(QPointF());
+    m_subject->d_func()->onSelectionHandlePressed(QPointF(), MTextSelectionOverlay::Cursor);
     QCOMPARE(editorToolbarAppeared(), false);
 
     // Editor toolbar should not become visible until selection handle

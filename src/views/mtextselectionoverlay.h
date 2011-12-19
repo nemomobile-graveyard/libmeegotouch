@@ -37,6 +37,12 @@ class MTextSelectionOverlay : public MTopLevelOverlay
 {
     Q_OBJECT
 public:
+
+    enum HandleType {
+        Cursor,
+        Anchor
+    };
+
     /*!
      * \brief Constructs text selection overlay.
      *
@@ -68,7 +74,8 @@ Q_SIGNALS:
     //! \brief Emitted when any selection handle is pressed.
     //!
     //! \param position Handle position in coordinates of controller
-    void selectionHandlePressed(const QPointF &position);
+    //! \param handleType Indicates whether Cursor or Anchor handle was pressed on.
+    void selectionHandlePressed(const QPointF &position, MTextSelectionOverlay::HandleType handleType);
 
     //! \brief Emitted when pressed selection handle is moved by user.
     //!

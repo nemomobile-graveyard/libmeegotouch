@@ -59,6 +59,7 @@ void Ut_MTextSelectionOverlay::initTestCase()
 
     qRegisterMetaType<M::OrientationAngle>("M::OrientationAngle");
     qRegisterMetaType<const MTextSelectionHandle*>("const MTextSelectionHandle*");
+    qRegisterMetaType<MTextSelectionOverlay::HandleType>("MTextSelectionOverlay::HandleType");
 
     static int dummyArgc = 1;
     static char *dummyArgv[1] = { (char *) "./ut_mtextselectionoverlay" };
@@ -342,7 +343,7 @@ void Ut_MTextSelectionOverlay::testMouseInteraction()
 
     MApplication::activeWindow()->setOrientationAngle((M::OrientationAngle)angle);
 
-    QSignalSpy spyPressed(subject, SIGNAL(selectionHandlePressed(QPointF)));
+    QSignalSpy spyPressed(subject, SIGNAL(selectionHandlePressed(QPointF, MTextSelectionOverlay::HandleType)));
     QVERIFY(spyPressed.isValid());
     QSignalSpy spyMoved(subject, SIGNAL(selectionHandleMoved(QPointF)));
     QVERIFY(spyMoved.isValid());
