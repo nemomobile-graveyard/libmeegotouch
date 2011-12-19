@@ -40,6 +40,7 @@ private slots:
     void testSizeHint();
 
     void testImageDataSize();
+    void testSetContentOnEmptyWidget();
 
     void testSetZoomFactor_data();
     void testSetZoomFactor();

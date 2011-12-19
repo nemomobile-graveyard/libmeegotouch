@@ -66,12 +66,14 @@ void Ut_MImageWidget::testConstructor()
     QImage img(fname);
     MImageWidget *myImage = new MImageWidget(&img);
     QCOMPARE(myImage->imageSize(), s);
+    QCOMPARE(myImage->model()->imageSize(), s);
 
     // test constructor from pixmap
     QPixmap *source = new QPixmap(s);
     source->fill(QColor(0, 0, 0, 0));
     MImageWidget *myImage3 = new MImageWidget(source);
     QCOMPARE(myImage3->imageSize(), s);
+    QCOMPARE(myImage3->model()->imageSize(), s);
     delete myImage3;
 
     // test copy constructor
@@ -81,6 +83,9 @@ void Ut_MImageWidget::testConstructor()
 
     MImageWidget myImage5 = *myImage;
     QCOMPARE(myImage5.imageSize(), myImage->imageSize());
+
+    MImageWidget *myImage6 = new MImageWidget();
+    QCOMPARE(myImage6->imageSize(), QSize());
 
     delete source;
     delete myImage;
@@ -159,6 +164,34 @@ void Ut_MImageWidget::testImageDataSize()
      //QSizeF half = imgSize*0.5;
      //m_subject->setCropSize(half);
      //QCOMPARE(half, m_subject->imageDataSize());
+
+    delete m_subject;
+    m_subject = 0;
+}
+
+// NB#281533
+void Ut_MImageWidget::testSetContentOnEmptyWidget()
+{
+    QString fname = qApp->applicationDirPath() + "/ut_mimagewidget-test.png";
+    QImage img(fname);
+    QPixmap pixmap(fname);
+    QSize imgSize = pixmap.size();
+
+    m_subject = new MImageWidget();
+    m_subject->setImage(QString(), QSize());
+
+    // test setImage()
+    QCOMPARE(m_subject->model()->imageSize(), QSize());
+    m_subject->setImage(img);
+    // the model has changed, which updates the view
+    QCOMPARE(m_subject->model()->imageSize(), imgSize);
+
+    m_subject->setImage(QString(), QSize());
+
+    // test setPixmap()
+    QCOMPARE(m_subject->model()->imageSize(), QSize());
+    m_subject->setPixmap(pixmap);
+    QCOMPARE(m_subject->model()->imageSize(), imgSize);
 
     delete m_subject;
     m_subject = 0;

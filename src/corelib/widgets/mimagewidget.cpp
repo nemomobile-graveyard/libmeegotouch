@@ -105,6 +105,7 @@ void MImageWidgetPrivate::init() {
     QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     policy.setHeightForWidth(false);
     q->setSizePolicy(policy);
+    q->model()->setImageSize(q->imageSize());
 }
 
 MImageWidget::MImageWidget(QGraphicsItem *parent) :
@@ -205,8 +206,10 @@ QSize MImageWidget::imageSize() const
     Q_D(const MImageWidget);
     if (d->pixmap)
         return d->pixmap->size();
-    else
+    else if (!d->image.isNull())
         return d->image.size();
+    else
+        return QSize();
 }
 
 const QPixmap *MImageWidget::pixmap() const
@@ -330,6 +333,7 @@ void MImageWidget::setImage(const QImage &image)
 
     d->setImage(image);
 
+    model()->setImageSize(imageSize());
     model()->setCrop(QRect());
 
     updateGeometry();
@@ -344,6 +348,7 @@ void MImageWidget::setPixmap(const QPixmap &pixmap)
     QPixmap* newPixmap = new QPixmap(pixmap);
     d->setPixmap(newPixmap, true);
 
+    model()->setImageSize(imageSize());
     model()->setCrop(QRect());
 
     updateGeometry();
