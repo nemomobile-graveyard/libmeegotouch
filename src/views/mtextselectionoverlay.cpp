@@ -33,6 +33,8 @@ namespace {
     const QString ObjectNameHandleB("TextSelectionHandleB");
 }
 
+Q_DECLARE_METATYPE(MTextSelectionOverlay::HandleType)
+
 MTextSelectionOverlay::MTextSelectionOverlay(MWidgetController *newController,
                                              MWidgetView *newView)
     : MTopLevelOverlay(newController->sceneManager()),
@@ -160,8 +162,9 @@ void MTextSelectionOverlay::onSelectionHandlePressed(const MTextSelectionHandle 
     }
 
     const QPointF position = mapToItem(controller, handle->hotSpot());
+    const HandleType pressedHandleType = (cursorHandle == handle) ? Cursor : Anchor;
 
-    emit selectionHandlePressed(position);
+    emit selectionHandlePressed(position, pressedHandleType);
 }
 
 void MTextSelectionOverlay::onHandleMoved(MTextSelectionHandle *handle)

@@ -865,8 +865,8 @@ void MTextEditViewPrivate::showSelectionOverlay()
         QObject::connect(selectionOverlay.data(), SIGNAL(selectionHandleMoved(QPointF)),
                          this, SLOT(onSelectionHandleMoved(QPointF)));
 
-        QObject::connect(selectionOverlay.data(), SIGNAL(selectionHandlePressed(const QPointF)),
-                         this, SLOT(onSelectionHandlePressed(const QPointF)));
+        QObject::connect(selectionOverlay.data(), SIGNAL(selectionHandlePressed(QPointF, MTextSelectionOverlay::HandleType)),
+                         this, SLOT(onSelectionHandlePressed(QPointF, MTextSelectionOverlay::HandleType)));
         QObject::connect(selectionOverlay.data(),
                          SIGNAL(selectionHandleReleased(const QPointF)),
                          this,
@@ -1314,7 +1314,8 @@ void MTextEditViewPrivate::onSelectionHandleMoved(const QPointF &position)
     updateMagnifierPosition();
 }
 
-void MTextEditViewPrivate::onSelectionHandlePressed(const QPointF &position)
+void MTextEditViewPrivate::onSelectionHandlePressed(const QPointF &position,
+                                                    MTextSelectionOverlay::HandleType handleType)
 {
     Q_Q(MTextEditView);
     selectionHandleIsPressed = true;
@@ -1332,14 +1333,16 @@ void MTextEditViewPrivate::onSelectionHandlePressed(const QPointF &position)
     lastHandlePos = QPointF();
     handleTime.start();
 
-    QTextCursor cursor = controller->textCursor();
+    anchorPos = controller->textCursor().anchor();
+    cursorPos = controller->textCursor().position();
 
-    int pressedHandlePos = cursorPosition(viewPos);
-    anchorPos = cursor.anchor();
-    cursorPos = cursor.position();
-
-    // make the active handle is always combined with cursor
-    if (pressedHandlePos == anchorPos) {
+    // Active handle is always associated with cursor instead of anchor.
+    // Therefore if anchor was pressed, we need to exchange cursor and anchor
+    // for the current selection and then notify selection overlay about it.
+    // Although in theory whether cursor or anchor was pressed could be determined from
+    // position of the handle it is more error-prone and currently cannot
+    // be done because of bug NB#289549: QTextDocument's hittest returns incorrect positions for RTL text
+    if (handleType == MTextSelectionOverlay::Anchor) {
         controller->setSelection(cursorPos, anchorPos - cursorPos, false);
         mapSelectionChange();
     }

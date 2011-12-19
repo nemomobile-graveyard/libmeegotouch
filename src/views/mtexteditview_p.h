@@ -29,6 +29,7 @@
 #include <QElapsedTimer>
 
 #include "mtexteditview.h"
+#include "mtextselectionoverlay.h"
 
 class MEditorToolbar;
 class MTextEdit;
@@ -36,7 +37,6 @@ class MTextMagnifier;
 class QGraphicsSceneMouseEvent;
 class QTextDocument;
 class MBanner;
-class MTextSelectionOverlay;
 
 //! \internal
 class MTextEditViewPrivate : public QObject
@@ -123,7 +123,7 @@ protected slots:
 
     void mapSelectionChange();
     void onSelectionHandleMoved(const QPointF &position);
-    void onSelectionHandlePressed(const QPointF &position);
+    void onSelectionHandlePressed(const QPointF &position, MTextSelectionOverlay::HandleType handleType);
     void onSelectionHandleReleased(const QPointF &position);
     void onSelectionOverlayVisibleChanged();
     void hideSelectionOverlayTemporarily();

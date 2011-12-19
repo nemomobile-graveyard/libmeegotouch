@@ -54,6 +54,7 @@ void Ut_MTextSelectionOverlay::initTestCase()
 {
     qRegisterMetaType<M::OrientationAngle>("M::OrientationAngle");
     qRegisterMetaType<const MTextSelectionHandle*>("const MTextSelectionHandle*");
+    qRegisterMetaType<MTextSelectionOverlay::HandleType>("MTextSelectionOverlay::HandleType");
 
     static int dummyArgc = 1;
     static char *dummyArgv[1] = { (char *) "./ut_mtextselectionoverlay" };
