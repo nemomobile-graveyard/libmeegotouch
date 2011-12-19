@@ -716,16 +716,17 @@ int MSliderGroove::screenPointToValue(const QPointF &point) const
     int offset = 0;
     QRectF valueRangeRect = rect();
     int range = maximum - minimum;
-    qreal w = sliderHandle->rect().width();
 
     if (minimum == maximum)
         return minimum;
 
     if (orientation == Qt::Horizontal) {
+        qreal w = sliderHandle->rect().width();
         valueRangeRect.adjust(w/2.0, 0, -w/2.0, 0);
         coordinate = handlePoint.x();
     } else if (orientation == Qt::Vertical) {
-        valueRangeRect.adjust(0, grooveMargin, 0, -grooveMargin);
+        qreal h = sliderHandle->rect().height();
+        valueRangeRect.adjust(0, h/2.0, 0, -h/2.0);
         coordinate = handlePoint.y();
     }
 
