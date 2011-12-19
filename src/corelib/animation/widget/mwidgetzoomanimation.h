@@ -51,6 +51,10 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(MWidgetZoomAnimation)
+
+#ifdef UNIT_TEST
+    friend class Ut_MWidgetZoomAnimation;
+#endif
 };
 
 //! \internal_end
