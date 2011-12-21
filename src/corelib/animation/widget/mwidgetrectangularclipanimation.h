@@ -48,6 +48,10 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(MWidgetRectangularClipAnimation)
+
+#ifdef UNIT_TEST
+    friend class Ut_MWidgetRectangularClipAnimation;
+#endif
 };
 //! \internal_end
 

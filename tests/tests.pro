@@ -213,6 +213,7 @@ SUBDIRS     =  \
     ut_mwidgetanimation \
     ut_mwidgetzoomanimation \
     ut_mwidgetmoveanimation \
+    ut_mwidgetrectangularclipanimation \
     ut_mcolorlist \
     ut_mcolorlistview \
     ut_mcolorcombobox \
