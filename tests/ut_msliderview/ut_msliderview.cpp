@@ -33,6 +33,7 @@
 #include "mapplicationwindow.h"
 #include "mapplicationpage.h"
 #include "mscenemanager.h"
+#include "mcancelevent.h"
 #include <mdebug.h>
 
 MApplication *app;
@@ -262,6 +263,124 @@ void Ut_MSliderView::testMinMaxIndicatorPosition()
     QVERIFY(grooveCenter.x() < maxIndicatorCenter.x());
     QVERIFY(minIndicatorCenter.y() == grooveCenter.y());
     QVERIFY(grooveCenter.y() == maxIndicatorCenter.y());
+}
+
+void Ut_MSliderView::testGrooveHandleIndicatorVisibility()
+{
+    QCOMPARE(m_subject->d_func()->sliderGroove->sliderHandleIndicator->isVisible(), false);
+    m_subject->d_func()->sliderGroove->raiseHandleIndicator();
+    QCOMPARE(m_subject->d_func()->sliderGroove->sliderHandleIndicator->isVisible(), true);
+    m_subject->d_func()->sliderGroove->lowerHandleIndicator();
+    QCOMPARE(m_subject->d_func()->sliderGroove->sliderHandleIndicator->isVisible(), false);
+}
+
+void Ut_MSliderView::testValueFromMouseEvents()
+{
+    MSeekBar *seekbar = new MSeekBar();
+    MSliderView *subject = new MSliderView(seekbar);
+    seekbar->setView(subject);
+    seekbar->setRange(0, 100);
+    QRectF rect = QRectF(0, 0, 400, 100);
+    seekbar->setGeometry(rect);
+    seekbar->setValue(0);
+
+    MApplicationWindow win;
+    MApplicationPage page;
+    page.setCentralWidget(seekbar);
+    win.sceneManager()->appearSceneWindowNow(&page);
+    win.show();
+
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setPos(QPointF(100,50));
+    subject->mousePressEvent(&pressEvent);
+    int valueFromScreen = subject->d_func()->sliderGroove->screenPointToValue(pressEvent.pos());
+    QCOMPARE(seekbar->value(), valueFromScreen);
+
+    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
+    moveEvent.setPos(QPointF(300,50));
+    subject->mouseMoveEvent(&moveEvent);
+    valueFromScreen = subject->d_func()->sliderGroove->screenPointToValue(moveEvent.pos());
+    QCOMPARE(seekbar->value(), valueFromScreen);
+
+    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
+    releaseEvent.setPos(QPointF(200,50));
+    subject->mouseReleaseEvent(&releaseEvent);
+    valueFromScreen = subject->d_func()->sliderGroove->screenPointToValue(releaseEvent.pos());
+    QCOMPARE(seekbar->value(), valueFromScreen);
+}
+
+void Ut_MSliderView::testMouseCancel()
+{
+    MSeekBar *seekbar = new MSeekBar();
+    MSliderView *subject = new MSliderView(seekbar);
+    seekbar->setView(subject);
+    seekbar->setRange(0, 100);
+    QRectF rect = QRectF(0, 0, 400, 100);
+    seekbar->setGeometry(rect);
+    const int valueWhenPressed = 5;
+    seekbar->setValue(valueWhenPressed);
+
+    MApplicationWindow win;
+    MApplicationPage page;
+    page.setCentralWidget(seekbar);
+    win.sceneManager()->appearSceneWindowNow(&page);
+    win.show();
+
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setPos(QPointF(100,50));
+    subject->mousePressEvent(&pressEvent);
+
+    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
+    moveEvent.setPos(QPointF(300,50));
+    subject->mouseMoveEvent(&moveEvent);
+    int valueFromScreen = subject->d_func()->sliderGroove->screenPointToValue(moveEvent.pos());
+    QVERIFY(valueWhenPressed != valueFromScreen);
+
+    MCancelEvent cancelEvent;
+    subject->cancelEvent(&cancelEvent);
+    QApplication::processEvents();
+    QCOMPARE(seekbar->value(), valueWhenPressed);
+}
+
+void Ut_MSliderView::testHandleLabelVisibilityFromMouseEvents()
+{
+    MSeekBar *seekbar = new MSeekBar();
+    MSliderView *subject = new MSliderView(seekbar);
+    seekbar->setView(subject);
+    seekbar->setRange(0, 100);
+    QRectF rect = QRectF(0, 0, 400, 100);
+    seekbar->setGeometry(rect);
+    seekbar->setValue(0);
+    seekbar->setHandleLabelVisible(true);
+
+    MApplicationWindow win;
+    MApplicationPage page;
+    page.setCentralWidget(seekbar);
+    win.sceneManager()->appearSceneWindowNow(&page);
+    win.show();
+
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setPos(QPointF(100,50));
+    subject->mousePressEvent(&pressEvent);
+
+    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
+    moveEvent.setPos(QPointF(300,50));
+    subject->mouseMoveEvent(&moveEvent);
+    QCOMPARE(subject->d_func()->sliderGroove->sliderHandleIndicator->isVisible(), true);
+
+    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
+    releaseEvent.setPos(QPointF(200,50));
+    subject->mouseReleaseEvent(&releaseEvent);
+    QCOMPARE(subject->d_func()->sliderGroove->sliderHandleIndicator->isVisible(), false);
+
+    subject->mousePressEvent(&pressEvent);
+    subject->mouseMoveEvent(&moveEvent);
+    QCOMPARE(subject->d_func()->sliderGroove->sliderHandleIndicator->isVisible(), true);
+
+    MCancelEvent cancelEvent;
+    subject->cancelEvent(&cancelEvent);
+    QApplication::processEvents();
+    QCOMPARE(subject->d_func()->sliderGroove->sliderHandleIndicator->isVisible(), false);
 }
 
 QTEST_APPLESS_MAIN(Ut_MSliderView)

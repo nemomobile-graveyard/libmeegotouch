@@ -43,6 +43,10 @@ private slots:
     void sliderPositionByValue();
     void testSetValueWhileAnimation();
     void testMinMaxIndicatorPosition();
+    void testGrooveHandleIndicatorVisibility();
+    void testValueFromMouseEvents();
+    void testMouseCancel();
+    void testHandleLabelVisibilityFromMouseEvents();
 
 private:
     MSeekBar *m_seekbar;
