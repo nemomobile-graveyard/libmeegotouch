@@ -452,12 +452,8 @@ void MListViewPrivate::viewportRangeChanged(const QRectF &range)
 
 void MListViewPrivate::connectPannableViewport()
 {
-    disconnect(controller, SIGNAL(parentChanged()), this, SLOT(controllerParentChanged()));
-
     if (pannableViewport)
         pannableViewport->disconnect(this);
-
-    connect(controller, SIGNAL(parentChanged()), SLOT(controllerParentChanged()));
 
     pannableViewport = MListViewPrivateNamespace::findParentWidgetOfType<MPannableViewport>(controller);
     if(pannableViewport) {
@@ -477,7 +473,6 @@ void MListViewPrivate::connectPannableViewport()
 
 void MListViewPrivate::controllerParentChanged()
 {
-    disconnect(controller, SIGNAL(parentChanged()), this, SLOT(controllerParentChanged()));
     connectPannableViewport();
 }
 

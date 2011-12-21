@@ -93,6 +93,7 @@ void MListView::init()
 
     connectSelectionModel();
     d_ptr->connectPannableViewport();
+    d_ptr->connect(controller, SIGNAL(parentChanged()), SLOT(controllerParentChanged()));
 
     d_ptr->resetModel(model());
 }
