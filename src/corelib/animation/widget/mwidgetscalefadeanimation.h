@@ -46,6 +46,10 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(MWidgetScaleFadeAnimation)
+
+#ifdef UNIT_TEST
+    friend class Ut_MWidgetScaleFadeAnimation;
+#endif
 };
 
 //! \internal_end
