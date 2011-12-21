@@ -274,6 +274,7 @@ void Ut_MEditorToolbar::testAutoHide()
 
     MEditorToolbarStyle *style = const_cast<MEditorToolbarStyle *>(subject->style().operator ->());
     style->setHideTimeout(1);
+    style->setAutoHideAnimationDuration(1);
     style->setHideAnimationDuration(1);
     style->setShowAnimationDuration(1);
 
@@ -299,6 +300,76 @@ void Ut_MEditorToolbar::testAutoHide()
     QCOMPARE(subject->isAppeared(), isAppearedImmediately);
     QTest::qWait(100);
     QCOMPARE(subject->isAppeared(), isAppearedAfterTimeout);
+}
+
+void Ut_MEditorToolbar::testAnimationDuration_data()
+{
+    // Set any duration values. Only thing that matters is that they are different.
+    const int autoHideDuration = 5;
+    const int hideDuration = 6;
+    const int showDuration = 7;
+
+    // These are the same for all rows.
+    QTest::addColumn<int>("autoHideDuration");
+    QTest::addColumn<int>("hideDuration");
+    QTest::addColumn<int>("showDuration");
+
+    QTest::addColumn<Operations>("ops");
+    QTest::addColumn<int>("expectedDuration");
+
+    QTest::newRow("disappear")
+        << autoHideDuration << hideDuration << showDuration
+        << (Operations() << Disappear) << hideDuration;
+
+    QTest::newRow("appear")
+        << autoHideDuration << hideDuration << showDuration
+        << (Operations() << Appear) << showDuration;
+
+    QTest::newRow("auto-hide")
+        << autoHideDuration << hideDuration << showDuration
+        << (Operations() << Appear << AutoHideEnable) << autoHideDuration;
+}
+
+void Ut_MEditorToolbar::testAnimationDuration()
+{
+    QFETCH(Operations, ops);
+    QFETCH(int, expectedDuration);
+
+    QFETCH(int, autoHideDuration);
+    QFETCH(int, hideDuration);
+    QFETCH(int, showDuration);
+
+    MEditorToolbarStyle *style = const_cast<MEditorToolbarStyle *>(subject->style().operator ->());
+    style->setHideTimeout(1);
+    style->setAutoHideAnimationDuration(autoHideDuration);
+    style->setHideAnimationDuration(hideDuration);
+    style->setShowAnimationDuration(showDuration);
+
+    foreach (Operation op, ops) {
+        switch (op) {
+        case Appear:
+            subject->appear();
+            break;
+        case Disappear:
+            subject->disappear();
+            break;
+        case AutoHideEnable:
+            subject->setAutoHideEnabled(true);
+            break;
+        case AutoHideDisable:
+            subject->setAutoHideEnabled(false);
+            break;
+        default:
+            break;
+        }
+    }
+
+    if (subject->isAutoHideEnabled()) {
+        // Wait for the 1msec auto hide timeout.
+        QTest::qWait(50);
+    }
+
+    QCOMPARE(subject->d_func()->hideAnimation.duration(), expectedDuration);
 }
 
 void Ut_MEditorToolbar::testZOrder()

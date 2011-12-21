@@ -60,6 +60,8 @@ private slots:
     void testActionTextChange();
     void testAutoHide_data();
     void testAutoHide();
+    void testAnimationDuration_data();
+    void testAnimationDuration();
     void testZOrder();
 
 private:

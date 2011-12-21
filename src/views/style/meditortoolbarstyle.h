@@ -35,6 +35,13 @@ class M_VIEWS_EXPORT MEditorToolbarStyle : public MWidgetStyle
      */
     M_STYLE_ATTRIBUTE(int, hideTimeout, HideTimeout)
 
+    /*! \brief Autohide animation duration.
+     *
+     *  The animation duration to use when toolbar is hiding automatically.
+     *  Given in milliseconds.
+     */
+    M_STYLE_ATTRIBUTE(int, autoHideAnimationDuration, AutoHideAnimationDuration)
+
     /*! \brief Hide animation duration, in milliseconds.
      *
      *  Used both in disappearance animation and autohide.

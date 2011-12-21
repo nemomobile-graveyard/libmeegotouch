@@ -558,7 +558,7 @@ void MEditorToolbarPrivate::updateWidgetOrigin()
 void MEditorToolbarPrivate::_q_startAutomaticHide()
 {
     Q_Q(MEditorToolbar);
-    hideAnimation.setDuration(q->style()->hideAnimationDuration());
+    hideAnimation.setDuration(q->style()->autoHideAnimationDuration());
     hideAnimation.setDirection(QAbstractAnimation::Forward);
     if (hideAnimation.state() == QAbstractAnimation::Stopped) {
         hideAnimation.start();
