@@ -313,6 +313,7 @@ void MEditorToolbarPrivate::disappear(TransitionMode transition)
     stopAutoHideTimer();
     if (transition == Animated) {
         hideAnimation.setDirection(QAbstractAnimation::Forward);
+        hideAnimation.setDuration(q->style()->hideAnimationDuration());
         if (hideAnimation.state() == QAbstractAnimation::Stopped) {
             hideAnimation.start();
         }
