@@ -87,6 +87,15 @@ MTextSelectionOverlay::MTextSelectionOverlay(MWidgetController *newController,
     }
 }
 
+MTextSelectionOverlay::~MTextSelectionOverlay()
+{
+    // Deleting of handle in some cases emits disappeared() signal.
+    // To avoid unneeded calls (which can crash because the object would be
+    // partially destroyed already) disconnect the signals.
+    disconnect(&handleA, SIGNAL(disappeared()), this, SLOT(onHandleDisappeared()));
+    disconnect(&handleB, SIGNAL(disappeared()), this, SLOT(onHandleDisappeared()));
+}
+
 void MTextSelectionOverlay::disappear()
 {
     onSelectionChange(0, QRectF(), false,

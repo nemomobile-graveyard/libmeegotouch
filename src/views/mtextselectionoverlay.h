@@ -53,6 +53,8 @@ public:
     explicit MTextSelectionOverlay(MWidgetController *newController,
                                    MWidgetView *newView);
 
+    virtual ~MTextSelectionOverlay();
+
     /*!
      * \brief Hide selection overlay.
      */
