@@ -16,37 +16,33 @@
 ** of this file.
 **
 ****************************************************************************/
- 
-#ifndef MWIDGETRECTANGULARCLIPANIMATION_P_H
-#define MWIDGETRECTANGULARCLIPANIMATION_P_H
 
-#include "mabstractwidgetanimation_p.h"
-#include "mabstractwidgetanimation.h"
+#ifndef UT_MWIDGETRECTANGULARCLIPANIMATION_H
+#define UT_MWIDGETRECTANGULARCLIPANIMATION_H
 
-#include <QAbstractAnimation>
+#include <QtTest/QtTest>
 
-class MGraphicsClipEffect;
+class MApplication;
 class MWidgetRectangularClipAnimation;
-class QPropertyAnimation;
 
-class MWidgetRectangularClipAnimationPrivate : public MAbstractWidgetAnimationPrivate
+class Ut_MWidgetRectangularClipAnimation : public QObject
 {
-public:
-    MWidgetRectangularClipAnimationPrivate();
-    virtual ~MWidgetRectangularClipAnimationPrivate();
+    Q_OBJECT
+
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
 
     void init();
+    void cleanup();
 
-private:
-    Q_DECLARE_PUBLIC(MWidgetRectangularClipAnimation)
+    void testAnimationIn();
+    void testAnimationOut();
 
-    QPropertyAnimation *clipAnimation;
-    MGraphicsClipEffect *clipEffect;
-    MAbstractWidgetAnimation::TransitionDirection transitionDirection;
+ private:
+    MWidgetRectangularClipAnimation *animation;
+    MApplication *app;
 
-#ifdef UNIT_TEST
-    friend class Ut_MWidgetRectangularClipAnimation;
-#endif
 };
 
-#endif // MWIDGETRECTANGULARCLIPANIMATION_P_H
+#endif // UT_MWIDGETRECTANGULARCLIPANIMATION_H
