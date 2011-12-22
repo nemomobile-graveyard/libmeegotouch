@@ -22,9 +22,13 @@
 #include <QApplication>
 #include <signal.h>
 
+#include <MDebug>
+
 #ifdef CLOSE_ON_ENTER
 #include "keypresswaiter.h"
 #endif
+
+#include "sharepixmapsmessage.h"
 
 namespace
 {
@@ -111,6 +115,9 @@ int main(int argc, char **argv)
 #endif // HAVE_MEEGOGRAPHICSSYSTEM
 
     QApplication app(argc, argv);
+
+    if (!sendSharePixmapsMessage())
+        mWarning("mthemedaemon") << "can't send pixmap sharing message";
 
     outputLevel = getOutputLevelFromArgs(app.arguments());
     qInstallMsgHandler(mMessageHandler);
