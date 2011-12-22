@@ -1,3 +1,12 @@
+libmeegotouch (0.24.17-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#291505 - all lines in mms event banner are too high
+  * Fixes: NB#287018 - MListView crash
+  * Fixes: NB#292600, Selection handles/copy-paste toolbar are not visible if hardware events ( by swype keyboard) are sent.
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 22 Dec 2011 11:19:39 +0200
+
 libmeegotouch (0.24.16-1) unstable; urgency=low
 
   * New version
