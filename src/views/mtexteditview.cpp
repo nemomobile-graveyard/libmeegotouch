@@ -73,10 +73,6 @@ namespace
 
     // Editor toolbar action property that affects toolbar closing
     const char * const NoCloseToolbarOnTriggerProperty("noCloseToolbarOnTrigger");
-
-    inline bool isGreater(const QSizeF &s1, const QSizeF &s2) {
-        return s1.width() < s2.width() || s1.height() < s2.height();
-    }
 }
 
 
@@ -1966,12 +1962,11 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     const qreal dx = -d->hscroll + paddingLeft;
     const qreal dy = -d->vscroll + s->paddingTop();
 
-    bool clip = false;
-
     // with no content we show the prompt text
     bool showPrompt = d->isPromptVisible || d->promptShowHideAnimation.state() == QAbstractAnimation::Running;
     // prompt box is now directly got from document, so no need to check its clipping explicitly
-    clip = isGreater(clipping.size(), d->activeDocumentSize());
+    const QRectF documentBox(QPointF(dx, dy), d->activeDocumentSize());
+    const bool clip = !clipping.contains(documentBox);
 
 
     if (clip) {
