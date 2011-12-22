@@ -34,6 +34,7 @@ PKGCONFIG += x11
 # Input
 SOURCES += main.cpp \
            mthemedaemonserver.cpp \
+           sharepixmapsmessage.cpp \
            ../src/corelib/theme/mthemedaemon.cpp \
            ../src/corelib/theme/mcommonpixmaps.cpp \
            ../src/corelib/theme/mimagedirectory.cpp \
@@ -53,6 +54,7 @@ contains(DEFINES, HAVE_GCONF) {
 
 HEADERS += \
            mthemedaemonserver.h \
+           sharepixmapsmessage.h \
            ../src/corelib/theme/mthemedaemon.h \
            ../src/corelib/theme/mcommonpixmaps.h \
            ../src/corelib/theme/mimagedirectory.h \
