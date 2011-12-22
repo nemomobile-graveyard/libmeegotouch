@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QHash>
+#include <QWeakPointer>
 #include <QModelIndex>
 #include <QVector>
 #include <QRectF>
@@ -107,6 +108,8 @@ public:
     void connectPannableViewport();
     void updateViewportRect(const QPointF &position, const QSizeF &size);
 
+    void trackParentMovement();
+
     void updatePannableViewportPosition();
     QPointF calculatePannableViewportOffset(const QPointF &listPosition);
 
@@ -189,7 +192,8 @@ public Q_SLOTS:
     void movingDetectionTimerTimeout();
     void viewportPositionChanged(const QPointF &pos);
     void viewportSizeChanged(const QSizeF &size);
-    void viewportRangeChanged(const QRectF &range);
+    void schedulePositioningAndLayoutUpdate();
+    void updatePositionsAndLayoutOfItems();
     void controllerParentChanged();
     void updateListGeometry();
 
@@ -228,6 +232,10 @@ public:
     bool moving;
     QTimer movingDetectorTimer;
     MPannableViewport *pannableViewport;
+
+    QWeakPointer<QGraphicsObject> parentBeingTrackedPointer;
+
+    bool pendingPositioningAndLayoutUpdate;
 
     QPointF listPosition;
     QPointF listOffset;

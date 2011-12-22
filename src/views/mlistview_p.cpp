@@ -58,6 +58,7 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     viewportVisibleHeight = 0;
     hseparatorHeight = 0;
     pannableViewport = NULL;
+    pendingPositioningAndLayoutUpdate = false;
     clearVisibleOnRelayout = false;
 
     scrollToAnimation = new QPropertyAnimation(this);
@@ -438,9 +439,26 @@ void MListViewPrivate::viewportSizeChanged(const QSizeF &size)
     updateRecyclerMaxItemsCount();
 }
 
-void MListViewPrivate::viewportRangeChanged(const QRectF &range)
+void MListViewPrivate::schedulePositioningAndLayoutUpdate()
 {
-    Q_UNUSED(range);
+    // That's to ensure that updatePositionsAndLayoutOfItems()
+    // ends up being called only once per "event" or change.
+    // A single change in the scene might trigger multiple
+    // places (e.g. pannableViewport::rangeChanged() and parent::yChanged())
+    // to call schedulePositioningAndLayoutUpdate and that
+    // will yield a single call to updatePositionsAndLayoutOfItems()
+    // on the next event loop as those signals are a consequence of the
+    // same change in the scene.
+    if (!pendingPositioningAndLayoutUpdate) {
+        QTimer::singleShot(0, this, SLOT(updatePositionsAndLayoutOfItems()));
+        pendingPositioningAndLayoutUpdate = true;
+    }
+}
+
+void MListViewPrivate::updatePositionsAndLayoutOfItems()
+{
+    Q_ASSERT(pendingPositioningAndLayoutUpdate);
+    pendingPositioningAndLayoutUpdate = false;
 
     if (isDeleted)
         return;
@@ -461,7 +479,7 @@ void MListViewPrivate::connectPannableViewport()
 
         connect(pannableViewport, SIGNAL(positionChanged(QPointF)), SLOT(viewportPositionChanged(QPointF)));
         connect(pannableViewport, SIGNAL(viewportSizeChanged(QSizeF)), SLOT(viewportSizeChanged(QSizeF)));
-        connect(pannableViewport, SIGNAL(rangeChanged(QRectF)), SLOT(viewportRangeChanged(QRectF)));
+        connect(pannableViewport, SIGNAL(rangeChanged(QRectF)), SLOT(schedulePositioningAndLayoutUpdate()));
 
         viewportTopLeft = pannableViewport->position() - listPosition;
         viewportVisibleHeight = pannableViewport->size().height();
@@ -474,6 +492,7 @@ void MListViewPrivate::connectPannableViewport()
 void MListViewPrivate::controllerParentChanged()
 {
     connectPannableViewport();
+    trackParentMovement();
 }
 
 void MListViewPrivate::updateListGeometry()
@@ -496,6 +515,47 @@ void MListViewPrivate::updateViewportRect(const QPointF &position, const QSizeF 
         viewportRectChanged(QRectF(position, size));
 
         _q_relayoutItemsIfNeeded();
+    }
+}
+
+void MListViewPrivate::trackParentMovement()
+{
+    QGraphicsObject *controllerParent = controller->parentObject();
+    QGraphicsObject *parentBeingTracked = parentBeingTrackedPointer.data();
+
+    if (parentBeingTracked == controllerParent)
+        return;
+
+    if (parentBeingTracked) {
+        QObject::disconnect(parentBeingTracked, SIGNAL(yChanged()),
+                            this, SLOT(schedulePositioningAndLayoutUpdate()));
+        parentBeingTracked = 0;
+        parentBeingTrackedPointer.clear();
+    }
+
+    if (!pannableViewport)
+        return;
+
+    // We are only interested in monitoring movement of an intermediate widget
+    // standing between the list and the panned widget.
+    // e.g.
+    // pannableVieport
+    //   \-- pannedWidget
+    //          \-- intermediateWidget
+    //                   \-- list
+    //
+    // If there's more than one widget in the hierarchy tree standing between the list and
+    // the panned widget we won't monitor their movements as it would be too complex/expensive.
+    // This is not a proper solution (as it doesn't cover all possibilities) but at least it
+    // covers all cases currently implemented by applications.
+    // The proper solution would be to monitor changes in the position of list relative to
+    // the panned widget (regardless of how many items are inbetween in the hierarchy).
+    if (controllerParent == pannableViewport->widget() || controllerParent == pannableViewport)
+        controllerParent = 0;
+
+    if (controllerParent) {
+        connect(controllerParent, SIGNAL(yChanged()), SLOT(schedulePositioningAndLayoutUpdate()));
+        parentBeingTrackedPointer = controllerParent;
     }
 }
 
