@@ -38,6 +38,12 @@ class Ut_MTextEditView : public QObject
 public:
     static QHash<QString, QPixmap *> themePixmap;
 
+    enum ClipType
+    {
+        ClipToViewBoundaries,
+        ClipToPadding
+    };
+
 private slots:
     void init();
     void cleanup();
@@ -67,6 +73,8 @@ private slots:
     void testEditorToolbarAutoHideWithSelectionMagnifier();
     void testSelectionOverlay();
     void testPromptEliding();
+    void testClipScrolledText_data();
+    void testClipScrolledText();
 
 private:
     bool editorToolbarAppeared() const;
@@ -78,6 +86,11 @@ private:
     MTextEditView *m_subject;
     MApplication *m_app;
     MApplicationWindow *m_appWindow;
+
+    // Can be used to share constant data between _data and actual test function.
+    QFont font;
+    int textEditWidth;
+    int cursorWidth;
 };
 
 #endif

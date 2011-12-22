@@ -44,7 +44,7 @@
 #include "utils.h"
 
 Q_DECLARE_METATYPE(Qt::FocusReason)
-
+Q_DECLARE_METATYPE(Ut_MTextEditView::ClipType)
 
 
 class AlwaysOnDisplayWindow
@@ -147,6 +147,7 @@ public:
     virtual ~FakePaintDevice();
 
     virtual QPaintEngine *paintEngine() const;
+    virtual int metric (PaintDeviceMetric /*metric*/) const { return 0; }
 
     QScopedPointer<FakePaintEngine> engine;
 };
@@ -183,15 +184,23 @@ public:
         }
     }
 
+    void drawPolygon(const QPointF */*points*/, int /*pointCount*/, PolygonDrawMode /*mode*/)
+    {
+    }
+
     void drawTextItem(const QPointF &p, const QTextItem &textItem)
     {
         if (tracePaint) {
             qDebug() << Q_FUNC_INFO << "p:" << p << "(mapped):" << transform.map(p) << "textItem:" << textItem.text() << textItem.font();
         }
+
         // store the topleft point of the item
         // (must exactly match the in-widget padding as set in the style)
         // (transformation is applied _after_ shifting)
-        texts.insert(textItem.text(), transform.map(p - QPointF(0, textItem.font().pixelSize())));
+        drawnTextItems[textItem.text()].point = transform.map(p - QPointF(0, textItem.font().pixelSize()));
+
+        // Save clipping bounding rectangle used for this textItem.
+        drawnTextItems[textItem.text()].cliprect = painter()->clipRegion().boundingRect();
     }
 
     virtual void updateState(const QPaintEngineState &state)
@@ -207,7 +216,13 @@ public:
         return User;
     }
 
-    QMap<QString, QPointF> texts;
+    struct TextItemInfo
+    {
+        QPointF point;
+        QRectF cliprect;
+    };
+
+    QMap<QString, TextItemInfo> drawnTextItems;
     QPaintDevice *device;
     QTransform transform;
     bool tracePaint;
@@ -227,7 +242,7 @@ QPaintEngine *FakePaintDevice::paintEngine() const
     return engine.data();
 }
 
-}
+} // end namespace
 
 void Ut_MTextEditView::testPaintPrompt()
 {
@@ -239,7 +254,7 @@ void Ut_MTextEditView::testPaintPrompt()
     QPainter painter;
     painter.begin(&fakePaintDevice);
     m_subject->drawContents(&painter, option);
-    QPoint englishPromptPoint = fakePaintDevice.engine->texts["Prompt"].toPoint();
+    QPoint englishPromptPoint = fakePaintDevice.engine->drawnTextItems["Prompt"].point.toPoint();
     painter.end();
     QCOMPARE(englishPromptPoint, QPoint(27, 37));
 
@@ -251,7 +266,7 @@ void Ut_MTextEditView::testPaintPrompt()
     m_controller->setPrompt(arabicPrompt);
     painter.begin(&fakePaintDevice);
     m_subject->drawContents(&painter, option);
-    QPointF arabicPromptPoint = fakePaintDevice.engine->texts[arabicPrompt];
+    QPointF arabicPromptPoint = fakePaintDevice.engine->drawnTextItems[arabicPrompt].point;
     painter.end();
     QVERIFY2(arabicPromptPoint.x() > 100, "Arabic prompt must be aligned to right");
 }
@@ -961,6 +976,109 @@ void Ut_MTextEditView::testPromptEliding()
     m_controller->setPrompt(superLong);
     const QString elidedPrompt = m_subject->d_ptr->elidedPrompt(m_subject->d_ptr->promptOption());
     QVERIFY(elidedPrompt.length() < superLong.length());
+}
+
+void Ut_MTextEditView::testClipScrolledText_data()
+{
+    QTest::addColumn<QString>("text");
+    QTest::addColumn<bool>("clippingRequired"); // This is the expected value to compare
+    QTest::addColumn<int>("leftPadding");
+    QTest::addColumn<int>("rightPadding");
+    QTest::addColumn<ClipType>("clipType");
+
+    this->font = QFont("Nokia Pure Text Light");
+    this->font.setPixelSize(24);
+    this->textEditWidth = 200;
+    this->cursorWidth = 1;
+
+    QFontMetrics metrics(font);
+
+    QTest::newRow("short text, clip to boundaries") << "short" << false << 0 << 0 << ClipToViewBoundaries;
+    QTest::newRow("short text, clip to padding") << "short" << false << 0 << 0 << ClipToPadding;
+    QTest::newRow("long text, clip to boundaries") << "text is so long that it's clipped" << true << 0 << 0 << ClipToViewBoundaries;
+    QTest::newRow("long text, clip to padding") << "text is so long that it's clipped" << true << 0 << 0 << ClipToPadding;
+
+    const QString scrolledText = "scrolled text";
+
+    QTest::newRow("right padding without scrolling, clip to boundaries")
+        << scrolledText << false << 0
+        << (textEditWidth - metrics.width(scrolledText) - this->cursorWidth) << ClipToViewBoundaries;
+
+    QTest::newRow("right padding without scrolling, clip to padding")
+        << scrolledText << false << 0
+        << (textEditWidth - metrics.width(scrolledText) - this->cursorWidth) << ClipToPadding;
+
+    // This verifies fix for NB#295558, "Text in contacts search input field goes beyond the text field boundaries".
+    // After padding, there's not enough room for text and cursor, and scrolling takes place.
+    // In this case, document size is smaller than clip area but clipping is still required.
+    QTest::newRow("right padding with scrolling, clip to boundaries")
+        << scrolledText << true << 0
+        << (textEditWidth - metrics.width(scrolledText)) << ClipToViewBoundaries;
+    QTest::newRow("right padding with scrolling, clip to padding")
+        << scrolledText << true << 0
+        << (textEditWidth - metrics.width(scrolledText)) << ClipToPadding;
+
+    QTest::newRow("left padding without scrolling, clip to boundaries")
+        << scrolledText << false << (textEditWidth - metrics.width(scrolledText) - this->cursorWidth) << 0 << ClipToViewBoundaries;
+    QTest::newRow("left padding without scrolling, clip to padding")
+        << scrolledText << false << (textEditWidth - metrics.width(scrolledText) - this->cursorWidth) << 0 << ClipToPadding;
+    QTest::newRow("left padding with scrolling, clip to boundaries") // Would require clipping if cursor was at the beginning.
+        << scrolledText << false << (textEditWidth - metrics.width(scrolledText)) << 0 << ClipToViewBoundaries;
+    QTest::newRow("left padding with scrolling, clip to padding")
+        << scrolledText << true << (textEditWidth - metrics.width(scrolledText)) << 0 << ClipToPadding;
+}
+
+void Ut_MTextEditView::testClipScrolledText()
+{
+    QFETCH(QString, text);
+    QFETCH(bool, clippingRequired);
+    QFETCH(int, leftPadding);
+    QFETCH(int, rightPadding);
+    QFETCH(ClipType, clipType);
+
+    // Creating new subject with single line.
+    MTextEdit edit(MTextEditModel::SingleLine, text);
+    edit.setStyleName("Ut_MTextEditView_MTextEdit");
+    MTextEditView *subject = new MTextEditView(&edit);
+    edit.setView(subject);
+
+    MTextEditStyle *style = const_cast<MTextEditStyle *>(subject->style().operator ->());
+
+    if (clipType == ClipToViewBoundaries) {
+        style->setTextClippingLeft(0);
+        style->setTextClippingRight(0);
+    } else {
+        // Disable style based clipping -> padding is used
+        style->setTextClippingLeft(-1);
+        style->setTextClippingRight(-1);
+    }
+
+    // Set margins to null so that this->textEditWidth is directly the width of the view.
+    style->setMarginLeft(0);
+    style->setMarginRight(0);
+
+    style->setPaddingLeft(leftPadding);
+    style->setPaddingRight(rightPadding);
+
+    style->setFont(this->font);
+    style->setCursorWidth(this->cursorWidth);
+
+    subject->applyStyle();
+
+    edit.resize(this->textEditWidth,
+                style->paddingTop() + style->paddingBottom() + QFontMetrics(font).height());
+
+    FakePaintDevice fakePaintDevice;
+    QPainter painter;
+
+    painter.begin(&fakePaintDevice);
+    QStyleOptionGraphicsItem option;
+    option.exposedRect = subject->boundingRect();
+    subject->drawContents(&painter, &option);
+    painter.end();
+
+    const bool clipRectSet = !fakePaintDevice.engine->drawnTextItems[text].cliprect.isEmpty();
+    QCOMPARE(clipRectSet, clippingRequired);
 }
 
 QImage Ut_MTextEditView::captureImage(MWidget *widget)
