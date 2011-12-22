@@ -89,15 +89,14 @@ void MContainer::setCentralWidget(QGraphicsWidget *centralWidget, bool destroy)
 
         if (centralWidget)
             connect(centralWidget, SIGNAL(destroyed()), SLOT(_q_onCentralWidgetDestroyed()));
-    } else {
+    } else if (oldCentralWidget) {
         // pass the ownership back to the caller.
         oldCentralWidget->setParentItem(0);
         oldCentralWidget->setParent(0);
         if (scene())
             scene()->removeItem(oldCentralWidget);
 
-        if (oldCentralWidget)
-            disconnect(oldCentralWidget, SIGNAL(destroyed()), this, SLOT(_q_onCentralWidgetDestroyed()));
+        disconnect(oldCentralWidget, SIGNAL(destroyed()), this, SLOT(_q_onCentralWidgetDestroyed()));
     }
 
 }
