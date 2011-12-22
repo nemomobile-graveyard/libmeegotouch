@@ -219,6 +219,9 @@ public:
 
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
+    MSliderHandle *handle() const;
+    void updateHandleIndicatorPos();
+
 protected:
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
 
@@ -227,7 +230,6 @@ protected:
 
 private:
     void updateHandlePos();
-    void updateHandleIndicatorPos();
 
     MSlider *controller;
 
@@ -325,6 +327,9 @@ public:
     void playSliderMoveFeedback(int newValue, const QPointF& newPosition);
     void updateMoveFeedbackData(int newValue);
     QPropertyAnimation* createPositionAnimation();
+
+    void _q_onPositionAnimationValueChanged();
+    void _q_onPositionAnimationFinished();
 
 #ifdef UNIT_TEST
     friend class Ut_MSliderView;

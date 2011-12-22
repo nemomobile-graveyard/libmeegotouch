@@ -893,14 +893,10 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
             QRectF elapsedRect = grooveRect;
 
             if (!reverse) {
-                if (value < maximum)
-                    elapsedRect.setRight(qMin(handle_center + elapsedOffset,
-                                              grooveRect.right()));
+                elapsedRect.setRight(qMin(handle_center + elapsedOffset, grooveRect.right()));
             }
             else {
-                if (value < maximum)
-                    elapsedRect.setLeft(qMax(handle_center - elapsedOffset,
-                                             grooveRect.left()));
+                elapsedRect.setLeft(qMax(handle_center - elapsedOffset, grooveRect.left()));
             }
 
             if (elapsedRect.width() >= qreal(horizontalMargins))
@@ -944,10 +940,7 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         if (!backgroundVerticalElapsedImage.isNull()) {
             QRectF elapsedRect = grooveRect;
 
-            if (value < maximum) {
-                elapsedRect.setTop(qMax(handle_center + elapsedOffset,
-                                        grooveRect.top()));
-            }
+            elapsedRect.setTop(qMax(handle_center + elapsedOffset, grooveRect.top()));
 
             if (elapsedRect.height() >= qreal(verticalMargins))
                 backgroundVerticalElapsedImage.data()->draw(elapsedRect.toRect(), painter);
@@ -1153,6 +1146,11 @@ qreal MSliderGroove::valueToScreenCoordinate(int value) const
     return beginning + offset;
 }
 
+MSliderHandle *MSliderGroove::handle() const
+{
+    return sliderHandle;
+}
+
 MSliderViewPrivate::MSliderViewPrivate() :
     q_ptr(0),
     controller(0),
@@ -1339,11 +1337,24 @@ QPropertyAnimation* MSliderViewPrivate::createPositionAnimation()
 {
     Q_Q(MSliderView);
 
-    QPropertyAnimation *animation = positionAnimation = new QPropertyAnimation(q, "position", 0);
+    QPropertyAnimation *animation = positionAnimation = new QPropertyAnimation(sliderGroove->handle(), "pos", 0);
+    QObject::connect(animation, SIGNAL(valueChanged(QVariant)), q, SLOT(_q_onPositionAnimationValueChanged()));
+    QObject::connect(animation, SIGNAL(finished()), q, SLOT(_q_onPositionAnimationFinished()));
+
     animation->setDuration(q->style()->handleAnimationDuration());
     animation->setEasingCurve(q->style()->handleAnimationEasingCurve());
 
     return animation;
+}
+
+void MSliderViewPrivate::_q_onPositionAnimationValueChanged()
+{
+    sliderGroove->updateHandleIndicatorPos();
+}
+
+void MSliderViewPrivate::_q_onPositionAnimationFinished()
+{
+    updateSliderGroove();
 }
 
 //sets slider value to that one corresponding
@@ -1379,6 +1390,7 @@ int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
                            sliderGroove->screenPointToValue(eventPos),
                            q->model()->maximum(),
                            q->model()->steps());
+
     //sometimes this method can be called twice with the same
     //event position (for example when user clicks to slider groove
     //once it is called at mouse press and once at mouse release)
@@ -1387,12 +1399,13 @@ int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
             if (!positionAnimation) {
                 positionAnimation = createPositionAnimation();
             }
-            positionAnimation->setEndValue(newValue);
+
+            positionAnimation->setEndValue(sliderGroove->valueToHandlePos(newValue));
+
             positionAnimation->start();
             usingAnimation = true;
-        } else {
-            position = newValue;
         }
+        position = newValue;
         controller->setValue(newValue);
     }
 
@@ -1530,8 +1543,12 @@ void MSliderView::updateData(const QList<const char *>& modifications)
             d->updateOrientation();
             updateGeometry();
         }
-        if (member == MSliderModel::State)
-            d->updateSliderGroove();
+        if (member == MSliderModel::State) {
+            if (d->positionAnimation && d->positionAnimation->state() == QPropertyAnimation::Running)
+                d->sliderGroove->setSliderState(model()->state()); //Update just state (not handle position) while it is animated
+            else
+                d->updateSliderGroove();
+        }
         else if (member == MSliderModel::Minimum)
             d->updateSliderGroove();
         else if (member == MSliderModel::Maximum)
@@ -1746,7 +1763,7 @@ void MSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
  
             if (d->positionAnimation)
                 d->positionAnimation->stop();
- 
+
             d->sliderGroove->lowerHandleIndicator();
         }
     }
@@ -1852,3 +1869,5 @@ void MSliderView::updateGestureGrab()
 }
 
 M_REGISTER_VIEW_NEW(MSliderView, MSlider)
+
+#include "moc_msliderview.cpp"

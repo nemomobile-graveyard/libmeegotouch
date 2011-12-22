@@ -174,6 +174,9 @@ private:
     void setPosition(int position);
     //! \internal_end
 
+    Q_PRIVATE_SLOT(d_func(), void _q_onPositionAnimationValueChanged())
+    Q_PRIVATE_SLOT(d_func(), void _q_onPositionAnimationFinished())
+
 private Q_SLOTS:
     /*!
       \brief Lowers slider handle indicator
