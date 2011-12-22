@@ -171,6 +171,13 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
 MTextEditViewPrivate::~MTextEditViewPrivate()
 {
     delete maskedTextDocument;
+
+    if (magnifier)
+        delete magnifier.data();
+    if (selectionOverlay)
+        delete selectionOverlay.data();
+    if (editorToolbar)
+        delete editorToolbar.data();
 }
 
 QTextDocument *MTextEditViewPrivate::document() const
@@ -611,16 +618,16 @@ void MTextEditViewPrivate::showEditorToolbar()
 {
     Q_Q(const MTextEditView);
     if (!editorToolbar) {
-        editorToolbar.reset(new MEditorToolbar(controller));
+        editorToolbar = new MEditorToolbar(controller);
         const MTextEditStyle *textEditStyle = static_cast<const MTextEditStyle *>(q->style().operator ->());
         if (textEditStyle) {
-            editorToolbar->setStyleName(textEditStyle->toolbarStyleName());
+            editorToolbar.data()->setStyleName(textEditStyle->toolbarStyleName());
         }
         foreach (QAction *action, controller->actions()) {
             if (!action->property(NoCloseToolbarOnTriggerProperty).toBool()) {
                 connect(action, SIGNAL(triggered()), editorToolbar.data(), SLOT(disappear()));
             }
-            editorToolbar->addAction(action);
+            editorToolbar.data()->addAction(action);
         }
 
         QObject::connect(controller, SIGNAL(textChanged()),
@@ -633,8 +640,8 @@ void MTextEditViewPrivate::showEditorToolbar()
                 this, SLOT(onEditorMoved()), Qt::UniqueConnection);
     }
 
-    editorToolbar->setAutoHideEnabled(!controller->hasSelectedText());
-    editorToolbar->appear();
+    editorToolbar.data()->setAutoHideEnabled(!controller->hasSelectedText());
+    editorToolbar.data()->appear();
     updateEditorToolbarPosition();
     lastScenePos = controller->scenePos();
     movementTime.start();
@@ -652,14 +659,14 @@ void MTextEditViewPrivate::hideEditorToolbar()
         return;
     }
 
-    editorToolbar->disappear();
-    editorToolbar.reset();
+    editorToolbar.data()->disappear();
+    delete editorToolbar.data();
 }
 
 void MTextEditViewPrivate::hideEditorToolbarTemporarily()
 {
-    if (editorToolbar && editorToolbar->isAppeared()) {
-        editorToolbar->disappear();
+    if (editorToolbar && editorToolbar.data()->isAppeared()) {
+        editorToolbar.data()->disappear();
     }
 }
 
@@ -667,9 +674,9 @@ void MTextEditViewPrivate::restoreEditorToolbar()
 {
     // If editorToolbar exists and is disappeared then assume it was hidden
     // only temporarily. Restore it.
-    if (editorToolbar && !editorToolbar->isAppeared()) {
-        editorToolbar->setAutoHideEnabled(!controller->hasSelectedText());
-        editorToolbar->appear();
+    if (editorToolbar && !editorToolbar.data()->isAppeared()) {
+        editorToolbar.data()->setAutoHideEnabled(!controller->hasSelectedText());
+        editorToolbar.data()->appear();
         updateEditorToolbarPosition();
     }
 }
@@ -749,8 +756,8 @@ void MTextEditViewPrivate::showMagnifier()
     q->updateCursorPosition(&mouseEvent, false);
 
     if (!magnifier) {
-        magnifier.reset(new MTextMagnifier(*controller,
-                                           cursorRect().size()));
+        magnifier = new MTextMagnifier(*controller,
+                                       cursorRect().size());
     }
 
     QObject::connect(controller, SIGNAL(cursorPositionChanged()),
@@ -758,7 +765,7 @@ void MTextEditViewPrivate::showMagnifier()
                      Qt::UniqueConnection);
 
     updateMagnifierPosition();
-    magnifier->appear();
+    magnifier.data()->appear();
     MTextEditPrivate *textWidgetPtr = static_cast<MTextEditPrivate *>(controller->d_func());
     if (textWidgetPtr) {
         connect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()),
@@ -793,8 +800,8 @@ void MTextEditViewPrivate::hideMagnifier()
 
         viewScrolled = false;
 
-        magnifier->disappear(MTextMagnifier::DestroyWhenDone);
-        (void)magnifier.take(); // Set pointer to null without destroying.
+        magnifier.data()->disappear(MTextMagnifier::DestroyWhenDone);
+        magnifier.clear(); // Set pointer to null without destroying.
     }
 
     QObject::disconnect(controller, SIGNAL(cursorPositionChanged()),
@@ -804,8 +811,8 @@ void MTextEditViewPrivate::hideMagnifier()
 void MTextEditViewPrivate::showSelectionMagnifier()
 {
     if (!magnifier) {
-        magnifier.reset(new MTextMagnifier(*controller,
-                                           cursorRect().size()));
+        magnifier = new MTextMagnifier(*controller,
+                                       cursorRect().size());
     }
 
     updateMagnifierPosition();
@@ -820,14 +827,14 @@ void MTextEditViewPrivate::showSelectionMagnifier()
                 this, SLOT(onScenePositionChanged()), Qt::UniqueConnection);
     }
 
-    magnifier->appear();
+    magnifier.data()->appear();
 }
 
 void MTextEditViewPrivate::hideSelectionMagnifier()
 {
     if (magnifier) {
-        magnifier->disappear(MTextMagnifier::DestroyWhenDone);
-        (void)magnifier.take(); // Set pointer to null without destroying.
+        magnifier.data()->disappear(MTextMagnifier::DestroyWhenDone);
+        magnifier.clear(); // Set pointer to null without destroying.
     }
 
     MTextEditPrivate *textWidgetPtr
@@ -850,7 +857,7 @@ void MTextEditViewPrivate::showSelectionOverlay()
 
     Q_Q(MTextEditView);
     if (selectionOverlay.isNull() && controller->sceneManager()) {
-        selectionOverlay.reset(new MTextSelectionOverlay(controller, q));
+        selectionOverlay = new MTextSelectionOverlay(controller, q);
 
 
         QObject::connect(selectionOverlay.data(), SIGNAL(visibleChanged()),
@@ -1141,7 +1148,7 @@ void MTextEditViewPrivate::startSelection(QGraphicsSceneMouseEvent *event)
 {
     if (activeDocument() != maskedTextDocument) {
         selecting = true;
-        if (editorToolbar && editorToolbar->isAppeared()) {
+        if (editorToolbar && editorToolbar.data()->isAppeared()) {
             hideEditorToolbar();
         }
 
@@ -1569,11 +1576,11 @@ void MTextEditViewPrivate::updateMagnifierPosition()
                                                  mouseTarget.y(),
                                                  documentGeometry.bottom() - fm.height() / 2.0f));
 
-        magnifier->setMagnifiedPosition(magnifierPos);
+        magnifier.data()->setMagnifiedPosition(magnifierPos);
 
 
         bool toRelocate = false;
-        if (magnifier->isAppeared()) {
+        if (magnifier.data()->isAppeared()) {
             // extend cursor rectangle to trigger automatic scrolling earlier
             const QRectF rect = cursorRect().adjusted(0,
                                                        -q->style()->scrollCursorMarginTop(),
@@ -1593,14 +1600,14 @@ void MTextEditViewPrivate::updateMagnifierPosition()
 void MTextEditViewPrivate::makeMagnifierDisappear()
 {
     if (magnifier) {
-        magnifier->disappear(MTextMagnifier::KeepWhenDone);
+        magnifier.data()->disappear(MTextMagnifier::KeepWhenDone);
     }
 }
 
 void MTextEditViewPrivate::makeMagnifierAppear()
 {
     if (magnifier) {
-        magnifier->appear();
+        magnifier.data()->appear();
     }
 }
 
@@ -1690,7 +1697,7 @@ void MTextEditViewPrivate::icUpdate()
 
 void MTextEditViewPrivate::updateEditorToolbarPosition()
 {
-    if (!editorToolbar || !editorToolbar->isAppeared()) {
+    if (!editorToolbar || !editorToolbar.data()->isAppeared()) {
         return;
     }
 
@@ -1714,15 +1721,15 @@ void MTextEditViewPrivate::updateEditorToolbarPosition()
     const QRect visibleSceneRect = controller->mapRectFromScene(
         QRectF(QPointF(), controller->sceneManager()->visibleSceneSize(M::Landscape))).toRect();
 
-    const int topLimit = qMax<int>(visibleRect.top() - editorToolbar->size().height(), visibleSceneRect.top());
+    const int topLimit = qMax<int>(visibleRect.top() - editorToolbar.data()->size().height(), visibleSceneRect.top());
 
-    if (targetY - editorToolbar->size().height() < topLimit) {
-        if (secondRect.bottom() + editorToolbar->size().height() <= visibleRect.bottom()) {
+    if (targetY - editorToolbar.data()->size().height() < topLimit) {
+        if (secondRect.bottom() + editorToolbar.data()->size().height() <= visibleRect.bottom()) {
             targetY = secondRect.bottom();
             targetRect = secondRect;
             placement = MEditorToolbar::BelowPointOfInterest;
         } else {
-            targetY = topLimit + editorToolbar->size().height();
+            targetY = topLimit + editorToolbar.data()->size().height();
         }
     }
 
@@ -1730,12 +1737,12 @@ void MTextEditViewPrivate::updateEditorToolbarPosition()
     const int targetX(visibleRect.intersected(targetRect).center().x());
 
     if (selectionOverlay) {
-        editorToolbar->setForbiddenRegion(selectionOverlay->region());
+        editorToolbar.data()->setForbiddenRegion(selectionOverlay.data()->region());
     } else {
-        editorToolbar->setForbiddenRegion(QRegion());
+        editorToolbar.data()->setForbiddenRegion(QRegion());
     }
 
-    editorToolbar->setPosition(QPointF(targetX, targetY), placement);
+    editorToolbar.data()->setPosition(QPointF(targetX, targetY), placement);
 }
 
 void MTextEditViewPrivate::startFocusAnimation()
@@ -1802,7 +1809,7 @@ void MTextEditViewPrivate::hideSelectionOverlayTemporarily()
         QObject::disconnect(selectionOverlay.data(), SIGNAL(visibleChanged()),
                             this, SLOT(onSelectionOverlayVisibleChanged()));
 
-        selectionOverlay->disappear();
+        selectionOverlay.data()->disappear();
     }
 }
 
@@ -1813,7 +1820,7 @@ void MTextEditViewPrivate::restoreSelectionOverlay()
         showSelectionOverlay();
         QObject::connect(selectionOverlay.data(), SIGNAL(visibleChanged()),
                          this, SLOT(onSelectionOverlayVisibleChanged()));
-        selectionOverlay->skipTransitions();
+        selectionOverlay.data()->skipTransitions();
     }
 }
 
@@ -2066,7 +2073,7 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         style()->releaseFeedback().play();
     }
 
-    const bool magnifierHidden(d->magnifier && d->magnifier->isAppeared());
+    const bool magnifierHidden(d->magnifier && d->magnifier.data()->isAppeared());
     d->hideMagnifier();
 
     const int eventCursorPos = d->cursorPosition(event);
@@ -2141,7 +2148,7 @@ void MTextEditView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     d->currentPosition = event->pos();
 
     // Only update selection if magnifier is not in use.
-    const bool updateSelection = !(d->magnifier && d->magnifier->isAppeared());
+    const bool updateSelection = !(d->magnifier && d->magnifier.data()->isAppeared());
     updateCursorPosition(event, updateSelection);
     if (d->selecting) {
         // start watching scrolling
@@ -2573,7 +2580,7 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
     Q_UNUSED(reason);
     d->focusingTap = true;
 
-    if (d->editorToolbar && d->editorToolbar->isAppeared()) {
+    if (d->editorToolbar && d->editorToolbar.data()->isAppeared()) {
         if (reason != Qt::ActiveWindowFocusReason
             && reason != Qt::PopupFocusReason) {
             d->hideEditorToolbar();
@@ -2582,7 +2589,7 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
         }
     }
 
-    if (!d->selectionOverlay.isNull() && d->selectionOverlay->isVisible()) {
+    if (!d->selectionOverlay.isNull() && d->selectionOverlay.data()->isVisible()) {
         emit selectionChanged(0, QRect(), false, 0, QRect(), false);
     }
 
@@ -2669,7 +2676,7 @@ void MTextEditView::applyStyle()
     d->focusAnimationDelay->setInterval(s->promptTransitionDelay());
 
     if (d->editorToolbar) {
-        d->editorToolbar->setStyleName(s->toolbarStyleName());
+        d->editorToolbar.data()->setStyleName(s->toolbarStyleName());
     }
 
     d->delaySelection.setInterval(s->selectionDelay());

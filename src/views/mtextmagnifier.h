@@ -38,7 +38,7 @@
  *  To be always on top of other widgets in scene this magnifier uses
  *  MOverlay internally as a parent scene window.
  */
-class MTextMagnifier : protected MStylableWidget
+class MTextMagnifier : public MStylableWidget
 {
     Q_OBJECT
 public:
