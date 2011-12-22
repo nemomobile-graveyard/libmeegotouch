@@ -462,7 +462,7 @@ int MLabelViewRich::cursorPositionOfLastVisibleCharacter()
 
 void MLabelViewRich::updateRichTextEliding()
 {
-    if (shouldElide()) {
+    if (!isElided && shouldElide()) {
         isElided = true;
         textDocument.setPageSize(viewPrivate->boundingRect().size());
         QFontMetrics fm(textDocument.defaultFont());
@@ -509,7 +509,7 @@ void MLabelViewRich::updateRichTextEliding()
             }
             int position = cursor.position();
             cursor.deletePreviousChar();
-            if (cursor.position() < position) {
+            if (cursor.position() >= position) {
                 //This shouldn't happen, but maybe it can with tables, or divs etc.  Best to make sure otherwise we could hang here in an infinite loop
                 break;
             }
