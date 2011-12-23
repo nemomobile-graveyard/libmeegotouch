@@ -1725,28 +1725,41 @@ void Ut_MLabel::testDiacritics()
     QVERIFY(textWithDiacriticsRect.height() >= textRect.height() + 6);
 }
 
-void Ut_MLabel::testLeftMarginUsage_data()
+void Ut_MLabel::testPlainAndRichTextAlignments_data()
 {
     QTest::addColumn<QString>("styleName");
+    QTest::addColumn<Qt::Alignment>("alignment");
 
-    QTest::newRow("margins") << "margins";
-    QTest::newRow("paddings") << "paddings";
-    QTest::newRow("reactive margins") << "reactiveMargins";
-    QTest::newRow("margins and paddings") << "marginsAndPaddings";
+    QTest::newRow("margins, top-aligned")              << "margins"            << Qt::Alignment(Qt::AlignTop);
+    QTest::newRow("padding, top-aligned")              << "paddings"           << Qt::Alignment(Qt::AlignTop);
+    QTest::newRow("reactive margins, top-aligned")     << "reactiveMargins"    << Qt::Alignment(Qt::AlignTop);
+    QTest::newRow("margins and paddings, top-aligned") << "marginsAndPaddings" << Qt::Alignment(Qt::AlignTop);
+
+    QTest::newRow("margins, vertically-centered")              << "margins"            << Qt::Alignment(Qt::AlignVCenter);
+    QTest::newRow("paddings, vertically-centered")             << "paddings"           << Qt::Alignment(Qt::AlignVCenter);
+    QTest::newRow("reactive margins, vertically-centered")     << "reactiveMargins"    << Qt::Alignment(Qt::AlignVCenter);
+    QTest::newRow("margins and paddings, vertically-centered") << "marginsAndPaddings" << Qt::Alignment(Qt::AlignVCenter);
+
+    QTest::newRow("margins, bottom-aligned")              << "margins"            << Qt::Alignment(Qt::AlignBottom);
+    QTest::newRow("paddings, bottom-aligned")             << "paddings"           << Qt::Alignment(Qt::AlignBottom);
+    QTest::newRow("reactive margins, bottom-aligned")     << "reactiveMargins"    << Qt::Alignment(Qt::AlignBottom);
+    QTest::newRow("margins and paddings, bottom-aligned") << "marginsAndPaddings" << Qt::Alignment(Qt::AlignBottom);
 }
 
-void Ut_MLabel::testLeftMarginUsage()
+void Ut_MLabel::testPlainAndRichTextAlignments()
 {
     QFETCH(QString, styleName);
+    QFETCH(Qt::Alignment, alignment);
 
-    const QString plainText = "A";
-    const QString plainThaiText = QString::fromUtf8("ใ");
+    const QString plainText = "Abc ygj";
+    const QString plainThaiText = QString::fromUtf8("ใAbc ygj");
 
     const QString richText = "<qt>" + plainText;
     const QString richThaiText = "<qt>" + plainThaiText;
 
     label->setFont(QFont("Nokia Pure Text", 30));
     label->setStyleName(styleName);
+    label->setAlignment(alignment);
     label->resize(400, 400);
 
     label->setText(plainText);
@@ -1761,13 +1774,8 @@ void Ut_MLabel::testLeftMarginUsage()
     label->setText(richThaiText);
     const QRect richThaiTextRect = contentRect(captureImage(label));
 
-    // As workaround until bug 294572 has been fixed only the sizes
-    // and the x-positions are compared. This should be replaced by
-    // just comparing the rectangles.
-    QCOMPARE(plainTextRect.size(), richTextRect.size());
-    QCOMPARE(plainTextRect.x(), richTextRect.x());
-    QCOMPARE(plainThaiTextRect.size(), richThaiTextRect.size());
-    QCOMPARE(plainThaiTextRect.x(), richThaiTextRect.x());
+    QCOMPARE(plainTextRect, richTextRect);
+    QCOMPARE(plainThaiTextRect, richThaiTextRect);
 
     const int plainDiff = plainTextRect.x() - plainThaiTextRect.x();
     const int richDiff = richTextRect.x() - richThaiTextRect.x();

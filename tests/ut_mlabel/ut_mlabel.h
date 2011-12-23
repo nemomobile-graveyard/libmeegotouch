@@ -143,9 +143,10 @@ private slots:
     void testDiacritics_data();
     void testDiacritics();
 
-    // Regression test for bug 293511  - Thai vowel marks are not fully displayed
-    void testLeftMarginUsage_data();
-    void testLeftMarginUsage();
+    // Regression test for bug 293511 ("Thai vowel marks are not fully displayed")
+    // and bug 294572 ("Inconsistent vertical alignment of simple-text and rich-text")
+    void testPlainAndRichTextAlignments_data();
+    void testPlainAndRichTextAlignments();
 
     void testLineBreakReplacement_data();
     void testLineBreakReplacement();

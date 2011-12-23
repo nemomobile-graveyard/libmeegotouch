@@ -84,13 +84,15 @@ void MLabelViewRich::drawContents(QPainter *painter, const QSizeF &size)
     // the vertical alignment is not working, because the widget can be bigger in size when compared
     // to the text document. Therefore we need to do the vertical alignment manually in here.
     // Perform manual alignment for bottom alignment.
+    QFontMetrics fm(textDocument.defaultFont());
+
     const MLabelStyle *style = viewPrivate->style();
-    pixmapOffset = QPoint(style->paddingLeft(), style->paddingTop());
+    pixmapOffset = QPoint(style->paddingLeft(), style->paddingTop() - fm.leading());
     if (textDocument.size().height() < size.height()) {
         if (viewPrivate->textOptions.alignment() & Qt::AlignBottom) {
-            pixmapOffset.setY(viewPrivate->style()->paddingTop() + size.height() - textDocument.size().height());
+            pixmapOffset.ry() += fm.leading() + size.height() - textDocument.size().height();
         } else if (viewPrivate->textOptions.alignment() & Qt::AlignVCenter) {
-            pixmapOffset.setY(viewPrivate->style()->paddingTop() + ((size.height() / 2) - (textDocument.size().height() / 2)));
+            pixmapOffset.ry() += (fm.leading() + size.height() - textDocument.size().height()) / 2.0;
         }
     }
 
@@ -768,7 +770,7 @@ void MLabelViewRich::drawTiles(QPainter *painter, const QPointF &pos)
                           || tileOffset.y() < minYOffset;
         if (clip) {
             painter->save();
-            const QRectF clipRect(QPointF(0, minYOffset), labelSize);
+            const QRectF clipRect(QPointF(-leftMargin(), minYOffset), labelSize);
             painter->setClipRect(clipRect, Qt::IntersectClip);
             painter->drawPixmap(tileOffset, pixmap);
             painter->restore();
