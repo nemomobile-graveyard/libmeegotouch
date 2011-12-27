@@ -107,7 +107,7 @@ void MCompleterViewPrivate::init()
     if (controller->widget()) {
         connect(controller->widget()->sceneManager(),
                 SIGNAL(orientationChangeFinished(const M::Orientation &)),
-                this, SLOT(organizeContents()));
+                this, SLOT(updatePosition()));
         connect(controller, SIGNAL(shown()),
                 this,       SLOT(handleCompleterShown()));
         connect(controller, SIGNAL(hidden()),
@@ -115,7 +115,7 @@ void MCompleterViewPrivate::init()
     }
 }
 
-void MCompleterViewPrivate::organizeContents()
+void MCompleterViewPrivate::updatePosition()
 {
     Q_Q(MCompleterView);
 
@@ -143,6 +143,11 @@ void MCompleterViewPrivate::organizeContents()
     }
     if (completerPos != controller->pos())
         controller->setPos(completerPos);
+
+    // Consider removing updateGeometry call.
+    // This is not required to be called for what happens in this method because
+    // sizeHint is not changed. It might be needed though because this is called
+    // on orientationChangeFinished and sizeHint currently depends on orientation.
     q->updateGeometry();
 }
 
@@ -239,7 +244,7 @@ void MCompleterViewPrivate::createContents()
         //even we already set focus proxy for controller, this step is still necessary,
         //otherwise the textwidget can not get focus.
         controller->scene()->setFocusItem(controller->widget());
-        organizeContents();
+        updatePosition();
     }
 }
 
@@ -330,7 +335,7 @@ void MCompleterViewPrivate::handleCompleterShown()
     connect(&textWidgetPrivate->signalEmitter,
             SIGNAL(scenePositionChanged()),
             this,
-            SLOT(organizeContents()),
+            SLOT(updatePosition()),
             Qt::UniqueConnection);
 }
 

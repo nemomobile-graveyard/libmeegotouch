@@ -52,7 +52,7 @@ protected slots:
 
     void refocusPopup();
 
-    void organizeContents();
+    void updatePosition();
 
     void handlePopupAppearing();
 
