@@ -53,6 +53,10 @@ protected slots:
     void refocusPopup();
 
     void updatePosition();
+    QRect cursorRectangle() const;
+    QRect widgetRectangle() const;
+    QRectF mapRectToRoot(const QGraphicsItem *item, const QRectF &itemRect) const;
+    QRectF mapSceneRectToRoot(const QRectF &sceneRect) const;
 
     void handlePopupAppearing();
 
@@ -67,8 +71,6 @@ protected slots:
 
 protected:
     void init();
-
-    QPoint locatePosition(const QRect &r) const;
 
     //! The MCompleter controller
     MCompleter *controller;

@@ -32,6 +32,7 @@
 #include "mscenemanager.h"
 
 #include <MCancelEvent>
+#include <MInputMethodState>
 #include <MLocale>
 
 #include <QGraphicsSceneMouseEvent>
@@ -121,26 +122,45 @@ void MCompleterViewPrivate::updatePosition()
 
     if (!controller->widget() || !controller->isActive())
         return;
-    QSize screenSize = MApplication::activeWindow()->visibleSceneSize();
 
-    const QRect textWidgetRect = controller->widget()->mapToScene(
-                                     controller->widget()->boundingRect()).boundingRect().toRect();
+    const QRect cursorRect = cursorRectangle();
 
-    QPoint completerPos = locatePosition(textWidgetRect);
-    //add y position offset
-    const int  yPositionOffset = q->style()->yPositionOffset();
-    if (yPositionOffset > 0) {
-        completerPos.setY(completerPos.y() - yPositionOffset);
+    QPoint completerPos;
+
+    const int completerHeight = static_cast<int>(controller->preferredHeight());
+
+    // Calculate new visible scene height, with input method height subtracted.
+    const int visibleSceneBottom = controller->sceneManager()->visibleSceneSize().height()
+                                   - static_cast<int>(mapSceneRectToRoot(MInputMethodState::instance()->inputMethodArea()).height());
+
+    // Visible scene top could take into account status bar and others, when present, but because it is difficult to reliably get
+    // the correct coordinate we set it to zero. This is good enough because the top coordinate is only used when setting
+    // completer's position _above_ text widget and in practice this only occurs in landscape when status bar is hidden.
+    const int visibleSceneTop = 0;
+
+    const int roomBelow = qMax<int>(0, visibleSceneBottom - (cursorRect.y() + cursorRect.height());
+    const int roomAbove = qMax<int>(0, cursorRect.top() - visibleSceneTop);
+
+    if (roomBelow >= completerHeight) {
+        // Completer fits below text widget. Prefer this.
+        const int yPositionOffset = qMin<int>(q->style()->yPositionOffset(),
+                                              roomBelow - completerHeight);
+        completerPos.setY(cursorRect.y() + cursorRect.height() + yPositionOffset);
+    } else if (roomAbove >= completerHeight) {
+        // Completer fits above text widget
+        const int yPositionOffset = qMin<int>(q->style()->yPositionOffset(),
+                                              roomAbove - completerHeight);
+        completerPos.setY(cursorRect.top() - completerHeight - yPositionOffset);
+    } else {
+        // No space to show completer fully. Pick the side which has most space.
+        if (roomBelow >= roomAbove) {
+            // Prefer below.
+            completerPos.setY(cursorRect.y() + cursorRect.height());
+        } else {
+            completerPos.setY(cursorRect.top() - completerHeight);
+        }
     }
 
-    //adjust position, to avoid the completer to be beyond the screen edge
-    //completer's position is fixed, aligning left bottom with text widget
-    //judge completion should stay at text widget below or upper
-    if (controller->preferredSize().height() > (screenSize.height() - completerPos.y())) {
-        completerPos.setY(completerPos.y()
-                          - controller->widget()->boundingRect().height()
-                          - controller->preferredSize().height() + yPositionOffset);
-    }
     if (completerPos != controller->pos())
         controller->setPos(completerPos);
 
@@ -151,31 +171,47 @@ void MCompleterViewPrivate::updatePosition()
     q->updateGeometry();
 }
 
-QPoint MCompleterViewPrivate::locatePosition(const QRect &r) const
+QRect MCompleterViewPrivate::cursorRectangle() const
 {
-    // locate the position for completer according input widget rectangle.
-    QSize screenSize = MApplication::activeWindow()->visibleSceneSize();
-    QPoint p;
-    switch (MApplication::activeWindow()->orientationAngle()) {
-    case M:: Angle90:
-        p = r.topLeft();
-        p = QPoint(0, (screenSize.height() - p.x()));
-        break;
-    case M:: Angle180:
-        p = r.topRight();
-        p = QPoint(0, (screenSize.height() - p.y()));
-        break;
-    case M:: Angle270:
-        p = r.bottomRight();
-        p = QPoint(0, p.x());
-        break;
-    case M:: Angle0:
-    default:
-        p = r.bottomLeft();
-        p.setX(0);
-        break;
+    const MWidget *widget = controller->widget();
+
+    QRect result;
+
+    if (widget->scene()->focusItem() == widget
+        && widget->flags() & QGraphicsItem::ItemAcceptsInputMethod) {
+        // Input method query on scene will be forwarded to correct item.
+        QVariant queryResult = widget->scene()->inputMethodQuery(Qt::ImMicroFocus);
+
+        if (queryResult.isValid()) {
+            result = mapSceneRectToRoot(queryResult.toRect()).toRect();
+        }
     }
-    return p;
+
+    if (result.isNull()) {
+        // Fall back to widget rectangle
+        result = widgetRectangle();
+    }
+
+    return result;
+}
+
+QRect MCompleterViewPrivate::widgetRectangle() const
+{
+    const MWidget *widget = controller->widget();
+    return mapRectToRoot(widget, widget->rect()).toRect();
+}
+
+QRectF MCompleterViewPrivate::mapRectToRoot(const QGraphicsItem *item,
+                                            const QRectF &itemRect) const
+{
+    // Calculate item rectangle in our parent coordinates by first bringing it
+    // to local coordinates and then translating.
+    return controller->mapRectFromItem(item, itemRect).translated(controller->pos());
+}
+
+QRectF MCompleterViewPrivate::mapSceneRectToRoot(const QRectF &sceneRect) const
+{
+    return controller->mapRectFromScene(sceneRect).translated(controller->pos()).toRect();
 }
 
 void MCompleterViewPrivate::createContents()
