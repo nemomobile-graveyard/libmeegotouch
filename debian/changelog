@@ -1,3 +1,11 @@
+libmeegotouch (0.24.18-1) unstable; urgency=low
+
+  * Fixes NB#290238, Text selection handle behaves wrongly with RTL text in a scenario
+  * Fixes: NB#290828 - - mthemedaemon needs to share X drawables in a secure manner
+  * Fixes: NB#294592 - COREWEB: /usr/bin/meegotouchhome '~QScopedPointer ... MWidget::~MWidget ... SwipeLauncherFolderContainer::~Sw
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Wed, 28 Dec 2011 11:22:41 +0200
+
 libmeegotouch (0.24.17-1) unstable; urgency=low
 
   * New version
