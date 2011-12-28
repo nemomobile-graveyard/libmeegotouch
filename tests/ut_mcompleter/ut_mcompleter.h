@@ -63,6 +63,14 @@ private slots:
     void checkComplete();
 
     void checkTrim();
+
+    void testVerticalPosition_data();
+    void testVerticalPosition();
+
+private:
+    //! \brief Helper method for retrieving default micro focus rectangle for empty MTextEdit
+    //! \returns Micro focus rectangle in MTextEdit's local coordinates
+    QRect defaultMicroFocusRectangle();
 };
 
 #endif

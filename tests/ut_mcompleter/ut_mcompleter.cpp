@@ -27,6 +27,8 @@
 #include <QAbstractTableModel>
 #include <mcompleter.h>
 #include "mcompleter_p.h"
+#include "mcompleterstyle.h"
+#include "minputmethodstate.h"
 #include <mtextedit.h>
 
 #include <MApplication>
@@ -122,6 +124,10 @@ void Ut_MCompleter::initTestCase()
     m_window->scene()->addItem(m_subject);
     QEvent activate(QEvent::WindowActivate);
     qApp->sendEvent(m_window->scene(), &activate);
+
+    // m_editWidget is added directly to scene -> use angle 0 always.
+    // Completer is a scene window and will follow scene manager's orientation.
+    m_window->sceneManager()->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
 
     QStringList modelColumn1;
     modelColumn1.append("Tom While");
@@ -471,7 +477,146 @@ void Ut_MCompleter::checkTrim()
     QCOMPARE(m_subject->completionPrefix(), prefix);
     m_subject->confirm();
     QCOMPARE(m_editWidget->text(), QString("nancy@example.com"));
+}
 
+void Ut_MCompleter::testVerticalPosition_data()
+{
+    QTest::addColumn<int>("completerHeight");
+    QTest::addColumn<int>("completerYOffset");
+    QTest::addColumn<int>("visibleSceneHeight");
+    QTest::addColumn<int>("editPos");
+    QTest::addColumn<int>("expectedCompleterPos");
+
+    // We only use vertical values of cursor rectangle and therefore
+    // don't have to worry about changing cursor pos as long as it is still
+    // at the first line.
+    const QRect cursorRect = defaultMicroFocusRectangle();
+
+    const int completerHeight = 50;
+
+    // In following cases, usually editPos is adjusted by a term -cursorRect.top().
+    // This means cursor is aligned to top of visible scene and rest of the terms
+    // actually set the cursor position instead of text edit position.
+    // Then, if expected completer position is cursorRect.height(), for example,
+    // it means that completer is positioned just below the cursor.
+
+    QTest::newRow("cursor height == visible scene height")
+        << completerHeight << 0
+        << cursorRect.height() << -cursorRect.top()
+        << cursorRect.height();
+
+    QTest::newRow("tight fit below")
+        << completerHeight << 0
+        << completerHeight + cursorRect.height() << -cursorRect.top()
+        << cursorRect.height();
+    QTest::newRow("tight fit below with offset")
+        << completerHeight << 3
+        << completerHeight + cursorRect.height() << -cursorRect.top()
+        << cursorRect.height(); // offset is ignored because of tight fit
+    QTest::newRow("less tight fit below with offset")
+        << completerHeight << 3
+        << completerHeight + cursorRect.height() + 1 << -cursorRect.top()
+        << cursorRect.height() + 1;
+    QTest::newRow("loose fit below with offset")
+        << completerHeight << 3
+        << completerHeight + cursorRect.height() + 100 << -cursorRect.top()
+        << cursorRect.height() + 3;
+
+    QTest::newRow("tight fit above")
+        << completerHeight << 0
+        << completerHeight + cursorRect.height() << completerHeight - cursorRect.top()
+        << 0;
+    QTest::newRow("tight fit above with offset")
+        << completerHeight << 3
+        << completerHeight + cursorRect.height() << completerHeight - cursorRect.top()
+        << 0; // still at 0, not enough room to use offset at all
+    QTest::newRow("less tight fit above with offset")
+        << completerHeight << 3
+        << completerHeight + cursorRect.height() << completerHeight + 1 - cursorRect.top()
+        << 0; // still at 0, extra space was used between completer and cursor
+    QTest::newRow("loose fit above with offset")
+        << completerHeight << 3
+        << completerHeight + cursorRect.height() << completerHeight + 100 - cursorRect.top()
+        << 100 - 3;
+
+    QTest::newRow("not enough but more space below")
+        << completerHeight << 0
+        << completerHeight + cursorRect.height() // This is only enough space if cursor was aligned to top or bottom.
+        << 10 - cursorRect.top() // ..but it's not. It is aligned at y=10.
+        << 10 + cursorRect.height();
+    QTest::newRow("not enough but more space above")
+        << completerHeight << 0
+        << completerHeight + cursorRect.height()
+        << completerHeight - 10 - cursorRect.top()
+        << -10;
+    QTest::newRow("not enough and equal amount of space on both sides")
+        << completerHeight << 0
+        << completerHeight + cursorRect.height()
+        << (completerHeight + cursorRect.height()) / 2 - cursorRect.height() / 2 - cursorRect.top()
+        << (completerHeight + cursorRect.height()) / 2 + cursorRect.height() / 2; // just below the centered cursor
+}
+
+void Ut_MCompleter::testVerticalPosition()
+{
+    QFETCH(int, completerHeight);
+    QFETCH(int, completerYOffset);
+    QFETCH(int, visibleSceneHeight);
+    QFETCH(int, editPos);
+    QFETCH(int, expectedCompleterPos);
+
+    MCompleterStyle *style = const_cast<MCompleterStyle *>(static_cast<MCompleterStyleContainer &>(m_subject->style()).operator ->());
+    const QSize completerSize(100, completerHeight);
+    style->setPreferredSize(completerSize);
+    style->setMinimumSize(completerSize);
+    style->setMaximumSize(completerSize);
+
+    // Margins to zero for simplicity
+    style->setMarginBottom(0);
+    style->setMarginTop(0);
+    style->setMarginLeft(0);
+    style->setMarginRight(0);
+
+    style->setYPositionOffset(completerYOffset);
+
+    QRect inputPanelRect(0, visibleSceneHeight,
+                         m_editWidget->sceneManager()->visibleSceneSize(M::Landscape).width(),
+                         m_editWidget->sceneManager()->visibleSceneSize(M::Landscape).height() - visibleSceneHeight);
+    MInputMethodState::instance()->setInputMethodArea(inputPanelRect);
+
+    m_editWidget->setText("tomas");
+    m_editWidget->setPos(QPoint(0, editPos));
+
+    m_subject->complete();
+    while (qApp->hasPendingEvents()) {
+        qApp->processEvents();
+    }
+
+    QCOMPARE(m_subject->pos().toPoint().y(), expectedCompleterPos);
+}
+
+QRect Ut_MCompleter::defaultMicroFocusRectangle()
+{
+    // Retrieve micro focus rectangle returned by MTextEdit
+
+    QGraphicsScene *scene = m_window->scene();
+
+    // For this operation we need to set text edit focused.
+    // Save previous focus item to be able to restore it.
+    QGraphicsItem *oldFocusItem = scene->focusItem();
+
+    MTextEdit *edit = new MTextEdit;
+    scene->addItem(edit);
+    scene->setFocusItem(edit);
+    QVariant variant = scene->inputMethodQuery(Qt::ImMicroFocus);
+
+    scene->setFocusItem(oldFocusItem);
+
+    delete edit;
+    edit = 0;
+
+    // The rectangle is actually in scene coordinates but since the widget lay
+    // at origin it is essentially the same as in local coordinates.
+    return variant.toRect();
 }
 
 QTEST_APPLESS_MAIN(Ut_MCompleter);
