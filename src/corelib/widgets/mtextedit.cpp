@@ -3094,9 +3094,27 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
     case M::WesternNumericInputEnforcedQuery:
         return QVariant(isWesternNumericInputEnforced());
 
-    default:
-        return MWidgetController::inputMethodQuery(query);
+    case M::ImRelocatorRectangle: {
+        // First ask cursor rectangle from view.
+        QVariant cursorQueryResult = MWidgetController::inputMethodQuery(Qt::ImMicroFocus);
+        if (cursorQueryResult.isValid()) {
+            QRectF relocatorRect = cursorQueryResult.toRectF();
+            // If completer exists, add its height to the rectangle. Do this regardless of
+            // whether completer is visible or not to avoid jumping when completer appears and disappears.
+            // Position cannot be used since it can change due to the value returned here.
+            if (d->completer) {
+                relocatorRect.adjust(0, 0, 0, d->completer->preferredHeight());
+            }
+            return relocatorRect;
+        } else {
+            break;
+        }
     }
+
+    default:
+        break;
+    }
+    return MWidgetController::inputMethodQuery(query);
 }
 
 QVariant MTextEdit::itemChange(GraphicsItemChange change, const QVariant &value)

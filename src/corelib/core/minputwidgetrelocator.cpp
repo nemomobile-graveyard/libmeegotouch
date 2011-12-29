@@ -375,7 +375,17 @@ QGraphicsWidget *MInputWidgetRelocator::focusedWidget() const
 QRect MInputWidgetRelocator::microFocusRect(const QGraphicsWidget *inputWidget) const
 {
     // It is only possible to retrieve microfocus via scene. Need to map it back to input widget.
-    const QRectF sceneRect = scene->inputMethodQuery(Qt::ImMicroFocus).toRectF();
+    QRectF sceneRect;
+
+    // First try to fetch M::ImRelocatorRectangle, which can be more specific area than just cursor.
+    QVariant queryResult = scene->inputMethodQuery(static_cast<Qt::InputMethodQuery>(M::ImRelocatorRectangle));
+    if (queryResult.isValid()) {
+        sceneRect = queryResult.toRectF();
+    } else {
+        // No ImRelocatorRectangle for this widget. Use cursor rectangle.
+        sceneRect = scene->inputMethodQuery(Qt::ImMicroFocus).toRectF();
+    }
+
     return inputWidget->mapRectFromScene(sceneRect).toRect();
 }
 

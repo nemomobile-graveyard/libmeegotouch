@@ -139,7 +139,8 @@ namespace M
         InputMethodAttributeExtensionIdQuery = InputMethodToolbarIdQuery, //!< attribute extension identifier for text entry
         InputMethodToolbarQuery,     //!< custom toolbar file name for text entry. \deprecated use InputMethodAttributeExtensionQuery instead.
         InputMethodAttributeExtensionQuery = InputMethodToolbarQuery, //!< attribute extension file name for text entry
-        WesternNumericInputEnforcedQuery //!< Overrides localized numeric input with western numeric input.
+        WesternNumericInputEnforcedQuery, //!< Overrides localized numeric input with western numeric input.
+        ImRelocatorRectangle        //!< Area for the widget which needs to be visible on screen. If invalid, Qt::ImMicroFocus will be used.
     };
 
     //! \deprecated do not use
