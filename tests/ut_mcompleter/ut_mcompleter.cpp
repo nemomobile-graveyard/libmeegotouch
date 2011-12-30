@@ -493,6 +493,7 @@ void Ut_MCompleter::testVerticalPosition_data()
     const QRect cursorRect = defaultMicroFocusRectangle();
 
     const int completerHeight = 50;
+    const int editHeight = 50;
 
     // In following cases, usually editPos is adjusted by a term -cursorRect.top().
     // This means cursor is aligned to top of visible scene and rest of the terms
@@ -520,7 +521,7 @@ void Ut_MCompleter::testVerticalPosition_data()
     QTest::newRow("loose fit below with offset")
         << completerHeight << 3
         << completerHeight + cursorRect.height() + 100 << -cursorRect.top()
-        << cursorRect.height() + 3;
+        << editHeight - cursorRect.top() + 3;
 
     QTest::newRow("tight fit above")
         << completerHeight << 0
@@ -564,6 +565,9 @@ void Ut_MCompleter::testVerticalPosition()
     QFETCH(int, editPos);
     QFETCH(int, expectedCompleterPos);
 
+    // See that this matches the one in _data() method.
+    const int editHeight = 50;
+
     MCompleterStyle *style = const_cast<MCompleterStyle *>(static_cast<MCompleterStyleContainer &>(m_subject->style()).operator ->());
     const QSize completerSize(100, completerHeight);
     style->setPreferredSize(completerSize);
@@ -584,7 +588,11 @@ void Ut_MCompleter::testVerticalPosition()
     MInputMethodState::instance()->setInputMethodArea(inputPanelRect);
 
     m_editWidget->setText("tomas");
-    m_editWidget->setPos(QPoint(0, editPos));
+    m_editWidget->setGeometry(QRectF(QPointF(0, editPos),
+                                     QSizeF(200, editHeight)));
+    m_editWidget->setMinimumHeight(editHeight);
+    m_editWidget->setPreferredHeight(editHeight);
+    m_editWidget->setMaximumHeight(editHeight);
 
     m_subject->complete();
     while (qApp->hasPendingEvents()) {

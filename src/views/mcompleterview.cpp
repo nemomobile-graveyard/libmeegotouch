@@ -138,16 +138,27 @@ void MCompleterViewPrivate::updatePosition()
     // completer's position _above_ text widget and in practice this only occurs in landscape when status bar is hidden.
     const int visibleSceneTop = 0;
 
-    const int roomBelow = qMax<int>(0, visibleSceneBottom - (cursorRect.y() + cursorRect.height());
+    const int cursorBottom = cursorRect.y() + cursorRect.height();
+    const int roomBelow = qMax<int>(0, visibleSceneBottom - cursorBottom);
     const int roomAbove = qMax<int>(0, cursorRect.top() - visibleSceneTop);
 
     if (roomBelow >= completerHeight) {
         // Completer fits below text widget. Prefer this.
-        const int yPositionOffset = qMin<int>(q->style()->yPositionOffset(),
+
+        // Position to widget bottom if possible, otherwise use cursor bottom.
+
+        const QRect widgetRect = widgetRectangle();
+        const int yPositionOffset = qMin<int>(q->style()->yPositionOffset()
+                                              + ((widgetRect.y() + widgetRect.height()) - cursorBottom),
                                               roomBelow - completerHeight);
         completerPos.setY(cursorRect.y() + cursorRect.height() + yPositionOffset);
     } else if (roomAbove >= completerHeight) {
         // Completer fits above text widget
+
+        // Position above cursor. Could also use widget top but because we don't know
+        // the real status bar & navigation bar height it's best to just use cursor.
+        // Also completer is closer to keyboard and user's fingers this way.
+
         const int yPositionOffset = qMin<int>(q->style()->yPositionOffset(),
                                               roomAbove - completerHeight);
         completerPos.setY(cursorRect.top() - completerHeight - yPositionOffset);
