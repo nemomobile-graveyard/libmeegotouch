@@ -373,6 +373,13 @@ void MCompleterViewPrivate::handleCompleterShown()
             this,
             SLOT(updatePosition()),
             Qt::UniqueConnection);
+
+    // Since completer's position is affected by input method area, follow
+    // its changes.
+    connect(MInputMethodState::instance(),
+            SIGNAL(inputMethodAreaChanged(QRect)),
+            this,
+            SLOT(updatePosition()), Qt::UniqueConnection);
 }
 
 void MCompleterViewPrivate::handleCompleterHidden()
@@ -391,6 +398,10 @@ void MCompleterViewPrivate::handleCompleterHidden()
                SIGNAL(scenePositionChanged()),
                this,
                0);
+
+    disconnect(MInputMethodState::instance(),
+               SIGNAL(inputMethodAreaChanged(QRect)),
+               this, 0);
 }
 
 void MCompleterViewPrivate::showCompletionsButton()
