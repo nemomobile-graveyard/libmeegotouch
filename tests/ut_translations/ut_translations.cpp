@@ -43,7 +43,7 @@ bool confIsDown()
 
 void Ut_Translations::initTestCase()
 {
-    static int argc = 0;
+    static int argc = 1;
     static char *argv[1] = { (char *) "ut_translations" };
     qap = new MApplication(argc, argv, "test");
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));

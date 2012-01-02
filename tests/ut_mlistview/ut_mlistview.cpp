@@ -40,7 +40,7 @@ Ut_MListView::Ut_MListView() :
 void Ut_MListView::initTestCase()
 {
     static char *app_name[1] = { (char *) "./ut_mlistview" };
-    static int argc = 0;
+    static int argc = 1;
     app = new MApplication(argc, app_name);
 
     MPannableViewport *viewport = new MPannableViewport();
@@ -89,7 +89,6 @@ void Ut_MListView::cleanupTestCase()
     //called from the inside of m_subject destructor where itemDeletionAnimation
     //destructor is called anyway
 
-    m_subject->d_func()->itemDeletionAnimation;
     m_subject->d_func()->itemDeletionAnimation = 0;
 
     delete m_subject;
@@ -114,12 +113,18 @@ void Ut_MListView::testPrivateMovingDetectionTimerTimeout()
     QEventLoop loop;
     connect( &d->movingDetectorTimer, SIGNAL( timeout() ),
             &loop, SLOT( quit() ) );
+    QTimer lockPreventer;
+    connect(&lockPreventer, SIGNAL( timeout() ),
+            &loop, SLOT( quit() ) );
+    lockPreventer.setSingleShot(true);
+    lockPreventer.start(1000);
 
-	d->viewportRectChanged(QRectF(5, 5, 100, 100));
+    d->viewportRectChanged(QRectF(5, 5, 100, 100));
 
-	loop.exec();
+    loop.exec();
+    QVERIFY2(lockPreventer.isActive(), "Timeout reached");
 
-	QVERIFY2(!d->moving, "List view expected to have moving = false");
+    QVERIFY2(!d->moving, "List view expected to have moving = false");
 }
 
 void Ut_MListView::testPrivateCellClicked()
