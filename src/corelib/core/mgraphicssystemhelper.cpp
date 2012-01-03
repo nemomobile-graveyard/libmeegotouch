@@ -16,6 +16,24 @@
 ** of this file.
 **
 ****************************************************************************/
+
+
+
+#include <cstdio>
+#include <cstring>
+#include <cstdarg>
+
+#include <unistd.h>
+
+
+
+namespace DirtyLogger
+{
+    void logMessage(const char *fmt, ...);
+}
+
+
+
 #include "mgraphicssystemhelper.h"
 
 #include "mwindow.h"
@@ -36,6 +54,7 @@
 #include <QString>
 #include <QFileInfo>
 #include <QDebug>
+#include <QRgb>
 
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
 #include <QtMeeGoGraphicsSystemHelper>
@@ -192,7 +211,70 @@ QPixmap MGraphicsSystemHelper::pixmapFromHandle(const MPixmapHandle& pixmapHandl
 
         QImage image((const uchar *)*addr, pixmapHandle.size.width(), pixmapHandle.size.height(), pixmapHandle.format);
 
-        return QMeeGoGraphicsSystemHelper::pixmapFromEGLSharedImage(pixmapHandle.eglHandle, image);
+        QPixmap ret = QMeeGoGraphicsSystemHelper::pixmapFromEGLSharedImage(pixmapHandle.eglHandle, image);
+
+        if(ret.isNull() || !ret.size().isValid()) {
+#define SHARED_IMAGE_FAILURE_LOGGING
+#ifdef SHARED_IMAGE_FAILURE_LOGGING
+            DirtyLogger::logMessage("QMeeGoGraphicsSystemHelper::pixmapFromEGLSharedImage failed\n");
+
+            QString imageFileName;
+
+            for(unsigned i = 0; i < 65536; i++) {
+                QString tmp = QString("/home/user/MyDocs/cyan-rectangle%1.png").arg(i);
+
+                if(!QFile::exists(tmp)) {
+                    imageFileName = tmp;
+                    break;
+                }
+            }
+
+            if(!imageFileName.isEmpty()) {
+                if(image.save(imageFileName))
+                    DirtyLogger::logMessage("saved image contents to %s\n",
+                                            qPrintable(imageFileName));
+                else
+                    DirtyLogger::logMessage("failed to save image contents to %s\n",
+                                            qPrintable(imageFileName));
+            }
+            DirtyLogger::logMessage("MPixmapHandle is %s\n",
+                                    pixmapHandle.isValid() ?
+                                   "valid" : "invalid");
+            DirtyLogger::logMessage("info:\n"
+			            "  size: (%d,%d)\n"
+				    "  direct map: %s\n"
+				    "  bytes: %d\n"
+				    "  format: %d\n",
+				    pixmapHandle.size.width(),
+				    pixmapHandle.size.height(),
+				    pixmapHandle.directMap ? "true" : "false",
+				    pixmapHandle.numBytes, pixmapHandle.format);
+
+            // creating shared pixmap failed - have local one instead of cyan
+            // rectangle ...
+            // TODO: the below takes the soft image, and tins it cyan. remove
+            // this code once we are done with debugging and directly use the
+            // soft image
+            QImage img = image;
+            for (int i = 0; i < img.height(); ++i) {
+                uchar * scanLine = img.scanLine(i);
+                for (int j = 0; j < image.width(); ++j) {
+                    QRgb *pixel = reinterpret_cast<QRgb*>(scanLine);
+                    int alpha = qMax(20, qAlpha(*pixel));
+                    int red = 0;
+                    int green = qMax(130, qGreen(*pixel));
+                    int blue = qMax(130, qBlue(*pixel));
+                    *pixel = qRgba(red, green, blue, alpha);
+                    scanLine += sizeof(QRgb);
+                }
+            }
+            ret = QPixmap::fromImage(img);
+#else
+            ret  = QPixmap::fromImage(image);
+#endif
+        }
+
+        return ret;
     } else
 #endif // HAVE_MEEGOGRAPHICSSYSTEM
     {
@@ -262,3 +344,52 @@ void MGraphicsSystemHelper::forceSoftwareRendering()
     QMeeGoGraphicsSystemHelper::setSwitchPolicy(QMeeGoGraphicsSystemHelper::NoSwitch);
 #endif
 }
+
+
+
+namespace DirtyLogger
+{
+  bool initialized = false;
+
+
+  char *filename = 0;
+}
+
+
+  // temporary cludge that needs to be removed
+void DirtyLogger::logMessage(const char *fmt, ...)
+{
+  if(!initialized) {
+    initialized = true;
+
+    pid_t pid = getpid();
+
+    unsigned l = strlen("/home/user/MyDocs/cyan_rectangles-.txt");
+
+    for(signed d = pid; d; d /= 10)
+      l++;
+
+    filename = new char[l+1];
+
+    sprintf(filename, "/home/user/MyDocs/cyan-rectangles_%d.txt", pid);
+
+    filename[l] = 0;
+  }
+
+  if(!filename)
+    return;
+
+  va_list al;
+
+  va_start(al, fmt);
+
+  FILE *f = fopen(filename, "a");
+  if(f) {
+    vfprintf(f, fmt, al);
+
+    fclose(f);
+  }
+
+  va_end(al);
+}
+
