@@ -19,6 +19,7 @@ TEST_HEADERS = \
 TEST_SOURCES = \
              $$MSRCDIR/corelib/core/mcomponentcache.cpp \
              $$MSRCDIR/corelib/core/mgraphicssystemhelper.cpp \
+             $$MSRCDIR/corelib/theme/mpixmaphandle.cpp \
 	
 INCLUDEPATH += $$MSRCDIR/feedback
 INCLUDEPATH += $$MSRCDIR/corelib/core
