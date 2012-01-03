@@ -120,7 +120,9 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
         //If we have word wrap, eliding, or a width constraint, then the minimum size is the size of a single letter,
         if (wrap() || viewPrivate->model()->textElide() || constraint.width() >= 0 || stringVariants.first().isEmpty()) {
             QFontMetricsF fm(viewPrivate->controller->font());
-            return QSizeF(fm.width(QLatin1Char('x')), fm.height());
+            //Add on the line spacing if it's positive, since QTextDocument appears to add line
+            //spacing on even for the last line.
+            return QSizeF(fm.width(QLatin1Char('x')), fm.height() + qMax<qreal>(0,fm.leading()));
         }
         //If word wrap and eliding are both disabled (the default) then use the smallest string as
         //the minimum size
@@ -472,7 +474,7 @@ QSizeF MLabelViewSimple::sizeForWidth(qreal width, const QString &text, int maxi
 
     QSizeF size = textLayout.boundingRect().size();
     if (preferredLineCountBehavior == MLabel::LineCountSetsPreferredHeight && lineCount < maximumLineCount) {
-        size.rheight() += fm.height() * (maximumLineCount - lineCount) + fm.leading() * (maximumLineCount - lineCount - 1);
+        size.rheight() += fm.lineSpacing() * (maximumLineCount - lineCount); //See mlabelview_rich.cpp sizeHint() comments
     }
     return size;
 }

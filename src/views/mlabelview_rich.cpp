@@ -176,7 +176,9 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
         //If we have word wrap or eliding, the minimum size is the size of a single letter,
         if (wrap() || viewPrivate->model()->textElide()) {
             QFontMetrics fm(viewPrivate->controller->font());
-            return QSizeF(fm.width('x'), fm.height());
+            //Add on the line spacing if it's positive, since QTextDocument appears to add line
+            //spacing on even for the last line.
+            return QSizeF(fm.width(QLatin1Char('x')), fm.height() + qMax(0,fm.leading()));
         }
         //If word wrap and eliding are both disabled (the default) then fall through to preferred
         //size case, so that the preferred size == minimum size.
@@ -235,8 +237,10 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
                 } else if (preferredLineCountBehavior == MLabel::LineCountSetsPreferredHeight) {
                     /* Our text has fewer lines than the preferred line count, so if we want to pad
                      * out the preferred size, add on the height of sufficient empty lines.
-                     * Note that this should be the same formula as that used in mlabelview_simple.cpp  */
-                    size.rheight() += fm.height() * (preferredLineCount - cursorLine) + fm.leading() * (preferredLineCount - cursorLine - 1);
+                     * Note that this should be the same formula as that used in mlabelview_simple.cpp
+                     * Note also that we add on leading() (part of lineSpacing) even for the last
+                     * line, because that's what QTextDocument does.*/
+                    size.rheight() += fm.lineSpacing() * (preferredLineCount - cursorLine);
                 }
             }
 

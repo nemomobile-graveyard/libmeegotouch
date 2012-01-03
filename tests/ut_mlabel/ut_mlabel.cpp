@@ -1814,9 +1814,9 @@ void Ut_MLabel::testPreferredLineCount_data()
     QTest::addColumn<bool>("wordWrap");
     QTest::addColumn<QTextOption::WrapMode>("wrapMode");
 
-    for (int richText = 1; richText < 2; richText++)
-        for (int useCSS = 0; useCSS < 1; useCSS++)
-            for (int wrapMode = 0; wrapMode < 1; wrapMode++) {
+    for (int richText = 0; richText < 2; richText++)
+        for (int useCSS = 0; useCSS < 2; useCSS++)
+            for (int wrapMode = 0; wrapMode < 2; wrapMode++) {
                 QString description = QString(richText?"Richtext ":"Plaintext ") + (useCSS?"CSS ":"setPreferredLineCount() ");
                 if (wrapMode == 0)
                     QTest::newRow((description + "no wordWrap, NoWrap").toLatin1()) << (bool)richText << (bool)useCSS << false << QTextOption::NoWrap;
@@ -1827,6 +1827,16 @@ void Ut_MLabel::testPreferredLineCount_data()
             }
 }
 
+// When we do not have enough text to fill the preferred line count, MLabel calculates the preferred
+// height using the font metrics lineSpacing().  Here we check that this guess is correct
+#define CHECK_PREFERRED_HEIGHT_GUESS \
+{\
+    qreal actualPreferredHeight = label->preferredSize().height();\
+    label->setText(""); \
+    qreal guessedPreferredHeight = label->preferredSize().height();\
+    label->setText(text); \
+    QCOMPARE( actualPreferredHeight, guessedPreferredHeight );\
+}
 void Ut_MLabel::testPreferredLineCount()
 {
     QFETCH(bool, richText);
@@ -1838,10 +1848,15 @@ void Ut_MLabel::testPreferredLineCount()
     label->setWordWrap(wordWrap);
     label->setWrapMode(wrapMode);
     label->setTextElide(true);
-    if (richText)
-        label->setText("<qt>AAA<br>BBB<br>CCC");
-    else
-        label->setText("A\nB\nC");
+    QString text;
+    if (richText) {
+        label->setTextFormat(Qt::RichText);
+        text = "<qt>AAA<br>BBB<br>CCC";
+    } else {
+        label->setTextFormat(Qt::PlainText);
+        text = "A\nB\nC";
+    }
+    label->setText(text);
     label->resize(label->preferredSize());
     if (wrapMode == QTextOption::WrapAnywhere || richText)
         QCOMPARE(label->renderedText(), QString("AAA\nBBB\nCCC"));
@@ -1851,6 +1866,7 @@ void Ut_MLabel::testPreferredLineCount()
         label->setStyleName("lineCount3");
     else
         label->setPreferredLineCount(3);
+    CHECK_PREFERRED_HEIGHT_GUESS
     label->resize(label->preferredSize());
     if (wrapMode == QTextOption::WrapAnywhere || richText)
         QCOMPARE(label->renderedText(), QString("AAA\nBBB\nCCC"));
@@ -1860,6 +1876,7 @@ void Ut_MLabel::testPreferredLineCount()
         label->setStyleName("lineCount2");
     else
         label->setPreferredLineCount(2);
+    CHECK_PREFERRED_HEIGHT_GUESS
     QVERIFY(label->size() != label->preferredSize()); // Size should have changed since we decreased the number of visible lines
     label->resize(label->preferredSize());
     QString ellipsisChar("...");
@@ -1872,6 +1889,7 @@ void Ut_MLabel::testPreferredLineCount()
     else
         label->setPreferredLineCount(1);
     label->resize(label->preferredSize());
+    CHECK_PREFERRED_HEIGHT_GUESS
     if (wrapMode == QTextOption::WrapAnywhere || richText)
         QCOMPARE(label->renderedText(), QString("AAA") + ellipsisChar);
     else
@@ -1883,6 +1901,7 @@ void Ut_MLabel::testPreferredLineCount()
     label->setMinimumSize(0,0);
     label->resize(label->preferredSize());
     QCOMPARE(label->renderedText(), QString(""));
+    CHECK_PREFERRED_HEIGHT_GUESS
 
     if (useCSS)
         QCOMPARE(label->preferredLineCount(), -1);
@@ -1892,6 +1911,7 @@ void Ut_MLabel::testPreferredLineCount()
     // Set both model and CSS line count, and make sure that model overrides CSS
     label->setStyleName("lineCount3");
     label->setPreferredLineCount(1);
+    CHECK_PREFERRED_HEIGHT_GUESS
     label->resize(label->preferredSize());
     if (wrapMode == QTextOption::WrapAnywhere || richText)
         QCOMPARE(label->renderedText(), QString("AAA") + ellipsisChar);
