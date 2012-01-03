@@ -60,7 +60,7 @@ Ut_MImageDirectory::Ut_MImageDirectory() :
 void Ut_MImageDirectory::initTestCase()
 {
     static char *app_name[1] = { (char *) "./ut_mimagedirectory" };
-    static int argc = 0;
+    static int argc = 1;
     app = new MApplication(argc, app_name);
 
     m_mThemeImagesDirectory = new MThemeImagesDirectory(QApplication::applicationDirPath() + "/ut_mimagedirectory-samples");
