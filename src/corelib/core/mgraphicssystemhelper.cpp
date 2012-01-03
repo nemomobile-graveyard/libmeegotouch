@@ -214,7 +214,7 @@ QPixmap MGraphicsSystemHelper::pixmapFromHandle(const MPixmapHandle& pixmapHandl
         QPixmap ret = QMeeGoGraphicsSystemHelper::pixmapFromEGLSharedImage(pixmapHandle.eglHandle, image);
 
         if(ret.isNull() || !ret.size().isValid()) {
-//#define SHARED_IMAGE_FAILURE_LOGGING
+#define SHARED_IMAGE_FAILURE_LOGGING
 #ifdef SHARED_IMAGE_FAILURE_LOGGING
             DirtyLogger::logMessage("QMeeGoGraphicsSystemHelper::pixmapFromEGLSharedImage failed\n");
 
