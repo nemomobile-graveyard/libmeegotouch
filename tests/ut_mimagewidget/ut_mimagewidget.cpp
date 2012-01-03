@@ -38,17 +38,19 @@ Ut_MImageWidget::Ut_MImageWidget() :
 
 void Ut_MImageWidget::initTestCase()
 {
-    QImage img(qApp->applicationDirPath() + qApp->applicationDirPath() + "/ut_mimagewidget-test.png");
-
     static char *app_name[1] = { (char *) "./ut_mimagewidget" };
-    static int argc = 0;
+    static int argc = 1;
     app = new MApplication(argc, app_name);
     MTheme::loadCSS(qApp->applicationDirPath() + "/ut_mimagewidget.css");
-    m_subject = new MImageWidget(&img);
-    QVERIFY(m_subject != 0);
 }
 
 void Ut_MImageWidget::cleanupTestCase()
+{
+    delete app;
+    app = 0;
+}
+
+void Ut_MImageWidget::cleanup()
 {
     delete m_subject;
     m_subject = 0;
@@ -65,6 +67,7 @@ void Ut_MImageWidget::testConstructor()
     // test load image files
     QImage img(fname);
     MImageWidget *myImage = new MImageWidget(&img);
+    QVERIFY(myImage != 0);
     QCOMPARE(myImage->imageSize(), s);
     QCOMPARE(myImage->model()->imageSize(), s);
 
@@ -86,6 +89,7 @@ void Ut_MImageWidget::testConstructor()
 
     MImageWidget *myImage6 = new MImageWidget();
     QCOMPARE(myImage6->imageSize(), QSize());
+    delete myImage6;
 
     delete source;
     delete myImage;
@@ -129,9 +133,6 @@ void Ut_MImageWidget::testSizeHint()
     QCOMPARE(m_subject->preferredSize(), QSizeF(10,10));
     m_subject->setObjectName("topmargin5");
     QCOMPARE(m_subject->preferredSize(), p->size()+QSizeF(0,5));
-
-    delete m_subject;
-    m_subject = 0;
 }
 
 void Ut_MImageWidget::testImageDataSize()
@@ -164,9 +165,6 @@ void Ut_MImageWidget::testImageDataSize()
      //QSizeF half = imgSize*0.5;
      //m_subject->setCropSize(half);
      //QCOMPARE(half, m_subject->imageDataSize());
-
-    delete m_subject;
-    m_subject = 0;
 }
 
 // NB#281533
@@ -192,9 +190,6 @@ void Ut_MImageWidget::testSetContentOnEmptyWidget()
     QCOMPARE(m_subject->model()->imageSize(), QSize());
     m_subject->setPixmap(pixmap);
     QCOMPARE(m_subject->model()->imageSize(), imgSize);
-
-    delete m_subject;
-    m_subject = 0;
 }
 
 void Ut_MImageWidget::testSetZoomFactor_data()
@@ -252,9 +247,6 @@ void Ut_MImageWidget::testSetZoomFactor()
         QCOMPARE(fx, factor);
         QCOMPARE(fy, factor);
     }
-
-    delete m_subject;
-    m_subject = 0;
 }
 
 void Ut_MImageWidget::testSetNegativeZoomFactor()
@@ -276,9 +268,6 @@ void Ut_MImageWidget::testSetNegativeZoomFactor()
 
     QVERIFY(qAbs(zx - posvalue) < 1e-3);
     QVERIFY(qAbs(zy - posvalue) < 1e-3);
-
-    delete m_subject;
-    m_subject = 0;
 }
 
 void Ut_MImageWidget::testSetCropSize_data()
@@ -308,9 +297,6 @@ void Ut_MImageWidget::testSetCropSize()
         QCOMPARE(t, QSizeF(0.0, 0.0));
     else
         QCOMPARE(t, crop);
-
-    delete m_subject;
-    m_subject = 0;
 }
 
 void Ut_MImageWidget::testSetCropTopLeftPoint_data()
@@ -341,9 +327,6 @@ void Ut_MImageWidget::testSetCropTopLeftPoint()
     Q_UNUSED(imgSize);
 
     QCOMPARE(point, topLeft);
-
-    delete m_subject;
-    m_subject = 0;
 }
 
 void Ut_MImageWidget::testImageNotExist()
@@ -355,9 +338,6 @@ void Ut_MImageWidget::testImageNotExist()
 
     QSize imageSize = m_subject->imageSize();
     QVERIFY(imageSize.isEmpty());
-
-    delete m_subject;
-    m_subject = 0;
 }
 
 void Ut_MImageWidget::testImageName()
@@ -370,9 +350,6 @@ void Ut_MImageWidget::testImageName()
     //(if imagename was not found by themedaemon, then it will be the
     //red rectangle)
     QVERIFY(m_subject->pixmap());
-
-    delete m_subject;
-    m_subject = 0;
 }
 
 void Ut_MImageWidget::testZoomIn()
@@ -400,9 +377,6 @@ void Ut_MImageWidget::testZoomIn()
 
     QCOMPARE(nfx, 2.0 * fx);
     QCOMPARE(nfy, 2.0 * fy);
-
-    delete m_subject;
-    m_subject = 0;
 }
 
 void Ut_MImageWidget::testZoomOut()
@@ -425,9 +399,6 @@ void Ut_MImageWidget::testZoomOut()
 
     QCOMPARE(nfx, 0.5 * fx);
     QCOMPARE(nfy, 0.5 * fy);
-
-    delete m_subject;
-    m_subject = 0;
 }
 
 void Ut_MImageWidget::testConstructors()
