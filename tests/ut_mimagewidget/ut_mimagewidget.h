@@ -35,6 +35,8 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+    void cleanup();
+
     void testConstructor();
     void testSizeHint_data();
     void testSizeHint();
