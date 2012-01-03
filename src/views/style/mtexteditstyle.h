@@ -50,7 +50,14 @@ class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(int,          hideShowPromptDuration,   HideShowPromptDuration)
     M_STYLE_ATTRIBUTE(int,          promptTransitionDelay,    PromptTransitionDelay)
     M_STYLE_ATTRIBUTE(bool,         disableToolbar,           DisableToolbar)
-        
+
+    /*!
+     *  Text clipping attributes are used to set text clipping area smaller than that determined
+     *  by paddings. However, they cannot be smaller than zero. Setting clipping value to -1 will
+     *  disable it and padding value is used instead.
+     *  These were introduced because some characters in certain fonts might exceed the space
+     *  reserved for them. Use these to prevent clipping in those situations. See NB#254700.
+     */
     M_STYLE_ATTRIBUTE(int,          textClippingLeft,         TextClippingLeft)
     M_STYLE_ATTRIBUTE(int,          textClippingTop,          TextClippingTop)
     M_STYLE_ATTRIBUTE(int,          textClippingRight,        TextClippingRight)

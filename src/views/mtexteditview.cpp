@@ -73,6 +73,14 @@ namespace
 
     // Editor toolbar action property that affects toolbar closing
     const char * const NoCloseToolbarOnTriggerProperty("noCloseToolbarOnTrigger");
+
+    //! Combine clipping and padding values from style to create actual clipping value for QPainter
+    inline int combineClippingAndPadding(int styleClipping, int stylePadding)
+    {
+        // Clipping value is not used if smaller than zero or larger than padding.
+        return (styleClipping < 0 || styleClipping > stylePadding)
+                ? stylePadding : styleClipping;
+    }
 }
 
 
@@ -711,10 +719,10 @@ QRectF MTextEditViewPrivate::clippingRect() const
         paddingRight = q->style()->paddingLeft();
     }
     // as sanity check use style clipping only if it's smaller than real padding
-    const int leftClipping = qMin<int>(q->style()->textClippingLeft(), paddingLeft);
-    const int rightClipping = qMin<int>(q->style()->textClippingRight(), paddingRight);
-    const int topClipping = qMin<int>(q->style()->textClippingTop(), q->style()->paddingTop());
-    const int bottomClipping = qMin<int>(q->style()->textClippingBottom(), q->style()->paddingBottom());
+    const int leftClipping = combineClippingAndPadding(q->style()->textClippingLeft(), paddingLeft);
+    const int rightClipping = combineClippingAndPadding(q->style()->textClippingRight(), paddingRight);
+    const int topClipping = combineClippingAndPadding(q->style()->textClippingTop(), q->style()->paddingTop());
+    const int bottomClipping = combineClippingAndPadding(q->style()->textClippingBottom(), q->style()->paddingBottom());
 
     // Return rectangle which could be used for text drawing
     return q->boundingRect().adjusted(leftClipping,
