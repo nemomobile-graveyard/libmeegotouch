@@ -230,7 +230,7 @@ void MTextSelectionOverlay::setupSelectionHandles()
         if (!anchorVisible) {
             anchorHandle->skipTransitions();
         }
-        const QRectF anchorRectLocal = mapFromItem(controller, anchorRect).boundingRect();
+        const QRectF anchorRectLocal = mapRectFromItem(controller, anchorRect);
         anchorHandle->updatePosition(anchorRectLocal.bottomLeft());
     }
 
@@ -239,7 +239,7 @@ void MTextSelectionOverlay::setupSelectionHandles()
         if (!cursorVisible) {
             cursorHandle->skipTransitions();
         }
-        const QRectF cursorRectLocal = mapFromItem(controller, cursorRect).boundingRect();
+        const QRectF cursorRectLocal = mapRectFromItem(controller, cursorRect);
         cursorHandle->updatePosition(cursorRectLocal.bottomLeft());
     }
 }
