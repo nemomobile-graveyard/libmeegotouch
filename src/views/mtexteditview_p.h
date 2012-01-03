@@ -156,7 +156,7 @@ private:
 
     QRect cursorRect(int position, int cursorWidth) const;
 
-    //! Returns a rectangle of the cursor
+    //! Returns a rectangle of the cursor in local view coordinates
     QRect cursorRect() const;
 
     //! \return area covered by text starting from \a startPosition and ending
@@ -164,7 +164,7 @@ private:
     QRect textRectangle(int startPosition, int endPosition);
     //! \return area covered by selection on its \a first or last line
     QRect selectionLineRectangle(bool first);
-    //! \return rectangle in local coordinates, which is not obscured/clipped
+    //! \return rectangle in local view coordinates, which is not obscured/clipped
     //!         by pannable viewports or navigation controls
     QRect visibleArea() const;
 
@@ -174,7 +174,14 @@ private:
     void icUpdate();
 
     //! \brief map item coordinates to view coordinates
-    QPointF fromItem(const QPointF &point) const;
+    QPointF fromItem(const QPointF &itemPoint) const;
+    QRectF fromItem(const QRectF &itemRect) const;
+
+    //! \brief map local view coordinates to item coordinates
+    QRectF toItem(const QRectF &viewRect) const;
+
+    //! \brief Top left corner of view rectangle in controller coordinates.
+    QPointF viewOffset() const;
 
     //! \brief Return text option for prompt drawing.
     QTextOption promptOption() const;

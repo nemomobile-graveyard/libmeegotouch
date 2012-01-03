@@ -701,36 +701,26 @@ QRectF MTextEditViewPrivate::clippingRect() const
 {
     Q_Q(const MTextEditView);
 
-    qreal paddingLeft, paddingRight, marginLeft, marginRight;
+    qreal paddingLeft, paddingRight;
 
     if (isLayoutLeftToRight()) {
         paddingLeft = q->style()->paddingLeft();
-        marginLeft = q->marginLeft();
         paddingRight = q->style()->paddingRight();
-        marginRight = q->marginRight();
     } else {
         paddingLeft = q->style()->paddingRight();
-        marginLeft = q->marginRight();
         paddingRight = q->style()->paddingLeft();
-        marginRight = q->marginLeft();
     }
     // as sanity check use style clipping only if it's smaller than real padding
-    const int leftClipping = qMin<int>(q->style()->textClippingLeft(), paddingLeft)
-                             + marginLeft;
-    const int rightClipping = qMin<int>(q->style()->textClippingRight(), paddingRight)
-                              + marginRight;
-    const int topClipping = qMin<int>(q->style()->textClippingTop(), q->style()->paddingTop())
-                            + q->marginTop();
-    const int bottomClipping = qMin<int>(q->style()->textClippingBottom(), q->style()->paddingBottom())
-                               + q->marginBottom();
+    const int leftClipping = qMin<int>(q->style()->textClippingLeft(), paddingLeft);
+    const int rightClipping = qMin<int>(q->style()->textClippingRight(), paddingRight);
+    const int topClipping = qMin<int>(q->style()->textClippingTop(), q->style()->paddingTop());
+    const int bottomClipping = qMin<int>(q->style()->textClippingBottom(), q->style()->paddingBottom());
 
-    // rectangle which could be used for text drawing
-    const QRectF clipping(controller->boundingRect().adjusted(leftClipping,
-                                                              topClipping,
-                                                              -rightClipping,
-                                                              -bottomClipping));
-
-    return clipping;
+    // Return rectangle which could be used for text drawing
+    return q->boundingRect().adjusted(leftClipping,
+                                      topClipping,
+                                      -rightClipping,
+                                      -bottomClipping);
 }
 
 void MTextEditViewPrivate::showMagnifier()
@@ -1291,7 +1281,9 @@ void MTextEditViewPrivate::mapSelectionChange()
     const QRectF clipping = clippingRect().intersected(visibleArea());
     const bool anchorVisible = clipping.contains(anchorRect);
     const bool cursorVisible = clipping.contains(rect);
-    emit q->selectionChanged(anchor, anchorRect, anchorVisible, position, rect, cursorVisible);
+    // Pass rectangles in item coordinates
+    emit q->selectionChanged(anchor, toItem(anchorRect), anchorVisible,
+                             position, toItem(rect), cursorVisible);
 }
 
 void MTextEditViewPrivate::onSelectionHandleMoved(const QPointF &position)
@@ -1410,12 +1402,27 @@ void MTextEditViewPrivate::onSelectionOverlayVisibleChanged()
     }
 }
 
-QPointF MTextEditViewPrivate::fromItem(const QPointF &point) const
+QPointF MTextEditViewPrivate::fromItem(const QPointF &itemPoint) const
+{
+    // Translate item point to view coordinates.
+    return itemPoint - viewOffset();
+}
+
+QRectF MTextEditViewPrivate::fromItem(const QRectF &itemRect) const
+{
+    return itemRect.translated(-viewOffset());
+}
+
+QRectF MTextEditViewPrivate::toItem(const QRectF &viewRect) const
+{
+    return viewRect.translated(viewOffset());
+}
+
+QPointF MTextEditViewPrivate::viewOffset() const
 {
     Q_Q(const MTextEditView);
-    // Translate item point to view coordinates.
-    const qreal leftMargin = isLayoutLeftToRight() ? q->marginLeft() : q->marginRight();
-    return (point - QPointF(leftMargin, q->marginTop()));
+    return QPointF(isLayoutLeftToRight() ? q->marginLeft() : q->marginRight(),
+                  q->marginTop());
 }
 
 QTextOption MTextEditViewPrivate::promptOption() const
@@ -1558,10 +1565,8 @@ QRect MTextEditViewPrivate::cursorRect(int position, int cursorWidth) const
     cursorHeight = currentLine.height();
     qreal x = currentLine.cursorToX(relativePos);
 
-    const qreal horizontalPaddingAndMargin(
-        isLayoutLeftToRight() ? (s->paddingLeft() + s->marginLeft())
-        : (s->paddingRight() + s->marginRight()));
-    rect = QRect(horizontalPaddingAndMargin + layoutPos.x() + x - hscroll,
+    const qreal leftPadding(isLayoutLeftToRight() ? s->paddingLeft() : s->paddingRight());
+    rect = QRect(leftPadding + layoutPos.x() + x - hscroll,
                  s->paddingTop() + layoutPos.y() + currentLine.y() - vscroll,
                  cursorWidth, cursorHeight);
 
@@ -1767,8 +1772,8 @@ void MTextEditViewPrivate::updateEditorToolbarPosition()
 
     const QRect visibleRect = visibleArea();
 
-    const QRect visibleSceneRect = controller->mapRectFromScene(
-        QRectF(QPointF(), controller->sceneManager()->visibleSceneSize(M::Landscape))).toRect();
+    const QRect visibleSceneRect = fromItem(controller->mapRectFromScene(
+        QRectF(QPointF(), controller->sceneManager()->visibleSceneSize(M::Landscape)))).toRect();
 
     const int topLimit = qMax<int>(visibleRect.top() - editorToolbar.data()->size().height(), visibleSceneRect.top());
 
@@ -1848,7 +1853,7 @@ QRect MTextEditViewPrivate::visibleArea() const
         widget = widget->parentWidget();
     }
 
-    return visibleRect;
+    return fromItem(visibleRect).toRect();
 }
 
 void MTextEditViewPrivate::hideSelectionOverlayTemporarily()
@@ -2418,7 +2423,7 @@ QVariant MTextEditView::inputMethodQuery(Qt::InputMethodQuery query) const
 
     switch (static_cast<int>(query)) {
     case Qt::ImMicroFocus:
-        result = QVariant(d->cursorRect());
+        result = QVariant(d->toItem(d->cursorRect()));
         break;
 
     case M::VisualizationPriorityQuery:
