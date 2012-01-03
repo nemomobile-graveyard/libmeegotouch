@@ -55,10 +55,14 @@ QList<MDataStore *> Ut_MSettingsLanguageSettingsFactory::settingsBooleansDataSto
 QList<MDataStore *> Ut_MSettingsLanguageSettingsFactory::settingsIntegersDataStores;
 MWidgetController *Ut_MSettingsLanguageSettingsFactory::mSettingsLanguageSelectionFactoryWidget = NULL;
 
+static char *app_name[1] = { (char *) "./ut_msettingslanguagesettingsfactory" };
+
 // QCoreApplication stubs to avoid crashing in processEvents()
 QStringList QCoreApplication::arguments()
 {
-    return QStringList();
+    QStringList list;
+    list << app_name[0];
+    return list;
 }
 
 // MImageWidget stubs
@@ -86,7 +90,7 @@ void Ut_MSettingsLanguageSettingsFactory::initTestCase()
 {
     // Create a MApplication
     static int argc = 1;
-    static char *app_name[1] = { (char *) "./ut_msettingslanguagesettingsfactory" };
+
     app = new MApplication(argc, app_name);
 }
 
