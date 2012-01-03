@@ -1934,37 +1934,19 @@ MTextEditView::~MTextEditView()
 void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_D(const MTextEditView);
-    int paddingLeft, paddingRight;
 
     const MTextEditStyle *s = static_cast<const MTextEditStyle *>(style().operator ->());
 
-    if (d->isLayoutLeftToRight()) {
-        paddingLeft = s->paddingLeft();
-        paddingRight = s->paddingRight();
-    } else {
-        paddingLeft = s->paddingRight();
-        paddingRight = s->paddingLeft();
-    }
-
     // mTimestamp("MTextEditView", QString("start text=%1").arg(d->document()->toPlainText()));
 
-    // as sanity check use style clipping only if it's smaller than real padding
-    int leftClipping = qMin<int>(s->textClippingLeft(), paddingLeft);
-    int rightClipping = qMin<int>(s->textClippingRight(), paddingRight);
-    int topClipping = qMin<int>(s->textClippingTop(), s->paddingTop());
-    int bottomClipping = qMin<int>(s->textClippingBottom(), s->paddingBottom());
-
     // set clipping rectangle to draw text inside the border
-    QRectF clipping(boundingRect().adjusted(leftClipping,
-                                            topClipping,
-                                            -rightClipping,
-                                            -bottomClipping));
+    QRectF clipping(d->clippingRect());
     if (option) {
         clipping = clipping.intersected(option->exposedRect);
     }
 
     // If text does not fit inside widget, it may have to be scrolled
-    const qreal dx = -d->hscroll + paddingLeft;
+    const qreal dx = -d->hscroll + (d->isLayoutLeftToRight() ? s->paddingLeft() : s->paddingRight());
     const qreal dy = -d->vscroll + s->paddingTop();
 
     // with no content we show the prompt text
