@@ -71,11 +71,11 @@ void Ut_MMashupCanvasView::init()
 
 void Ut_MMashupCanvasView::cleanup()
 {
-    delete m_subject;
-
     // Destroy any created widgets
     qDeleteAll(createdWidgets);
     createdWidgets.clear();
+
+    delete mashupCanvas;
 }
 
 void Ut_MMashupCanvasView::addWidgetToMashupCanvas(QGraphicsWidget *widget, MDataStore *dataStore)

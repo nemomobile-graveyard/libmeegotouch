@@ -65,11 +65,11 @@ void Ut_MApplicationExtensionAreaView::init()
 
 void Ut_MApplicationExtensionAreaView::cleanup()
 {
-    delete m_subject;
-
     // Destroy any created widgets
     qDeleteAll(createdWidgets);
     createdWidgets.clear();
+
+    delete extensionArea;
 }
 
 void Ut_MApplicationExtensionAreaView::addWidgetToApplicationExtensionArea(QGraphicsWidget *widget, MDataStore *dataStore)

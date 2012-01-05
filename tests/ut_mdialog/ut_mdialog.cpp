@@ -56,6 +56,7 @@ void Ut_MDialog::initTestCase()
 
 void Ut_MDialog::cleanupTestCase()
 {
+    delete appWin;
     delete app;
 }
 
