@@ -123,11 +123,6 @@ Ut_MLayout::Ut_MLayout() :
     m_scene(0),
     m_proxy(0)
 {
-    static int argc = 1;
-    static char *argv[1] = { (char *) "./ut_mlayout" };
-    app = new MApplication(argc, argv);
-    appWin = new MWindow;
-    qRegisterMetaType<M::Orientation>("M::Orientation");
 }
 
 Ut_MLayout::~Ut_MLayout()
@@ -135,6 +130,15 @@ Ut_MLayout::~Ut_MLayout()
     Q_ASSERT(0 == m_button);
     Q_ASSERT(0 == m_scene);
     Q_ASSERT(0 == m_proxy);
+}
+
+void Ut_MLayout::initTestCase()
+{
+    static int argc = 1;
+    static char *argv[1] = { (char *) "./ut_mlayout" };
+    app = new MApplication(argc, argv);
+    appWin = new MWindow;
+    qRegisterMetaType<M::Orientation>("M::Orientation");
 }
 
 void Ut_MLayout::cleanupTestCase()
@@ -2988,6 +2992,8 @@ void Ut_MLayout::testUserChangingValues()
     QCOMPARE(policy->verticalSpacing(), 6.0); // Now manually set
     policy->setStyleName("packed");
     QCOMPARE(policy->verticalSpacing(), 6.0);
+
+    delete form;
 }
 void Ut_MLayout::testAddingAndRemovingWithSpacing()
 {
