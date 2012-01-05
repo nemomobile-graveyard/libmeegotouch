@@ -228,6 +228,10 @@ void Ut_MSheet::testCentralWidgetDoesntGrowBeyondSlotLimits()
     // that contains it.
     QVERIFY(bigWidget->size().width() == slot->size().width());
     QVERIFY(bigWidget->size().height() == slot->size().height());
+
+    delete subject;
+    subject = 0;
+    delete window;
 }
 
 void Ut_MSheet::testSettingInitialSystemwideModeOrientation_data()

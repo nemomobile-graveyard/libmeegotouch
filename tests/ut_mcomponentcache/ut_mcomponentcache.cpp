@@ -23,7 +23,7 @@
 #include <MComponentData>
 #include <MApplication>
 #include <MApplicationService>
-#include <MApplicationService>
+#include <MApplicationWindow>
 
 class MThemeDaemon
 {
@@ -84,6 +84,8 @@ void Ut_MComponentCache::testDBusService()
     QVERIFY2( win != NULL, "Failure");
     QVERIFY2( MComponentCache::populating() == false, "Failure");
 
+    delete win;
+
     cleanupCache();
 }
 
@@ -107,6 +109,7 @@ char ** Ut_MComponentCache::packTwoArgs(const char * arg0, const char * arg1)
 
 void  Ut_MComponentCache::cleanupCache()
 {
+    delete (MComponentCache::d_ptr->mApplicationWindowInstance);
     delete (MComponentCache::d_ptr->mApplicationInstance);
     MComponentCache::d_ptr->mApplicationInstance = 0;
     MComponentCache::d_ptr->mApplicationWindowInstance = 0;
