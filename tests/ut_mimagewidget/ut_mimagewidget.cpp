@@ -93,6 +93,35 @@ void Ut_MImageWidget::testConstructor()
 
     delete source;
     delete myImage;
+
+    QString testId("test_id");
+    QSize testSize(32,32);
+
+    // test both constructor and copy constructor for images created with an id string
+    MImageWidget *myImage7 = new MImageWidget(testId);
+    MImageWidget *myImage8 = new MImageWidget(*myImage7);
+
+    QCOMPARE(myImage7->imageId(), testId);
+    QCOMPARE(myImage8->imageId(), testId);
+    QCOMPARE(myImage7->model()->imageSize(), QSize());
+    QCOMPARE(myImage8->model()->imageSize(), QSize());
+
+    delete myImage7;
+    delete myImage8;
+
+    // test both constructor (followed by setImage) and copy constructor for images
+    // with an id string and an explicit size
+    MImageWidget *myImage9 = new MImageWidget();
+    myImage9->setImage(testId, testSize);
+    MImageWidget *myImage10 = new MImageWidget(*myImage9);
+
+    QCOMPARE(myImage9->imageId(), testId);
+    QCOMPARE(myImage10->imageId(), testId);
+    QCOMPARE(myImage9->model()->imageSize(), testSize);
+    QCOMPARE(myImage10->model()->imageSize(), testSize);
+
+    delete myImage9;
+    delete myImage10;
 }
 
 void Ut_MImageWidget::testSizeHint_data()
