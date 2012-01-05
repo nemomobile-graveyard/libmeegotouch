@@ -30,10 +30,14 @@
 #include <MDataStore>
 #include "../stubs/mockdatastore.h"
 
+static char *app_name[1] = { (char *)"./ut_msettingslanguagebooleancontroller" };
+
 // QCoreApplication stubs to avoid crashing in processEvents()
 QStringList QCoreApplication::arguments()
 {
-    return QStringList();
+    QStringList arguments;
+    arguments << app_name[0];
+    return arguments;
 }
 
 void Ut_MSettingsLanguageBooleanController::init()
@@ -47,7 +51,6 @@ void Ut_MSettingsLanguageBooleanController::cleanup()
 void Ut_MSettingsLanguageBooleanController::initTestCase()
 {
     static int argc = 1;
-    static char *app_name[1] = { (char *)"./ut_msettingslanguagebooleancontroller" };
     app = new MApplication(argc, app_name);
 }
 
