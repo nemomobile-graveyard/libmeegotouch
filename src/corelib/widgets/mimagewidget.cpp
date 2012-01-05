@@ -143,8 +143,12 @@ MImageWidget::MImageWidget(const MImageWidget &other) :
     MWidgetController(new MImageWidgetPrivate(), new MImageWidgetModel(), 0)
 {
     Q_D(MImageWidget);
-    *this = other;
+
+    // Must call init() BEFORE copying (size will be reset to QSize() in
+    // certain cases if called after)
     d->init();
+
+    *this = other;
 }
 
 MImageWidget &MImageWidget::operator=(const MImageWidget &other)
@@ -153,11 +157,11 @@ MImageWidget &MImageWidget::operator=(const MImageWidget &other)
 
     d->cleanUp();
 
-    if (other.d_func()->ownPixmap) {
-        if (other.d_func()->pixmap)
-            d->pixmap = new QPixmap(*(other.d_func()->pixmap));
-    } else
-        setImage(other.model()->imageId(), other.model()->imageSize());
+    // always copy imageId and size
+    setImage(other.model()->imageId(), other.model()->imageSize());
+
+    if (other.d_func()->ownPixmap && other.d_func()->pixmap)
+        d->pixmap = new QPixmap(*(other.d_func()->pixmap));
 
     d->ownPixmap = other.d_func()->ownPixmap;
 
