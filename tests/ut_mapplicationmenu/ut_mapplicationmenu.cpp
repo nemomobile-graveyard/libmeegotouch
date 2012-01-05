@@ -169,7 +169,6 @@ void Ut_MApplicationMenu::testInsertAction()
     QVERIFY(action_at1 == action0);
     QVERIFY(action_at2);
     QVERIFY(action_at2 == action1);
-
 }
 
 void Ut_MApplicationMenu::testSetWidgetAfterWidgetActionIsAdded()
@@ -187,6 +186,7 @@ void Ut_MApplicationMenu::testSetWidgetAfterWidgetActionIsAdded()
     MMenuListItem* menuItem = getMenuItem(viewPrivate, 0);
     QVERIFY(menuItem);
     QVERIFY(menuItem->customWidget() == widgetInAction);
+    delete menuItem;
 }
 
 void Ut_MApplicationMenu::testChangeWidgetInWidgetAction()
@@ -207,6 +207,7 @@ void Ut_MApplicationMenu::testChangeWidgetInWidgetAction()
     MMenuListItem* menuItem = getMenuItem(viewPrivate, 0);
     QVERIFY(menuItem);
     QVERIFY(menuItem->customWidget() == newWidgetInAction);
+    delete menuItem;
 }
 
 void Ut_MApplicationMenu::testRemoveWidgetFromWidgetAction()
@@ -226,6 +227,7 @@ void Ut_MApplicationMenu::testRemoveWidgetFromWidgetAction()
     MMenuListItem* menuItem = getMenuItem(viewPrivate, 0);
     QVERIFY(menuItem);
     QVERIFY(!menuItem->customWidget());
+    delete menuItem;
 }
 
 void Ut_MApplicationMenu::testActionVisiblity()
@@ -313,6 +315,7 @@ void Ut_MApplicationMenu::testOpeningAndClosingAppMenuWithDisabledAction()
     MMenuListItem *menuItem = getMenuItem(viewPrivate, 0);
     QVERIFY(menuItem);
     QVERIFY(menuItem->isEnabled());
+    delete menuItem;
 
     // Test opening and closing the app menu with the action disabled, it should remain disabled
     action->setEnabled(false);
@@ -322,7 +325,7 @@ void Ut_MApplicationMenu::testOpeningAndClosingAppMenuWithDisabledAction()
     appWin->sceneManager()->appearSceneWindowNow(m_subject);
     appWin->sceneManager()->dismissSceneWindowNow(m_subject);
     QVERIFY(!menuItem->isEnabled());
-
+    delete menuItem;
 }
 
 const MApplicationMenuViewPrivate* Ut_MApplicationMenu::menuViewPrivate()

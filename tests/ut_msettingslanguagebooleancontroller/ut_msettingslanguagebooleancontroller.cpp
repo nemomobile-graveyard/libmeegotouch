@@ -88,6 +88,8 @@ void Ut_MSettingsLanguageBooleanController::testToggleButton()
 
     QVERIFY(button->isChecked());
     QCOMPARE(dataStore->value("testKey").toBool(), true);
+
+    delete widget;
 }
 
 QTEST_APPLESS_MAIN(Ut_MSettingsLanguageBooleanController)

@@ -103,6 +103,8 @@ void Ut_MSettingsLanguageSelectionFactory::testBuildWidget()
     QCOMPARE(buttonGroupButtonValues.at(1), 5);
     delete option0;
     delete option1;
+
+    delete widget;
 }
 
 QTEST_APPLESS_MAIN(Ut_MSettingsLanguageSelectionFactory)

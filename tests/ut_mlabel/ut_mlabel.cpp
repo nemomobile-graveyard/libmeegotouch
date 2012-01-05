@@ -1014,7 +1014,6 @@ void Ut_MLabel::testPlainTextColor()
 {
     QFETCH(QString, text);
 
-    TestMLabel *label = new TestMLabel();
     label->setText(text);
     label->setGeometry(QRectF(0, 0, 400, 20));
     QImage imageLabel = captureImage(label);
@@ -1028,7 +1027,7 @@ void Ut_MLabel::testPlainTextColor()
     anotherLabel->setText(text);
     anotherLabelImage = captureImage(anotherLabel);
     QVERIFY2(imageLabel != anotherLabelImage, "Images shoudn't be equal, because in css colors are different");
-    delete label;
+
     delete anotherLabel;
 }
 void Ut_MLabel::testSizeHint_data()
@@ -1071,7 +1070,6 @@ void Ut_MLabel::testSizeHint()
     QFETCH(QTextOption::WrapMode, wrapMode);
     QFETCH(qreal, widthConstraint);
 
-    TestMLabel *label = new TestMLabel();
     label->setText(text);
     label->setGeometry(QRectF(0, 0, 400, 20));
     QVERIFY(label->sizePolicy().hasHeightForWidth());
@@ -1178,7 +1176,7 @@ void Ut_MLabel::testWordWrappingSizeHint_data()
 void Ut_MLabel::testWordWrappingSizeHint()
 {
     QFETCH(QTextOption::WrapMode, wrapMode);
-    TestMLabel *label = new TestMLabel();
+
     label->setText("This is a long string with lots of words, lots of words, lots of words.");
 
     label->setWordWrap(true);
@@ -1229,7 +1227,6 @@ void Ut_MLabel::testFont()
 {
     QFETCH(QString, text);
 
-    MLabel *label = new TestMLabel();
     label->setText(text);
 
     // this will create the view and load CSS font
@@ -1259,7 +1256,6 @@ void Ut_MLabel::testColor()
 {
     QFETCH(QString, text);
 
-    MLabel *label = new TestMLabel();
     label->setText(text);
 
     // this will create the view and load CSS font

@@ -83,6 +83,8 @@ void Ut_MSettingsLanguageTextFactory::testCreateWidget()
     MTextEdit *textEdit = dynamic_cast<MTextEdit *>(layout->itemAt(1));
     QVERIFY(textEdit != NULL);
     QCOMPARE(textEdit->text(), dataStore.value("TestKey").toString());
+
+    delete widget;
 }
 
 QTEST_APPLESS_MAIN(Ut_MSettingsLanguageTextFactory)

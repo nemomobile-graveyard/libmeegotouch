@@ -722,5 +722,7 @@ void Ut_MLinearLayoutPolicy::testLayoutInLayoutRefresh()
     QCOMPARE(leftSpacerWithWidget->geometry(), QRectF(0,0,0,200));
     QCOMPARE(m_mockItem100->geometry(), QRectF(0,0,100,100));
     QCOMPARE(m_mockItem200->geometry(), QRectF(200,0,200,200));
+
+    delete form;
 }
 QTEST_APPLESS_MAIN(Ut_MLinearLayoutPolicy)

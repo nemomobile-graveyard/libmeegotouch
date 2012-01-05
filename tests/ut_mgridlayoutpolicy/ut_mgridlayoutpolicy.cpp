@@ -586,6 +586,8 @@ void Ut_MGridLayoutPolicy::testHeightForWidthInSubLayout()
 
     QCOMPARE(form->preferredSize(), QSizeF(500,500));
     QCOMPARE(form->effectiveSizeHint(Qt::PreferredSize, QSizeF(100,-1)), QSizeF(100,100));
+
+    delete form;
 }
 
 void Ut_MGridLayoutPolicy::testDeleteItem_data()
