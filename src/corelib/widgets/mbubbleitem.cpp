@@ -255,8 +255,6 @@ void MBubbleItem::addInformationWidget(QGraphicsWidget *widget)
 
 void MBubbleItem::removeInformationWidget(QGraphicsWidget *widget)
 {
-    widget->setParentItem(0);
-    widget->setParent(0);
     if (scene())
         scene()->removeItem(widget);
 
