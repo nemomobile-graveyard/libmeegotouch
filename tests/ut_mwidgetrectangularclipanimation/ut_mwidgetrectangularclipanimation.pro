@@ -27,8 +27,8 @@ HEADERS  += \
            $$MSRCDIR/corelib/style/mstyle.h \
            $$MSRCDIR/corelib/style/mstyle_p.h \
            $$MSRCDIR/corelib/style/manimationstyle.h \
-           $$MSRCDIR/corelib/animation/widget/mabstractwidgetanimation.h \
-           $$MSRCDIR/corelib/animation/widget/mabstractwidgetanimation_p.h \
+           $$MSRCDIR/corelib/animation/widget/core/mabstractwidgetanimation.h \
+           $$MSRCDIR/corelib/animation/widget/core/mabstractwidgetanimation_p.h \
            $$MSRCDIR/corelib/effects/mgraphicsclipeffect.h \
            $$MSRCDIR/corelib/effects/mgraphicsclipeffect_p.h \
            $$MSRCDIR/corelib/style/mabstractwidgetanimationstyle.h \
