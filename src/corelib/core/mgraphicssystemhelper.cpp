@@ -54,6 +54,7 @@ namespace DirtyLogger
 #include <QString>
 #include <QFileInfo>
 #include <QDebug>
+#include <QRgb>
 
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
 #include <QtMeeGoGraphicsSystemHelper>
@@ -237,7 +238,7 @@ QPixmap MGraphicsSystemHelper::pixmapFromHandle(const MPixmapHandle& pixmapHandl
             DirtyLogger::logMessage("MPixmapHandle is %s\n",
                                     pixmapHandle.isValid() ?
                                    "valid" : "invalid");
-	    DirtyLogger::logMessage("info:\n"
+            DirtyLogger::logMessage("info:\n"
 			            "  size: (%d,%d)\n"
 				    "  direct map: %s\n"
 				    "  bytes: %d\n"
@@ -246,8 +247,28 @@ QPixmap MGraphicsSystemHelper::pixmapFromHandle(const MPixmapHandle& pixmapHandl
 				    pixmapHandle.size.height(),
 				    pixmapHandle.directMap ? "true" : "false",
 				    pixmapHandle.numBytes, pixmapHandle.format);
+
+            // creating shared pixmap failed - have local one instead of cyan
+            // rectangle ...
+            // TODO: the below takes the soft image, and tins it cyan. remove
+            // this code once we are done with debugging and directly use the
+            // soft image
+            QImage img = image;
+            for (int i = 0; i < img.height(); ++i) {
+                uchar * scanLine = img.scanLine(i);
+                for (int j = 0; j < image.width(); ++j) {
+                    QRgb *pixel = reinterpret_cast<QRgb*>(scanLine);
+                    int alpha = qMax(20, qAlpha(*pixel));
+                    int red = 0;
+                    int green = qMax(130, qGreen(*pixel));
+                    int blue = qMax(130, qBlue(*pixel));
+                    *pixel = qRgba(red, green, blue, alpha);
+                    scanLine += sizeof(QRgb);
+                }
+            }
+            ret = QPixmap::fromImage(img);
         }
-	
+
         return ret;
     } else
 #endif // HAVE_MEEGOGRAPHICSSYSTEM
