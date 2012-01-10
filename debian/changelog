@@ -1,3 +1,11 @@
+libmeegotouch (0.24.20-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#296163i - [TASK] Enable logging of certain error cases in PR
+    images in order to catch bug #292977
+
+ -- Armin Berres <armin.berres@basyskom.com>  Tue, 10 Jan 2012 13:28:26 +0100
+
 libmeegotouch (0.24.19-1) unstable; urgency=low
 
   * New version
