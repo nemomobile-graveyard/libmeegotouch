@@ -6,6 +6,7 @@ INCLUDEPATH += $$MSRCDIR
 SOURCES += \
     ut_meditortoolbar.cpp \
     $$MSRCDIR/views/meditortoolbar.cpp \
+    $$MSRCDIR/views/meatgesturefilter.cpp \
     $$MSRCDIR/views/mtopleveloverlay.cpp \
     $$MSRCDIR/views/meditortoolbararrow.cpp
 
@@ -14,6 +15,7 @@ HEADERS += \
     meditortoolbarstyle.h \
     $$MSRCDIR/views/meditortoolbar.h \
     $$MSRCDIR/views/meditortoolbar_p.h \
+    $$MSRCDIR/views/meatgesturefilter.h \
     $$MSRCDIR/views/meditortoolbararrow.h \
     $$MSRCDIR/views/mtopleveloverlay.h
 

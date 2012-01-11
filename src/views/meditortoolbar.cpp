@@ -20,6 +20,7 @@
 #include "meditortoolbar_p.h"
 #include "mtopleveloverlay.h"
 #include <mtexteditstyle.h>
+#include "meatgesturefilter.h"
 
 #include <MButton>
 #include <MLayout>
@@ -230,7 +231,7 @@ void MEditorToolbarPrivate::init()
     hideAnimation.setEasingCurve(QEasingCurve::InOutQuad);
     QObject::connect(&hideAnimation, SIGNAL(finished()), q, SLOT(_q_onAnimationFinished()));
 
-    eatMButtonGestureFilter = new EatMButtonGestureFilter(q);
+    eatMButtonGestureFilter = new MEatGestureFilter(q);
 
     // Setup toolbar to hide during scene orientation change.
     // Don't need to hide during 180 degree angle changes.
@@ -706,21 +707,6 @@ void MEditorToolbarPrivate::setButtonsEnabled(bool enabled)
 {
     foreach (MButton *button, buttons) {
         button->setEnabled(enabled);
-    }
-}
-
-EatMButtonGestureFilter::EatMButtonGestureFilter(QObject *parent)
-    :QObject(parent)
-{
-}
-
-bool EatMButtonGestureFilter::eventFilter(QObject *watched, QEvent *event)
-{
-    if (event->type() == QEvent::Gesture || event->type() == QEvent::GestureOverride) {
-        event->accept();
-        return true;
-    } else {
-        return QObject::eventFilter(watched, event);
     }
 }
 

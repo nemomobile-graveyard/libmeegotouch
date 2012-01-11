@@ -29,7 +29,7 @@
 #include <QTimer>
 #include <QRegion>
 
-class EatMButtonGestureFilter;
+class MEatGestureFilter;
 class MButton;
 class MEditorToolbar;
 class MEditorToolbarArrow;
@@ -92,7 +92,7 @@ private:
     QTimer autohideTimer;
     QPropertyAnimation hideAnimation;
 
-    EatMButtonGestureFilter *eatMButtonGestureFilter;
+    MEatGestureFilter *eatMButtonGestureFilter;
 
     bool autoHideEnabled;
     bool disappearedForOrientationChange;
@@ -107,16 +107,5 @@ private:
     friend class Ut_MEditorToolbar;
 #endif
 };
-
-class EatMButtonGestureFilter : public QObject
-{
-    Q_OBJECT
-
-public:
-    EatMButtonGestureFilter(QObject *parent = 0);
-protected:
-    bool eventFilter(QObject *watched, QEvent *event);
-};
-
 
 #endif // MEDITORTOOLBAR_P_H

@@ -105,6 +105,7 @@ PRIVATE_HEADERS += \
     mtextselectionhandle.h \
     mtextselectionoverlay.h \
     melidedtext.h \
+    meatgesturefilter.h \
 
 SOURCES += \
     mapplicationpageview.cpp \
@@ -179,4 +180,5 @@ SOURCES += \
     mtextselectionhandle.cpp \
     mtextselectionoverlay.cpp \
     melidedtext.cpp \
+    meatgesturefilter.cpp \
 
