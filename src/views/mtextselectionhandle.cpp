@@ -20,6 +20,8 @@
 #include "mtextselectionhandle.h"
 #include "mdebug.h"
 
+#include "meatgesturefilter.h"
+
 namespace {
     const int DefaultMovementSensitivity = 3;
     const qreal NormalOpacity = 1.0f;
@@ -42,6 +44,10 @@ MTextSelectionHandle::MTextSelectionHandle()
 {
     setFocusProxy(0);
     setFocusPolicy(Qt::NoFocus);
+
+    grabGestureWithCancelPolicy(Qt::TapGesture);
+    grabGestureWithCancelPolicy(Qt::TapAndHoldGesture);
+    installEventFilter(new MEatGestureFilter(this));
 
     setOpacity(0.0f);
     hide();
