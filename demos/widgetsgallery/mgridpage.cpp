@@ -184,6 +184,8 @@ void MGridPage::createContent()
     connect(list, SIGNAL(panningStarted()), this, SLOT(pauseLoaders()));
     connect(list, SIGNAL(panningStopped()), this, SLOT(resumeLoaders()));
 
+    connect(sceneManager(), SIGNAL(orientationChanged(M::Orientation)), SLOT(configureGrid(M::Orientation)));
+
     retranslateUi();
 }
 
@@ -218,12 +220,6 @@ void MGridPage::itemClicked(const QModelIndex &index)
     }
 }
 
-void MGridPage::orientationChangeEvent(MOrientationChangeEvent *event)
-{
-    MApplicationPage::orientationChangeEvent(event);
-    configureGrid(event->orientation());
-}
-
 void MGridPage::configureGrid()
 {
     configureGrid(sceneManager()->orientation());
@@ -232,18 +228,30 @@ void MGridPage::configureGrid()
 void MGridPage::configureGrid(M::Orientation orientation)
 {
     if (list) {
+        int oldColumnsCount = list->columns();
+        int oldItemHeight = m_itemSize.height();
+
+        // when orientation changes when page is not visible list->geometry() will be outdated;
+        // scene size should give proper width
+        int width = sceneManager()->visibleSceneSize().width();
+
         if (orientation == M::Portrait) {
-            m_itemSize.setHeight(list->geometry().width() / m_columnsPortrait);
+            m_itemSize.setHeight(width / m_columnsPortrait);
             list->setColumns(m_columnsPortrait);
         } else {
-            m_itemSize.setHeight(list->geometry().width() / m_columnsLandscape);
+            m_itemSize.setHeight(width / m_columnsLandscape);
             list->setColumns(m_columnsLandscape);
+        }
+
+        bool listModelChanged = oldColumnsCount != list->columns();
+
+        if (oldItemHeight != m_itemSize.height() && !listModelChanged) {
+            // make sure that MListView private object is recreated, otherwise new item height won't work
+            // setting new CellCreator will do the trick
+            list->setCellCreator(new ContentItemCreator(this, list));
         }
     }
     m_itemSize.setWidth(m_itemSize.height());
-
-    updateGeometry();
-    update();
 }
 
 void MGridPage::configurationUpdated()

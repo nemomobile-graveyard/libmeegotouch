@@ -57,7 +57,6 @@ public Q_SLOTS:
 signals:
 protected:
     void retranslateUi();
-    virtual void orientationChangeEvent(MOrientationChangeEvent *event);
 
 private slots:
     void configureGrid();
