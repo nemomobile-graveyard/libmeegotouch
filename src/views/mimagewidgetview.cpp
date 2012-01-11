@@ -343,6 +343,11 @@ QSizeF MImageWidgetView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
         return QSizeF(-1,-1);
 
     QSizeF size = d->controller->imageSize();
+
+    // an empty QSize() translates to (-1,-1) which would result in an incorrect size hint
+    if (!size.isValid())
+        size = QSizeF(0, 0);
+
     if (constraint.width() >= 0 && constraint.width() < size.width())
         size.scale(QSizeF(constraint.width(), QWIDGETSIZE_MAX), Qt::KeepAspectRatio);
     else if (constraint.height() >= 0 && constraint.height() < size.height())
