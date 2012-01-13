@@ -69,7 +69,6 @@ MBubbleItemViewPrivate::MBubbleItemViewPrivate()
 
 MBubbleItemViewPrivate::~MBubbleItemViewPrivate()
 {
-    clearLayout();
 }
 
 void MBubbleItemViewPrivate::initLayout()
