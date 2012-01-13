@@ -1,8 +1,32 @@
-libmeegotouch (0.25.4~1) unstable; urgency=low
+libmeegotouch (0.25.4-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#296253 - Inconsistent behavior of MImageWidget's copy constructor
+  * Fixes: NB#295523 - NOKIA text is not displaying properly in About product applet.
+  * Fixes: NB#294908 MLabelView - Include the leading() for the last line for height calculations
+  * Fixes: NB#295786 - the view in grid view is not correct.
+  * Fixes: Crash in Ut_MSettingsLanguageBooleanController
+  * Fixes: Crash in ut_msettingslanguagesettingsfactory initTestCase().
+  * Fixes: Crash in unit tests ut_mlistview and ut_translations.
+  * Fixes: NB#295003, More than one of copy-paste button actions can be used while text is selected in Rich text edit
+  * Fixes: NB#288882 - MMS thread in INBOX not displaying properly when MMS composed with subject full of emoticons
+  * Fixes: NB#291502 - list items in e-mail app fail to appear from the very bottom of the list
+  * Fixes: NB#295399 - Text magnifier disappear after a second it appears in copy paste widget from WG.
+  * Fixes: NB#295153 - Brightness slider is not animated.
+  * Fixes: Pressing center of the vertical slider handle changes the value
+  * Fixes: NB#292960, Swiping keyboard to close keep text selected
+  * Fixes: NB#295007, Very slow non-automatic hiding animation of MEditorToolbar
+  * Fixes: Use proper animation duration for hiding MEditorToolbar
+  * Fixes: NB#290238, Text selection handle behaves wrongly with RTL text in a scenario
+  * Fixes: NB#290828 - - mthemedaemon needs to share X drawables in a secure manner
+  * Fixes: NB#281533, Avatar delays to display in service selection view
+  * Fixes: NB#294592, COREWEB: /usr/bin/meegotouchhome '~QScopedPointer ... MWidget::~MWidget ... SwipeLauncherFolderContainer::~SwipeLauncherFolderContainer'
+  * Fixes: NB#289753, swipe while switching focus removes part of contents
+  * Fixes: NB#293425, Copy-Paste static text from browser to email: Composer shows text styles it does not support
+  * Fixes: NB#294927 - MProgressIndicator does not become visible/animated when calling setVisible(true) in switcher
+  * Fixes: NB#294911 - MSheet::centralWidgetSizePolicyRespected doesn't work with word-wrapping labels.
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 15 Dec 2011 12:01:53 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 13 Jan 2012 10:58:20 +0100
 
 libmeegotouch (0.25.3-1) unstable; urgency=low
 
