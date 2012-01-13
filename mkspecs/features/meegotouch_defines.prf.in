@@ -6,7 +6,7 @@
 
 M_MAJOR_VERSION = 0
 M_MINOR_VERSION = 25
-M_PATCH_VERSION = 4
+M_PATCH_VERSION = 5
 M_VERSION=$${M_MAJOR_VERSION}.$${M_MINOR_VERSION}.$${M_PATCH_VERSION}
 
 # first set default value for meegotouch prefix
