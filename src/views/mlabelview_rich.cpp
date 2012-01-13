@@ -38,6 +38,7 @@
 #include "mlabel.h"
 #include "mlabel_p.h"
 #include "mlabelhighlighter.h"
+#include "mlocale.h"
 #include "mdeviceprofile.h"
 #include "morientationchangeevent.h"
 #include "morientationtracker.h"
@@ -477,13 +478,22 @@ void MLabelViewRich::updateRichTextEliding()
         // The ellipsis should start from the last visible line, minus the ellipsis's width and height.  We
         // don't have to be completely accurate in guessing where the ellipsis should go, but we
         // need to only ever overestimate the charPositionForEllipsis value, never underestimate it.
-        QPointF positionForEllipsis = QPointF(viewPrivate->boundingRect().width() - ellipsisSize.width()+1,
-                qMin(viewPrivate->boundingRect().height(), textDocument.documentLayout()->documentSize().height()) - ellipsisSize.height() + 1);
-        if (positionForEllipsis.y() < 0) {
+        qreal ellipsisY = qMin(viewPrivate->boundingRect().height(),
+                               textDocument.documentLayout()->documentSize().height()) - ellipsisSize.height() + 1;
+        if (ellipsisY < 0) {
             // If the document does not contain any text but e.g. only images, the height of the ellipsis might
             // be larger than the height of the document
-            positionForEllipsis.ry() = 0;
+            ellipsisY = 0;
         }
+
+        Qt::LayoutDirection textDirection = viewPrivate->model()->textDirection();
+        if (textDirection == Qt::LayoutDirectionAuto) {
+            textDirection = MLocale::directionForText(textDocument.toPlainText());
+        }
+        const bool rightToLeftDirection = (textDirection == Qt::RightToLeft);
+        const QPointF positionForEllipsis = rightToLeftDirection
+                                            ? QPointF(ellipsisSize.width() + 1, ellipsisY)
+                                            : QPointF(viewPrivate->boundingRect().width() - ellipsisSize.width() + 1, ellipsisY);
         int charPositionForEllipsis = textDocument.documentLayout()->hitTest(positionForEllipsis, Qt::FuzzyHit);
 
         // Now we have a pretty good guess where the ellipsis should be.  In practise this is almost
@@ -502,7 +512,9 @@ void MLabelViewRich::updateRichTextEliding()
         format.setFont(textDocument.defaultFont());
         format.setForeground(viewPrivate->textColor());
         cursor.insertText(ellipsisString, format);
-        cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, ellipsisString.size());
+        cursor.movePosition(rightToLeftDirection ? QTextCursor::Right : QTextCursor::Left,
+                            QTextCursor::MoveAnchor,
+                            ellipsisString.size());
         textDocument.setPageSize(viewPrivate->boundingRect().size());
 
         QTextLayout *layout = cursor.block().layout();

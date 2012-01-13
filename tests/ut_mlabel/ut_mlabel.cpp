@@ -771,6 +771,7 @@ void Ut_MLabel::testTextElide_data()
 
     QTest::newRow("plain") << "David Michael Hasselhoff (born July 17, 1952) is an American actor and singer.He is best known for his lead roles as Michael Knight in the popular 1980s U.S. series Knight Rider and as L.A. County Lifeguard Mitch Buchannon in the series Baywatch. Hasselhoff also produced Baywatch for a number of series in the 1990s up until 2001 when the series ended with Baywatch Hawaii. Hasselhoff also crossed over to a music career during the end of the 1980s and the early 1990s and was noted for his performance when the Berlin Wall was brought down in 1989. He enjoyed a short lived success as a singer primarily in German-speaking Europe, particularly in Germany and Austria. More recently Hasselhoff has been involved with talent shows such as NBC's America's Got Talent in 2006. Hasselhoff's autobiography, Making Waves, was released in the United Kingdom in September 2006.";
     QTest::newRow("nospaces") << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    QTest::newRow("r2l") << "הצגת עדכוני המצב של חבריך המקוונים בכרטיסי הקשרהצגת עדכוני המצב של חבריך המקוונים בכרטיסי הקשר";
     // For some reason this doesn't work in CC -> solve why
     //QTest::newRow("rich") << "<b>David Michael Hasselhoff (born July 17, 1952) is an American actor and singer. He is best known for his lead roles as Michael Knight in the popular 1980s U.S. series Knight Rider and as L.A. County Lifeguard Mitch Buchannon in the series Baywatch. Hasselhoff also produced Baywatch for a number of series in the 1990s up until 2001 when the series ended with Baywatch Hawaii. Hasselhoff also crossed over to a music career during the end of the 1980s and the early 1990s and was noted for his performance when the Berlin Wall was brought down in 1989. He enjoyed a short lived success as a singer primarily in German-speaking Europe, particularly in Germany and Austria. More recently Hasselhoff has been involved with talent shows such as NBC's America's Got Talent in 2006. Hasselhoff's autobiography, Making Waves, was released in the United Kingdom in September 2006.</b>";
 }
@@ -785,6 +786,7 @@ void Ut_MLabel::testTextElide()
     label->setTextElide(true);
     label->resize(400, 100);
     QVERIFY(label->textElide() == true);
+    QVERIFY(label->renderedText().contains("..."));
     QImage elided = captureImage(label);
 
     label->setWordWrap(true);
@@ -796,6 +798,7 @@ void Ut_MLabel::testTextElide()
     label->setTextElide(false);
     label->resize(400, 100);
     QVERIFY(label->textElide() == false);
+    QVERIFY(!label->renderedText().contains("..."));
     QImage unelided = captureImage(label);
 
     label->setLayoutDirection(Qt::RightToLeft);
@@ -809,6 +812,7 @@ void Ut_MLabel::testRichTextElide_data()
 {
     QTest::addColumn<QString>("text");
     QTest::newRow("rich") << "<b>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</b>";
+    QTest::newRow("rich r2l") << "<b>הצגת עדכוני המצב של חבריך המקוונים בכרטיסי הקשרהצגת עדכוני המצב של חבריך המקוונים בכרטיסי הקשר</b>";
 }
 
 void Ut_MLabel::testRichTextElide()
@@ -824,19 +828,21 @@ void Ut_MLabel::testRichTextElide()
     QVERIFY(label->textElide() == true);
     const QImage elided = captureImage(label);
     const QRect elidedRect = contentRect(elided);
+    QVERIFY(label->renderedText().contains("..."));
 
     label->setTextElide(false);
     label->resize(400,400);
     QVERIFY(label->textElide() == false);
     const QImage unelided = captureImage(label);
     const QRect unelidedRect = contentRect(unelided);
+    QVERIFY(!label->renderedText().contains("..."));
 
     int cropWidth = 200;
     QImage leftUnelided = unelided.copy(0, 0, cropWidth, unelided.height());
-    QImage rightUnelided = unelided.copy(cropWidth, 0, unelided.width() - cropWidth, unelided.height());
+    QImage rightUnelided = unelided.copy(unelided.width() - cropWidth, 0, cropWidth, unelided.height());
 
     QImage leftElided = elided.copy(0, 0, cropWidth, elided.height());
-    QImage rightElided = elided.copy(cropWidth, 0, elided.width() - cropWidth, elided.height());
+    QImage rightElided = elided.copy(elided.width() - cropWidth, 0, cropWidth, elided.height());
 
     QCOMPARE(elided.isNull(), false);
     QCOMPARE(unelided.isNull(), false);
@@ -844,10 +850,16 @@ void Ut_MLabel::testRichTextElide()
     QVERIFY(elided != unelided);
     QVERIFY(elidedRect != unelidedRect);
 
-    //'...' is added to the rightmost part of the label in LTR mode
-    QVERIFY(leftUnelided == leftElided);
-    QVERIFY(rightUnelided != rightElided);
-
+    const QString renderedText = label->renderedText();
+    if (MLocale::directionForText(renderedText) == Qt::LeftToRight) {
+        //'...' is added to the rightmost part of the label in LTR mode
+        QVERIFY(leftUnelided == leftElided);
+        QVERIFY(rightUnelided != rightElided);
+    } else {
+        //'...' is added to the leftmost part of the label in RTL mode
+        QVERIFY(leftUnelided != leftElided);
+        QVERIFY(rightUnelided == rightElided);
+    }
 }
 
 void Ut_MLabel::testImagesElide()
