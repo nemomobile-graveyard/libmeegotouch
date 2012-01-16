@@ -43,6 +43,12 @@
  * For simple use cases, a QStringList can be sufficient.
  * Candidates are confirmed (and inserted into the text edit) by pressing return or touching the
  * completion item.
+ *
+ * MCompleter also supports asynchronous model for completion candidates. Although the base class
+ * QAbstractItemModel does not directly provide state information for asynchronous fetches, MCompleter
+ * uses its canFetchMore() method to query whether fetch is in progress. Because nothing signales the
+ * state changes completer has to resort to polling.
+ *
  * \code
  *   QStringList list;
  *   list << "apple" << "appreciate" << "orange" << "offset";
@@ -117,6 +123,7 @@ class M_CORE_EXPORT MCompleter : public MSceneWindow
     Q_PROPERTY(bool acceptMultipleEntries READ acceptMultipleEntries WRITE setAcceptMultipleEntries)
     Q_PROPERTY(QString charactersToTrimForCompletionPrefix READ charactersToTrimForCompletionPrefix WRITE setCharactersToTrimForCompletionPrefix)
     Q_PROPERTY(QString completionTitle READ completionTitle WRITE setCompletionTitle)
+    Q_PROPERTY(QString fetchInProgressLabel READ fetchInProgressLabel WRITE setFetchInProgressLabel)
 
 public:
 
@@ -259,6 +266,22 @@ public:
      */
     QString completionTitle() const;
 
+    /*!
+     * \brief Label text to show during asynchronous model update.
+     *
+     * The text is visible in completer only when fetch is in progress, there are no matches,
+     * and there is a completion prefix.
+     * \sa setFetchInProgressLabel
+     */
+    QString fetchInProgressLabel() const;
+
+    /*!
+     * \brief Set the label to show during asynchronous model update.
+     * \param text Temporary completion label to show when there are no candidates. "Waiting...", or the like.
+     * \sa fetchInProgressLabel
+     */
+    void setFetchInProgressLabel(const QString &text);
+
 Q_SIGNALS:
     /*!
      * This signal is emitted before starting matching the completion candidates.
@@ -345,6 +368,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_complete())
     Q_PRIVATE_SLOT(d_func(), void _q_pollModel())
     Q_PRIVATE_SLOT(d_func(), void _q_rowsRemoved(const QModelIndex &parent, int start, int end))
+    Q_PRIVATE_SLOT(d_func(), void _q_pollAsyncFetchEnd())
 
 #ifdef UNIT_TEST
     friend class Ut_MCompleter;
