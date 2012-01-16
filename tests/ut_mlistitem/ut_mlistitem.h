@@ -40,10 +40,14 @@ private slots:
     void testClick();
     void testLongTap();
 
-    void testClicked();
-    void testLongTapped();
-
     void testReleasedOnHide();
+
+    void testMouseClick();
+    void testMouseMoveOutside();
+    void testMouseMoveWithinMaxDistance();
+    void testMouseMoveBeyondMaxDistance();
+    void testCancelEvent();
+    void testTapAndHold();
 
  private:
     MApplication *app;

@@ -21,12 +21,15 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QStateMachine>
 #include <QState>
+#include <QSignalSpy>
+#include <QTapAndHoldGesture>
 #include "ut_mlistitem.h"
 #include "mlistitem.h"
 #include "mlistitemview.h"
 #include "mlistitemview_p.h"
 #include "mtapstatemachine.h"
 #include "mtapstatemachine_p.h"
+#include "mviewconstants.h"
 
 void Ut_MListItem::initTestCase()
 {
@@ -52,24 +55,18 @@ void Ut_MListItem::cleanup()
 
 void Ut_MListItem::testClick()
 {
+    QSignalSpy clickedSpy(listItem, SIGNAL(clicked()));
     listItem->click();
+    QCOMPARE(clickedSpy.count(), 1);
 }
 
 void Ut_MListItem::testLongTap()
 {
     QPointF point (0, 0);
+    QSignalSpy longTappedSpy(listItem, SIGNAL(longTapped(QPointF)));
     listItem->longTap(point);
-}
-
-void Ut_MListItem::testClicked()
-{
-    listItem->clicked();
-}
-
-void Ut_MListItem::testLongTapped()
-{
-    QPointF point (0, 0);
-    listItem->longTapped(point);
+    QCOMPARE(longTappedSpy.count(), 1);
+    QCOMPARE(longTappedSpy.last()[0].toPointF(), point);
 }
 
 void Ut_MListItem::testReleasedOnHide()
@@ -116,6 +113,151 @@ void Ut_MListItem::testReleasedOnHide()
 
     scene->removeItem(listItem);
     delete scene;
+}
+
+void Ut_MListItem::testMouseClick()
+{
+    QSignalSpy clickedSpy(listItem, SIGNAL(clicked()));
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setButton(Qt::LeftButton);
+    listItem->mousePressEvent(&pressEvent);
+
+    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
+    releaseEvent.setButton(Qt::LeftButton);
+    listItem->mouseReleaseEvent(&releaseEvent);
+    QCOMPARE(clickedSpy.count(), 1);
+}
+
+void Ut_MListItem::testMouseMoveOutside()
+{
+    MListItemView *view = const_cast<MListItemView*>(qobject_cast<const MListItemView*>(listItem->view()));
+    MListItemStyle *style = const_cast<MListItemStyle*>(view->style().operator ->());
+    int maxDistanceForClick = M_RELEASE_MISS_DELTA+100;
+    style->setMaxDistanceForClick(maxDistanceForClick);
+
+    listItem->setGeometry(QRectF(0, 0, 300, 100));
+
+    QSignalSpy clickedSpy(listItem, SIGNAL(clicked()));
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setButton(Qt::LeftButton);
+    listItem->mousePressEvent(&pressEvent);
+
+    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
+    moveEvent.setButton(Qt::LeftButton);
+    moveEvent.setScenePos(QPointF(-(maxDistanceForClick-10), 0)); //within max distance from the press point but outside of the widget release area
+    listItem->mouseMoveEvent(&moveEvent);
+
+    QCoreApplication::processEvents();
+
+    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
+    releaseEvent.setButton(Qt::LeftButton);
+    listItem->mouseReleaseEvent(&releaseEvent);
+
+    QCOMPARE(clickedSpy.count(), 0);
+}
+
+void Ut_MListItem::testMouseMoveWithinMaxDistance()
+{
+    MListItemView *view = const_cast<MListItemView*>(qobject_cast<const MListItemView*>(listItem->view()));
+    MListItemStyle *style = const_cast<MListItemStyle*>(view->style().operator ->());
+    int maxDistanceForClick = 100;
+    style->setMaxDistanceForClick(maxDistanceForClick);
+
+    listItem->setGeometry(QRectF(0, 0, maxDistanceForClick, 100));
+
+    QSignalSpy clickedSpy(listItem, SIGNAL(clicked()));
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setButton(Qt::LeftButton);
+    listItem->mousePressEvent(&pressEvent);
+
+    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
+    moveEvent.setButton(Qt::LeftButton);
+    moveEvent.setScenePos(QPointF(maxDistanceForClick-10, 0)); //within max distance from the press point and widget area
+    listItem->mouseMoveEvent(&moveEvent);
+
+    QCoreApplication::processEvents();
+
+    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
+    releaseEvent.setButton(Qt::LeftButton);
+    listItem->mouseReleaseEvent(&releaseEvent);
+
+    QCOMPARE(clickedSpy.count(), 1);
+}
+
+void Ut_MListItem::testMouseMoveBeyondMaxDistance()
+{
+    MListItemView *view = const_cast<MListItemView*>(qobject_cast<const MListItemView*>(listItem->view()));
+    MListItemStyle *style = const_cast<MListItemStyle*>(view->style().operator ->());
+    int maxDistanceForClick = 100;
+    style->setMaxDistanceForClick(maxDistanceForClick);
+
+    listItem->setGeometry(QRectF(0, 0, maxDistanceForClick+100, 100));
+
+    QSignalSpy clickedSpy(listItem, SIGNAL(clicked()));
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setButton(Qt::LeftButton);
+    listItem->mousePressEvent(&pressEvent);
+
+    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
+    moveEvent.setButton(Qt::LeftButton);
+    moveEvent.setScenePos(QPointF(maxDistanceForClick+10, 0)); //Too far from the press point but within widget area
+    listItem->mouseMoveEvent(&moveEvent);
+
+    QCoreApplication::processEvents();
+
+    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
+    releaseEvent.setButton(Qt::LeftButton);
+    listItem->mouseReleaseEvent(&releaseEvent);
+
+    QCOMPARE(clickedSpy.count(), 0);
+}
+
+void Ut_MListItem::testCancelEvent()
+{
+    QSignalSpy clickedSpy(listItem, SIGNAL(clicked()));
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setButton(Qt::LeftButton);
+    listItem->mousePressEvent(&pressEvent);
+
+    MCancelEvent event;
+    listItem->cancelEvent(&event);
+
+    QCoreApplication::processEvents();
+
+    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
+    releaseEvent.setButton(Qt::LeftButton);
+    listItem->mouseReleaseEvent(&releaseEvent);
+
+    QCOMPARE(clickedSpy.count(), 0);
+}
+
+Qt::GestureState QGesture::state() const
+{
+    return Qt::GestureFinished;
+}
+
+void Ut_MListItem::testTapAndHold()
+{
+    listItem->setGeometry(QRectF(0, 0, 300, 100));
+
+    QSignalSpy longTappedSpy(listItem, SIGNAL(longTapped(QPointF)));
+
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setButton(Qt::LeftButton);
+    listItem->mousePressEvent(&pressEvent);
+
+    QList<QGesture *> gestures;
+    QTapAndHoldGesture gesture;
+    QPointF point(10, 10);
+    gesture.setPosition(point);
+    gestures.append(&gesture);
+    QGestureEvent event(gestures);
+
+    listItem->tapAndHoldGestureEvent(&event, &gesture);
+
+    QVERIFY(event.isAccepted(&gesture));
+    QCOMPARE(longTappedSpy.count(), 1);
+    QCOMPARE(longTappedSpy.last()[0].toPointF(), point);
 }
 
 QTEST_APPLESS_MAIN(Ut_MListItem)
