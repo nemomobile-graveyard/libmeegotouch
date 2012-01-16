@@ -388,6 +388,8 @@ void MCompleterViewPrivate::updateCompletionLabelText()
             text = text.replace(index, replacedString.length(),
                                 q->style()->highlightDecoration().arg(colorfulText));
         }
+    } else if (q->model()->fetchInProgress()) {
+        text = q->model()->fetchInProgressLabel();
     }
 
     completionLabel->setText(text);
@@ -399,6 +401,7 @@ void MCompleterViewPrivate::updateCompletionsButton()
 
     //set button's visibility and label
     int total = q->model()->matchedModel()->rowCount();
+    bool showButton = false;
 
     // There must be more than one match to show completions button with total count.
     // If there are matches there must also be a valid matchedIndex. If not, it means we have no matches and matchedModel is outdated.
@@ -409,6 +412,23 @@ void MCompleterViewPrivate::updateCompletionsButton()
             completionsButton->setText(QString("<qt>%1").arg(MLocale().formatNumber(total)));
         else
             completionsButton->setText(QString("<qt>%1+").arg(MLocale().formatNumber(DefaultMaximumHits)));
+        completionsButton->setAllowMouseInteraction(true);
+        showButton = true;
+    } else {
+        // Only one or zero matches -> clear button contents and disallow user input.
+        // Without spinner inside the button we would just hide here.
+        completionsButton->setAllowMouseInteraction(false);
+        completionsButton->setText(QString());
+    }
+
+    if (q->model()->fetchInProgress()) {
+        showButton = true;
+        completionsButton->setProgressIndicatorVisible(true);
+    } else {
+        completionsButton->setProgressIndicatorVisible(false);
+    }
+
+    if (showButton) {
         showCompletionsButton();
 
         // For some reason the widget does not activate properly. Do it now.
@@ -469,6 +489,16 @@ void MCompleterView::cancelEvent(MCancelEvent *event)
     event->accept();
 }
 
+void MCompleterView::setupModel()
+{
+    Q_D(MCompleterView);
+
+    MSceneWindowView::setupModel();
+
+    // Set initial state for spinner.
+    d->updateCompletionsButton();
+}
+
 void MCompleterView::updateData(const QList<const char *>& modifications)
 {
     Q_D(MCompleterView);
@@ -481,6 +511,17 @@ void MCompleterView::updateData(const QList<const char *>& modifications)
         }
     } else if (modifications.contains(MCompleterModel::CompletionTitle) && d->popup) {
         d->popup->setTitle(model()->completionTitle());
+    } else if (modifications.contains(MCompleterModel::FetchInProgress)) {
+        d->updateCompletionsButton();
+        // Switch between FetchInProgressLabel and actual completion.
+        d->updateCompletionLabelText();
+    } else if (modifications.contains(MCompleterModel::FetchInProgressLabel)) {
+        d->updateCompletionLabelText();
+    } else if (modifications.contains(MCompleterModel::MatchedIndex)) {
+        d->updateCompletionLabelText();
+
+        // Whenever MatchedIndex changes between -1 and >= 0 we need to update button.
+        d->updateCompletionsButton();
     }
 
     MSceneWindowView::updateData(modifications);

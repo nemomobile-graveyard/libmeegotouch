@@ -46,6 +46,8 @@ namespace
     const int CompleterTimeInterval = 500;
     //! How long to show completer with no matched results.
     const int EmptyCompleterHideTimeout = 700;
+    //! Polling interval for detecting end of async fetch in completion model.
+    const int AsyncFetchPollingInterval = 300;
 }
 
 MCompleterPrivate::MCompleterPrivate()
@@ -53,7 +55,7 @@ MCompleterPrivate::MCompleterPrivate()
       hasOwnModel(false),
       completionModel(0),
       matchedModel(new MCompletionModel),
-      completerTimer(new QTimer)
+      completerTimer(new QTimer),
 {
 }
 
@@ -87,6 +89,9 @@ void MCompleterPrivate::init()
     emptyHideTimer.setSingleShot(true);
     connected &= q->connect(&emptyHideTimer, SIGNAL(timeout()),
                             q, SLOT(hideCompleter()));
+
+    asyncFetchPollTimer.setInterval(AsyncFetchPollingInterval);
+    asyncFetchPollTimer.setSingleShot(false);
 
     if (!connected) {
         qWarning("MCompleterPrivate::init() - Failed to connect signals!");
@@ -290,6 +295,8 @@ void MCompleterPrivate::setCompletionModel(QAbstractItemModel *m, bool own)
 
 void MCompleterPrivate::pollModel(bool isResetFocus)
 {
+    Q_Q(MCompleter);
+
     emptyHideTimer.stop();
 
     if (!isCompletionCustomized()) {
@@ -310,6 +317,57 @@ void MCompleterPrivate::pollModel(bool isResetFocus)
 
     if (canFetchMore) {
         completionModel->fetchMore(QModelIndex());
+
+        // If still can fetch more, even though we just requested to fetch, assume
+        // it wasn't yet finished because an asynchronous fetch operation was launched.
+        // QAbstractItemModel::fetchMore() documentation says:
+        //   "Fetches any available data for the items with the parent specified by the parent index."
+        // Hence, we are not simply asking whether *more* can be fetched which wouldn't already be
+        // fetched with the previous call. Qt doesn't specify that this could be used for detecting
+        // async fetches but at least it works with the async model set by recipient editor,
+        // one of the biggest clients.
+        canFetchMore = completionModel->canFetchMore(QModelIndex());
+        if (canFetchMore && !q->model()->fetchInProgress()) {
+            onAsyncFetchStart();
+        }
+    }
+
+    if (!canFetchMore && q->model()->fetchInProgress()) {
+        _q_pollAsyncFetchEnd();
+    }
+}
+
+void MCompleterPrivate::onAsyncFetchStart()
+{
+    Q_Q(MCompleter);
+
+    q->model()->setFetchInProgress(true);
+
+    // We don't get notify from QAbstractItemModel if the async fetch returned nothing.
+    // In that case, no modelReset() or rowsInserted() signal is emitted.
+    // Need to poll.
+    QObject::connect(&asyncFetchPollTimer, SIGNAL(timeout()),
+                     q, SLOT(_q_pollAsyncFetchEnd()),
+                     Qt::UniqueConnection);
+    asyncFetchPollTimer.start();
+}
+
+void MCompleterPrivate::_q_pollAsyncFetchEnd()
+{
+    Q_Q(MCompleter);
+
+    if (!q->model()->fetchInProgress()) {
+        return;
+    }
+
+    if (!completionModel->canFetchMore(QModelIndex())) {
+        asyncFetchPollTimer.stop();
+        QObject::disconnect(&asyncFetchPollTimer, 0, q, 0);
+        q->model()->setFetchInProgress(false);
+
+        if (q->model()->active() && q->model()->matchedIndex() < 0) {
+            q->hideCompleter();
+        }
     }
 }
 
@@ -325,7 +383,13 @@ void MCompleterPrivate::updateScene(bool moreDataExpected,
     if (q->model()->popupActive())
         return;
 
-    if (matchedModel->rowCount() > 0) {
+    // Show completer when either matchedModel has rows or the
+    // special case when async fetch is ongoing and user has entered
+    // a prefix.
+    if (matchedModel->rowCount() > 0
+        || (!q->model()->active()
+            && q->model()->fetchInProgress()
+            && !q->model()->completionPrefix().isEmpty())) {
         q->model()->setMatchedIndex(0);
         q->model()->setActive(true);
         // the completerview has currently broken expectation on the
@@ -334,14 +398,19 @@ void MCompleterPrivate::updateScene(bool moreDataExpected,
         // TODO: introduce a new signal like updateContent().
         q->widget()->sceneManager()->appearSceneWindowNow(q);
         emit q->shown();
-    } else if (q->model()->active()) {
-        if (moreDataExpected) {
-            emptyHideTimer.start();
-        } else {
-            reset();
-            q->hideCompleter();
-            if (isResetFocus)
-                resetFocus();
+    } else {
+        // Notify view that we have no matches.
+        q->model()->setMatchedIndex(-1);
+
+        if (q->model()->active() && !q->model()->fetchInProgress()) {
+            if (moreDataExpected) {
+                emptyHideTimer.start();
+            } else {
+                reset();
+                q->hideCompleter();
+                if (isResetFocus)
+                    resetFocus();
+            }
         }
     }
 }
@@ -466,7 +535,12 @@ QAbstractItemModel *MCompleter::matchedCandidateModel() const
 
 void MCompleter::hideCompleter()
 {
+    Q_D(MCompleter);
+
     if (isActive()) {
+        d->asyncFetchPollTimer.stop();
+        model()->setFetchInProgress(false);
+
         // change active state to false before really hidden to notify view
         // to do necessary clear.
         model()->setActive(false);
@@ -679,6 +753,15 @@ QString MCompleter::completionTitle() const
     return model()->completionTitle();
 }
 
+QString MCompleter::fetchInProgressLabel() const
+{
+    return model()->fetchInProgressLabel();
+}
+
+void MCompleter::setFetchInProgressLabel(const QString &text)
+{
+    model()->setFetchInProgressLabel(text);
+}
 
 
 MCompletionModel::MCompletionModel(QObject *parent)

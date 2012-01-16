@@ -42,6 +42,8 @@ private:
     M_MODEL_PROPERTY(QString, charactersToTrim, CharactersToTrim, true, QString(" "))
     M_MODEL_PROPERTY(QString, charactersToTrimForCompletionPrefix, CharactersToTrimForCompletionPrefix, true, QString())
     M_MODEL_PROPERTY(QString, completionTitle, CompletionTitle, true, QString())
+    M_MODEL_PROPERTY(bool, fetchInProgress, FetchInProgress, true, false)
+    M_MODEL_PROPERTY(QString, fetchInProgressLabel, FetchInProgressLabel, true, QString())
 };
 
 #endif

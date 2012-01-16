@@ -49,6 +49,9 @@ public:
     void _q_pollModel();
     void _q_rowsRemoved(const QModelIndex &parent, int start, int end);
 
+    void onAsyncFetchStart();
+    void _q_pollAsyncFetchEnd();
+
 protected:
     void fetchPrefix();
 
@@ -78,6 +81,7 @@ private:
     QList<int> matchedIndexList;
     QTimer *completerTimer;
     QTimer emptyHideTimer;
+    QTimer asyncFetchPollTimer;
 #ifdef UNIT_TEST
     friend class Ut_MCompleter;
 #endif
