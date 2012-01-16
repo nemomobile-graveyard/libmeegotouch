@@ -36,6 +36,9 @@
 #include <MImageWidget>
 #include <QDir>
 #include <MDebug>
+#include <MTextEdit>
+#include <MCompleter>
+#include <MButton>
 
 static const int ImageSize = 64;
 
@@ -49,9 +52,11 @@ SpinnerPage::SpinnerPage() :
     description(0),
     view(Unknown),
     imageContainerPolicy(0),
+    completer(0),
     actionInMainArea(0),
     actionInContainerHeader(0),
-    actionInDialog(0)
+    actionInDialog(0),
+    actionInCompleter(0)
 {
 }
 
@@ -86,6 +91,12 @@ void SpinnerPage::createContent()
     connect(actionInDialog, SIGNAL(triggered()), this, SLOT(inDialog()));
     addAction(actionInDialog);
 
+    actionInCompleter = new MAction(this);
+    actionInCompleter->setObjectName("actionInCompleter");
+    actionInCompleter->setLocation(MAction::ApplicationMenuLocation);
+    connect(actionInCompleter, SIGNAL(triggered()), this, SLOT(inCompleter()));
+    addAction(actionInCompleter);
+
     inApplicationMainArea();
 
     retranslateUi();
@@ -111,6 +122,8 @@ void SpinnerPage::retranslateUi()
     actionInContainerHeader->setText(qtTrId("xx_spinner_page_container_header"));
     //% "In dialog"
     actionInDialog->setText(qtTrId("xx_spinner_page_dialog"));
+    //% "In completer"
+    actionInCompleter->setText(qtTrId("xx_spinner_page_completer"));
 }
 
 void SpinnerPage::inApplicationMainArea()
@@ -256,6 +269,109 @@ void SpinnerPage::launchDialog()
     dialog.exec();
 }
 
+void SpinnerPage::inCompleter()
+{
+    reset();
+    view = Completer;
+
+    QStringList list;
+    list << "Betty Brey <Betty.C.Brey@example.com>"
+         << "Anne Rodriguez <Anne.E.Rodriguez@example.com>"
+         << "Elizabeth Hutchings <Elizabeth.T.Hutchings@example.com>"
+         << "Robert Hornbuckle <Robert.C.Hornbuckle@example.com>"
+         << "Willie Logan <Willie.B.Logan@example.com>"
+         << "Marcia Pineda <Marcia.J.Pineda@example.com>"
+         << "Jessica Schmitt <Jessica.L.Schmitt@example.com>"
+         << "Lynda Wan <Lynda.W.Wan@example.com>"
+         << "Alphonso Stevens <Alphonso.I.Stevens@example.com>"
+         << "Patricia Murphy <Patricia.K.Murphy@example.com>"
+         << "Jeff Terry <Jeff.M.Terry@example.com>"
+         << "Richard Orlando <Richard.B.Orlando@example.com>"
+         << "Eva Quackenbush <Eva.D.Quackenbush@example.com>"
+         << "Tim Parker <Tim.J.Parker@example.com>"
+         << "Deborah Sanchez <Deborah.E.Sanchez@example.com>"
+         << "Carol Reimer <Carol.J.Reimer@example.com>"
+         << "Susan Amaya <Susan.H.Amaya@example.com>"
+         << "Shelia Rudd <Shelia.E.Rudd@example.com>"
+         << "Elizabeth Livingston <Elizabeth.B.Livingston@example.com>"
+         << "Renee Heard <Renee.N.Heard@example.com>"
+         << "Megan Gagne <Megan.R.Gagne@example.com>"
+         << "Katherine Enos <Katherine.B.Enos@example.com>"
+         << "Gary Hawkins <Gary.J.Hawkins@example.com>"
+         << "Bianca Sparks <Bianca.M.Sparks@example.com>"
+         << "Cleta Richardson <Cleta.E.Richardson@example.com>"
+         << "Latoya Lawrence <Latoya.E.Lawrence@example.com>"
+         << "Ethel Allen <Ethel.S.Allen@example.com>"
+         << "Maria Austin <Maria.D.Austin@example.com>"
+         << "John Smith <john.smith@example.com>"
+         << "Jane Smith <jane.smith@example.com>"
+         << "Doug Barker <Doug.J.Barker@example.com>"
+         << "Sandra Cross <Sandra.J.Cross@example.com>"
+         << "Debra Roberts <Debra.D.Roberts@example.com>"
+         << "Mei Copeland <Mei.D.Copeland@example.com>"
+         << "Raymond Slack <Raymond.A.Slack@example.com>"
+         << "Martin Vidal <Martin.M.Vidal@example.com>"
+         << "Patricia Rymer <Patricia.R.Rymer@example.com>"
+         << "Maria Gilbreath <Maria.G.Gilbreath@example.com>"
+         << "Mary Ramos <Mary.C.Ramos@example.com>"
+         << "Michael Haller <Michael.K.Haller@example.com>"
+         << "Randall Hood <Randall.J.Hood@example.com>"
+         << "Bruce Lindsey <Bruce.D.Lindsey@example.com>"
+         << "Heidi Martin <Heidi.S.Martin@example.com>"
+         << "Helen Kennedy <Helen.E.Kennedy@example.com>"
+         << "Margaret Worsham <Margaret.R.Worsham@example.com>"
+         << "Sun Singleton <Sun.R.Singleton@example.com>"
+         << "Alberto Prince <Alberto.A.Prince@example.com>"
+         << "Norman Weiland <Norman.B.Weiland@example.com>"
+         << "Carolyn Delia <Carolyn.G.Delia@example.com>"
+         << "Lakesha Acosta <Lakesha.G.Acosta@example.com>";
+
+    QStringList names, addresses;
+    foreach(const QString & s, list) {
+        QStringList split = s.split('<');
+        if (split.count() >= 2) {
+            names << split[0].trimmed();
+            addresses << QString('<' + split[1]);
+        }
+    }
+
+    IncrementalCompletionModel *model = new IncrementalCompletionModel(names, addresses);
+    completer = new MCompleter(model);
+    completer->setCharactersToTrim(QString("<>"));
+    completer->setCharactersToTrimForCompletionPrefix(QString(" "));
+    completer->setAcceptMultipleEntries(true);
+
+    //% "Fetching contacts..."
+    completer->setFetchInProgressLabel(qtTrId("xx_spinner_page_completer_fetching_label"));
+
+    MTextEdit *edit = new MTextEdit;
+    edit->setCompleter(completer);
+
+    MButton *restartButton = new MButton("clear & start populating");
+    connect(restartButton, SIGNAL(clicked()), model, SLOT(startPopulating()));
+
+    //% "Completer's model is incrementally populated. During this time spinner is shown."
+    MLabel *completerDescription = new MLabel(qtTrId("xx_spinner_page_completer_description"));
+    completerDescription->setWordWrap(true);
+
+    QGraphicsWidget *centralWidget = new QGraphicsWidget;
+    QGraphicsLinearLayout *verticalLayout = new QGraphicsLinearLayout(Qt::Vertical, centralWidget);
+    verticalLayout->addItem(edit);
+    verticalLayout->addItem(restartButton);
+    verticalLayout->addItem(completerDescription);
+
+    MContainer *container = new MContainer(//% "Completer with spinner"
+                                           qtTrId("xx_spinner_page_completer_header"));
+    container->setCentralWidget(centralWidget);
+    containerPolicy->addItem(container);
+
+    // Focus in and start completing immediately.
+    edit->setFocus();
+    edit->setText("r");
+    model->startPopulating();
+    completer->complete();
+}
+
 void SpinnerPage::reset()
 {
     switch (view) {
@@ -292,9 +408,110 @@ void SpinnerPage::reset()
         delete description;
         description = NULL;
     } break;
+
+    case Completer: {
+        delete containerPolicy->itemAt(containerPolicy->count() - 1);
+        delete completer;
+        completer = 0;
+    }
     }
 
     imageContainerPolicy = NULL;
     view = Unknown;
 }
 
+
+IncrementalCompletionModel::IncrementalCompletionModel(const QStringList &names,
+                                                       const QStringList &addresses,
+                                                       QObject *parent)
+    : QAbstractTableModel(parent),
+      column1(names),
+      column2(addresses),
+      populateCounter(0)
+{
+    populateTimer.setInterval(300);
+    populateTimer.setSingleShot(false);
+    connect(&populateTimer, SIGNAL(timeout()), this, SLOT(addOne()));
+}
+
+IncrementalCompletionModel::~IncrementalCompletionModel()
+{
+}
+
+void IncrementalCompletionModel::startPopulating()
+{
+    populateCounter = 0;
+    populateTimer.start();
+}
+
+void IncrementalCompletionModel::stopPopulating()
+{
+    populateTimer.stop();
+}
+
+void IncrementalCompletionModel::addOne()
+{
+    if (populateCounter == column1.count()) {
+        populateTimer.stop();
+        return;
+    }
+
+    beginInsertRows(QModelIndex(),
+                    populateCounter + 1,
+                    populateCounter + 1);
+    ++populateCounter;
+    endInsertRows();
+}
+
+void IncrementalCompletionModel::setData(const QStringList &names, const QStringList &addresses)
+{
+    beginResetModel();
+    populateCounter = 0;
+    column1 = names;
+    column2 = addresses;
+    endResetModel();
+}
+
+QModelIndex IncrementalCompletionModel::index(int row, int column, const QModelIndex &parent) const
+{
+    return hasIndex(row, column, parent) ? createIndex(row, column, 0) : QModelIndex();
+}
+
+QModelIndex IncrementalCompletionModel::parent(const QModelIndex & /* index */) const
+{
+    return QModelIndex();
+}
+
+int IncrementalCompletionModel::columnCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent);
+    return 2;
+}
+
+int IncrementalCompletionModel::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent);
+    return populateCounter;
+}
+
+QVariant IncrementalCompletionModel::data(const QModelIndex &index, int role) const
+{
+    Q_UNUSED(role);
+    int row = index.row();
+    int column = index.column();
+    if (role != Qt::DisplayRole)
+        return QVariant();
+    QString value;
+    if (row < rowCount() && row >= 0 && column < 2 && column >= 0) {
+        if (column == 0 && row < column1.count())
+            value = column1[row];
+        else if (column == 1 && row < column2.count())
+            value = column2[row];
+    }
+    return QVariant(value);
+}
+
+bool IncrementalCompletionModel::canFetchMore(const QModelIndex &parent) const
+{
+    return !parent.isValid() && populateTimer.isActive();
+}
