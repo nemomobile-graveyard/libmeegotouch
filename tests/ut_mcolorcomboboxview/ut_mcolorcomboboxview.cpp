@@ -31,6 +31,29 @@
 
 MApplication *app;
 
+#ifdef __arm__
+void startProcessAndWaitForFinished(const QString& name,
+                                    const QStringList& args)
+{
+    QProcess process;
+    process.start(name, args);
+    process.waitForFinished();
+    process.close();
+}
+
+void unlockHelper()
+{
+    QString mceToolName = "mcetool";
+    QStringList args1;
+    args1.append("--set-tklock-mode=unlocked");
+    startProcessAndWaitForFinished(mceToolName, args1);
+
+    QStringList args2;
+    args2.append("--unblank-screen");
+    startProcessAndWaitForFinished(mceToolName, args2);
+}
+#endif
+
 void Ut_MColorComboBoxView::initTestCase()
 {
     static int argc = 1;
@@ -66,6 +89,11 @@ void Ut_MColorComboBoxView::testSetTitle()
 
 void Ut_MColorComboBoxView::testSelectColor()
 {
+#ifdef __arm__
+    //need to unlock and unblank device in order to test displaying m_subject
+    unlockHelper();
+#endif
+
     MApplicationWindow win;
     win.show();
 
