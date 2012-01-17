@@ -23,6 +23,8 @@
 #include "mcompleter.h"
 #include "mcompleterview.h"
 #include "private/mwidgetview_p.h"
+#include <MButton>
+#include <MProgressIndicator>
 
 class MCompleter;
 class MWidgetController;
@@ -31,6 +33,7 @@ class MButton;
 class MPopupList;
 class QStringListModel;
 class QGraphicsLinearLayout;
+class CompletionCountButton;
 
 //! \internal
 class MCompleterViewPrivate : public QObject
@@ -80,9 +83,36 @@ protected:
     MCompleterView *q_ptr;
 
     MLabel *completionLabel;
-    MButton *completionsButton;
+    CompletionCountButton *completionsButton;
     QGraphicsLinearLayout *layout;
     MPopupList *popup;
 };
+
+//! CompletionCountButton is a button used to show matching completions.
+//! It contains a spinner which can be enabled and disabled. When shown,
+//! the spinner is replacing button borders.
+class CompletionCountButton : public MButton
+{
+    Q_OBJECT
+public:
+    CompletionCountButton(QGraphicsItem *parent = 0);
+    virtual ~CompletionCountButton();
+
+    void setProgressIndicatorVisible(bool visible);
+    bool progressIndicatorVisible() const;
+
+    void setAllowMouseInteraction(bool allow);
+
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
+private:
+    MProgressIndicator spinner;
+    bool allowMouseInteraction;
+};
+
+//! \internal_end
 
 #endif

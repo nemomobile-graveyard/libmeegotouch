@@ -30,6 +30,7 @@
 #include "mapplication.h"
 #include "mapplicationwindow.h"
 #include "mscenemanager.h"
+#include "mprogressindicator.h"
 
 #include <MCancelEvent>
 #include <MInputMethodState>
@@ -63,7 +64,7 @@ MCompleterViewPrivate::MCompleterViewPrivate(MCompleter *controller, MCompleterV
     completionLabel->setTextElide(true);
     completionLabel->setWordWrap(false);
     completionLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    completionsButton = new MButton(controller);
+    completionsButton = new CompletionCountButton(controller);
     completionsButton->setObjectName(CompleterTotalButtonObjectName);
     completionsButton->hide();
 
@@ -546,6 +547,59 @@ void MCompleterView::updateData(const QList<const char *>& modifications)
     }
 
     MSceneWindowView::updateData(modifications);
+}
+
+CompletionCountButton::CompletionCountButton(QGraphicsItem *parent)
+    : MButton(parent),
+      spinner(this, MProgressIndicator::spinnerType),
+      allowMouseInteraction(true)
+{
+    // Spinner position is adjusted by margins to match
+    // visual button position.
+    spinner.setPos(QPointF());
+    spinner.setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    spinner.setUnknownDuration(true);
+    spinner.setStyleName("CompletionSpinner");
+    setProgressIndicatorVisible(false);
+}
+
+CompletionCountButton::~CompletionCountButton()
+{
+}
+
+void CompletionCountButton::setProgressIndicatorVisible(bool visible)
+{
+    if (spinner.isVisible() != visible) {
+        spinner.setVisible(visible);
+        update(); // button background drawing depends of this
+    }
+}
+
+bool CompletionCountButton::progressIndicatorVisible() const
+{
+    return spinner.isVisible();
+}
+
+void CompletionCountButton::setAllowMouseInteraction(bool allow)
+{
+    allowMouseInteraction = allow;
+}
+
+void CompletionCountButton::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (allowMouseInteraction) {
+        MButton::mousePressEvent(event);
+    }
+    // Otherwise do nothing and stop mouse event from propagating.
+}
+
+void CompletionCountButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    // Draw button background only when spinner is not shown or when button is down.
+    // The exception with isDown is to give user feedback.
+    if (!spinner.isVisible() || isDown()) {
+        MButton::paint(painter, option, widget);
+    }
 }
 
 M_REGISTER_VIEW_NEW(MCompleterView, MCompleter)
