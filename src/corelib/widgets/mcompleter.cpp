@@ -689,6 +689,7 @@ MCompletionModel::MCompletionModel(QObject *parent)
 void MCompletionModel::setMatchedList(const QList<int>& indexList)
 {
     if (QAbstractProxyModel::sourceModel() && (indexList.count() <= QAbstractProxyModel::sourceModel()->rowCount())) {
+        QAbstractProxyModel::beginResetModel();
         this->indexList = indexList;
         QAbstractProxyModel::endResetModel();
     }
