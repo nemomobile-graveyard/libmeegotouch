@@ -21,6 +21,7 @@
 
 #include "ut_minputmethodstate.h"
 #include "minputmethodstate.h"
+#include "minputmethodstate_p.h"
 
 void Ut_MInputMethodState::initTestCase()
 {
@@ -44,6 +45,11 @@ void Ut_MInputMethodState::init()
 
 void Ut_MInputMethodState::cleanup()
 {
+    MInputMethodState *state = MInputMethodState::instance();
+
+    foreach (int id, state->d_ptr->attributeExtensions.keys()) {
+        state->unregisterAttributeExtension(id);
+    }
 }
 
 void Ut_MInputMethodState::testActiveWindowOrientationAngle()
@@ -153,6 +159,10 @@ void Ut_MInputMethodState::testToolbars()
     int invalidToolbar = 13131313;
     state->setToolbarItemAttribute(invalidToolbar, "itemName", "attributeName", 42);
     QCOMPARE(changeSpy.count(), 0);
+
+    state->unregisterToolbar(id);
+    state->unregisterToolbar(id2);
+    QVERIFY(state->d_ptr->attributeExtensions.isEmpty());
 }
 
 // checks registering and modifying attributeExtension
@@ -229,6 +239,29 @@ void Ut_MInputMethodState::testExtendedAttributes()
     QSignalSpy unregisterSpy(state, SIGNAL(attributeExtensionUnregistered(int)));
     state->unregisterAttributeExtension(id);
     QCOMPARE(unregisterSpy.count(), 1);
+}
+
+void Ut_MInputMethodState::testAttributeExtensionInfo()
+{
+    MInputMethodState *state = MInputMethodState::instance();
+
+    QSignalSpy changeSpy(state,
+                         SIGNAL(extendedAttributeChanged(int, QString, QString, QString, QVariant)));
+    QVERIFY(changeSpy.isValid());
+    QVERIFY(state->d_ptr->attributeExtensions.isEmpty());
+
+    state->registerAttributeExtension("filename");
+    QCOMPARE(state->d_ptr->attributeExtensions.count(), 1);
+
+    AttributeExtensionInfo* info = *state->d_ptr->attributeExtensions.begin();
+
+    info->updateExtendedAttribute("invalid/key", QVariant(false));
+    QVERIFY(changeSpy.isEmpty());
+    QVERIFY(info->extendedAttributes.isEmpty());
+
+    info->updateExtendedAttribute("/toolbar/item/key", QVariant(true));
+    QCOMPARE(changeSpy.count(), 1);
+    QCOMPARE(info->extendedAttributes["/toolbar"]["item"]["key"], QVariant(true));
 }
 
 QTEST_APPLESS_MAIN(Ut_MInputMethodState)

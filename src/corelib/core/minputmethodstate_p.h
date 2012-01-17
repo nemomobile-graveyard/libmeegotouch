@@ -31,16 +31,12 @@
 #include "minputmethodstate.h"
 #include "mnamespace.h"
 
-class AttributeExtensionInfo {
+class AttributeExtensionInfo : public QObject
+{
+    Q_OBJECT
+
 public:
-    AttributeExtensionInfo(const QString &attributeExtensionFile)
-#ifdef HAVE_MALIIT
-        : extension(new Maliit::AttributeExtension(attributeExtensionFile))
-#else
-        : fileName(attributeExtensionFile)
-#endif
-    {
-    }
+    explicit AttributeExtensionInfo(const QString &attributeExtensionFile);
 
 #ifdef HAVE_MALIIT
     QScopedPointer<Maliit::AttributeExtension> extension;
@@ -48,6 +44,16 @@ public:
     QString fileName;
 #endif
     MInputMethodState::ExtendedAttributeMap extendedAttributes;
+
+public Q_SLOTS:
+    void updateExtendedAttribute(const QString &key,
+                                 const QVariant &value);
+
+Q_SIGNALS:
+    //! Emitted when input method extended attribute is changed.
+    void extendedAttributeChanged(int id, const QString &target, const QString &targetItem,
+                                  const QString &attribute, const QVariant &value);
+
 };
 
 class MInputMethodStatePrivate

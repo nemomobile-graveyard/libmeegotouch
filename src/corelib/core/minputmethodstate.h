@@ -256,6 +256,10 @@ private:
     MInputMethodStatePrivate *const d_ptr;
 
     Q_DECLARE_PRIVATE(MInputMethodState)
+
+#ifdef UNIT_TEST
+    friend class Ut_MInputMethodState;
+#endif
 };
 
 #endif

@@ -46,6 +46,8 @@ private slots:
 
     void testExtendedAttributes();
 
+    void testAttributeExtensionInfo();
+
 private:
     std::auto_ptr<MApplication> m_app;
 };

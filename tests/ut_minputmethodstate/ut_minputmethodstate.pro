@@ -17,4 +17,6 @@ HEADERS += \
    $$MSRCDIR/corelib/core/minputmethodstate.h \
    $$MSRCDIR/corelib/core/minputmethodstate_p.h
 
+INCLUDEPATH += $$MSRCDIR/corelib/core
+
 include(../common_bot.pri)

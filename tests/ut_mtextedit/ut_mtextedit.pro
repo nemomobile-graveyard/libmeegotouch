@@ -26,5 +26,5 @@ HEADERS += \
 INCLUDEPATH += \
     $$MSRCDIR/corelib/widgets/ \
     $$MSRCDIR/../tests/ \
-             
+
 include(../common_bot.pri)

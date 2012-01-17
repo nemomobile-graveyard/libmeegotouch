@@ -37,6 +37,42 @@ using Maliit::AttributeExtension;
 
 namespace {
     const char * const ToolbarExtension("/toolbar");
+
+    // Keys describing extended attributes should be combined from three parts:
+    // target, item and attribute name.
+    // See also MInputMethodState::setExtendedAttribute()
+    const int ExtendedAttributeKeyParts = 3;
+
+    // Separator between parts in the key pointing to extended attribute
+    const QChar ExtendedAttributeKeySeparator('/');
+}
+
+AttributeExtensionInfo::AttributeExtensionInfo(const QString &attributeExtensionFile)
+#ifdef HAVE_MALIIT
+    : extension(new Maliit::AttributeExtension(attributeExtensionFile))
+#else
+    : fileName(attributeExtensionFile)
+#endif
+{
+#ifdef HAVE_MALIIT
+    connect(extension.data(), SIGNAL(extendedAttributeChanged(QString, QVariant)),
+            this, SLOT(updateExtendedAttribute(QString,QVariant)));
+#endif
+}
+
+void AttributeExtensionInfo::updateExtendedAttribute(const QString &key, const QVariant &value)
+{
+    const QStringList list = key.split(ExtendedAttributeKeySeparator, QString::SkipEmptyParts);
+
+    if (list.count() == ExtendedAttributeKeyParts) {
+        const QString target = ExtendedAttributeKeySeparator + list.at(0);
+        const QString targetItem = list.at(1);
+        const QString attribute = list.at(2);
+
+        extendedAttributes[target][targetItem][attribute] = value;
+        emit extendedAttributeChanged(extension->id(), target, targetItem,
+                                      attribute, value);
+    }
 }
 
 MInputMethodStatePrivate::MInputMethodStatePrivate()
@@ -287,6 +323,10 @@ int MInputMethodState::registerAttributeExtension(const QString &fileName)
     AttributeExtensionInfo *attributeExtension = new AttributeExtensionInfo(fileName);
 #ifdef HAVE_MALIIT
     int newId = attributeExtension->extension->id();
+    connect(attributeExtension,
+            SIGNAL(extendedAttributeChanged(int, QString, QString, QString, QVariant)),
+            this,
+            SIGNAL(extendedAttributeChanged(int, QString, QString, QString, QVariant)));
 #else
     static int idCounter = 0;
     // generate an application local unique identifier for the toolbar.
@@ -319,8 +359,8 @@ void MInputMethodState::setExtendedAttribute(int id, const QString &target, cons
     bool changed = (value != attributeExtension->extendedAttributes[target][targetItem][attribute]);
 
 #ifdef HAVE_MALIIT
-    const QString &key = QString::fromLatin1("%1/%2/%3").arg(target, targetItem, attribute);
-    attributeExtension->extension->setAttribute(key, value);
+    attributeExtension->extension->setAttribute(Maliit::AttributeExtension::key(target, targetItem, attribute),
+                                                value);
 #endif
 
     if (changed) {
