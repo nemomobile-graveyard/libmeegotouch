@@ -263,6 +263,7 @@ void MCompleterViewPrivate::showPopup()
         popup->setItemModel(q->model()->matchedModel());
         popup->setTitle(q->model()->completionTitle());
         connect(popup, SIGNAL(appearing()), this, SLOT(handlePopupAppearing()));
+        connect(popup, SIGNAL(disappearing()), this, SLOT(handlePopupDisappearing()));
         connect(popup, SIGNAL(disappeared()), this, SLOT(handlePopupDisappeared()));
     }
 
@@ -288,8 +289,12 @@ void MCompleterViewPrivate::handlePopupAppearing()
     }
 }
 
-void MCompleterViewPrivate::handlePopupDisappeared()
+void MCompleterViewPrivate::handlePopupDisappearing()
 {
+    // Signal disappearing() (or accept()) must be used to confirm selection.
+    // On disappeared() is too late since matchedModel might've been updated
+    // during disappearance animation and index returned by popup could be incorrect.
+
     Q_Q(MCompleterView);
     if (controller->widget()) {
         disconnect(controller->widget(), SIGNAL(gainedFocus(Qt::FocusReason)),
@@ -298,11 +303,17 @@ void MCompleterViewPrivate::handlePopupDisappeared()
             //only confirm when accept
             controller->scene()->setFocusItem(controller->widget());
             q->model()->setMatchedIndex(popup->currentIndex().row());
+
             controller->confirm();
         } else {
             controller->scene()->setFocusItem(controller->widget());
         }
     }
+}
+
+void MCompleterViewPrivate::handlePopupDisappeared()
+{
+    Q_Q(MCompleterView);
     q->model()->setPopupActive(false);
 }
 

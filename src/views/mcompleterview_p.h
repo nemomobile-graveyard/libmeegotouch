@@ -55,7 +55,7 @@ protected slots:
     void organizeContents();
 
     void handlePopupAppearing();
-
+    void handlePopupDisappearing();
     void handlePopupDisappeared();
 
     void handleCompleterShown();
