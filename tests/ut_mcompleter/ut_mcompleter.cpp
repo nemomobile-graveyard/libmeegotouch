@@ -553,8 +553,8 @@ void Ut_MCompleter::testVerticalPosition_data()
     QTest::newRow("not enough and equal amount of space on both sides")
         << completerHeight << 0
         << completerHeight + cursorRect.height()
-        << (completerHeight + cursorRect.height()) / 2 - cursorRect.height() / 2 - cursorRect.top()
-        << (completerHeight + cursorRect.height()) / 2 + cursorRect.height() / 2; // just below the centered cursor
+        << qRound((completerHeight + cursorRect.height()) / 2.0 - cursorRect.height() / 2.0 - cursorRect.top())
+        << qRound((completerHeight + cursorRect.height()) / 2.0 + cursorRect.height() / 2.0); // just below the centered cursor
 }
 
 void Ut_MCompleter::testVerticalPosition()
