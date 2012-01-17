@@ -59,7 +59,7 @@ protected slots:
     QRectF mapSceneRectToRoot(const QRectF &sceneRect) const;
 
     void handlePopupAppearing();
-
+    void handlePopupDisappearing();
     void handlePopupDisappeared();
 
     void handleCompleterShown();
