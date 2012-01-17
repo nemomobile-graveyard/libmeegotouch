@@ -72,6 +72,9 @@ protected slots:
 protected:
     void init();
 
+    void updateCompletionLabelText();
+    void updateCompletionsButton();
+
     //! The MCompleter controller
     MCompleter *controller;
     MCompleterView *q_ptr;
