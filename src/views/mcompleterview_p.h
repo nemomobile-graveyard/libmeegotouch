@@ -69,6 +69,8 @@ protected:
     void init();
 
     QPoint locatePosition(const QRect &r) const;
+    void updateCompletionLabelText();
+    void updateCompletionsButton();
 
     //! The MCompleter controller
     MCompleter *controller;

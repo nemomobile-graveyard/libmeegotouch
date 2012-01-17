@@ -183,54 +183,13 @@ void MCompleterViewPrivate::createContents()
         if (!controller->widget()->scene()->items().contains(controller))
             controller->widget()->scene()->addItem(controller);
 
-        QString text;
-        if (q->model()->matchedModel()->rowCount() > q->model()->matchedIndex()) {
-            QVariant var = q->model()->matchedModel()->data(
-                               q->model()->matchedModel()->index(q->model()->matchedIndex(), 0));
-            if (var.isValid())
-                text += var.toString();
-        }
-        if (text.isEmpty())
+        updateCompletionLabelText();
+
+        if (completionLabel->text().isEmpty()) {
             return;
-
-        //highlight the completionPrefix
-        QString prefix = q->model()->completionPrefix().trimmed();
-        text = text.replace('<', "&lt;");
-        text = text.replace('>', "&gt;");
-        prefix = prefix.replace('<', "&lt;");
-        prefix = prefix.replace('>', "&gt;");
-        int index = -1;
-        if (!text.isEmpty() && !prefix.isEmpty()) {
-            index = text.indexOf(prefix, 0, Qt::CaseInsensitive);
         }
 
-        // only highlight if there is a match in text.
-        if (index != -1) {
-            const QString highlightColor = q->style()->highlightColor().name();
-            const QString replacedString = text.mid(index, prefix.length());
-            const QString colorfulText = QString("<font color=%1>" + replacedString + "</font>").arg(highlightColor);
-            text = text.replace(index, replacedString.length(),
-                                q->style()->highlightDecoration().arg(colorfulText));
-        }
-        completionLabel->setText(text);
-
-        //set button's visibility and label
-        int total = q->model()->matchedModel()->rowCount();
-        if (total > 1) {
-            // Workaround for NB#177781: MButton has different alignments for rich text and normal text in its label.
-            // Both completionLabel and completionsButton use rich text label to get same alignment
-            if (total <= DefaultMaximumHits)
-                completionsButton->setText(QString("<qt>%1").arg(MLocale().formatNumber(total)));
-            else
-                completionsButton->setText(QString("<qt>%1+").arg(MLocale().formatNumber(DefaultMaximumHits)));
-            showCompletionsButton();
-
-            // For some reason the widget does not activate properly. Do it now.
-            // The use case for this is when button label is changing between "١٠+" and "٢", for example.
-            layout->activate();
-        } else {
-            hideCompletionsButton();
-        }
+        updateCompletionsButton();
 
         completionLabel->setFocusProxy(controller->widget());
         controller->setFocusProxy(controller->widget());
@@ -392,6 +351,71 @@ void MCompleterViewPrivate::hideCompletionsButton()
     completionsButton->hide();
     completionsButton->setText("");
     layout->removeItem(completionsButton);
+}
+
+void MCompleterViewPrivate::updateCompletionLabelText()
+{
+    Q_Q(MCompleterView);
+
+    QString text;
+    if (q->model()->matchedModel()
+        && q->model()->matchedIndex() >= 0
+        && q->model()->matchedModel()->rowCount() > q->model()->matchedIndex()) {
+        QVariant var = q->model()->matchedModel()->data(
+                           q->model()->matchedModel()->index(q->model()->matchedIndex(), 0));
+        if (var.isValid())
+            text = var.toString();
+    }
+
+    if (!text.isEmpty()) {
+        //highlight the completionPrefix
+        QString prefix = q->model()->completionPrefix().trimmed();
+        text = text.replace('<', "&lt;");
+        text = text.replace('>', "&gt;");
+        prefix = prefix.replace('<', "&lt;");
+        prefix = prefix.replace('>', "&gt;");
+        int index = -1;
+        if (!text.isEmpty() && !prefix.isEmpty()) {
+            index = text.indexOf(prefix, 0, Qt::CaseInsensitive);
+        }
+
+        // only highlight if there is a match in text.
+        if (index != -1) {
+            const QString highlightColor = q->style()->highlightColor().name();
+            const QString replacedString = text.mid(index, prefix.length());
+            const QString colorfulText = QString("<font color=%1>" + replacedString + "</font>").arg(highlightColor);
+            text = text.replace(index, replacedString.length(),
+                                q->style()->highlightDecoration().arg(colorfulText));
+        }
+    }
+
+    completionLabel->setText(text);
+}
+
+void MCompleterViewPrivate::updateCompletionsButton()
+{
+    Q_Q(MCompleterView);
+
+    //set button's visibility and label
+    int total = q->model()->matchedModel()->rowCount();
+
+    // There must be more than one match to show completions button with total count.
+    // If there are matches there must also be a valid matchedIndex. If not, it means we have no matches and matchedModel is outdated.
+    if (total > 1 && q->model()->matchedIndex() >= 0) {
+        // Workaround for NB#177781: MButton has different alignments for rich text and normal text in its label.
+        // Both completionLabel and completionsButton use rich text label to get same alignment
+        if (total <= DefaultMaximumHits)
+            completionsButton->setText(QString("<qt>%1").arg(MLocale().formatNumber(total)));
+        else
+            completionsButton->setText(QString("<qt>%1+").arg(MLocale().formatNumber(DefaultMaximumHits)));
+        showCompletionsButton();
+
+        // For some reason the widget does not activate properly. Do it now.
+        // The use case for this is when button label is changing between "١٠+" and "٢", for example.
+        layout->activate();
+    } else {
+        hideCompletionsButton();
+    }
 }
 
 MCompleterView::MCompleterView(MCompleter *controller)
