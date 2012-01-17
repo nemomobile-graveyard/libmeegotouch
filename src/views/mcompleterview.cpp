@@ -287,6 +287,7 @@ void MCompleterViewPrivate::showPopup()
         controller->queryAll();
     q->model()->setPopupActive(true);
 
+    popup->setProgressIndicatorVisible(q->model()->fetchInProgress());
     controller->sceneManager()->appearSceneWindow(popup);
 }
 
@@ -578,6 +579,11 @@ void MCompleterView::updateData(const QList<const char *>& modifications)
         d->updateCompletionsButton();
         // Switch between FetchInProgressLabel and actual completion.
         d->updateCompletionLabelText();
+
+        // If popup is active, update its spinner visibility.
+        if (model()->popupActive()) {
+            d->popup->setProgressIndicatorVisible(model()->fetchInProgress());
+        }
     } else if (modifications.contains(MCompleterModel::FetchInProgressLabel)) {
         d->updateCompletionLabelText();
     } else if (modifications.contains(MCompleterModel::MatchedIndex)) {
