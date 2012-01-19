@@ -22,11 +22,9 @@ SUBDIRS     = \
  pt_minimalmapplication \
  pt_minimalqtapplication \
  pt_mlayout \
- pt_mlocationdatabase \
  pt_mprogressindicator \
  pt_qapplication \
  pt_mlabel \
- pt_mlocale \
  pt_mslider \
  pt_mstylesheet \
  pt_mtheme \
@@ -37,8 +35,7 @@ SUBDIRS     = \
 
 contains(DEFINES, HAVE_ICU) {
 SUBDIRS += \
- pt_mcalendar \
- pt_mcharsetdetector
+
 }
 
 include(shell.pri)
