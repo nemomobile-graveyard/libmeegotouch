@@ -82,6 +82,11 @@ private:
     QTimer *completerTimer;
     QTimer emptyHideTimer;
     QTimer asyncFetchPollTimer;
+
+    //! completeRequested is true between calls to complete() and hideCompleter().
+    //! It is used to prevent completer from appearing on sudden completion model
+    //! changes.
+    bool completeRequested;
 #ifdef UNIT_TEST
     friend class Ut_MCompleter;
 #endif

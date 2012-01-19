@@ -56,6 +56,7 @@ MCompleterPrivate::MCompleterPrivate()
       completionModel(0),
       matchedModel(new MCompletionModel),
       completerTimer(new QTimer),
+      completeRequested(false)
 {
 }
 
@@ -234,6 +235,8 @@ void MCompleterPrivate::_q_complete()
         return;
     }
 
+    completeRequested = true;
+
     emit q->startCompleting(q->model()->completionPrefix(),
                             completionModel->index(q->model()->matchedIndex(), q->valueColumnIndex()));
     pollModel(true);
@@ -379,8 +382,9 @@ void MCompleterPrivate::updateScene(bool moreDataExpected,
 {
     Q_Q(MCompleter);
 
-    // The completer don't need to reshow/reset focus when popup is active
-    if (q->model()->popupActive())
+    // The completer don't need to reshow/reset focus when popup is active.
+    // This holds also when complete() has not been called after hide.
+    if (q->model()->popupActive() || !completeRequested)
         return;
 
     // Show completer when either matchedModel has rows or the
@@ -536,6 +540,7 @@ QAbstractItemModel *MCompleter::matchedCandidateModel() const
 void MCompleter::hideCompleter()
 {
     Q_D(MCompleter);
+    d->completeRequested = false;
 
     if (isActive()) {
         d->asyncFetchPollTimer.stop();
