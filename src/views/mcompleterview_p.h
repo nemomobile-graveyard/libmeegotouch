@@ -31,7 +31,6 @@ class MWidgetController;
 class MLabel;
 class MButton;
 class MPopupList;
-class QStringListModel;
 class QGraphicsLinearLayout;
 class CompletionCountButton;
 
