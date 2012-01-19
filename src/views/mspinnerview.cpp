@@ -221,8 +221,20 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
         return;
 
     const QPixmap *p = d->animationPixmaps[d->currentFrame];
-    if (p && !p->isNull())
+    if (p && !p->isNull()) {
+        // If drawing the pixmap in some other than its original size use smoother scaling algorithm.
+        const bool setSmoothRendering = !(painter->renderHints() & QPainter::SmoothPixmapTransform)
+                                        && (size().toSize() != p->rect().size());
+        if (setSmoothRendering) {
+            painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
+        }
+
         painter->drawPixmap(QRectF(QPointF(0, 0), size()), *p, QRectF(p->rect()));
+
+        if (setSmoothRendering) {
+            painter->setRenderHint(QPainter::SmoothPixmapTransform, false);
+        }
+    }
 }
 
 #include "moc_mspinnerview.cpp"
