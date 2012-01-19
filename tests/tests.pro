@@ -180,9 +180,6 @@ SUBDIRS     =  \
     ut_mfeedback \
     ut_mfeedbackplayer \
     ut_mcompleter \
-    ut_translations \
-    ut_translations/translations-tr \
-    ut_translations/translations-qttrid \
     ut_mextensionarea \
     ut_mextensionrunner \
     ut_mapplicationextensionloader \
@@ -199,8 +196,6 @@ SUBDIRS     =  \
     ut_mpanrecognizertouch \
     ut_mstatusbarview \
     ut_mabstractitemmodel \
-    ut_phonenumberformatting \
-    ut_mlocationdatabase \
     ut_mlocalthemedaemon \
     ut_mremotethemedaemon \
     ut_mswiperecognizer \
@@ -243,15 +238,6 @@ SUBDIRS     =  \
 
 contains(DEFINES, HAVE_ICU) {
 SUBDIRS += \
-    ft_breakiterator \
-    ft_locales \
-    ft_localedata \
-    ft_mlocalebuckets \
-    ft_numbers \
-    ft_sorting \
-    ft_mcharsetdetector \
-    ft_mstringsearch \
-    ut_mcalendar \
     ut_mappletinstantiator \
     ft_mmoc
 }
