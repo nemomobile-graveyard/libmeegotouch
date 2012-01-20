@@ -164,7 +164,7 @@ void Ut_MAppletInventory::init()
     inventory = new MAppletInventory();
     inventory->setMashupCanvas(*mashupCanvas);
     connect(this, SIGNAL(appletPathChanged(QString)), inventory, SLOT(appletPathChanged(QString)));
-    connect(this, SIGNAL(instantiateAppletsFromPackage(QString)), inventory, SLOT(instantiateAppletsFromPackage(QString)));
+    connect(this, SIGNAL(instantiateAppletsFromPackage(QString)), inventory, SLOT(instantiateAppletsInPackage(QString)));
 
     watchedDirectories.clear();
     appletList.clear();
