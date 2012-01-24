@@ -156,6 +156,7 @@ void Ut_MTheme::testStyle()
 
 void Ut_MTheme::testThemeChangeCompleted()
 {
+    QSKIP("This test is unstable and theme changing is not supported anymore anyway", SkipAll);
     QList<ThemeInfo> themes = findAvailableThemes();
 
     if (themes.count() <= 1)
