@@ -20,6 +20,8 @@
 #include <QPointer>
 #include <QGraphicsSceneMouseEvent>
 #include <mbubbleitem.h>
+#include <mbubbleitemview.h>
+#include <mbubbleitemview_p.h>
 #include <mimagewidget.h>
 #include <mwidgetview.h>
 #include <mwidgetmodel.h>
@@ -152,6 +154,39 @@ void Ut_MBubbleItem::testMessageType()
     QCOMPARE(m_bubble->preferredSize(), size);
 }
 
+// Regression test for #297343 - MBubbleItem setMessageType() and setCentralWidget() methods not working correctly after the view is created
+void Ut_MBubbleItem::testMessageTypeWithCentralWidget()
+{
+    QGraphicsScene *scene = new QGraphicsScene;
+    scene->addItem(m_bubble);
+
+    MBubbleItemView *view = const_cast<MBubbleItemView*>(qobject_cast<const MBubbleItemView*>(m_bubble->view()));
+    QVERIFY(view);
+
+    QGraphicsWidget *centralWidget = new QGraphicsWidget;
+    m_bubble->setCentralWidget(centralWidget);
+    QGraphicsWidget *separator = (QGraphicsWidget *)view->d_func()->separator;
+    QVERIFY(separator);
+
+    m_bubble->setMessageType(MBubbleItem::Outgoing);
+
+    QVERIFY(view->d_func()->currentCentralWidget == centralWidget);
+    QVERIFY(scene->items().contains(centralWidget));
+    QVERIFY((QGraphicsWidget *)view->d_func()->separator == separator);
+    QVERIFY(scene->items().contains(separator));
+
+    m_bubble->setMessageType(MBubbleItem::Incoming);
+
+    QVERIFY(view->d_func()->currentCentralWidget == centralWidget);
+    QVERIFY(scene->items().contains(centralWidget));
+    QVERIFY((QGraphicsWidget *)view->d_func()->separator == separator);
+    QVERIFY(scene->items().contains(separator));
+
+    delete centralWidget;
+    scene->removeItem(m_bubble);
+    delete scene;
+}
+
 void Ut_MBubbleItem::testAvatar()
 {
     QSizeF size = m_bubble->preferredSize();
@@ -207,6 +242,35 @@ void Ut_MBubbleItem::testCentralWidget()
     m_bubble->updateGeometry();
     QCOMPARE(m_bubble->preferredSize(), size);
 }
+
+// Regression test for #297343 - MBubbleItem setMessageType() and setCentralWidget() methods not working correctly after the view is created
+void Ut_MBubbleItem::testCentralWidgetReplacing()
+{
+    QGraphicsScene *scene = new QGraphicsScene;
+    scene->addItem(m_bubble);
+
+    MBubbleItemView *view = const_cast<MBubbleItemView*>(qobject_cast<const MBubbleItemView*>(m_bubble->view()));
+    QVERIFY(view);
+
+    QGraphicsWidget *centralWidget = new QGraphicsWidget;
+    m_bubble->setCentralWidget(centralWidget);
+    QVERIFY(view->d_func()->currentCentralWidget == centralWidget);
+    QGraphicsWidget *separator = (QGraphicsWidget *)view->d_func()->separator;
+
+    QGraphicsWidget *centralWidget2 = new QGraphicsWidget;
+    m_bubble->setCentralWidget(centralWidget2);
+    QVERIFY(view->d_func()->currentCentralWidget == centralWidget2);
+    QVERIFY(!scene->items().contains(centralWidget));
+    QVERIFY(scene->items().contains(centralWidget2));
+    QVERIFY((QGraphicsWidget *)view->d_func()->separator == separator);
+    QVERIFY(scene->items().contains(separator));
+
+    delete centralWidget;
+    delete centralWidget2;
+    scene->removeItem(m_bubble);
+    delete scene;
+}
+
 void Ut_MBubbleItem::testInformationWidgets()
 {
     QSizeF size = m_bubble->preferredSize();

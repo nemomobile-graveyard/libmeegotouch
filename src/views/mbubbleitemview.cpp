@@ -137,11 +137,28 @@ void MBubbleItemViewPrivate::setupCentralWidget()
 {
     Q_Q(MBubbleItemView);
 
-    if (q->model()->centralWidget() &&
-        q->model()->centralWidget() != currentCentralWidget) {
-        separator = new MSeparator;
-        separator->setOrientation(Qt::Horizontal);
-        innerLayout->addItem(separator);
+    if (q->model()->centralWidget()) {
+        bool addSeparator = true;
+        if (separator) {
+            for (int i = 0; i < innerLayout->count(); i++) {
+                if (innerLayout->itemAt(i) == separator) {
+                    addSeparator = false;
+                    break;
+                }
+            }
+        } else {
+            separator = new MSeparator;
+            separator->setOrientation(Qt::Horizontal);
+        }
+
+        if (addSeparator)
+            innerLayout->addItem(separator);
+
+        if (currentCentralWidget) {
+            innerLayout->removeItem(currentCentralWidget);
+            if (q->model()->centralWidget() != currentCentralWidget && controller->scene())
+                controller->scene()->removeItem(currentCentralWidget);
+        }
 
         currentCentralWidget = q->model()->centralWidget();
         innerLayout->addItem(currentCentralWidget);

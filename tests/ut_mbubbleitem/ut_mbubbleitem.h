@@ -43,8 +43,10 @@ private slots:
     void testCommentsString();
     void testThumbsUpString();
     void testMessageType();
+    void testMessageTypeWithCentralWidget(); // Regression test for #297343
     void testAvatar();
     void testCentralWidget();
+    void testCentralWidgetReplacing(); // Regression test for #297343
     void testInformationWidgets();
 
     void testForMemoryLeaks();

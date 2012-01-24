@@ -28,6 +28,7 @@ class MImageWidget;
 class MScalableImage;
 class MControllerWidget;
 class QGraphicsGridLayout;
+class QGraphicsLinearLayout;
 class MBubbleItemBackground;
 class MSeparator;
 class MImageWidget;

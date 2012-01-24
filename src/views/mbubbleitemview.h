@@ -71,6 +71,10 @@ protected:
 private:
     Q_DISABLE_COPY(MBubbleItemView)
     Q_DECLARE_PRIVATE(MBubbleItemView)
+
+#ifdef UNIT_TEST
+    friend class Ut_MBubbleItem;
+#endif
 };
 
 #endif
