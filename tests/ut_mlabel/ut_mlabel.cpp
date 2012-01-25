@@ -1729,27 +1729,38 @@ void Ut_MLabel::testPlainAndRichTextAlignments_data()
 {
     QTest::addColumn<QString>("styleName");
     QTest::addColumn<Qt::Alignment>("alignment");
+    QTest::addColumn<QFont>("font");
 
-    QTest::newRow("margins, top-aligned")              << "margins"            << Qt::Alignment(Qt::AlignTop);
-    QTest::newRow("padding, top-aligned")              << "paddings"           << Qt::Alignment(Qt::AlignTop);
-    QTest::newRow("reactive margins, top-aligned")     << "reactiveMargins"    << Qt::Alignment(Qt::AlignTop);
-    QTest::newRow("margins and paddings, top-aligned") << "marginsAndPaddings" << Qt::Alignment(Qt::AlignTop);
+    QFont fonts[] = {
+        QFont("Nokia Pure", 30),
+        QFont("Nokia Sans", 30)
+    };
 
-    QTest::newRow("margins, vertically-centered")              << "margins"            << Qt::Alignment(Qt::AlignVCenter);
-    QTest::newRow("paddings, vertically-centered")             << "paddings"           << Qt::Alignment(Qt::AlignVCenter);
-    QTest::newRow("reactive margins, vertically-centered")     << "reactiveMargins"    << Qt::Alignment(Qt::AlignVCenter);
-    QTest::newRow("margins and paddings, vertically-centered") << "marginsAndPaddings" << Qt::Alignment(Qt::AlignVCenter);
+    for(int i = 0; i < 2; i++) {
+        QFont font = fonts[i];
+        QString fontName = ", "+font.family();
+        QTest::newRow(qPrintable("margins, top-aligned"+fontName))              << "margins"            << Qt::Alignment(Qt::AlignTop) << font;
+        QTest::newRow(qPrintable("padding, top-aligned"+fontName))              << "paddings"           << Qt::Alignment(Qt::AlignTop) << font;
+        QTest::newRow(qPrintable("reactive margins, top-aligned"+fontName))     << "reactiveMargins"    << Qt::Alignment(Qt::AlignTop) << font;
+        QTest::newRow(qPrintable("margins and paddings, top-aligned"+fontName)) << "marginsAndPaddings" << Qt::Alignment(Qt::AlignTop) << font;
 
-    QTest::newRow("margins, bottom-aligned")              << "margins"            << Qt::Alignment(Qt::AlignBottom);
-    QTest::newRow("paddings, bottom-aligned")             << "paddings"           << Qt::Alignment(Qt::AlignBottom);
-    QTest::newRow("reactive margins, bottom-aligned")     << "reactiveMargins"    << Qt::Alignment(Qt::AlignBottom);
-    QTest::newRow("margins and paddings, bottom-aligned") << "marginsAndPaddings" << Qt::Alignment(Qt::AlignBottom);
+        QTest::newRow(qPrintable("margins, vertically-centered"+fontName))              << "margins"            << Qt::Alignment(Qt::AlignVCenter) << font;
+        QTest::newRow(qPrintable("paddings, vertically-centered"+fontName))             << "paddings"           << Qt::Alignment(Qt::AlignVCenter) << font;
+        QTest::newRow(qPrintable("reactive margins, vertically-centered"+fontName))     << "reactiveMargins"    << Qt::Alignment(Qt::AlignVCenter) << font;
+        QTest::newRow(qPrintable("margins and paddings, vertically-centered"+fontName)) << "marginsAndPaddings" << Qt::Alignment(Qt::AlignVCenter) << font;
+
+        QTest::newRow(qPrintable("margins, bottom-aligned"+fontName))              << "margins"            << Qt::Alignment(Qt::AlignBottom) << font;
+        QTest::newRow(qPrintable("paddings, bottom-aligned"+fontName))             << "paddings"           << Qt::Alignment(Qt::AlignBottom) << font;
+        QTest::newRow(qPrintable("reactive margins, bottom-aligned"+fontName))     << "reactiveMargins"    << Qt::Alignment(Qt::AlignBottom) << font;
+        QTest::newRow(qPrintable("margins and paddings, bottom-aligned"+fontName)) << "marginsAndPaddings" << Qt::Alignment(Qt::AlignBottom) << font;
+    }
 }
 
 void Ut_MLabel::testPlainAndRichTextAlignments()
 {
     QFETCH(QString, styleName);
     QFETCH(Qt::Alignment, alignment);
+    QFETCH(QFont, font);
 
     const QString plainText = "Abc ygj";
     const QString plainThaiText = QString::fromUtf8("ใAbc ygj");
@@ -1757,7 +1768,7 @@ void Ut_MLabel::testPlainAndRichTextAlignments()
     const QString richText = "<qt>" + plainText;
     const QString richThaiText = "<qt>" + plainThaiText;
 
-    label->setFont(QFont("Nokia Pure Text", 30));
+    label->setFont(font);
     label->setStyleName(styleName);
     label->setAlignment(alignment);
     label->resize(400, 400);

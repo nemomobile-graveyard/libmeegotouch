@@ -89,7 +89,11 @@ void MLabelViewRich::drawContents(QPainter *painter, const QSizeF &size)
     const MLabelStyle *style = viewPrivate->style();
     pixmapOffset = QPoint(style->paddingLeft(), style->paddingTop() - fm.leading());
     if (textDocument.size().height() < size.height()) {
-        if (viewPrivate->textOptions.alignment() & Qt::AlignBottom) {
+        if (viewPrivate->textOptions.alignment() & Qt::AlignTop) {
+            // when font has leading < 0 we need to move offset up so that plain
+            // text label and rich text label have the same alignment
+            pixmapOffset.ry() += qMin(fm.leading(), 0);
+        } else if (viewPrivate->textOptions.alignment() & Qt::AlignBottom) {
             pixmapOffset.ry() += fm.leading() + size.height() - textDocument.size().height();
         } else if (viewPrivate->textOptions.alignment() & Qt::AlignVCenter) {
             pixmapOffset.ry() += (fm.leading() + size.height() - textDocument.size().height()) / 2.0;
