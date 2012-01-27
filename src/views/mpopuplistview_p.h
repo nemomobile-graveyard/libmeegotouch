@@ -37,6 +37,8 @@ class MPopupListItem : public MListItem {
 public:
     explicit MPopupListItem(QGraphicsItem *parent = NULL);
     void setTitle(const QString &title);
+    //! Foreground color can be QColor() (invalid) which means title label uses color from style.
+    void setTitleForeground(const QColor &color);
     void setWordWrap(bool wordWrap);
     void setIconID(const QString& id);
     void setPixmap(const QPixmap& pixmap);
@@ -44,6 +46,7 @@ public:
 private:
     void updateLayout();
     MImageWidget* iconWidget();
+    MLabel *titleLabel();
 
     enum ItemStyle {
         SingleTitle,
@@ -56,6 +59,7 @@ private:
     ItemStyle itemStyle;
 #ifdef UNIT_TEST
     friend class Ut_MPopupList;
+    friend class Ut_MPopupListItem;
 #endif
 };
 

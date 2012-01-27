@@ -61,13 +61,14 @@ void MPopupListItem::updateLayout()
 
 void MPopupListItem::setTitle(const QString &text)
 {
-    if (!title) {
-        title = new MLabel(this);
-        title->setTextElide(true);
-        title->setStyleName("CommonSingleTitle");
-    }
-    title->setText(text);
+    titleLabel()->setText(text);
     updateLayout();
+}
+
+void MPopupListItem::setTitleForeground(const QColor &color)
+{
+    // Invalid QColor resets the label to use color from style.
+    titleLabel()->setColor(color);
 }
 
 void MPopupListItem::setWordWrap(bool wordWrap) {
@@ -118,6 +119,15 @@ void MPopupListItem::setPixmap(const QPixmap &pixmap)
     updateLayout();
 }
 
+MLabel *MPopupListItem::titleLabel()
+{
+    if (!title) {
+        title = new MLabel(this);
+        title->setTextElide(true);
+        title->setStyleName("CommonSingleTitle");
+    }
+    return title;
+}
 
 MPopupListViewPrivate::MPopupListViewPrivate()
     : controller(0), list(0), cellCreator(0)
@@ -151,9 +161,15 @@ void MPopupListCellCreator::updateCell(const QModelIndex& index, MWidget * cell)
 
     QVariant variant = list->itemModel()->data(index, Qt::DisplayRole);
     item->setTitle(variant.toString());
+
     item->setWordWrap(wordWrap);
 
     variant = list->itemModel()->data(index, Qt::DecorationRole);
+    // Accepting QString as Qt::DecorationRole is against Qt documentation
+    // and brings ambiguity between types QString and QColor: QColor can always
+    // be converted into a QString and QString can potentially be converted to
+    // QColor. QVariant::type() should probably be used here to check but could
+    // cause regressions if we already rely on such conversions.
     if (variant.canConvert<QString>()) {
         item->setIconID(variant.toString());
     } else if (variant.canConvert<QIcon>()) {
@@ -163,6 +179,22 @@ void MPopupListCellCreator::updateCell(const QModelIndex& index, MWidget * cell)
     } else {
         item->setPixmap(variant.value<QPixmap>());
     }
+
+    QColor foregroundColor; // Title foreground color
+    variant = list->itemModel()->data(index, Qt::ForegroundRole);
+    if (variant.isValid()) {
+        // By Qt documention the type should be QBrush. We also accept QColor.
+        // Color is the only thing used here, eventually.
+        if (variant.type() == static_cast<QVariant::Type>(QMetaType::QBrush)) {
+            foregroundColor = variant.value<QBrush>().color();
+        } else if (variant.type() == static_cast<QVariant::Type>(QMetaType::QColor)) {
+            foregroundColor =variant.value<QColor>();
+        }
+    }
+    // If the model didn't provide ForegroundRole foregroundColor
+    // will be invalid here. Still set it as existing one may need
+    // to be cleared.
+    item->setTitleForeground(foregroundColor);
 
     if (list->selectionModel()->isSelected(index))
         item->setSelected(true);
