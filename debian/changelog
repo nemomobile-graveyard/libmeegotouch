@@ -1,8 +1,12 @@
-libmeegotouch (0.25.5~1) unstable; urgency=low
+libmeegotouch (0.25.5-1) unstable; urgency=low
 
-  *  Increase version number
+  * New version
+  * Fixes: NB#287717 - [TASK] MCountry requires ISO 3166-1 country codes support
+  * Fixes: NB#297242 - [TASK] Enable logging of certain error cases in PR1.3 images in order to catch bug #292977
+  * Fixes: NB#289472 - [Thread] Next or Previous message button in additional header is enabled in the mentioned scenario.
+  * Fixes: NB#291414 - MFeedback has incorrectly defined constants for feedback effects, resulting in no feedback
 
- -- Armin Berres <armin.berres@basyskom.com>  Tue, 24 Jan 2012 16:02:24 +0100
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 30 Jan 2012 11:09:04 +0100
 
 libmeegotouch (0.24.21-1) unstable; urgency=low
 
