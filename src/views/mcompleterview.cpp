@@ -237,11 +237,6 @@ void MCompleterViewPrivate::createContents()
             controller->widget()->scene()->addItem(controller);
 
         updateCompletionLabelText();
-
-        if (completionLabel->text().isEmpty()) {
-            return;
-        }
-
         updateCompletionsButton();
 
         completionLabel->setFocusProxy(controller->widget());
