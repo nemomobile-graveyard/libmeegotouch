@@ -394,7 +394,8 @@ void MCompleterPrivate::updateScene(bool moreDataExpected,
         || (!q->model()->active()
             && q->model()->fetchInProgress()
             && !q->model()->completionPrefix().isEmpty())) {
-        q->model()->setMatchedIndex(0);
+        // If there are matches choose first one as matched index. Otherwise -1.
+        q->model()->setMatchedIndex(matchedModel->rowCount() ? 0 : -1);
         q->model()->setActive(true);
         // the completerview has currently broken expectation on the
         // signal shown() and that's why the signal gets emitted even though
