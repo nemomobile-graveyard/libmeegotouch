@@ -48,6 +48,9 @@ namespace
     const int EmptyCompleterHideTimeout = 700;
     //! Polling interval for detecting end of async fetch in completion model.
     const int AsyncFetchPollingInterval = 300;
+    //! Minimum fetch duration to take into account. When async fetch is ongoing
+    //! for a shorter period of time, it is ignored.
+    const int MinimumAsyncFetchDuration = 300;
 }
 
 MCompleterPrivate::MCompleterPrivate()
@@ -93,6 +96,9 @@ void MCompleterPrivate::init()
 
     asyncFetchPollTimer.setInterval(AsyncFetchPollingInterval);
     asyncFetchPollTimer.setSingleShot(false);
+
+    asyncFetchPollStartTimer.setInterval(MinimumAsyncFetchDuration);
+    asyncFetchPollStartTimer.setSingleShot(true);
 
     if (!connected) {
         qWarning("MCompleterPrivate::init() - Failed to connect signals!");
@@ -331,7 +337,7 @@ void MCompleterPrivate::pollModel(bool isResetFocus)
         // one of the biggest clients.
         canFetchMore = completionModel->canFetchMore(QModelIndex());
         if (canFetchMore && !q->model()->fetchInProgress()) {
-            onAsyncFetchStart();
+            tryAsyncFetchStart();
         }
     }
 
@@ -340,9 +346,37 @@ void MCompleterPrivate::pollModel(bool isResetFocus)
     }
 }
 
-void MCompleterPrivate::onAsyncFetchStart()
+void MCompleterPrivate::tryAsyncFetchStart()
 {
     Q_Q(MCompleter);
+
+    if(asyncFetchPollStartTimer.isActive()) {
+        return;
+    }
+
+    QObject::connect(&asyncFetchPollStartTimer, SIGNAL(timeout()),
+                     q, SLOT(_q_onAsyncFetchStart()));
+    asyncFetchPollStartTimer.start();
+}
+
+void MCompleterPrivate::_q_onAsyncFetchStart()
+{
+    Q_Q(MCompleter);
+
+    // The only place we get to this slot is from asyncFetchPollStartTimer. Disconnect it.
+    QObject::disconnect(&asyncFetchPollStartTimer, SIGNAL(timeout()),
+                        q, SLOT(_q_onAsyncFetchStart()));
+
+    // Need to recheck the async fetch state. It can already be finished.
+    if (!completionModel->canFetchMore(QModelIndex())) {
+        // If already finished, we need to hide completer. This is copied
+        // from _q_pollAsyncFetchEnd(). It is not called directly to avoid
+        // setting fetchInProgress state on unnecessarily.
+        if (q->model()->active() && q->model()->matchedIndex() < 0) {
+            q->hideCompleter();
+        }
+        return;
+    }
 
     q->model()->setFetchInProgress(true);
 
@@ -545,6 +579,8 @@ void MCompleter::hideCompleter()
 
     if (isActive()) {
         d->asyncFetchPollTimer.stop();
+        d->asyncFetchPollStartTimer.stop();
+
         model()->setFetchInProgress(false);
 
         // change active state to false before really hidden to notify view
