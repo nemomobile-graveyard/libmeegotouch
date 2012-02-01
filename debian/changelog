@@ -1,3 +1,10 @@
+libmeegotouch (0.25.6-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#297788, Empty completer displayed in create message view
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 01 Feb 2012 19:35:55 +0100
+
 libmeegotouch (0.25.5-1) unstable; urgency=low
 
   * New version
