@@ -49,7 +49,8 @@ public:
     void _q_pollModel();
     void _q_rowsRemoved(const QModelIndex &parent, int start, int end);
 
-    void onAsyncFetchStart();
+    void tryAsyncFetchStart();
+    void _q_onAsyncFetchStart();
     void _q_pollAsyncFetchEnd();
 
 protected:
@@ -82,6 +83,10 @@ private:
     QTimer *completerTimer;
     QTimer emptyHideTimer;
     QTimer asyncFetchPollTimer;
+
+    //! Timer provided not to annoy user for quick async fetches
+    //! i.e. only notify user if the fetch is long enough.
+    QTimer asyncFetchPollStartTimer;
 
     //! completeRequested is true between calls to complete() and hideCompleter().
     //! It is used to prevent completer from appearing on sudden completion model
