@@ -158,6 +158,10 @@ protected Q_SLOTS:
 private:
     Q_DISABLE_COPY(MInfoBannerInformationView)
     Q_DECLARE_PRIVATE(MInfoBannerInformationView)
+
+#ifdef UNIT_TEST
+    friend class Ut_MInfoBannerInformationView;
+#endif
 };
 
 #endif

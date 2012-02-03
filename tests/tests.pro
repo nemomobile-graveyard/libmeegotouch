@@ -105,6 +105,7 @@ SUBDIRS     =  \
     ut_mcontentitemview \
     ut_minfobanner \
     ut_minfobannerview \
+    ut_minfobannerinformationview \
     ut_mbanner \
     ut_mbannerview \
     ut_mwidgetcontroller \
