@@ -32,7 +32,7 @@
 
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>
-
+#include <QBitmap>
 #ifdef Q_WS_X11
 #include <QX11Info>
 #include <X11/Xlib.h>
@@ -152,15 +152,16 @@ void MExtensionHandleViewPrivate::allocatePixmapToBeTakenIntoUse(QSizeF size)
 #ifdef Q_WS_X11
     // Allocate a new pixmap to be taken into use
     QSizeF pixmapSize = size.expandedTo(QSizeF(1, 1));
-    Pixmap pixmap = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(), pixmapSize.width(), pixmapSize.height(), QX11Info::appDepth());
+    // Pixmap is created with 32 color-depth to allow the alpha channel creation in the painter
+    Pixmap pixmap = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(), pixmapSize.width(), pixmapSize.height(), 32);
     QApplication::syncX();
     pixmapToBeTakenIntoUse = new QPixmap();
     *pixmapToBeTakenIntoUse = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
 
-    // Clear the pixmap
+    // Clear the pixmap (including the alpha-channel)
     QPainter painter(pixmapToBeTakenIntoUse);
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
-    painter.fillRect(pixmapToBeTakenIntoUse->rect(), QColor(0, 0, 0, 0));
+    painter.fillRect(pixmapToBeTakenIntoUse->rect(), Qt::transparent);
 
     // Communicate the new geometry and pixmap handle to be taken into use to the runner
     handle->sendGeometryMessage(QRectF(QPointF(), pixmapSize), pixmapToBeTakenIntoUse->handle());
