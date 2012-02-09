@@ -928,6 +928,10 @@ void MainPage::showInitialPage()
 {
     if (!initialPageToShow.isEmpty()) {
         showPageByTimedemoTitle(initialPageToShow);
+        //disconnect this slot so back button can be used from initialpage when
+        //widgetsgallery is started with -initialpage
+        //without this back button click will be followed by returning to initialpage
+        disconnect(this, SIGNAL(appeared()), this, SLOT(showInitialPage()));
     }
 }
 
