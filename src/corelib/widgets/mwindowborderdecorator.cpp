@@ -49,12 +49,14 @@ bool MWindowBorderDecorator::isDecorating() const
 
 void MWindowBorderDecorator::decorate(MSceneManager *sceneManager)
 {
-    sceneManager->appearSceneWindow(top);
-    sceneManager->appearSceneWindow(bottom);
+    sceneManager->appearSceneWindowNow(top);
+    sceneManager->appearSceneWindowNow(bottom);
 }
 
 void MWindowBorderDecorator::removeDecorations()
 {
-    top->disappear();
-    bottom->disappear();
+    if (top->sceneManager())
+        top->sceneManager()->disappearSceneWindowNow(top);
+    if (bottom->sceneManager())
+        bottom->sceneManager()->disappearSceneWindowNow(bottom);
 }
