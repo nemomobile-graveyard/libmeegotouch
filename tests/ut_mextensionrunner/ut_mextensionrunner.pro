@@ -3,6 +3,8 @@ include(../common_mextensions.pri)
 
 QT += network xml
 
+LIBS += -lX11
+
 contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
     CONFIG += link_pkgconfig
     PKGCONFIG += contextsubscriber-1.0

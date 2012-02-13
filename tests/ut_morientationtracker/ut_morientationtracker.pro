@@ -4,6 +4,8 @@ INCLUDEPATH += \
     $$MSRCDIR/corelib/widgets \
     $$MSRCDIR/corelib/events \
 
+LIBS += -lcontextsubscriber
+
 TARGET = ut_morientationtracker
 
 # Input

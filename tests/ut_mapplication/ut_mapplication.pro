@@ -34,4 +34,6 @@ SOURCES += \
 SOURCES += \
     $$STUBSDIR/stubbase.cpp \
 
+LIBS += -lX11 -lXdamage
+
 include(../common_bot.pri)

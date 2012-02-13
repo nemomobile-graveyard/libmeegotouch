@@ -5,6 +5,7 @@
 
 WIDGETS_SRC_DIR=./widgets
 INCLUDEPATH+=./widgets
+LIBS += -lX11
 
 include(core/core.pri)
 

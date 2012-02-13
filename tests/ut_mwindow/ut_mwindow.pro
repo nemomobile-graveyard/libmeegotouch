@@ -4,6 +4,8 @@ TARGET = ut_mwindow
 
 INCLUDEPATH += $$MSRCDIR/corelib/events
 
+LIBS += -lX11
+
 # Input
 HEADERS += \
     ut_mwindow.h \

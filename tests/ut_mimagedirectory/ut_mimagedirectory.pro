@@ -4,6 +4,8 @@ contains(DEFINES, HAVE_MEEGOGRAPHICSSYSTEM) {
     QT += meegographicssystemhelper
 }
 
+LIBS += -lX11 -lrt
+
 INCLUDEPATH += \
     $${M_SOURCE_TREE}/src/corelib/theme \
     $${M_SOURCE_TREE}/src/corelib/core

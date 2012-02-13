@@ -6,6 +6,8 @@ contains(DEFINES, HAVE_MEEGOGRAPHICSSYSTEM) {
     QT += meegographicssystemhelper
 }
 
+LIBS += -lX11 -lrt
+
 INCLUDEPATH += $$MSRCDIR/corelib/theme
 INCLUDEPATH += $$MSRCDIR/corelib/core
 

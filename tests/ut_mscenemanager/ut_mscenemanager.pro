@@ -8,6 +8,8 @@ INCLUDEPATH += \
 
 TARGET = ut_mscenemanager
 
+LIBS += -lX11
+
 # Input
 HEADERS += \
     ut_mscenemanager.h \

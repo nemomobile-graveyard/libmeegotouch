@@ -6,6 +6,8 @@ INCLUDEPATH += $$MSRCDIR/views $$STUBSDIR $$MSRCDIR/corelib/widgets
 TEST_SOURCES = \
     $$MSRCDIR/views/mstatusbarview.cpp \
 
+LIBS += -lX11 -lXdamage
+
 # unit test and unit
 SOURCES += \
     ut_mstatusbarview.cpp \

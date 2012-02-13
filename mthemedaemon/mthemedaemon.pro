@@ -13,6 +13,8 @@ DEPENDPATH += .
 
 QT += svg network
 
+LIBS += -lrt
+
 contains(DEFINES, HAVE_MEEGOGRAPHICSSYSTEM) {
     QT += meegographicssystemhelper
 }

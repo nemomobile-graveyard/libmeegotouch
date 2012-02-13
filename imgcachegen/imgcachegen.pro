@@ -4,6 +4,8 @@ INCLUDEPATH += ../src/include \
                ../src/corelib/theme \
                ../src/corelib/core
 
+LIBS += -lX11 -lrt
+
 TEMPLATE = app
 TARGET = imgcachegen
 

@@ -7,6 +7,8 @@ include(../common_top.pri)
 TARGET =  ut_mcomponentcache
 DEPENDPATH += .
 
+LIBS += -lX11 -lrt
+
 QT+=opengl
 contains(DEFINES, HAVE_MEEGOGRAPHICSSYSTEM) {
     QT += meegographicssystemhelper

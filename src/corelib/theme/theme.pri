@@ -4,6 +4,8 @@
 ############################################################################### 
 THEME_SRC_DIR=./theme
 INCLUDEPATH+=./theme
+LIBS += -lX11
+
 PUBLIC_HEADERS += \
     $$THEME_SRC_DIR/mtheme.h \
     $$THEME_SRC_DIR/mdefaultfonts.h \

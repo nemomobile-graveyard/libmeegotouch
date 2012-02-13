@@ -15,7 +15,8 @@ QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
 QMAKE_LFLAGS += -pie -rdynamic
 
 LIBS += $$mAddLibrary(meegotouchcore) \
-        $$mAddLibrary(meegotouchviews)
+        $$mAddLibrary(meegotouchviews) \
+        -licuuc -ldbus-glib-1 -ldl
 
 !macx:LIBS += $$mAddLibrary(meegotouchsettings) \
         $$mAddLibrary(meegotouchextensions)

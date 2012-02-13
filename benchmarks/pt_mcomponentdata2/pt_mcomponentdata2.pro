@@ -3,6 +3,8 @@ include($${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf)
 
 DEFINES+=M_VERSION
 
+LIBS += -lXfixes
+
 QT += network
 contains(DEFINES, HAVE_MEEGOGRAPHICSSYSTEM) {
     QT += meegographicssystemhelper

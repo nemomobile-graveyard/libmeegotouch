@@ -1,6 +1,8 @@
 include(../common_top.pri)
 include(../common_mextensions.pri)
 
+LIBS += -lX11
+
 INCLUDEPATH += \
     $$MSRCDIR/corelib/widgets \
     $$MSRCDIR/corelib/widgets/core \

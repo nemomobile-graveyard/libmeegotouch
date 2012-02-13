@@ -3,6 +3,8 @@ TARGET = ut_msheet
 
 INCLUDEPATH += $$MSRCDIR/corelib/widgets
 
+LIBS += -lcontextsubscriber
+
 # unit test
 SOURCES += \
     ut_msheet.cpp \

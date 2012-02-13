@@ -5,6 +5,7 @@
 ###############################################################################
 CORE_SRC_DIR=./core
 INCLUDEPATH+=./core
+LIBS += -lrt -lX11
 
 PUBLIC_HEADERS += \
     $$CORE_SRC_DIR/mapplication.h \
