@@ -155,6 +155,7 @@ public:
      * as there are size limitations for pixmaps.
      */
     struct Tile {
+        qreal x;
         qreal y;
         QString pixmapCacheKey;
         QSize size;
@@ -213,7 +214,7 @@ public:
      * Creates \a count tiles with a size of \a size
      * and applies them to the member 'tiles'.
      */
-    void createTiles(int count, const QSize &size);
+    void createTiles(int columns, int rows, const QSize &size);
 
     /**
      * Releases the cache for all tiles. The member 'tiles' will be set empty.
@@ -266,9 +267,6 @@ public:
      */
     bool isTilesCacheValid() const;
 
-    Tile* topTile();
-    Tile* bottomTile();
-
     /**
      * \param x Output parameter that specifies the x-value for the QPainter
      *          translation that is required for a correct padding in the
@@ -298,7 +296,7 @@ public:
     QPoint pixmapOffset;
     int mouseDownCursorPos;
 
-    int tileHeight;
+    int tileDimension;
     QString tileCacheKey;
     QList<Tile> tiles;
 

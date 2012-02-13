@@ -1661,20 +1661,25 @@ void Ut_MLabel::testRichTextTiles()
             return;
         }
 
-        const int tileHeight = tile0.height();
-        QCOMPARE(tile1.height(), tileHeight);
-
-        if (y0 > y1) {
-            qSwap(y0, y1);
+        if (!tile0.isNull() && !tile1.isNull()) {
+            if (y0 > y1) {
+                qSwap(y0, y1);
+            }
+            const int tileHeight = tile0.height();
+            QCOMPARE(tile1.height(), tileHeight);
+            QVERIFY(y0 <= viewportY + labelY);
+            QVERIFY(y1 + tileHeight >= viewportY + labelY);
+            QCOMPARE(y0 + tileHeight, y1);
+            QVERIFY(!contentRect(tile0.toImage()).isEmpty());
+            QVERIFY(!contentRect(tile1.toImage()).isEmpty());
+        } else {
+            QVERIFY(!tile0.isNull() || !tile1.isNull());
+            if (tile0.isNull()) {
+                QCOMPARE(y1, 0);
+            } else if (tile1.isNull()) {
+                QCOMPARE(y0, 0);
+            }
         }
-
-        QVERIFY(y0 <= viewportY + labelY);
-        QVERIFY(y1 + tileHeight >= viewportY + labelY);
-        QCOMPARE(y0 + tileHeight, y1);
-        QVERIFY(!tile0.isNull());
-        QVERIFY(!tile1.isNull());
-        QVERIFY(!contentRect(tile0.toImage()).isEmpty());
-        QVERIFY(!contentRect(tile1.toImage()).isEmpty());
     }
 }
 

@@ -58,13 +58,13 @@ struct CursorAndFormat {
 
 MLabelViewRich::MLabelViewRich(MLabelViewPrivate *viewPrivate) :
     MLabelViewSimple(viewPrivate), textDocumentDirty(true), mouseDownCursorPos(-1),
-    tileHeight(-1), tileCacheKey(), tiles(), highlightersChanged(false), isElided(false)
+    tileDimension(-1), tileCacheKey(), tiles(), highlightersChanged(false), isElided(false)
 {
     textDocument.setDocumentMargin(0);
     tileCacheKey.sprintf("%p", static_cast<void*>(this));
 
     const QSize resolution = MDeviceProfile::instance()->resolution();
-    tileHeight = qMax(resolution.width(), resolution.height());
+    tileDimension = qMax(resolution.width(), resolution.height());
 }
 
 
@@ -110,7 +110,6 @@ void MLabelViewRich::drawContents(QPainter *painter, const QSizeF &size)
             textDocument.drawContents(painter, textBounds);
         }
     } else {
-        pixmapOffset.rx() -= leftMargin();
         drawTiles(painter, pixmapOffset);
     }
 }
@@ -632,8 +631,6 @@ QString MLabelViewRich::renderedText() const
 bool MLabelViewRich::tileInformation(int index, QPixmap &pixmap, int &y) const
 {
     if (!tiles.isEmpty()) {
-        Q_ASSERT(index == 0 || index == 1);
-
         if (index >= tiles.count()) {
             pixmap = QPixmap();
             y = 0;
@@ -711,41 +708,57 @@ void MLabelViewRich::initTiles()
     updateRichTextEliding();
     updateHighlighting();
 
-    int tileCount = 2;
-    QSize tileSize(viewPrivate->controller->size().width(), tileHeight);
+    int columns = 2;
+    int rows = 2;
+    QSize tileSize(tileDimension, tileDimension);
 
     const MLabelStyle *style = viewPrivate->style();
-    const int requiredHeight = qMin(viewPrivate->controller->size().height() + style->reactiveMarginTop() + style->reactiveMarginBottom(),
-                                    textDocument.size().height() + topMargin() + bottomMargin());
-    if (requiredHeight < tileSize.height()) {
-        tileSize.setHeight(requiredHeight);
-        tileCount = 1;
+
+    const int requiredWidth = qMin(viewPrivate->controller->size().width() + style->reactiveMarginLeft() + style->reactiveMarginRight(),
+                                   textDocument.size().width() + leftMargin() + rightMargin());
+    if (requiredWidth <= tileSize.width()) {
+        tileSize.setWidth(requiredWidth);
+        columns = 1;
     }
 
-    createTiles(tileCount, tileSize);
+    const int requiredHeight = qMin(viewPrivate->controller->size().height() + style->reactiveMarginTop() + style->reactiveMarginBottom(),
+                                    textDocument.size().height() + topMargin() + bottomMargin());
+    if (requiredHeight <= tileSize.height()) {
+        tileSize.setHeight(requiredHeight);
+        rows = 1;
+    }
+
+    createTiles(columns, rows, tileSize);
 }
 
-void MLabelViewRich::createTiles(int count, const QSize &size)
+void MLabelViewRich::createTiles(int columns, int rows, const QSize &size)
 {
     if (size.isEmpty()) {
         return;
     }
 
     Q_ASSERT(tiles.isEmpty());
+    int index = 0;
     int y = -topMargin();
-    for (int i = 0; i < count; ++i) {
-        Tile tile;
-        tiles.append(tile);
+    for (int row = 0; row < rows; ++row) {
+        int x = -leftMargin();
+        for (int column = 0; column < columns; ++column) {
+            Tile tile;
+            tiles.append(tile);
 
-        tiles[i].y = y;
-        tiles[i].pixmapCacheKey = tileCacheKey + QString::number(i);
-        tiles[i].size = size;
+            tiles[index].x = x;
+            tiles[index].y = y;
+            tiles[index].pixmapCacheKey = tileCacheKey + QString::number(index);
+            tiles[index].size = size;
 
-        if (!updateTilePixmap(tiles[i])) {
-            cleanupTiles();
-            return;
+            if (!updateTilePixmap(tiles[index])) {
+                cleanupTiles();
+                return;
+            }
+
+            x += size.width();
+            ++index;
         }
-
         y += size.height();
     }
 }
@@ -766,7 +779,7 @@ void MLabelViewRich::drawTiles(QPainter *painter, const QPointF &pos)
             return;
         }
 
-        const QPointF tileOffset(pos.x(), pos.y() + tile.y);
+        const QPointF tileOffset(pos.x() + tile.x, pos.y() + tile.y);
         const int minYOffset = -topMargin();
         const MLabelStyle *style = viewPrivate->style();
         const QSizeF labelSize = viewPrivate->controller->size() + QSizeF(0,style->reactiveMarginBottom() + style->reactiveMarginTop());
@@ -786,37 +799,53 @@ void MLabelViewRich::drawTiles(QPainter *painter, const QPointF &pos)
 
 void MLabelViewRich::updateTilesPosition()
 {
-    if (tiles.count() <= 1) {
+    const int tilesCount = tiles.count();
+    if (tilesCount <= 1) {
         // If only one tile is used, the whole text fits into the tile and no change of the
         // position is required.
         return;
     }
 
-    Q_ASSERT(tiles.count() == 2);
-    Tile *top = topTile();
-    Tile *bottom = bottomTile();
+    const QPointF relLabelPos = viewPrivate->controller->pos();
+    const QPointF absLabelPos = viewPrivate->mapToRoot(relLabelPos);
 
-    // Update the tile pixmaps and position, if they got invalid because of a changed scene position
-    const QPointF rootOffset = viewPrivate->mapToRoot(viewPrivate->controller->pos());
-    const int rootOffsetY = rootOffset.y();
+    const qreal labelPosXDiff = relLabelPos.x() - absLabelPos.x();
+    const qreal labelPosYDiff = relLabelPos.y() - absLabelPos.y();
+    const int diff = tileDimension * 2;
 
-    const int labelYPos = viewPrivate->controller->pos().y();
+    const qreal xMin = labelPosXDiff - tileDimension;
+    const qreal xMax = labelPosXDiff + tileDimension;
+    const qreal yMin = labelPosYDiff - tileDimension;
+    const qreal yMax = labelPosYDiff + tileDimension;
 
-    // Check if none of the tiles are visible
-    if (rootOffsetY + bottom->y + tileHeight < labelYPos) {
-        // None of the tiles are visible. Put them where they're visible
-        top->y = (-rootOffsetY / tileHeight) * tileHeight - topMargin();
-        bottom->y = top->y + tileHeight;
-        updateTilePixmap(*top);
-        updateTilePixmap(*bottom);
-    } else if (rootOffsetY + top->y + tileHeight < labelYPos) {
-        // The top tile got invisible, use it as bottom tile for the next iteration
-        top->y = bottom->y + tileHeight;
-        updateTilePixmap(*top);
-    } else if (rootOffsetY + top->y > labelYPos) {
-        // The bottom tile got invisible, use it as top tile for the next iteration
-        bottom->y = top->y - tileHeight;
-        updateTilePixmap(*bottom);
+    for (int i = 0; i < tilesCount; ++i) {
+
+        Tile& tile = tiles[i];
+        bool update = false;
+
+        while (tile.x < xMin) {
+            tile.x += diff;
+            update = true;
+        }
+
+        while (tile.x > xMax) {
+            tile.x -= diff;
+            update = true;
+        }
+
+        while (tile.y < yMin) {
+            tile.y += diff;
+            update = true;
+        }
+
+        while (tile.y > yMax) {
+            tile.y -= diff;
+            update = true;
+        }
+
+        if (update) {
+            updateTilePixmap(tile);
+        }
     }
 }
 
@@ -848,13 +877,16 @@ bool MLabelViewRich::updateTilePixmap(const Tile &tile)
 {
     qreal x;
     QRectF textBounds = textBoundaries(&x);
-    textBounds = textBounds.intersected(QRectF(textBounds.x(), tile.y, tile.size.width(), tile.size.height()));
-    if (!textBounds.isEmpty()) {
+    const QRectF tileBounds(tile.x, tile.y, tile.size.width(), tile.size.height());
+    textBounds = textBounds.intersected(tileBounds);
+    if (textBounds.isEmpty()) {
+        QPixmapCache::insert(tile.pixmapCacheKey, QPixmap());
+    } else {
         QPixmap pixmap(tile.size);
         pixmap.fill(Qt::transparent);
 
         QPainter painter(&pixmap);
-        painter.translate(leftMargin() - x, -tile.y);
+        painter.translate(-tile.x + x, -tile.y);
         textDocument.drawContents(&painter, textBounds);
 
         return QPixmapCache::insert(tile.pixmapCacheKey, pixmap);
@@ -871,18 +903,6 @@ bool MLabelViewRich::isTilesCacheValid() const
         }
     }
     return true;
-}
-
-MLabelViewRich::Tile* MLabelViewRich::topTile()
-{
-    Q_ASSERT(tiles.count() == 2);
-    return (tiles[0].y <= tiles[1].y) ? &tiles[0] : &tiles[1];
-}
-
-MLabelViewRich::Tile* MLabelViewRich::bottomTile()
-{
-    Q_ASSERT(tiles.count() == 2);
-    return (tiles[0].y <= tiles[1].y) ? &tiles[1] : &tiles[0];
 }
 
 QRectF MLabelViewRich::textBoundaries(qreal *x) const
