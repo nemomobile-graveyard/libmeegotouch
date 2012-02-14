@@ -58,8 +58,12 @@ void Ut_MSceneWindowScroller::cleanupTestCase()
 void Ut_MSceneWindowScroller::testQueryScrollingAmount()
 {
     // get the size of the visible area
-    // we use landscape size because the scroller does so
+#ifdef __arm__
+    QRect sceneRect(QRect(QPoint(), sceneWindow->sceneManager()->visibleSceneSize()));
+#else
+    // on scratchbox we must assume that we're in landscape orientation
     QRect sceneRect(QRect(QPoint(), sceneWindow->sceneManager()->visibleSceneSize(M::Landscape)));
+#endif
 
     // Ask how much the window can scroll with its 2000 height using current scene rect and
     // with no initial offset
