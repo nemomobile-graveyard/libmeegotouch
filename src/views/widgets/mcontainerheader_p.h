@@ -54,6 +54,10 @@ signals:
 
 private slots:
     void lift();
+
+#ifdef UNIT_TEST
+    friend class Ut_MContainerHeader;
+#endif
 };
 
 /*!
@@ -71,4 +75,8 @@ public:
 
 signals:
     void clicked();
+
+#ifdef UNIT_TEST
+    friend class Ut_MContainerHeader;
+#endif
 };
