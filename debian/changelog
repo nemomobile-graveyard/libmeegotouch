@@ -1,8 +1,21 @@
-libmeegotouch (0.26.0~1) unstable; urgency=low
+libmeegotouch (0.26.0-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#297788 -Empty completer displayed in create message view
+  * Fixes: NB#295471 - Calendar invitation body is not easily scrolable, scrolls frame by frame
+  * Fixes: NB#297680 - Not transparent background for applicationextension widget (for example weather applet) in events desktop
+  * Fixes: NB#298284 - Sometimes during application start up square top corners can be briefly seen until they get rounded.
+  * Fixes: NB#289461 - MUniqueStringCache must be able to increase the size of the cache
+  * Fixes: NB#297343 - MBubbleItem setMessageType() and setCentralWidget() methods not working correctly after the view is created
+  * Fixes: NB#297359 - Setting setTextFormat(Qt::PlainText) in MLabel change its position in layout.
+  * Fixes: NB#295558 - Text in contacts search input field goes beyond the text field boundaries
+  * Fixes: NB#297242 - [TASK] Enable logging of certain error cases in PR1.3 images in order to catch bug #292977
+  * Fixes: NB#297181 - libmlocale related tests should be removed from libmeegotouch tests
+  * Fixes: NB#294572 - MLabel: Inconsistent vertical alignment of simple-text and rich-text
+  * Fixes: NB#291925 - Ut_MLabel::testRichTextTiles() fails
+  * Fixes: NB#295983 - Magnifier is still shown even if the finger is released from the text
 
- -- Adrian Yanes <ayanes@Mino>  Mon, 30 Jan 2012 10:46:30 +0100
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 15 Feb 2012 12:41:10 +0200
 
 libmeegotouch (0.25.4-1) unstable; urgency=low
 
