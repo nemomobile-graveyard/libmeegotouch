@@ -41,6 +41,7 @@ private slots:
     void init(); // called before every single test
     void cleanup(); // called after every single test
 
+    void testHeaderHiding_data();
     void testHeaderHiding();
 
     void testCentralWidgetSizePolicyRespected_preferred();

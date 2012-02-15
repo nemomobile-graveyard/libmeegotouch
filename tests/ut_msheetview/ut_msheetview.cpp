@@ -69,11 +69,29 @@ void Ut_MSheetView::cleanup()
     window = 0;
 }
 
+void Ut_MSheetView::testHeaderHiding_data()
+{
+    QTest::addColumn<M::OrientationAngle>("orientationAngle");
+
+    QTest::newRow("Landscape")
+            << M::Angle0;
+    QTest::newRow("Portrait")
+            << M::Angle270;
+}
+
 void Ut_MSheetView::testHeaderHiding()
 {
+    QFETCH(M::OrientationAngle, orientationAngle);
+
     window->show();
+    window->setOrientationAngle(orientationAngle);
+    window->setOrientationAngleLocked(true);
 
     window->sceneManager()->appearSceneWindowNow(sheet);
+
+    // the style must be updated for the header/central slot dimensions to be correct for each orientation
+    subject->applyStyle();
+    QApplication::processEvents();
 
     QRectF initHeaderGeometry = subject->d_func()->headerSlot->geometry();
     QRectF initCentralGeometry = subject->d_func()->centralSlot->geometry();
