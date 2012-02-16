@@ -387,6 +387,9 @@ void MCompleterPrivate::_q_onAsyncFetchStart()
                      q, SLOT(_q_pollAsyncFetchEnd()),
                      Qt::UniqueConnection);
     asyncFetchPollTimer.start();
+
+    // Show completer if we are still hidden.
+    updateScene(true, false);
 }
 
 void MCompleterPrivate::_q_pollAsyncFetchEnd()
