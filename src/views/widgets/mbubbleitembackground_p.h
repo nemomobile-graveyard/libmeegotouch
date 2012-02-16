@@ -61,6 +61,10 @@ private:
   MBubbleItemBackground* controller;
 
   Q_DISABLE_COPY(MBubbleItemBackgroundView)
+
+#ifdef UNIT_TEST
+    friend class Ut_MBubbleItemBackground;
+#endif
 };
 
 /*
@@ -88,6 +92,10 @@ Q_SIGNALS:
 
 private:
     MBubbleItem::MessageType _messageType;
+
+#ifdef UNIT_TEST
+    friend class Ut_MBubbleItemBackground;
+#endif
 };
 
 #endif
