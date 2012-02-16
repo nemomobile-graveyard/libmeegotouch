@@ -282,7 +282,7 @@ void MTextEditViewPrivate::scrolling()
 
     } else if (q->model()->edit() == MTextEditModel::EditModeSelect
                && !selectionHandleIsPressed) {
-        controller->setSelection(startCursorPos, cursorIndex - startCursorPos, true);
+        controller->setSelection(startCursorPos, cursorIndex - startCursorPos, true, MTextEditModel::SelectionHandlesAndToolbar);
     }
 
     q->doUpdate(); // need to redraw, widget supposedly changed.
@@ -683,9 +683,14 @@ void MTextEditViewPrivate::hideEditorToolbarTemporarily()
 
 void MTextEditViewPrivate::restoreEditorToolbar()
 {
+    Q_Q(const MTextEditView);
     // If editorToolbar exists and is disappeared then assume it was hidden
-    // only temporarily. Restore it.
-    if (editorToolbar && !editorToolbar.data()->isAppeared()) {
+    // only temporarily and restore it unless there is a selection without
+    // controls visible.
+    if (editorToolbar && !editorToolbar.data()->isAppeared()
+        && (!controller->hasSelectedText() 
+            || (controller->hasSelectedText()
+                && q->model()->enabledSelectionControls() == MTextEditModel::SelectionHandlesAndToolbar))) {
         editorToolbar.data()->setAutoHideEnabled(!controller->hasSelectedText());
         editorToolbar.data()->appear();
         updateEditorToolbarPosition();
@@ -1171,7 +1176,7 @@ void MTextEditViewPrivate::startSelection(QGraphicsSceneMouseEvent *event)
         int currentPos = cursorPosition(event);
         startCursorPos = cursorPosition(event->buttonDownPos(Qt::LeftButton));
         previousSelectionCursorPosition = startCursorPos;
-        controller->setSelection(startCursorPos, currentPos - startCursorPos, true);
+        controller->setSelection(startCursorPos, currentPos - startCursorPos, true, MTextEditModel::SelectionHandlesAndToolbar);
     } else {
         // with masked input we just select all
         selecting = false;
@@ -1211,7 +1216,7 @@ void MTextEditViewPrivate::updateSelection(const QPointF &pos)
     if (ignoreSelection)
         return;
 
-    controller->setSelection(startCursorPos, cursorPosition(pos) - startCursorPos, true);
+    controller->setSelection(startCursorPos, cursorPosition(pos) - startCursorPos, true, MTextEditModel::SelectionHandlesAndToolbar);
 }
 
 
@@ -1353,7 +1358,7 @@ void MTextEditViewPrivate::onSelectionHandlePressed(const QPointF &position,
     // position of the handle it is more error-prone and currently cannot
     // be done because of bug NB#289549: QTextDocument's hittest returns incorrect positions for RTL text
     if (handleType == MTextSelectionOverlay::Anchor) {
-        controller->setSelection(cursorPos, anchorPos - cursorPos, false);
+        controller->setSelection(cursorPos, anchorPos - cursorPos, false, MTextEditModel::SelectionHandlesAndToolbar);
         mapSelectionChange();
     }
 }
@@ -1866,19 +1871,22 @@ QRect MTextEditViewPrivate::visibleArea() const
 
 void MTextEditViewPrivate::hideSelectionOverlayTemporarily()
 {
+    Q_Q(MTextEditView);
     // hide text selection overlay temporarily
-    if (controller->hasSelectedText() && !selectionOverlay.isNull()) {
+    if (controller->hasSelectedText() && !selectionOverlay.isNull()
+        && q->model()->isSelecting()) {
         QObject::disconnect(selectionOverlay.data(), SIGNAL(visibleChanged()),
                             this, SLOT(onSelectionOverlayVisibleChanged()));
-
         selectionOverlay.data()->disappear();
     }
 }
 
 void MTextEditViewPrivate::restoreSelectionOverlay()
 {
+    Q_Q(MTextEditView);
     // restore text selection overlay if it was temporarily hidden
-    if (controller->hasSelectedText() && !selectionOverlay.isNull()) {
+    if (controller->hasSelectedText() && !selectionOverlay.isNull()
+        && q->model()->isSelecting()) {
         showSelectionOverlay();
         QObject::connect(selectionOverlay.data(), SIGNAL(visibleChanged()),
                          this, SLOT(onSelectionOverlayVisibleChanged()));
@@ -1888,7 +1896,7 @@ void MTextEditViewPrivate::restoreSelectionOverlay()
 
 void MTextEditViewPrivate::setSelection()
 {
-    controller->setSelection(anchorPos, cursorPos - anchorPos, false);
+    controller->setSelection(anchorPos, cursorPos - anchorPos, false, MTextEditModel::SelectionHandlesAndToolbar);
     scrollingTestAndStart(lastHandlePos, true);
 }
 
@@ -1897,14 +1905,25 @@ void MTextEditViewPrivate::handleSelectionChanged()
     Q_Q(MTextEditView);
 
     if (controller->hasSelectedText() && !q->model()->isSelecting()) {
-        if (!q->style()->disableToolbar()) {
-            showEditorToolbar();
+        if (q->model()->enabledSelectionControls() == MTextEditModel::SelectionHandlesAndToolbar) {
+            if (!q->style()->disableToolbar()) {
+                showEditorToolbar();
+            }
+            showSelectionOverlay();
+        } else {
+            hideEditorToolbar();
         }
-        showSelectionOverlay();
     } else {
         updateEditorToolbarPosition();
+
         if (q->model()->isSelecting()) {
-            mapSelectionChange();
+            if (controller->hasSelectedText()
+                && q->model()->enabledSelectionControls() == MTextEditModel::NoSelectionControls) {
+                emit q->selectionChanged(0, QRect(), false, 0, QRect(), false);
+                hideEditorToolbar();
+            } else {
+                mapSelectionChange();
+            }
         }
     }
 }

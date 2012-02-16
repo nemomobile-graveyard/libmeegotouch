@@ -82,6 +82,15 @@ public:
         PasswordEchoOnEdit
     };
 
+    //! Are selection controls shown for programmatically selected text 
+    enum SelectionControls {
+        //! Selection controls will not be shown
+        NoSelectionControls,
+
+        //! Selection handles and toolbar will be shown
+        SelectionHandlesAndToolbar
+    };
+
 private:
 
     M_MODEL_PROPERTY(MTextEditModel::EditMode, edit, Edit, true, MTextEditModel::EditModeBasic)
@@ -118,6 +127,7 @@ private:
         still appearing.
     */
     M_MODEL_PROPERTY(bool, isSelecting, IsSelecting, true, false)
+    M_MODEL_PROPERTY(MTextEditModel::SelectionControls, enabledSelectionControls, EnabledSelectionControls, true, MTextEditModel::SelectionHandlesAndToolbar)
 
 public:
     void updateCursor()   {

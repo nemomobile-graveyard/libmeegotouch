@@ -267,12 +267,28 @@ public:
     void deselect();
 
     /*!
-     * \brief Selects text from word boundary to another so that anchorPosition and anchorPosition+length are
-     included in the selection.
-     * Puts the cursor position to anchorPosition+length.
-     * length may be negative
-    */
+     * \brief Selects text from position \a anchorPosition and for \a length characters.
+     * Puts the cursor position to anchorPosition+length. \a length may be negative.
+     * \param anchorPosition Start position of the selected text
+     * \param length Amount of characters selected from anchorPosition
+     * \param useBoundaries If true, text is selected from word boundary to another so that
+     *        anchorPosition and anchorPosition+length are included in the selection
+     */
     void setSelection(int anchorPosition, int length, bool useBoundaries = false);
+
+    /*!
+     * \brief Selects text from position \a anchorPosition and for \a length characters.
+     * Puts the cursor position to anchorPosition+length. \a length may be negative.
+     * \param anchorPosition Start position of the selected text
+     * \param length Amount of characters selected from anchorPosition
+     * \param useBoundaries If true, text is selected from word boundary to another so that
+     *        anchorPosition and anchorPosition+length are included in the selection
+     * \param showControls Determines if text selection controls are available for the user
+              for the selection done with this function call. Any selection done by the user
+              (with mouse or shift+cursor) will have selection controls.
+     */
+    void setSelection(int anchorPosition, int length, bool useBoundaries, 
+                      MTextEditModel::SelectionControls selectionControls);
 
     /*
      * \brief returns the index of first selected character in the widget or -1 if no text is

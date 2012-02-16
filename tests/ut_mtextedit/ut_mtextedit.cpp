@@ -1503,6 +1503,111 @@ void Ut_MTextEdit::testSelection()
     QVERIFY(copyAvailableSpy.count() == 0);
 }
 
+void Ut_MTextEdit::testSelectionControls()
+{
+    QKeyEvent shiftRight(QEvent::KeyPress, Qt::Key_Right, Qt::ShiftModifier, QChar());
+    QKeyEvent right(QEvent::KeyPress, Qt::Key_Right, Qt::NoModifier, QChar());
+
+    QSignalSpy selectionChangedSpy(m_subject.get(), SIGNAL(selectionChanged()));
+    const char *text = "a bcd e";
+    m_subject->setText(text);
+
+    m_subject->setSelection(0, 1);
+    QCOMPARE(m_subject->text(), QString(text));
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::SelectionHandlesAndToolbar);
+
+    m_subject->setSelection(0, 1, false, MTextEditModel::NoSelectionControls);
+    QCOMPARE(m_subject->text(), QString(text));
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::NoSelectionControls);
+
+    // Adding to selection with shifth+arrow should make selection controls
+    // appear regardless of previous selection
+    m_subject->keyPressEvent(&shiftRight);
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::SelectionHandlesAndToolbar);
+
+    // Clearing a selection with arrows should reset selection controls
+    m_subject->setSelection(0, 1, false, MTextEditModel::NoSelectionControls);
+    QCOMPARE(m_subject->text(), QString(text));
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::NoSelectionControls);
+    m_subject->keyPressEvent(&right);
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::SelectionHandlesAndToolbar);
+
+    // Inserting text should reset selection controls
+    m_subject->setSelection(0, 1, false, MTextEditModel::NoSelectionControls);
+    m_subject->copy();
+    QCOMPARE(m_subject->text(), QString(text));
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::NoSelectionControls);
+    m_subject->insert(text);
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::SelectionHandlesAndToolbar);
+
+    // Pasting text should reset selection controls
+    m_subject->setText(text);
+    m_subject->setSelection(0, 1, false, MTextEditModel::NoSelectionControls);
+    m_subject->copy();
+    QCOMPARE(m_subject->text(), QString(text));
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::NoSelectionControls);
+    m_subject->paste();
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::SelectionHandlesAndToolbar);
+
+    // Cutting text should reset selection controls
+    m_subject->setText(text);
+    m_subject->setSelection(0, 1, false, MTextEditModel::NoSelectionControls);
+    m_subject->copy();
+    QCOMPARE(m_subject->text(), QString(text));
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::NoSelectionControls);
+    m_subject->cut();
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::SelectionHandlesAndToolbar);
+
+    // Deselecting text should reset selection controls
+    m_subject->setText(text);
+    m_subject->setSelection(0, 1, false, MTextEditModel::NoSelectionControls);
+    QCOMPARE(m_subject->text(), QString(text));
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::NoSelectionControls);
+    m_subject->deselect();
+    QCOMPARE(m_subject->text(), QString(text));
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::SelectionHandlesAndToolbar);
+
+    // Setting a new cursor should reset selection controls
+    m_subject->setSelection(0, 1, false, MTextEditModel::NoSelectionControls);
+    QCOMPARE(m_subject->text(), QString(text));
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::NoSelectionControls);
+    QTextCursor cursor(m_subject->textCursor());
+    cursor.setPosition(1);
+    m_subject->setTextCursor(cursor);
+    QCOMPARE(m_subject->text(), QString(text));
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    selectionChangedSpy.clear();
+    QCOMPARE(m_subject->model()->enabledSelectionControls(), MTextEditModel::SelectionHandlesAndToolbar);
+}
+
 void Ut_MTextEdit::testSelectionVsFocus()
 {
     AutoActivatedScene sc;

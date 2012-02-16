@@ -1743,8 +1743,12 @@ MTextEdit::~MTextEdit()
 
 void MTextEdit::setSelection(int anchorPosition, int length, bool useBoundaries)
 {
-    Q_D(MTextEdit);
+    setSelection(anchorPosition, length, useBoundaries, MTextEditModel::SelectionHandlesAndToolbar);
+}
 
+void MTextEdit::setSelection(int anchorPosition, int length, bool useBoundaries, MTextEditModel::SelectionControls selectionControls)
+{
+    Q_D(MTextEdit);
     if (!isSelectionEnabled()) {
         return;
     }
@@ -1777,7 +1781,8 @@ void MTextEdit::setSelection(int anchorPosition, int length, bool useBoundaries)
 
     // check if change actually happens
     QTextCursor *currentCursor = d->cursor();
-    if (anchorPosition == currentCursor->anchor() && newCursorPosition == currentCursor->position()) {
+    if (anchorPosition == currentCursor->anchor() && newCursorPosition == currentCursor->position()
+        && model()->enabledSelectionControls() == selectionControls) {
         return;
     }
 
@@ -1804,6 +1809,7 @@ void MTextEdit::setSelection(int anchorPosition, int length, bool useBoundaries)
 
     d->updateMicroFocus();
 
+    model()->setEnabledSelectionControls(selectionControls);
     emit selectionChanged();
 
     return;
@@ -1909,6 +1915,7 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
                 d->sendCopyAvailable(false);
             }
             if (moved) {
+                model()->setEnabledSelectionControls(MTextEditModel::SelectionHandlesAndToolbar);
                 emit selectionChanged();
                 d->updateMicroFocus();
             }
@@ -2053,6 +2060,7 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
 
         if (wasSelecting == true) {
             d->setMode(MTextEditModel::EditModeBasic);
+            model()->setEnabledSelectionControls(MTextEditModel::SelectionHandlesAndToolbar);
             emit selectionChanged();
             d->sendCopyAvailable(false);
         }
@@ -2214,6 +2222,7 @@ bool MTextEdit::insert(const QString &text)
     // back to basic mode
     if ((mode() == MTextEditModel::EditModeSelect) && d->cursor()->hasSelection()) {
         d->cursor()->removeSelectedText();
+        model()->setEnabledSelectionControls(MTextEditModel::SelectionHandlesAndToolbar);
         emit selectionChanged();
     } else if (mode() == MTextEditModel::EditModeActive) {
         d->removePreedit();
@@ -2431,6 +2440,7 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
                     d->cursor()->setPosition(end, QTextCursor::KeepAnchor);
                     d->setMode(MTextEditModel::EditModeSelect);
                     model()->updateCursor();
+                    model()->setEnabledSelectionControls(MTextEditModel::SelectionHandlesAndToolbar);
                     emit selectionChanged();
                     d->sendCopyAvailable(true);
                     d->doubleClickSelectionTime = QTime::currentTime();
@@ -2515,6 +2525,7 @@ void MTextEdit::selectAll()
         }
 
         model()->updateCursor();
+        model()->setEnabledSelectionControls(MTextEditModel::SelectionHandlesAndToolbar);
         emit selectionChanged();
         d->sendCopyAvailable(true);
         d->updateMicroFocus();
@@ -2557,6 +2568,7 @@ void MTextEdit::paste()
     // back to basic mode
     if (wasSelecting) {
         d->cursor()->removeSelectedText();
+        model()->setEnabledSelectionControls(MTextEditModel::SelectionHandlesAndToolbar);
         emit selectionChanged();
     } else if (mode() == MTextEditModel::EditModeActive) {
         d->commitPreedit(true);
@@ -2610,6 +2622,7 @@ void MTextEdit::cut()
         cursor->removeSelectedText();
         d->setMode(MTextEditModel::EditModeBasic);
         d->sendCopyAvailable(false);
+        model()->setEnabledSelectionControls(MTextEditModel::SelectionHandlesAndToolbar);
         emit selectionChanged();
         emit textChanged();
         emit cursorPositionChanged();
@@ -2942,6 +2955,7 @@ void MTextEdit::setTextCursor(const QTextCursor &cursor)
     if ((newMode == MTextEditModel::EditModeSelect && changed) ||
             (newMode == MTextEditModel::EditModeBasic &&
              oldMode == MTextEditModel::EditModeSelect)) {
+        model()->setEnabledSelectionControls(MTextEditModel::SelectionHandlesAndToolbar);
         emit selectionChanged();
     }
 
@@ -3230,6 +3244,7 @@ void MTextEdit::deselect()
         model()->updateCursor();
         d->sendCopyAvailable(false);
         d->updateMicroFocus();
+        model()->setEnabledSelectionControls(MTextEditModel::SelectionHandlesAndToolbar);
         emit selectionChanged();
     }
 }
