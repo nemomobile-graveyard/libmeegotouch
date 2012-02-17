@@ -82,6 +82,8 @@ protected:
     CompletionCountButton *completionsButton;
     QGraphicsLinearLayout *layout;
     MPopupList *popup;
+
+    int popupSelectedIndex;
 };
 
 //! CompletionCountButton is a button used to show matching completions.
