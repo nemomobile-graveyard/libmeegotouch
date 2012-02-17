@@ -57,7 +57,8 @@ MCompleterViewPrivate::MCompleterViewPrivate(MCompleter *controller, MCompleterV
       completionLabel(0),
       completionsButton(0),
       layout(0),
-      popup(0)
+      popup(0),
+      popupSelectedIndex(-1)
 {
     completionLabel = new MLabel(controller);
     completionLabel->setObjectName(CompleterCandidatesLabelObjectName);
@@ -292,6 +293,10 @@ void MCompleterViewPrivate::handlePopupAppearing()
     controller->hideCompleter();
     if (controller->widget()) {
         controller->widget()->clearFocus();
+
+        // Refocusing popup is a workaround for an issue where text edit
+        // receives focus automatically when app is minimized and restored
+        // during the time popup dialog is appeared.
         connect(controller->widget(), SIGNAL(gainedFocus(Qt::FocusReason)),
                 this, SLOT(refocusPopup()), Qt::UniqueConnection);
     }
@@ -303,25 +308,40 @@ void MCompleterViewPrivate::handlePopupDisappearing()
     // On disappeared() is too late since matchedModel might've been updated
     // during disappearance animation and index returned by popup could be incorrect.
 
+    // Calling confirm() here however would lead to a regression when recipient editor opens
+    // a contact detail picker while this, higher z-level popup, is still visible.
+    // Normally the new dialog would remove focus from text edit (by QEvent::WindowBlocked)
+    // but because the popup is still visible the focus remains and shows input method on
+    // top of detail picker dialog. See bug NB#203502.
+
+    popupSelectedIndex = popup->result() == MDialog::Accepted
+                         ? popup->currentIndex().row() : -1;
+}
+
+void MCompleterViewPrivate::handlePopupDisappeared()
+{
     Q_Q(MCompleterView);
+
     if (controller->widget()) {
         disconnect(controller->widget(), SIGNAL(gainedFocus(Qt::FocusReason)),
                    this, SLOT(refocusPopup()));
         if (popup->result() == MDialog::Accepted) {
-            //only confirm when accept
+
+            // If model changed after selection, popup's currentIndex seem to be -1.
+            if (popupSelectedIndex != popup->currentIndex().row()) {
+                qWarning("MCompleterView: Model updated during dialog's disappearance animation. "
+                         "Selected item may be wrong!");
+                // The value of popupSelectedIndex is not validated here before
+                // setting it as matchedIndex, it is done in confirm().
+            }
             controller->scene()->setFocusItem(controller->widget());
-            q->model()->setMatchedIndex(popup->currentIndex().row());
+            q->model()->setMatchedIndex(popupSelectedIndex);
 
             controller->confirm();
         } else {
             controller->scene()->setFocusItem(controller->widget());
         }
     }
-}
-
-void MCompleterViewPrivate::handlePopupDisappeared()
-{
-    Q_Q(MCompleterView);
     q->model()->setPopupActive(false);
 }
 
