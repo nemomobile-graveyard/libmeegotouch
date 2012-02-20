@@ -1,8 +1,12 @@
-libmeegotouch (0.25.7~1) unstable; urgency=low
+libmeegotouch (0.25.7-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: NB#289461 - MUniqueStringCache must be able to increase the size of the cache
+  * Fixes: NB#297680 - Not transparent background for applicationextension widget (for example weather applet) in events desktop
+  * Fixes: NB#293780 - [RARE] COREWEB: /usr/bin/mthemedaemon 'MThemeDaemonServer::clientDataAvailable'
+  * Fixes: NB#287619 - Presence UI crash appeared when Google is configured with Picasa and Youtube
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 07 Feb 2012 16:35:56 +0200
+ -- Armin Berres <armin.berres@basyskom.com>  Mon, 20 Feb 2012 10:21:42 +0100
 
 libmeegotouch (0.25.6-1) unstable; urgency=low
 
