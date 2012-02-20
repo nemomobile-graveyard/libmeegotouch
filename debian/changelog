@@ -1,3 +1,9 @@
+libmeegotouch (0.25.8~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Armin Berres <armin.berres@basyskom.com>  Mon, 20 Feb 2012 10:27:42 +0100
+
 libmeegotouch (0.25.7-1) unstable; urgency=low
 
   * New version
