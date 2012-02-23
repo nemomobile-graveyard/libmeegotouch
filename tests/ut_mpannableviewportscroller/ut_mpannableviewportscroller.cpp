@@ -62,7 +62,8 @@ void Ut_MPannableViewportScroller::cleanupTestCase()
     }
     delete scroller;
     delete appWindow;
-    delete app;
+    //Commented to prevent the crash at exit
+    //delete app;
 }
 
 void Ut_MPannableViewportScroller::testQueryScrollingAmount()
