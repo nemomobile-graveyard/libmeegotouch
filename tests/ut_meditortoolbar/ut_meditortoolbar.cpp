@@ -30,8 +30,17 @@
 #include <MButton>
 #include <MScene>
 #include <MSceneManager>
+#include <MSceneWindow>
 
 Q_DECLARE_METATYPE(Ut_MEditorToolbar::Operations)
+
+#ifndef __arm__
+// on scratchbox we must assume we're in landscape mode
+M::Orientation MSceneManager::orientation() const
+{
+    return M::Landscape;
+}
+#endif // !__arm__
 
 void Ut_MEditorToolbar::initTestCase()
 {
@@ -43,8 +52,9 @@ void Ut_MEditorToolbar::initTestCase()
     m_app = new MApplication(dummyArgc, dummyArgv);
     m_appWindow = new MApplicationWindow;
 
-    fakeParent = new MWidget;
-    m_appWindow->scene()->addItem(fakeParent);
+    fakeParent = new MSceneWindow;
+    m_appWindow->sceneManager()->appearSceneWindowNow(fakeParent, MSceneWindow::DestroyWhenDone);
+    qApp->processEvents();
 }
 
 void Ut_MEditorToolbar::cleanupTestCase()
@@ -59,9 +69,6 @@ void Ut_MEditorToolbar::init()
 {
     fakeParent->setPos(QPointF());
     subject = new MEditorToolbar(fakeParent);
-
-    // fakeParent must be in the orientation of the scene.
-    fakeParent->setRotation(static_cast<qreal>(subject->sceneManager()->orientationAngle()));
 }
 
 void Ut_MEditorToolbar::cleanup()
@@ -177,6 +184,7 @@ void Ut_MEditorToolbar::testForbiddenRegion_data()
     QTest::newRow("use forbidden area, action is visible")
             << QPointF(2.0, 5.0) << QPointF() << QRegion(QRect(-10, -10, 20, 20)) << true << static_cast<qreal>(10.0f);
 }
+
 void Ut_MEditorToolbar::testForbiddenRegion()
 {
     QFETCH(QPointF, fakeParentPos);
@@ -196,9 +204,7 @@ void Ut_MEditorToolbar::testForbiddenRegion()
     subject->setPosition(position, MEditorToolbar::BelowPointOfInterest);
     qApp->processEvents(); // Allow setPosition() to take effect
 
-    QPointF mappedActualPos = subject->parentItem()->mapToItem(fakeParent,
-                                                               subject->pos());
-    // chack vertical translation
+    // check vertical translation
     QCOMPARE(subject->transform().m32(), m32);
 }
 
