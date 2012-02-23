@@ -28,7 +28,7 @@ class MApplication;
 class MApplicationWindow;
 class MButton;
 class MEditorToolbar;
-class MWidget;
+class MSceneWindow;
 
 class Ut_MEditorToolbar : public QObject
 {
@@ -69,7 +69,7 @@ private:
     MApplication *m_app;
     MApplicationWindow *m_appWindow;
     MEditorToolbar *subject;
-    MWidget *fakeParent;
+    MSceneWindow *fakeParent;
 };
 
 #endif
