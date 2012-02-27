@@ -36,8 +36,11 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testBannerData();
-    void testMouseReleaseEvent();
+    void testBodyText();
+    void testImageId();
+    void testIconId();
+    void testClickedEvent();
+    void testClickedEventCancelledByLeavingArea();
 
 private:
     MInfoBanner *m_infoBanner;
