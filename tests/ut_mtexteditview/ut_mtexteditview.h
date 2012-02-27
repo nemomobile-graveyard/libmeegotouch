@@ -75,6 +75,7 @@ private slots:
     void testPromptEliding();
     void testClipScrolledText_data();
     void testClipScrolledText();
+    void testScrollPositionAfterPasswordEchoOnEditFieldLoosesFocus();
 
 private:
     bool editorToolbarAppeared() const;

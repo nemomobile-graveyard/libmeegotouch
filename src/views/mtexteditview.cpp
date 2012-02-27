@@ -2684,6 +2684,11 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
 
     d->playFocusAnimation(QAbstractAnimation::Backward, d->currentPromptOpacity);
 
+    // if echo mode is PasswordEchoOnEdit we must update scrolling position
+    // because masked text can be shorter than unmasked
+    if (model()->echo() == MTextEditModel::PasswordEchoOnEdit)
+        d->checkScroll();
+
     doUpdate();
 }
 

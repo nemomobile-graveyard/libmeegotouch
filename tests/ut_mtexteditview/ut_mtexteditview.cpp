@@ -1094,5 +1094,35 @@ QImage Ut_MTextEditView::captureImage(MWidget *widget)
     return pixmap.toImage();
 }
 
+void Ut_MTextEditView::testScrollPositionAfterPasswordEchoOnEditFieldLoosesFocus()
+{
+    cleanup();
+    sc = new AutoActivatedScene();
+    m_controller = new MTextEdit(MTextEditModel::SingleLine, "");
+    m_subject = new MTextEditView(m_controller);
+    m_controller->setView(m_subject);
+    m_controller->setParentItem(sc->window()->box());
+    m_controller->resize(500, 50);
+    sc->window()->show();
+
+    m_controller->setEchoMode(MTextEditModel::PasswordEchoOnEdit);
+    m_controller->setFocus();
+
+    QKeyEvent pressW(QEvent::KeyPress, Qt::Key_W, Qt::ShiftModifier, "W");
+    QVERIFY(qFuzzyCompare(m_subject->d_ptr->hscroll, (qreal)0.0));
+    int count = 40;
+    for (int n = 0; n < count; ++n) {
+        m_controller->keyPressEvent(&pressW);
+    }
+
+    QFontMetrics fm(m_controller->document()->defaultFont());
+    qreal textWidth = fm.width(m_controller->text());
+    QVERIFY(m_subject->d_ptr->hscroll >= textWidth - m_controller->size().width());
+
+    m_controller->clearFocus();
+    QVERIFY(qFuzzyCompare(m_subject->d_ptr->hscroll, (qreal)0.0));
+}
+
 QTEST_APPLESS_MAIN(Ut_MTextEditView)
+
 
