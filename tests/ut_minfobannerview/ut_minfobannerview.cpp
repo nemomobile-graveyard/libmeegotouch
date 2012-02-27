@@ -59,29 +59,57 @@ void Ut_MInfoBannerView::cleanupTestCase()
     app = NULL;
 }
 
-void Ut_MInfoBannerView::testBannerData()
+void Ut_MInfoBannerView::testBodyText()
 {
     QString bodyText("testing");
     m_infoBanner->setBodyText(bodyText);
+    QCOMPARE(m_infoBanner->bodyText(), bodyText);
     QCOMPARE(m_subject->d_func()->label->text(), bodyText);
+}
 
-    QString imageID("image ID");
+void Ut_MInfoBannerView::testImageId()
+{
+    QString imageID("icon-l-contacts");
     m_infoBanner->setImageID(imageID);
+    QCOMPARE(m_infoBanner->imageID(), imageID);
     QCOMPARE(m_subject->d_func()->image->imageId(), imageID);
+}
 
-    QString iconID("icon ID");
+void Ut_MInfoBannerView::testIconId()
+{
+    QString iconID("icon-l-contacts");
     m_infoBanner->setIconID(iconID);
+    QCOMPARE(m_infoBanner->iconID(), iconID);
     QCOMPARE(m_subject->d_func()->icon->imageId(), iconID);
 }
 
-void Ut_MInfoBannerView::testMouseReleaseEvent()
+void Ut_MInfoBannerView::testClickedEvent()
 {
     m_infoBanner->setGeometry(QRectF(0, 0, 200, 100));
     QSignalSpy clickedSpy(m_infoBanner, SIGNAL(clicked()));
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setScenePos(QPointF(10, 10));
+    m_subject->mousePressEvent(&pressEvent);
     QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
     releaseEvent.setScenePos(QPointF(10, 10));
     m_subject->mouseReleaseEvent(&releaseEvent);
     QCOMPARE(clickedSpy.count(), 1);
+}
+
+void Ut_MInfoBannerView::testClickedEventCancelledByLeavingArea()
+{
+    m_infoBanner->setGeometry(QRectF(0, 0, 200, 100));
+    QSignalSpy clickedSpy(m_infoBanner, SIGNAL(clicked()));
+
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setScenePos(QPointF(10, 10));
+    m_subject->mousePressEvent(&pressEvent);
+
+    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
+    releaseEvent.setScenePos(QPointF(100, 200));
+    m_subject->mouseReleaseEvent(&releaseEvent);
+
+    QCOMPARE(clickedSpy.count(), 0);
 }
 
 QTEST_APPLESS_MAIN(Ut_MInfoBannerView)
