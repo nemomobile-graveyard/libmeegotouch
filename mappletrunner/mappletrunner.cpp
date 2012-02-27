@@ -39,6 +39,7 @@ MAppletRunner::MAppletRunner() : MExtensionRunner(),
 
 MAppletRunner::~MAppletRunner()
 {
+    delete appletInstanceDataStore;
     delete appletSettings;
 }
 
