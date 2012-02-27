@@ -700,6 +700,8 @@ void MBannerViewPrivate::manageOpacities() const
             prefixTimeStampLabel->setOpacity(q->style()->pressDownBannerOpacity());
         if (bannerTimeStampLabel)
             bannerTimeStampLabel->setOpacity(q->style()->pressDownBannerOpacity());
+        if (pixmapBanner)
+            pixmapBanner->setOpacity(q->style()->pressDownBannerOpacity());
     } else if (!q->model()->down() && isDownOpacityEnabled) {
         if (iconId)
             iconId->setOpacity(controller->opacity());
@@ -711,6 +713,8 @@ void MBannerViewPrivate::manageOpacities() const
             prefixTimeStampLabel->setOpacity(controller->opacity());
         if (bannerTimeStampLabel)
             bannerTimeStampLabel->setOpacity(controller->opacity());
+        if (pixmapBanner)
+            pixmapBanner->setOpacity(controller->opacity());
     }
 }
 
