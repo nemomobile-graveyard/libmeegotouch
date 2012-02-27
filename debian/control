@@ -25,7 +25,7 @@ Build-Depends: debhelper (>= 5),
  libxcomposite-dev,
  libngf-dev,
  aegis-builder (>= 1.6),
- libmaliit1-dev,
+ libmaliit1-dev (>= 0.81.5),
  libmlocale-dev (>= 0.4.1-1)
 Standards-Version: 3.7.2
 
