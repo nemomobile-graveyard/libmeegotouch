@@ -875,6 +875,19 @@ void Ut_MTextEdit::testInputMethodEvent()
     spy.clear();
     m_subject->inputMethodEvent(&preeditEvent);
     QCOMPARE(spy.count(), 0);
+
+    // check that pre-edit is ended when trying to add text on already full text field
+    m_subject->clear();
+    m_subject->setMaxLength(testString.length());
+    m_subject->inputMethodEvent(&event);
+    QCOMPARE(m_subject->text(), testString);
+    // Confirm that widget moved to pre-editing mode
+    QVERIFY(m_subject->mode() == MTextEditModel::EditModeActive);
+    m_subject->inputMethodEvent(&preeditEvent);
+    QCOMPARE(m_subject->text(), testString);
+    // Confirm that widget moved from pre-editing mode
+    QVERIFY(m_subject->mode() == MTextEditModel::EditModeBasic);
+
 }
 
 void Ut_MTextEdit::testText()

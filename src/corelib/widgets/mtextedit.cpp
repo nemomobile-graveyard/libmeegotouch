@@ -2852,7 +2852,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     // use when committed, but full entry can be known not to accept anything.
     if (!preedit.isEmpty()) {
         const bool atMaxLength((maxLength() >= 0) && (d->realCharacterCount() == maxLength()));
-        if (!atMaxLength) {
+        if (!atMaxLength || (preedit == d->cursor()->selectedText())) {
             emitTextChanged = emitTextChanged || !wasPreediting || (d->cursor()->selectedText() != preedit);
             if (!(wasPreediting && d->cursor()->hasSelection() && (newPreeditPosition == d->cursor()->selectionStart()))) {
                 d->cursor()->setPosition(newPreeditPosition);
@@ -2860,7 +2860,13 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
             d->setPreeditText(preedit, attributes);
             d->setMode(MTextEditModel::EditModeActive);
         } else {
+            const QString textBefore = d->cursor()->selectedText();
+            d->removePreedit();
+            d->doTextInsert(textBefore);
+            d->cursor()->setPosition(cursorPositionBefore);
+            d->setMode(MTextEditModel::EditModeBasic);
             d->safeReset();
+            d->updateMicroFocus();
         }
     }
 
