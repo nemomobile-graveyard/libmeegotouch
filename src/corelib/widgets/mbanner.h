@@ -316,6 +316,7 @@ private:
 
 #ifdef UNIT_TEST
     friend class Ut_MBanner;
+    friend class Ut_MBannerView;
 #endif
 };
 

@@ -80,6 +80,9 @@ void Ut_MBannerView::testInstantiateBannerView()
     MBannerView *bannerView = new MBannerView(*bannerViewPrivate, banner);
     banner->setView(bannerView);
 
+    QVERIFY2(banner, "Banner is NULL");
+    QVERIFY2(banner->view(), "Banner view is NULL");
+
     delete banner;
 }
 
@@ -225,13 +228,30 @@ void Ut_MBannerView::testBannerStyles()
 
 void Ut_MBannerView::testPrivateManageOpacities()
 {
+    const qreal bannerOpacity = m_subject->style()->pressDownBannerOpacity();
+
     m_subject->d_ptr->isDownOpacityEnabled = true;
 
     m_subject->d_ptr->manageOpacities();
 
+    QCOMPARE(m_subject->d_ptr->iconId->opacity(), m_subject->opacity());
+    QCOMPARE(m_subject->d_ptr->titleLabel->opacity(), m_subject->opacity());
+    QCOMPARE(m_subject->d_ptr->subtitleLabel->opacity(), m_subject->opacity());
+    QCOMPARE(m_subject->d_ptr->prefixTimeStampLabel->opacity(), m_subject->opacity());
+    QCOMPARE(m_subject->d_ptr->bannerTimeStampLabel->opacity(), m_subject->opacity());
+    QCOMPARE(m_subject->d_ptr->pixmapBanner->opacity(), m_subject->opacity());
+
     m_subject->model()->setDown(true);
 
     m_subject->d_ptr->manageOpacities();
+
+    QCOMPARE(m_subject->d_ptr->iconId->opacity(), bannerOpacity);
+    QCOMPARE(m_subject->d_ptr->titleLabel->opacity(), bannerOpacity);
+    QCOMPARE(m_subject->d_ptr->subtitleLabel->opacity(), bannerOpacity);
+    QCOMPARE(m_subject->d_ptr->prefixTimeStampLabel->opacity(), bannerOpacity);
+    QCOMPARE(m_subject->d_ptr->bannerTimeStampLabel->opacity(), bannerOpacity);
+    QCOMPARE(m_subject->d_ptr->pixmapBanner->opacity(), bannerOpacity);
+
 }
 
 void Ut_MBannerView::testPrivateLayoutShortEventBanner()
