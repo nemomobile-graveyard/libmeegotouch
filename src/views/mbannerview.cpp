@@ -117,13 +117,11 @@ MImageWidget *MBannerViewPrivate::pixmap()
 {
 
     if (!pixmapBanner) {
-        Q_Q(MBannerView);
         pixmapBanner = new MImageWidget(controller);
         QSizePolicy policy(pixmapBanner->sizePolicy());
         policy.setHorizontalPolicy(QSizePolicy::Fixed);
         policy.setVerticalPolicy(QSizePolicy::Fixed);
         pixmapBanner->setSizePolicy(policy);
-        pixmapBanner->setPreferredSize(q->style()->iconSize());
     }
 
     return pixmapBanner;
