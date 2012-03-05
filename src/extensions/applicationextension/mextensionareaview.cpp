@@ -86,8 +86,10 @@ void MExtensionAreaViewPrivate::updateLayout()
         // that don't exist in the data store
         for (int i = layout->count() - 1; i >= 0; --i) {
             MContainer *container = dynamic_cast<MContainer *>(layout->itemAt(i));
+            if (!container)
+                continue;
             QGraphicsWidget *centralWidget = container->centralWidget();
-            if (container != NULL && !dsMap->contains(centralWidget)) {
+            if (!dsMap->contains(centralWidget)) {
                 // Remove widget from layout
                 layout->removeAt(i);
                 centralWidget->setParentItem(controller);
@@ -164,7 +166,7 @@ int MExtensionAreaViewPrivate::findLayoutIndex(QGraphicsWidget *widget)
     const int count = layout->count();
     for (int i = 0; i < count; ++i) {
         MContainer *c = dynamic_cast<MContainer *>(layout->itemAt(i));
-        if (widget == c->centralWidget()) {
+        if (c && widget == c->centralWidget()) {
             return i;
         }
     }
