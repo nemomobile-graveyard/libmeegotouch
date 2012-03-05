@@ -41,4 +41,6 @@ locale_files.files += ut_mimagedirectory-samples/*
 locale_files.path = $$[QT_INSTALL_LIBS]/libmeegotouch-tests/ut_mimagedirectory-samples
 INSTALLS += locale_files
 
+support_files.files += ut_mimagedirectory-image-svg.svg
+
 include(../common_bot.pri)

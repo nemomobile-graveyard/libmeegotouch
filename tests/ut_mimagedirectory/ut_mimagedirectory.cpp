@@ -78,7 +78,7 @@ void Ut_MImageDirectory::initTestCase()
     m_pixmapImageResource = new PixmapImageResource(QApplication::applicationDirPath() + QDir::separator() + m_pngImageFileName);
     QVERIFY(m_pixmapImageResource != 0);
 
-    m_svgImageResource = new SvgImageResource("testresource", QApplication::applicationDirPath() + QDir::separator() + m_svgImageFileName);
+    m_svgImageResource = new SvgImageResource("layer1", QApplication::applicationDirPath() + QDir::separator() + m_svgImageFileName);
     QVERIFY(m_svgImageResource != 0);
 }
 
@@ -94,6 +94,8 @@ void Ut_MImageDirectory::cleanupTestCase()
     m_svgImageResource = 0;
 
     QFile().remove(QApplication::applicationDirPath() + QDir::separator() + m_pngImageFileName);
+
+    delete app;
 }
 
 void Ut_MImageDirectory::testReloadLocalizedResources_data()
@@ -193,6 +195,8 @@ void Ut_MImageDirectory::testSaveToFsCache()
     QImage loadedImage = m_pixmapImageResource->loadFromFsCache(size, entry);
 
     QVERIFY2(!loadedImage.isNull(), "Invalid QImage object returned");
+
+    delete entry;
 }
 
 void Ut_MImageDirectory::testPixmapImageResourceCreatePixmap()
