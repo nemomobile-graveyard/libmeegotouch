@@ -35,6 +35,8 @@
 #include <MApplicationWindow>
 #include <MScene>
 
+#include "sbox_portrait_support.h"
+
 class CompleterTestModel : public  QAbstractTableModel
 {
 public :

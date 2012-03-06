@@ -41,10 +41,11 @@
 MApplication *app;
 MApplicationWindow *appWin;
 
+#include "sbox_portrait_support.h"
+
 #define WAIT_VERIFY(x) { int i = 0; while(!(x) && i++ < 100) { QTest::qWait(50); } QVERIFY(x); }
 
 void Ut_MToolBarView::initTestCase()
-
 {
     static int argc = 1;
     static char *app_name[1] = { (char *) "./Ut_MToolBarView" };

@@ -32,15 +32,9 @@
 #include <MSceneManager>
 #include <MSceneWindow>
 
-Q_DECLARE_METATYPE(Ut_MEditorToolbar::Operations)
+#include "sbox_portrait_support.h"
 
-#ifndef __arm__
-// on scratchbox we must assume we're in landscape mode
-M::Orientation MSceneManager::orientation() const
-{
-    return M::Landscape;
-}
-#endif // !__arm__
+Q_DECLARE_METATYPE(Ut_MEditorToolbar::Operations)
 
 void Ut_MEditorToolbar::initTestCase()
 {

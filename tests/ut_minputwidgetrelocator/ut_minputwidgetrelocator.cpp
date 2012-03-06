@@ -210,9 +210,23 @@ void Ut_MInputWidgetRelocator::testTargetPosition_data()
     const QRect landscapeSip(0, screenSize.height() - sipHeight,
                              screenSize.width(),
                              sipHeight);
+
+#ifdef __arm__
     const QRect portraitSip(screenSize.width() - sipHeight, 0,
                             sipHeight,
                             screenSize.height());
+#else // !__arm__
+    // workaround for making the test pass in scratchbox portrait mode
+    QRect portraitSip;
+    if (screenSize.height() > screenSize.width())
+        portraitSip = QRect(screenSize.height() - sipHeight, 0,
+                            sipHeight,
+                            screenSize.width());
+    else
+        portraitSip = QRect(screenSize.width() - sipHeight, 0,
+                            sipHeight,
+                            screenSize.height());
+#endif
 
     QTest::newRow("no sip, widget at upper nogo zone")   << M::Landscape << QRect() << UpperNoGoZone;
     QTest::newRow("no sip, widget already visible")    << M::Landscape << QRect() << AllowedZone;

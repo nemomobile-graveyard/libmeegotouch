@@ -35,6 +35,8 @@
 
 #include <msheet.h>
 
+#include "sbox_portrait_support.h"
+
 // QCOMPARE doesn't know MSceneWindow::SceneWindowSate enum. Thus it won't
 // print "Expected" and "Actual" values in case of failure unless they're cast
 // to a known type

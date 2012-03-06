@@ -42,6 +42,28 @@
 
 #include "testpage.h"
 
+// a workaround for scratchbox portrait mode...
+// sbox_portrait_support.h is not used because a slightly different
+// implementation is needed here
+#ifndef __arm__
+#include <MDeviceProfile>
+
+M::Orientation MDeviceProfile::orientationFromAngle(M::OrientationAngle angle) const
+{
+    if (angle == M::Angle90 || angle == M::Angle270)
+        return M::Portrait;
+    return M::Landscape;
+}
+
+QSize MSceneManager::visibleSceneSize(M::Orientation orientation) const
+{
+    QSize s = MDeviceProfile::instance()->resolution();
+    if (s.height() < s.width() && orientation == M::Portrait)
+        return QSize(s.height(), s.width());
+    return s;
+}
+#endif // !__arm__
+
 // QCOMPARE doesn't know MSceneWindow::SceneWindowSate enum. Thus it won't
 // print "Expected" and "Actual" values in case of failure unless they're cast
 // to a known type

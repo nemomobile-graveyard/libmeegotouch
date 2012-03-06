@@ -16,6 +16,7 @@ INCLUDEPATH += \
     $$STUBSDIR \
     $$MSRCDIR/include \
     $$MSRCDIR/views/style \
+    $$MSRCDIR/../tests/ \
 
 DEPENDPATH = $$INCLUDEPATH
 QMAKE_LIBDIR += ../../lib /usr/local/lib

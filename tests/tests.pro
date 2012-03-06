@@ -6,6 +6,7 @@ include(../mkspecs/common.pri)
 
 HEADERS += \
     utils.h \
+    sbox_portrait_support.h \
 
 SUBDIRS     =  \
     ft_mservicefwgen \

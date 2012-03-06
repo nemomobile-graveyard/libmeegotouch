@@ -30,6 +30,8 @@
 #include <QEventLoop>
 #include <QtTest>
 
+#include "sbox_portrait_support.h"
+
 namespace {
     const char *KnownIconId = "meegotouch-combobox-indicator";
     const char *UnknownIconId = "whatever";

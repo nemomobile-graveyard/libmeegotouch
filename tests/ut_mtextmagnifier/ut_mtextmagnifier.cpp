@@ -35,6 +35,8 @@
 #include <MSceneManager>
 #include <MWidget>
 
+#include "sbox_portrait_support.h"
+
 namespace {
     Qt::GestureState gGestureState = Qt::GestureStarted;
 }

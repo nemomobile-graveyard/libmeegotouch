@@ -30,6 +30,8 @@
 
 #include <QWindowStateChangeEvent>
 
+#include "sbox_portrait_support.h"
+
 namespace {
     enum { KeyboardOpen = 0, KeyboardClosed };
     QList<M::OrientationAngle> supportedAnglesStubLists[2];
