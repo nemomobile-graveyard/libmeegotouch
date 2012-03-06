@@ -26,13 +26,13 @@
 #include <QModelIndex>
 #include <MApplication>
 #include <QStandardItemModel>
+#include <QStringListModel>
 
 #include "mpopuplistview.h"
 #include "mpopuplistview_p.h"
 #include "mpopuplistview.cpp"
 
 #include "ut_mpopuplist.h"
-
 
 MApplication *app;
 
@@ -209,6 +209,47 @@ void Ut_MPopupList::testQStandardItemWithIcon()
     delete list;
 
     MTheme::releasePixmap(pixmap);
+}
+
+class ColoredListModel : public QStringListModel
+{
+public:
+    ColoredListModel(const QStringList &strings, QObject *parent = 0)
+        : QStringListModel(strings, parent) {}
+    virtual QVariant data(const QModelIndex &index, int role) const
+    {
+        if (role == Qt::ForegroundRole) {
+            // Assume Qt::DisplayRole is a string describing item color.
+            return QVariant(QBrush(QColor(QStringListModel::data(index, Qt::DisplayRole).toString())));
+        } else {
+            return QStringListModel::data(index, role);
+        }
+    }
+};
+
+void Ut_MPopupList::testItemForegroundColor()
+{
+    // This test checks that Qt::ForegroundRole given by model is eventually used
+    // as title label's color.
+
+    QStringList colorStrings = (QStringList() << "blue" << "white" << "red");
+    QList<QColor> expectedColors = (QList<QColor>() << QColor(Qt::blue) << QColor(Qt::white) << QColor(Qt::red));
+
+    ColoredListModel itemModel(colorStrings);
+
+    MList* list = new MList();
+    MPopupListCellCreator *cellCreator = new MPopupListCellCreator(list);
+    list->setCellCreator(cellCreator);
+    list->setItemModel(&itemModel);
+
+    MWidgetRecycler recycler;
+
+    for (int i = 0; i < colorStrings.size(); ++i) {
+        MPopupListItem *item = (MPopupListItem *)(cellCreator->createCell(itemModel.index(i, 0), recycler));
+        QCOMPARE(item->title->color(), expectedColors.at(i));
+        delete item;
+    }
+    delete list;
 }
 
 void Ut_MPopupList::testScrollTo()

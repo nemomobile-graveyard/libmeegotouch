@@ -44,6 +44,7 @@ private slots:
     void testSetItemIconID();
     void testSetItemPixmap();
     void testQStandardItemWithIcon();
+    void testItemForegroundColor();
     void testScrollTo();
     void testModelScrollTo();
 
