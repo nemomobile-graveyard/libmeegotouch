@@ -55,6 +55,19 @@ void MListIndexTooltipPrivate::init()
 void MListIndexTooltipPrivate::setTitle(const QString &title)
 {
     titleLabel()->setText(title);
+
+    qreal leftMargin = 0;
+    if (!title.isEmpty()) {
+        // Assure that texts with a negative left bearing
+        // don't exceed the left border.
+        const QFontMetricsF fontMetrics(titleLabel()->font());
+        const qreal leftBearing = fontMetrics.leftBearing(title[0]);
+        if (leftBearing < 0) {
+            leftMargin = -leftBearing;
+        }
+    }
+    layout->setContentsMargins(leftMargin, 0, 0, 0);
+    layout->activate();
 }
 
 MLabel *MListIndexTooltipPrivate::titleLabel()
