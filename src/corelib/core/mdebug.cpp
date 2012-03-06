@@ -222,9 +222,9 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
 {
     QTextStream s(stderr);
     s.setCodec("UTF-8");
-    QString indentation;
-    for (int i = 0; i < initialIndentationDepth * 4; i++)
-        indentation += ' ';
+
+    QString indentation(initialIndentationDepth * 4, ' ');
+
     s << indentation;
     QSizeF hfwPreferredSize = widget->effectiveSizeHint( Qt::PreferredSize, QSizeF(widget->geometry().width(), -1));
     QSizeF preferredSize = widget->effectiveSizeHint( Qt::PreferredSize, QSizeF(widget->preferredWidth(), -1));
@@ -339,70 +339,74 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
 
 void MDebug::printDebugChildInformation(QGraphicsLayout *layout, QGraphicsWidget *widget, int initialIndentationDepth)
 {
+    if (!layout || !widget)
+        return;
+
     QTextStream s(stderr);
     s.setCodec("UTF-8");
 
-    QString indentation;
-    for (int i = 0; i < initialIndentationDepth *4 -1; i++)
-        indentation += ' ';
+    QString indentation(initialIndentationDepth * 4 - 1, ' ');
+
+    QSizeF preferredSize = layout->effectiveSizeHint(Qt::PreferredSize, QSizeF(layout->preferredWidth(), -1));
+    QSizeF hfwPreferredSize = layout->effectiveSizeHint(Qt::PreferredSize, QSizeF(layout->geometry().width(), -1));
+
+    QGraphicsGridLayout *gridLayout = dynamic_cast<QGraphicsGridLayout*>(layout);
+    QGraphicsAnchorLayout *anchorLayout = dynamic_cast<QGraphicsAnchorLayout*>(layout);
+    QGraphicsLinearLayout *linearLayout = dynamic_cast<QGraphicsLinearLayout*>(layout);
+
     MLayout *mLayout = dynamic_cast<MLayout*>(layout);
 
-    if (layout) {
-        QSizeF preferredSize = layout->effectiveSizeHint(Qt::PreferredSize, QSizeF(layout->preferredWidth(), -1));
-        QSizeF hfwPreferredSize = layout->effectiveSizeHint(Qt::PreferredSize, QSizeF(layout->geometry().width(), -1));
+    s << indentation << "*"  << rectToString(layout->geometry().toRect(), preferredSize);
 
-        QGraphicsLinearLayout *linearLayout = dynamic_cast<QGraphicsLinearLayout*>(layout);
-        s << indentation << "*"  << rectToString(layout->geometry().toRect(), preferredSize);
-
-        s << normal();
-        if (widget->isVisible())
-            s << emphasize() << blue();
-        if (widget->testAttribute(Qt::WA_SetLayoutDirection)) {
-            if (widget->layoutDirection() == Qt::LeftToRight)
-                s << "LTR ";
-            else if (widget->layoutDirection() == Qt::RightToLeft)
-                s << "RTL ";
-        }
-        if (dynamic_cast<QGraphicsGridLayout*>(layout)) {
-            s << "QGraphicsGridLayout";
-        } else if (dynamic_cast<QGraphicsAnchorLayout*>(layout)) {
-            s << "QGraphicsAnchorLayout";
-        } else if (linearLayout) {
-            if (linearLayout->orientation() == Qt::Horizontal)
-                s << "QGraphicsLinearLayout (Hor)";
-            else
-                s << "QGraphicsLinearLayout (Ver)";
-        } else if (mLayout) {
-            if (dynamic_cast<MGridLayoutPolicy*>(mLayout->policy()))
-                s << "MGridLayoutPolicy";
-            else if (dynamic_cast<MFlowLayoutPolicy*>(mLayout->policy()))
-                s << "MFlowLayoutPolicy";
-            else if (MLinearLayoutPolicy *linearPolicy = dynamic_cast<MLinearLayoutPolicy*>(mLayout->policy())) {
-                if (linearPolicy->orientation() == Qt::Horizontal)
-                    s << "MLinearLayoutPolicy (Hor)";
-                else
-                    s << "MLinearLayoutPolicy (Ver)";
-            } else {
-                s << "MLayout";
-            }
-        } else {
-            s << "QGraphicsLayout";
-        }
-        s << ' ' << normal();
-        if (!widget->isVisible())
-            s << deemphasize();
-
-        s << sizeToString(layout->minimumSize().toSize());
-        s << QString::fromUtf8("≤ ") << sizeToString( preferredSize.toSize());
-        if (preferredSize.height() != hfwPreferredSize.height())
-            s << "(hfw:" << sizeToString(hfwPreferredSize.toSize()).trimmed() << ") ";
-        if (layout->effectiveSizeHint( Qt::MaximumSize) != QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX))
-            s << QString::fromUtf8("≤ ") << sizeToString(layout->maximumSize().toSize());
-
-        s << sizePolicyToString(layout->sizePolicy());
-
-        s << '\n';
+    s << normal();
+    if (widget->isVisible())
+        s << emphasize() << blue();
+    if (widget->testAttribute(Qt::WA_SetLayoutDirection)) {
+        if (widget->layoutDirection() == Qt::LeftToRight)
+            s << "LTR ";
+        else if (widget->layoutDirection() == Qt::RightToLeft)
+            s << "RTL ";
     }
+    if (gridLayout) {
+        s << "QGraphicsGridLayout";
+    } else if (anchorLayout) {
+        s << "QGraphicsAnchorLayout";
+    } else if (linearLayout) {
+        if (linearLayout->orientation() == Qt::Horizontal)
+            s << "QGraphicsLinearLayout (Hor)";
+        else
+            s << "QGraphicsLinearLayout (Ver)";
+    } else if (mLayout) {
+        if (dynamic_cast<MGridLayoutPolicy*>(mLayout->policy()))
+            s << "MGridLayoutPolicy";
+        else if (dynamic_cast<MFlowLayoutPolicy*>(mLayout->policy()))
+            s << "MFlowLayoutPolicy";
+        else if (MLinearLayoutPolicy *linearPolicy = dynamic_cast<MLinearLayoutPolicy*>(mLayout->policy())) {
+            if (linearPolicy->orientation() == Qt::Horizontal)
+                s << "MLinearLayoutPolicy (Hor)";
+            else
+                s << "MLinearLayoutPolicy (Ver)";
+        } else {
+            s << "MLayout";
+        }
+    } else {
+        s << "QGraphicsLayout";
+    }
+    s << ' ' << normal();
+    if (!widget->isVisible())
+        s << deemphasize();
+
+    s << sizeToString(layout->minimumSize().toSize());
+    s << QString::fromUtf8("≤ ") << sizeToString( preferredSize.toSize());
+    if (preferredSize.height() != hfwPreferredSize.height())
+        s << "(hfw:" << sizeToString(hfwPreferredSize.toSize()).trimmed() << ") ";
+    if (layout->effectiveSizeHint( Qt::MaximumSize) != QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX))
+        s << QString::fromUtf8("≤ ") << sizeToString(layout->maximumSize().toSize());
+
+    s << sizePolicyToString(layout->sizePolicy());
+
+    s << '\n';
+
     s << normal();
     s.flush();
 
