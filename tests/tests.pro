@@ -70,6 +70,7 @@ SUBDIRS     =  \
      ut_mpositionindicator \
      ut_mpositionindicatorview \
      ut_mpopuplist \
+     ut_mpopuplistitem \
      ut_mprogressindicator \
      ut_mprogressindicatorspinnerview \
      ut_mprogressindicatorbarview \
