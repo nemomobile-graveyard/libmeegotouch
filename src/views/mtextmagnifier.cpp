@@ -132,7 +132,7 @@ void MTextMagnifier::drawContents(QPainter *painter,
 
     QStyleOptionGraphicsItem sourceWidgetOption = *option;
     sourceWidgetOption.exposedRect = sourceWidgetRect;
-    offscreenPainter.setCompositionMode(QPainter::CompositionMode_Source);
+    offscreenPainter.setCompositionMode(QPainter::CompositionMode_SourceOver);
     const_cast<MWidget *>(&sourceWidget)->paint(&offscreenPainter, &sourceWidgetOption);
 
     offscreenPainter.resetTransform();
