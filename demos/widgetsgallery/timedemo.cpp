@@ -148,7 +148,7 @@ void Timedemo::showFirstPage()
 
     qDebug() << "Current page:" << demoPages[m_currentPageIndex]->timedemoTitle();
     demoPages[m_currentPageIndex]->createBenchmarks(this);
-    beginBenchmark();
+    QTimer::singleShot(0, this, SLOT(beginBenchmark()));
 }
 
 void Timedemo::beginBenchmark()
@@ -193,14 +193,6 @@ void Timedemo::showNextPage()
         qDebug() << "Current page:" << currentPage->timedemoTitle();
         demoPages[m_currentPageIndex]->createBenchmarks(this);
 
-        if (currentPage == m_pFrontPage) {
-            // FIXME: the front page needs a special invitation.
-            // otherwise it does not show up again
-            if (MApplication::activeWindow()) {
-                // FIXME: why appearSceneWindowNow() and not appear()?
-                MApplication::activeWindow()->sceneManager()->appearSceneWindowNow(demoPages[m_currentPageIndex]);
-            }
-        }
         beginBenchmark();
     } else {
         // all pages shown, display results:
