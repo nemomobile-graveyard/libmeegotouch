@@ -239,9 +239,10 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
                     /* Our text has fewer lines than the preferred line count, so if we want to pad
                      * out the preferred size, add on the height of sufficient empty lines.
                      * Note that this should be the same formula as that used in mlabelview_simple.cpp
-                     * Note also that we add on leading() (part of lineSpacing) even for the last
+                     * Note the we add non-negative leading to the height even for the last
                      * line, because that's what QTextDocument does.*/
-                    size.rheight() += fm.lineSpacing() * (preferredLineCount - cursorLine);
+                    int lineSpacing = fm.height() + qMax(fm.leading(), 0);
+                    size.rheight() += lineSpacing * (preferredLineCount - cursorLine);
                 }
             }
 
