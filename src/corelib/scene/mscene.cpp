@@ -812,7 +812,9 @@ bool MScene::event(QEvent *event)
     if (d->eventEmulateTwoFingerGestures(event))
         return true;
 
-    if (event->type() == QEvent::GraphicsSceneMousePress) {
+    // Handle also double click event as a press event, just as QGraphicsScene does.
+    if (event->type() == QEvent::GraphicsSceneMousePress
+        || event->type() == QEvent::GraphicsSceneMouseDoubleClick) {
         return d->handleGraphicsSceneMousePress(static_cast<QGraphicsSceneMouseEvent *>(event));
     } else if (event->type() == QEvent::GraphicsSceneMouseRelease) {
         return d->handleGraphicsSceneMouseRelease(static_cast<QGraphicsSceneMouseEvent *>(event));
