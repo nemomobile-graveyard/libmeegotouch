@@ -102,6 +102,8 @@ public:
     //! \param viewWidth Width of view. If -1, current width will be used.
     qreal realDocumentTextWidth(qreal viewWidth = -1) const;
 
+    void drawPrompt(QPainter *painter) const;
+
 protected slots:
     void scrolling();
     void hideUnmaskedText();

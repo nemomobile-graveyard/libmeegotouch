@@ -468,6 +468,59 @@ qreal MTextEditViewPrivate::realDocumentTextWidth(qreal width) const
     return width - q->style()->paddingLeft() - q->style()->paddingRight() - cursorWidth();
 }
 
+void MTextEditViewPrivate::drawPrompt(QPainter *painter) const
+{
+    Q_Q(const MTextEditView);
+    const MTextEditStyle *s = static_cast<const MTextEditStyle *>(q->style().operator ->());
+
+    const QTextOption promptOptions = promptOption();
+
+    // The document layout is the most proper box for drawing the prompt
+    QRectF promptClipping = activeDocument()->documentLayout()->blockBoundingRect(activeDocument()->begin());
+    // there is a issue in Qt, most probably a bug, that is does not consider indentation of the first block
+    // for counting the boundingRect position
+    // the following is a workaround for this. It must produce correct result always
+    QTextLayout *layout = activeDocument()->begin().layout();
+    promptClipping.translate(layout->boundingRect().topLeft() - layout->position());
+
+    qreal opacity = painter->opacity();
+    painter->setOpacity(currentPromptOpacity);
+    QPen savePen = painter->pen();
+    painter->setPen(s->promptColor());
+    QFont saveFont = painter->font();
+    painter->setFont(s->promptFont());
+
+    // Using painter->drawText(promptClipping, d->elidedPrompt(promptOptions), promptOptions);
+    // does not work for languages like Thai because the used font-configuration results in
+    // using a font-fallback with a smaller height and hence a wrong vertical alignment (see
+    // #288626). As a workaround the baseline is calculated manually with QFontMetrics.
+    const QString elidedPrompt = this->elidedPrompt(promptOptions);
+    const QFontMetricsF fontMetrics(s->promptFont());
+
+    // Calculate x-position
+    const Qt::Alignment alignment = promptOptions.alignment();
+    qreal promptX;
+    if (alignment & Qt::AlignHCenter) {
+        promptX = promptClipping.left() + (promptClipping.width() - fontMetrics.width(elidedPrompt)) / 2;
+    } else {
+        Qt::LayoutDirection textDir = promptOptions.textDirection();
+        if (textDir == Qt::LayoutDirectionAuto) {
+            textDir = MLocale::directionForText(elidedPrompt);
+        }
+        const bool alignRight = (textDir == Qt::LeftToRight && (alignment & Qt::AlignRight)) ||
+                                (textDir == Qt::RightToLeft && (alignment & Qt::AlignLeft));
+        promptX = alignRight ? promptClipping.right() - fontMetrics.width(elidedPrompt)
+                             : promptClipping.left();
+    }
+
+    const qreal promptY = promptClipping.y() + fontMetrics.ascent();
+    painter->drawText(promptX, promptY, elidedPrompt);
+
+    painter->setPen(savePen);
+    painter->setFont(saveFont);
+    painter->setOpacity(opacity);
+}
+
 //! sets the mouse target point making sure it's inside the widget
 void MTextEditViewPrivate::setMouseTarget(const QPointF &point)
 {
@@ -1996,52 +2049,7 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         && d->activeDocument()->blockCount() > 0 // this is in fact always so, even if text is empty
                                                  // checking just to prevent segfault by activeDocument()->begin()
         ) {
-        const QTextOption promptOptions = d->promptOption();
-        
-        // The document layout is the most proper box for drawing the prompt
-        QRectF promptClipping = d->activeDocument()->documentLayout()->blockBoundingRect(d->activeDocument()->begin());
-        // there is a issue in Qt, most probably a bug, that is does not consider indentation of the first block
-        // for counting the boundingRect position
-        // the following is a workaround for this. It must produce correct result always
-        QTextLayout *layout = d->activeDocument()->begin().layout();
-        promptClipping.translate(layout->boundingRect().topLeft() - layout->position());
-
-        qreal opacity = painter->opacity();
-        painter->setOpacity(d->currentPromptOpacity);
-        QPen savePen = painter->pen();
-        painter->setPen(s->promptColor());
-        QFont saveFont = painter->font();
-        painter->setFont(s->promptFont());
-
-        // Using painter->drawText(promptClipping, d->elidedPrompt(promptOptions), promptOptions);
-        // does not work for languages like Thai because the used font-configuration results in
-        // using a font-fallback with a smaller height and hence a wrong vertical alignment (see
-        // #288626). As a workaround the baseline is calculated manually with QFontMetrics.
-        const QString elidedPrompt = d->elidedPrompt(promptOptions);
-        const QFontMetricsF fontMetrics(s->promptFont());
-
-        // Calculate x-position
-        const Qt::Alignment alignment = promptOptions.alignment();
-        qreal promptX;
-        if (alignment & Qt::AlignHCenter) {
-            promptX = promptClipping.left() + (promptClipping.width() - fontMetrics.width(elidedPrompt)) / 2;
-        } else {
-            Qt::LayoutDirection textDir = promptOptions.textDirection();
-            if (textDir == Qt::LayoutDirectionAuto) {
-                textDir = MLocale::directionForText(elidedPrompt);
-            }
-            const bool alignRight = (textDir == Qt::LeftToRight && (alignment & Qt::AlignRight)) ||
-                                    (textDir == Qt::RightToLeft && (alignment & Qt::AlignLeft));
-            promptX = alignRight ? promptClipping.right() - fontMetrics.width(elidedPrompt)
-                                 : promptClipping.left();
-        }
-
-        const qreal promptY = promptClipping.y() + fontMetrics.ascent();
-        painter->drawText(promptX, promptY, elidedPrompt);
-
-        painter->setPen(savePen);
-        painter->setFont(saveFont);
-        painter->setOpacity(opacity);
+        d->drawPrompt(painter);
     }
 
     // normal painting, also draw cursor when prompt is visible
