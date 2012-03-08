@@ -1,8 +1,15 @@
-libmeegotouch (0.25.8~1) unstable; urgency=low
+libmeegotouch (0.25.8-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * New version
+  * Fixes: MAppletRunner leak
+  * Fixes: NB#288382, Completer not visible upon entering first character
+  * Changes: Fixed MSceneWindowScroller unit test which failed when it was run on the device in
+  * Changes: Fixed MSheetView unit test to work with different orientations and made
+  * Changes: Fixed MEditorToolbar unit test to work properly in both orientations on device
+  * Changes: Update MInfoBannerView test.
+  * Changes: removing delete app from Ut_MPannableViewportScroller 
 
- -- Armin Berres <armin.berres@basyskom.com>  Mon, 20 Feb 2012 10:27:42 +0100
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 08 Mar 2012 11:09:58 +0200
 
 libmeegotouch (0.25.7-1) unstable; urgency=low
 
