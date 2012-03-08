@@ -49,6 +49,7 @@
 #include "minputmethodstate.h"
 #include "mdebug.h"
 #include "mtextselectionoverlay.h"
+#include "mlocale.h"
 
 namespace
 {
@@ -2012,7 +2013,32 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         QFont saveFont = painter->font();
         painter->setFont(s->promptFont());
 
-        painter->drawText(promptClipping, d->elidedPrompt(promptOptions), promptOptions);
+        // Using painter->drawText(promptClipping, d->elidedPrompt(promptOptions), promptOptions);
+        // does not work for languages like Thai because the used font-configuration results in
+        // using a font-fallback with a smaller height and hence a wrong vertical alignment (see
+        // #288626). As a workaround the baseline is calculated manually with QFontMetrics.
+        const QString elidedPrompt = d->elidedPrompt(promptOptions);
+        const QFontMetricsF fontMetrics(s->promptFont());
+
+        // Calculate x-position
+        const Qt::Alignment alignment = promptOptions.alignment();
+        qreal promptX;
+        if (alignment & Qt::AlignHCenter) {
+            promptX = promptClipping.left() + (promptClipping.width() - fontMetrics.width(elidedPrompt)) / 2;
+        } else {
+            Qt::LayoutDirection textDir = promptOptions.textDirection();
+            if (textDir == Qt::LayoutDirectionAuto) {
+                textDir = MLocale::directionForText(elidedPrompt);
+            }
+            const bool alignRight = (textDir == Qt::LeftToRight && (alignment & Qt::AlignRight)) ||
+                                    (textDir == Qt::RightToLeft && (alignment & Qt::AlignLeft));
+            promptX = alignRight ? promptClipping.right() - fontMetrics.width(elidedPrompt)
+                                 : promptClipping.left();
+        }
+
+        const qreal promptY = promptClipping.y() + fontMetrics.ascent();
+        painter->drawText(promptX, promptY, elidedPrompt);
+
         painter->setPen(savePen);
         painter->setFont(saveFont);
         painter->setOpacity(opacity);
