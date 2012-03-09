@@ -323,10 +323,10 @@ QPointF MLabelView::mapToRoot(const QPointF &point)
     return d->controller->mapToRoot(point);
 }
 
-bool MLabelView::tileInformation(int index, QPixmap &pixmap, int &y) const
+bool MLabelView::tileInformation(int index, QPixmap &pixmap, QPoint &pos) const
 {
     Q_D(const MLabelView);
-    return d->impl->tileInformation(index, pixmap, y);
+    return d->impl->tileInformation(index, pixmap, pos);
 }
 M_REGISTER_VIEW_NEW(MLabelView, MLabel)
 

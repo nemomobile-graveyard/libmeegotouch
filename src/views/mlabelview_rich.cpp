@@ -59,13 +59,10 @@ struct CursorAndFormat {
 
 MLabelViewRich::MLabelViewRich(MLabelViewPrivate *viewPrivate) :
     MLabelViewSimple(viewPrivate), textDocumentDirty(true), mouseDownCursorPos(-1),
-    tileDimension(-1), tileCacheKey(), tiles(), highlightersChanged(false), isElided(false)
+    maxTileSize(), tileCacheKey(), tiles(), highlightersChanged(false), isElided(false)
 {
     textDocument.setDocumentMargin(0);
     tileCacheKey.sprintf("%p", static_cast<void*>(this));
-
-    const QSize resolution = MDeviceProfile::instance()->resolution();
-    tileDimension = qMax(resolution.width(), resolution.height());
 }
 
 
@@ -441,6 +438,12 @@ void MLabelViewRich::longPressEvent(QGestureEvent *event, QTapAndHoldGesture* ge
     }
 }
 
+void MLabelViewRich::orientationChangeEvent(MOrientationChangeEvent *event)
+{
+    updateMaximumTileSize(event->orientation());
+    cleanupTiles();
+}
+
 /**
  * Find cursor position of last visible character of document.
  * It starts from the bottom right corner, goes up until finds
@@ -640,18 +643,19 @@ QString MLabelViewRich::renderedText() const
     return textDocument.toPlainText();
 }
 
-bool MLabelViewRich::tileInformation(int index, QPixmap &pixmap, int &y) const
+bool MLabelViewRich::tileInformation(int index, QPixmap &pixmap, QPoint &pos) const
 {
     if (!tiles.isEmpty()) {
         if (index >= tiles.count()) {
             pixmap = QPixmap();
-            y = 0;
+            pos = QPoint(0, 0);
             return true;
         }
 
         const Tile &tile = tiles.at(index);
         if (QPixmapCache::find(tile.pixmapCacheKey, &pixmap)) {
-            y = tile.y;
+            pos.rx() = tile.x;
+            pos.ry() = tile.y;
             return true;
         }
     }
@@ -722,7 +726,13 @@ void MLabelViewRich::initTiles()
 
     int columns = 2;
     int rows = 2;
-    QSize tileSize(tileDimension, tileDimension);
+    if (maxTileSize.isEmpty()) {
+        const MSceneManager* sceneManager = viewPrivate->controller->sceneManager();
+        const M::Orientation orientation = sceneManager ? sceneManager->orientation()
+                                                        : MDeviceProfile::instance()->orientationFromAngle(M::Angle0);
+        updateMaximumTileSize(orientation);
+    }
+    QSize tileSize = maxTileSize;
 
     const MLabelStyle *style = viewPrivate->style();
 
@@ -818,40 +828,44 @@ void MLabelViewRich::updateTilesPosition()
         return;
     }
 
+    if (!viewPrivate->controller->sceneManager()) {
+        return;
+    }
+
     const QPointF relLabelPos = viewPrivate->controller->pos();
     const QPointF absLabelPos = viewPrivate->mapToRoot(relLabelPos);
 
     const qreal labelPosXDiff = relLabelPos.x() - absLabelPos.x();
     const qreal labelPosYDiff = relLabelPos.y() - absLabelPos.y();
-    const int diff = tileDimension * 2;
+    const int xDiff = maxTileSize.width() * 2;
+    const int yDiff = maxTileSize.height() * 2;
 
-    const qreal xMin = labelPosXDiff - tileDimension;
-    const qreal xMax = labelPosXDiff + tileDimension;
-    const qreal yMin = labelPosYDiff - tileDimension;
-    const qreal yMax = labelPosYDiff + tileDimension;
+    const qreal xMin = labelPosXDiff - maxTileSize.width();
+    const qreal xMax = labelPosXDiff + maxTileSize.width();
+    const qreal yMin = labelPosYDiff - maxTileSize.height();
+    const qreal yMax = labelPosYDiff + maxTileSize.height();
 
     for (int i = 0; i < tilesCount; ++i) {
-
         Tile& tile = tiles[i];
         bool update = false;
 
         while (tile.x < xMin) {
-            tile.x += diff;
+            tile.x += xDiff;
             update = true;
         }
 
         while (tile.x > xMax) {
-            tile.x -= diff;
+            tile.x -= xDiff;
             update = true;
         }
 
         while (tile.y < yMin) {
-            tile.y += diff;
+            tile.y += yDiff;
             update = true;
         }
 
         while (tile.y > yMax) {
-            tile.y -= diff;
+            tile.y -= yDiff;
             update = true;
         }
 
@@ -953,4 +967,17 @@ void MLabelViewRich::triggerHighlightingUpdate()
     // Try to update the highlighting after at least one frame
     const int maxFps = 60;
     viewPrivate->requestHighlighterUpdate(1000 / maxFps);
+}
+
+void MLabelViewRich::updateMaximumTileSize(M::Orientation orientation)
+{
+    const QSize resolution =  MDeviceProfile::instance()->resolution();
+    const bool useResolution = (orientation == M::Landscape && resolution.width() > resolution.height()) ||
+                               (orientation == M::Portrait  && resolution.width() < resolution.height());
+    if (useResolution) {
+        maxTileSize = resolution;
+    } else {
+        maxTileSize.rwidth()  = resolution.height();
+        maxTileSize.rheight() = resolution.width();
+    }
 }

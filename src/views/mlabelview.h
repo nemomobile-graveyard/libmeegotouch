@@ -161,7 +161,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_highlighterUpdateTimerExceeded())
 
     //! \see MLabelViewSimple::tileInformation()
-    bool tileInformation(int index, QPixmap &pixmap, int &y) const;
+    bool tileInformation(int index, QPixmap &pixmap, QPoint& pos) const;
 
 #ifdef UNIT_TEST
     friend class Pt_MLabel;

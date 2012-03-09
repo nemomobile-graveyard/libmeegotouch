@@ -69,13 +69,13 @@ public:
      *
      * \param pixmap Output parameter that contains the tile-pixmap if the
      *               the return value has been true.
-     * \param y      Output parameter that returns the y-position of the tile
+     * \param pos    Output parameter that returns the position of the tile
      *               if the return value has been true.
      * \return       True if accessing the tiles is possible. If false has been
      *               returned the tiling had been disabled because of e.g. a
      *               cleared QPixmapCache.
      */
-    virtual bool tileInformation(int index, QPixmap &pixmap, int &y) const;
+    virtual bool tileInformation(int index, QPixmap &pixmap, QPoint &pos) const;
 
     void initializeTextProperties();
 
@@ -174,10 +174,11 @@ public:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void cancelEvent(MCancelEvent *event);
     virtual void longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
+    virtual void orientationChangeEvent(MOrientationChangeEvent *event);
 
     virtual void applyStyle();
     virtual QString renderedText() const;
-    virtual bool tileInformation(int index, QPixmap &pixmap, int &y) const;
+    virtual bool tileInformation(int index, QPixmap &pixmap, QPoint &pos) const;
 
     void ensureDocumentIsReady();
     int cursorPositionOfLastVisibleCharacter();
@@ -291,12 +292,18 @@ public:
      */
     void triggerHighlightingUpdate();
 
+    /**
+     * Updates the maximum tile size maxTileSize to the screen size respecting
+     * the orientation.
+     */
+    void updateMaximumTileSize(M::Orientation orientation);
+
     mutable QTextDocument textDocument;
     bool textDocumentDirty;
     QPoint pixmapOffset;
     int mouseDownCursorPos;
 
-    int tileDimension;
+    QSize maxTileSize;
     QString tileCacheKey;
     QList<Tile> tiles;
 

@@ -136,6 +136,7 @@ private slots:
 
     void testTextFormat();
 
+    void testRichTextTiles_data();
     void testRichTextTiles();
 
     void testRichTextWithoutPixmapCache();

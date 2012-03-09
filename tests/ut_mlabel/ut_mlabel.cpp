@@ -31,6 +31,7 @@
 #include <mlabelview.h>
 #include <mpannableviewport.h>
 #include <mlocale.h>
+#include <mdeviceprofile.h>
 
 #include <QSignalSpy>
 #include <QTestEventList>
@@ -1587,8 +1588,20 @@ void Ut_MLabel::testTextFormat()
     QCOMPARE(label->textFormat(), Qt::PlainText);
 }
 
+void Ut_MLabel::testRichTextTiles_data()
+{
+    QTest::addColumn<QSize>("labelSize");
+
+    QTest::newRow("small") << QSize(300, 200);
+    QTest::newRow("large height")  << QSize(300, 5000);
+    QTest::newRow("large width") << QSize(5000, 300);
+    QTest::newRow("large width and height") << QSize(3000, 2000);
+}
+
 void Ut_MLabel::testRichTextTiles()
 {
+    QFETCH(QSize, labelSize);
+
     // A MSceneWindow is required as parent of MLabel for testing the tiles.
     // The tiling functionality relies on QPixmapCache which can be cleared
     // at any time. This makes it necessary to check whether tiling is available
@@ -1596,58 +1609,47 @@ void Ut_MLabel::testRichTextTiles()
     MApplicationWindow window;
     MApplicationPage page;
 
-    const int labelY = 300;
-    MLabel *tiledLabel = new MLabel("Short richtext, only <i>one</i> tile should be used", page.centralWidget());
-    tiledLabel->setWordWrap(true);
-    tiledLabel->setWrapMode(QTextOption::WrapAnywhere);
-    tiledLabel->setGeometry(QRectF(0, labelY, 400, 400));
-
     page.appear(&window);
     window.show();
 
-    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
-
-    const MLabelView* view = qobject_cast<const MLabelView*>(tiledLabel->view());
-
-    int y0;
-    int y1;
-    QPixmap tile0;
-    QPixmap tile1;
-
-    bool ok = view->tileInformation(0, tile0, y0);
-    ok = ok && view->tileInformation(1, tile1, y1);
-    if (!ok) {
-        qWarning() << "Skipped testRichTextTiles(): No tiles are available.";
-        return;
-    }
-
-    QVERIFY(!tile0.isNull());
-    QVERIFY(tile1.isNull());
-    QVERIFY(!contentRect(tile0.toImage()).isEmpty());
-    QCOMPARE(y0, 0);
+    MLabel *tiledLabel = new MLabel(page.centralWidget());
 
     QString longText;
-    for (int i = 0; i < 1000; ++i) {
-        longText.append("Long text: <i>Two</i> tiles should be used if the height of the label is large enough.");
+    for (int i = 0; i < 500; ++i) {
+        longText.append("Long <b>rich</b> text to test the tiling of MLabel. ");
     }
+
+    QFont font = tiledLabel->font();
+    font.setPixelSize(50);
+    tiledLabel->setFont(font);
     tiledLabel->setText(longText);
+    tiledLabel->setWordWrap(true);
+    tiledLabel->setWrapMode(QTextOption::WrapAnywhere);
+    tiledLabel->setGeometry(QRectF(0, 0, labelSize.width(), labelSize.height()));
 
-    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
-
-    ok = ok && view->tileInformation(0, tile0, y0);
-    ok = ok && view->tileInformation(1, tile1, y1);
-    if (!ok) {
-        qWarning() << "Skipped testRichTextTiles(): No tiles are available.";
-        return;
+    QSize resolution =  MDeviceProfile::instance()->resolution();
+    const M::Orientation orientation = window.orientation();
+    const bool flipResolution = (orientation == M::Portrait  && resolution.width() > resolution.height()) ||
+                                (orientation == M::Landscape && resolution.width() < resolution.height());
+    if (flipResolution) {
+        resolution = QSize(resolution.height(), resolution.width());
     }
 
-    QVERIFY(!tile0.isNull());
-    QVERIFY(tile1.isNull());
-    QCOMPARE(y0, 0);
+    QPoint pos[4];
+    QPixmap tile[4];
 
-    tiledLabel->resize(QSizeF(400, 10000));
+    int tileCount = 1;
+    QSize tileSize = labelSize;
+    if (labelSize.width() > resolution.width()) {
+        tileCount *= 2;
+        tileSize.rwidth() = resolution.width();
+    }
+    if (labelSize.height() > resolution.height()) {
+        tileCount *= 2;
+        tileSize.rheight() = resolution.height();
+    }
 
-    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+    bool hasValidTile = false;
 
     MPannableViewport* pannableViewport = 0;
     foreach(QGraphicsItem *childItem, page.childItems()) {
@@ -1659,38 +1661,31 @@ void Ut_MLabel::testRichTextTiles()
     }
     QVERIFY(pannableViewport);
 
-    const int maxViewportY = tiledLabel->size().height() / 2;
-    for (int viewportY = 0; viewportY < maxViewportY; viewportY += 200) {
-        const QPointF newPos(0, viewportY);
-        pannableViewport->physics()->setPosition(newPos);
+    const int maxViewportX = labelSize.width()  > resolution.width()  ? labelSize.width()  / 2 : 0;
+    const int maxViewportY = labelSize.height() > resolution.height() ? labelSize.height() / 2 : 0;
 
-        QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+    for (int viewportY = 0; viewportY <= maxViewportY; viewportY += 250) {
+        for (int viewportX = 0; viewportX <= maxViewportX; viewportX += 250) {
+            const QPointF newPos(viewportX, viewportY);
+            pannableViewport->physics()->setPosition(newPos);
 
-        ok = ok && view->tileInformation(0, tile0, y0);
-        ok = ok && view->tileInformation(1, tile1, y1);
-        if (!ok) {
-            qWarning() << "Skipped testRichTextTiles(): No tiles are available.";
-            return;
-        }
+            QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
 
-        if (!tile0.isNull() && !tile1.isNull()) {
-            if (y0 > y1) {
-                qSwap(y0, y1);
+            const MLabelView* view = qobject_cast<const MLabelView*>(tiledLabel->view());
+            for (int i = 0; i < tileCount; ++i) {
+                const bool ok = view->tileInformation(i, tile[i], pos[i]);
+                if (!ok) {
+                    qWarning() << "Skipped testRichTextTiles(): No tiles are available.";
+                    return;
+                }
+
+                if (!tile[i].isNull()) {
+                    QCOMPARE(tile[i].size(), tileSize);
+                    hasValidTile = true;
+                }
             }
-            const int tileHeight = tile0.height();
-            QCOMPARE(tile1.height(), tileHeight);
-            QVERIFY(y0 <= viewportY + labelY);
-            QVERIFY(y1 + tileHeight >= viewportY + labelY);
-            QCOMPARE(y0 + tileHeight, y1);
-            QVERIFY(!contentRect(tile0.toImage()).isEmpty());
-            QVERIFY(!contentRect(tile1.toImage()).isEmpty());
-        } else {
-            QVERIFY(!tile0.isNull() || !tile1.isNull());
-            if (tile0.isNull()) {
-                QCOMPARE(y1, 0);
-            } else if (tile1.isNull()) {
-                QCOMPARE(y0, 0);
-            }
+
+            QVERIFY(hasValidTile);
         }
     }
 }

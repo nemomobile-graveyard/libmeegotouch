@@ -260,11 +260,11 @@ QString MLabelViewSimple::renderedText() const
     return staticText.text().replace(QChar::LineSeparator, QLatin1Char('\n')).replace(EllipsisChar, QLatin1String("..."));
 }
 
-bool MLabelViewSimple::tileInformation(int index, QPixmap &pixmap, int &y) const
+bool MLabelViewSimple::tileInformation(int index, QPixmap &pixmap, QPoint &pos) const
 {
     Q_UNUSED(index);
     Q_UNUSED(pixmap);
-    Q_UNUSED(y);
+    Q_UNUSED(pos);
     return false;
 }
 
