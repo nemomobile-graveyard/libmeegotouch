@@ -60,6 +60,7 @@ AttributeExtensionInfo::AttributeExtensionInfo(const QString &attributeExtension
 #endif
 }
 
+#ifdef HAVE_MALIIT
 void AttributeExtensionInfo::updateExtendedAttribute(const QString &key, const QVariant &value)
 {
     const QStringList list = key.split(ExtendedAttributeKeySeparator, QString::SkipEmptyParts);
@@ -74,6 +75,7 @@ void AttributeExtensionInfo::updateExtendedAttribute(const QString &key, const Q
                                       attribute, value);
     }
 }
+#endif
 
 MInputMethodStatePrivate::MInputMethodStatePrivate()
     : orientationAngle(M::Angle0),

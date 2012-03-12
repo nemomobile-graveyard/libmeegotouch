@@ -45,6 +45,7 @@ public:
 #endif
     MInputMethodState::ExtendedAttributeMap extendedAttributes;
 
+#ifdef HAVE_MALIIT
 public Q_SLOTS:
     void updateExtendedAttribute(const QString &key,
                                  const QVariant &value);
@@ -53,7 +54,7 @@ Q_SIGNALS:
     //! Emitted when input method extended attribute is changed.
     void extendedAttributeChanged(int id, const QString &target, const QString &targetItem,
                                   const QString &attribute, const QVariant &value);
-
+#endif
 };
 
 class MInputMethodStatePrivate
