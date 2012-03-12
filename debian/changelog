@@ -1,3 +1,22 @@
+libmeegotouch (0.26.1-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#299340 - Failing MImageWidget functional test
+  * Fixes: NB#288518 - Selected smileys are not visible in magnifier
+  * Fixes: NB#299387 - Ut_MLabel::testPreferredLineCount fails
+  * Fixes: NB#294652 - Settings: In fast scroll, no edge for the characters "ر" and "ز"
+  * Fixes: NB#297031 - Odd behavior of MMS composer Subject Field in case of reach maximum lenght and use special characters
+  * Fixes: NB#298966 - MBanner::setPixmap() screws up notification banner icon size (Icon set with MNotification::setImage() is shown incorrectly)
+  * Fixes: NB#299022 - MImageWidget does not render properly the images when a QPixmap is used
+  * Fixes: NB#298716 - With the chinese keyboard as active input method,text entered is shown out of the text field when the focus is moved to the next field.
+  * Fixes: NB#278880 - MInputMethodState::setExtendedAttribute fails to set the pressed attribute
+  * Fixes: NB#288382 - Completer not visible upon entering first character
+  * Fixes: NB#297725 - Cut/Copy option is displayed unnecessarily when "com" is sugested
+  * Fixes: NB#298438 - Detail Selection Dialog is covered by VKB
+  * Fixes: NB#292121 - IDUG:"View other's availability information" changed to full string with a truncation after long tap on it in Persian language
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 12 Mar 2012 16:13:51 +0200
+
 libmeegotouch (0.26.1~1) unstable; urgency=low
 
   * [UNRELEASED]
