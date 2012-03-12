@@ -1,8 +1,10 @@
-libmeegotouch (0.25.9~1) unstable; urgency=low
+libmeegotouch (0.25.9-1) unstable; urgency=low
 
-  * UNRELEASED
+  * New version
+  * Fixes: NB#288382 - Fix MCompleter spinner regressions caused by earlier fixes
+  * Fixes: NB#298966 - MBanner::setPixmap() screws up notification banner icon size (Icon set with MNotification::setImage() is shown incorrectly)
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 08 Mar 2012 11:15:58 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 12 Mar 2012 09:03:01 +0200
 
 libmeegotouch (0.25.8-1) unstable; urgency=low
 
