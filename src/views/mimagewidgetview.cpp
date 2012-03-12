@@ -265,18 +265,19 @@ void MImageWidgetView::drawContents(QPainter *painter, const QStyleOptionGraphic
     const QPixmap *pixmap = d->controller->d_func()->getPixmap();
 
     d->drawBorders(painter, d->drawRect);
+    // Because we are providing the pixmap directly without themedaemon
+    // mscalableimage it is not called, thus, in order to have a smooth
+    // scalation of the pixmap we need to draw it with a smooth transformation
+    static bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
 
     if (pixmap) {
         const_cast<MImageWidgetViewPrivate*>(d)->checkPixmapSize();
-        // Because we are providing the pixmap directly without themedaemon
-        // mscalableimage it is not called, thus, in order to have a smooth
-        // scalation of the pixmap we need to draw it with a smooth transformation
-        static bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
-        painter->setRenderHint(QPainter::SmoothPixmapTransform);
         painter->drawPixmap(d->drawRect, *pixmap, d->sourceRect);
-        painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
-    } else
+    } else {
         painter->drawImage(d->drawRect, d->controller->d_func()->getImage(), d->sourceRect);
+    }
+    painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
 }
 
 void MImageWidgetView::resizeEvent(QGraphicsSceneResizeEvent *event)
