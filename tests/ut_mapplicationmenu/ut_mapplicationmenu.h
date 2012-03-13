@@ -49,6 +49,7 @@ private Q_SLOTS:
     void testRemoveWidgetFromWidgetAction();
     void testActionVisiblity();
     void testOpeningAndClosingAppMenuWithDisabledAction();
+    void testDisappearOnActivation();
     void testClear();
     void testPaint();
     void testEventsPassingThrough();

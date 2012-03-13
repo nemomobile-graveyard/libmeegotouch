@@ -328,6 +328,27 @@ void Ut_MApplicationMenu::testOpeningAndClosingAppMenuWithDisabledAction()
     delete menuItem;
 }
 
+void Ut_MApplicationMenu::testDisappearOnActivation()
+{
+    MAction *action = new MAction("action", m_subject);
+    action->setLocation(MAction::ApplicationMenuLocation);
+    action->setEnabled(true);
+    m_subject->addAction(action);
+
+    QCOMPARE(m_subject->sceneWindowState(), MSceneWindow::Disappeared);
+
+    appWin->sceneManager()->appearSceneWindowNow(m_subject);
+
+    QCOMPARE(m_subject->sceneWindowState(), MSceneWindow::Appeared);
+
+    MList *list = menuViewPrivate()->list;
+
+    list->selectItem(list->itemModel()->index(0, 0));
+
+    QVERIFY(m_subject->sceneWindowState() == MSceneWindow::Disappeared ||
+            m_subject->sceneWindowState() == MSceneWindow::Disappearing);
+}
+
 const MApplicationMenuViewPrivate* Ut_MApplicationMenu::menuViewPrivate()
 {
     const MApplicationMenuView *view = dynamic_cast<const MApplicationMenuView *>(m_subject->view());
