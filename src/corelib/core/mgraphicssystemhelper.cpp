@@ -25,13 +25,13 @@
 
 #include <unistd.h>
 
-
-
+//#define SHARED_IMAGE_FAILURE_LOGGING
+#ifdef SHARED_IMAGE_FAILURE_LOGGING
 namespace DirtyLogger
 {
     void logMessage(const char *fmt, ...);
 }
-
+#endif
 
 
 #include "mgraphicssystemhelper.h"
@@ -214,7 +214,6 @@ QPixmap MGraphicsSystemHelper::pixmapFromHandle(const MPixmapHandle& pixmapHandl
         QPixmap ret = QMeeGoGraphicsSystemHelper::pixmapFromEGLSharedImage(pixmapHandle.eglHandle, image);
 
         if(ret.isNull() || !ret.size().isValid()) {
-#define SHARED_IMAGE_FAILURE_LOGGING
 #ifdef SHARED_IMAGE_FAILURE_LOGGING
             DirtyLogger::logMessage("QMeeGoGraphicsSystemHelper::pixmapFromEGLSharedImage failed\n");
 
@@ -346,7 +345,7 @@ void MGraphicsSystemHelper::forceSoftwareRendering()
 }
 
 
-
+#ifdef SHARED_IMAGE_FAILURE_LOGGING
 namespace DirtyLogger
 {
   bool initialized = false;
@@ -392,4 +391,4 @@ void DirtyLogger::logMessage(const char *fmt, ...)
 
   va_end(al);
 }
-
+#endif //Logging for shared image failure

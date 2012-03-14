@@ -17,12 +17,13 @@
 **
 ****************************************************************************/
 
-
+//#define SHARED_IMAGE_FAILURE_LOGGING
+#ifdef SHARED_IMAGE_FAILURE_LOGGING
 namespace DirtyLogger
 {
     void logMessage(const char *fmt, ...);
 }
-
+#endif
 
 
 #include "mtheme.h"
@@ -1023,8 +1024,10 @@ void MThemePrivate::pixmapCreatedOrChangedSlot(const QString &imageId, const QSi
 
     if (pixmap->isNull() || !pixmap->size().isValid()) {
         mWarning("MThemePrivate") << "pixmapFromHandle: shared pixmap creation failed";
+#ifdef SHARED_IMAGE_FAILURE_LOGGING
         QString logMessage = QString("cyan pixmap path triggered for %1 %2x%3\n").arg(imageId).arg(size.width()).arg(size.height());
         DirtyLogger::logMessage(qPrintable(logMessage));
+#endif
         *pixmap = *invalidPixmap();
         pixmap->fill(Qt::cyan); //to see that it is different case
     }
