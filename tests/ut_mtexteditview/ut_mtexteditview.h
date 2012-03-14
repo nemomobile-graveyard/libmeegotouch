@@ -69,6 +69,7 @@ private slots:
     void testEditorToolbarReappearanceAfterFocusLostAndMovement_data();
     void testEditorToolbarReappearanceAfterFocusLostAndMovement();
     void testEditorToolbarReappearanceAfterMovement();
+    void testEditorToolbarPositionUpdateAfterHandleAppearance();
     void testEditorToolbarAutoHide();
     void testEditorToolbarAutoHideWithSelectionMagnifier();
     void testSelectionOverlay();

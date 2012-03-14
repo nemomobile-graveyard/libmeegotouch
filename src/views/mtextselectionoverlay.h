@@ -84,8 +84,14 @@ Q_SIGNALS:
     //! \param position New position of the handle in coordinates of controller
     void selectionHandleMoved(const QPointF &position);
 
-    //! \brief Emitted selection handle is released.
+    //! \brief Emitted when selection handle is released.
     void selectionHandleReleased(const QPointF &position);
+
+    //! \brief Emitted when one or more selection handle becomes visible
+    //! 
+    //! \note Only emitted when initially both handles are not visible and either one
+    //!       or both becomes visible.
+    void selectionHandlesAppeared();
 
 protected:
     //! \reimp

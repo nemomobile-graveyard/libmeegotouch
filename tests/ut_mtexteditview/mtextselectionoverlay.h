@@ -38,25 +38,29 @@ public:
 
     QRegion region()
     {
-        return QRegion();
+        return selectionHandleRegion;
     }
 
 Q_SIGNALS:
     void selectionHandlePressed(const QPointF &, MTextSelectionOverlay::HandleType);
     void selectionHandleMoved(const QPointF &);
     void selectionHandleReleased(const QPointF &);
+    void selectionHandlesAppeared();
 
 private Q_SLOTS:
     void onSelectionChange(int newAnchor, const QRectF &, bool,
                            int newCursor, const QRectF &, bool)
     {
         if (newAnchor != newCursor) {
+            emit selectionHandlesAppeared();
             show();
         } else {
             hide();
         }
     };
 
+public:
+    QRegion selectionHandleRegion;
 };
 
 //! \internal_end

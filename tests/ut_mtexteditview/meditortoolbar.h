@@ -30,7 +30,7 @@ public:
 
     bool isAutoHideEnabled() const { return autohide; }
     void setAutoHideEnabled(bool enable) { autohide = enable; }
-    void setForbiddenRegion(const QRegion &) {}
+    void setForbiddenRegion(const QRegion &region) { forbiddenRegion = region; }
 
 signals:
     void sizeChanged();
@@ -47,6 +47,7 @@ public:
     QString styleName;
     bool appeared;
     bool autohide;
+    QRegion forbiddenRegion;
 };
 
 #endif // MEDITORTOOLBAR_H

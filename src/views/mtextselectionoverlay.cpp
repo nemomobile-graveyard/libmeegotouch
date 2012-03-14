@@ -217,6 +217,9 @@ void MTextSelectionOverlay::setupSelectionHandles()
     if (!isVisible()) {
         show();
     }
+
+    const bool handlesVisibleBefore(handleA.isVisible() || handleB.isVisible());
+
     if (handleA.isPressed()){
         cursorHandle = &handleA;
         anchorHandle = &handleB;
@@ -241,6 +244,12 @@ void MTextSelectionOverlay::setupSelectionHandles()
         }
         const QRectF cursorRectLocal = mapRectFromItem(controller, cursorRect);
         cursorHandle->updatePosition(cursorRectLocal.bottomLeft());
+    }
+
+    const bool handlesVisibleAfter(handleA.isVisible() || handleB.isVisible());
+
+    if (!handlesVisibleBefore && handlesVisibleAfter) {
+        emit selectionHandlesAppeared();
     }
 }
 

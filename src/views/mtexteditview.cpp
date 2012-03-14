@@ -931,6 +931,8 @@ void MTextEditViewPrivate::showSelectionOverlay()
                          SIGNAL(selectionHandleReleased(const QPointF)),
                          this,
                          SLOT(onSelectionHandleReleased(const QPointF)));
+        QObject::connect(selectionOverlay.data(), SIGNAL(selectionHandlesAppeared()),
+                         this, SLOT(onSelectionHandlesAppeared()));
 
         QObject::connect(controller->sceneManager(),
                          SIGNAL(orientationChanged(const M::Orientation &)),
@@ -1447,6 +1449,15 @@ void MTextEditViewPrivate::onSelectionHandleReleased(const QPointF &position)
     q->model()->setInputContextUpdateEnabled(true);
     hideSelectionMagnifier();
     mapSelectionChange();
+}
+
+void MTextEditViewPrivate::onSelectionHandlesAppeared()
+{
+    // Editor toolbar must make way for text selection handles if editor toolbar
+    // was visible before text selection handles become visible.
+    if (editorToolbar && editorToolbar.data()->isAppeared()) {
+        updateEditorToolbarPosition();
+    }
 }
 
 void MTextEditViewPrivate::onSelectionOverlayVisibleChanged()

@@ -827,6 +827,42 @@ void Ut_MTextEditView::testEditorToolbarReappearanceAfterMovement()
     QCOMPARE(editorToolbarAppeared(), true);
 }
 
+void Ut_MTextEditView::testEditorToolbarPositionUpdateAfterHandleAppearance()
+{
+    m_controller->setParentItem(sc->window()->box());
+    m_controller->setFocus();
+    sc->window()->show();
+    QTest::qWaitForWindowShown(sc->window());
+    QRegion testRegion(1, 2, 3, 4);
+
+    m_controller->setText("test text");
+
+    // Show and hide text selection overlay to make sure it's constructed
+    m_controller->setSelection(0, 5, false);
+    QCOMPARE(m_subject->d_func()->selectionOverlay.isNull(), false);
+    QCOMPARE(m_subject->d_func()->selectionOverlay.data()->isVisible(), true);
+
+    m_controller->setSelection(0, 0, false);
+    QCOMPARE(m_subject->d_func()->selectionOverlay.data()->isVisible(), false);
+
+    m_subject->d_func()->selectionOverlay.data()->selectionHandleRegion = QRegion();
+
+    // Show editor toolbar before text selection handles are shown
+    m_subject->d_func()->showEditorToolbar();
+    QCOMPARE(editorToolbarAppeared(), true);
+    QCOMPARE(m_subject->d_func()->editorToolbar.data()->forbiddenRegion, QRegion());
+
+    m_subject->d_func()->selectionOverlay.data()->selectionHandleRegion = testRegion;
+
+    // Make text selection handles appear
+    m_controller->setSelection(0, 5, false);
+    QCOMPARE(m_subject->d_func()->selectionOverlay.data()->isVisible(), true);
+
+    // Appearance of text selection handles should update forbidden region of editor toolbar
+    QCOMPARE(editorToolbarAppeared(), true);
+    QCOMPARE(m_subject->d_func()->editorToolbar.data()->forbiddenRegion, testRegion);
+}
+
 void Ut_MTextEditView::testEditorToolbarAutoHide()
 {
     // Toolbar is to set to autohide on show without selection.

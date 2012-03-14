@@ -128,6 +128,7 @@ protected slots:
     void onSelectionHandleMoved(const QPointF &position);
     void onSelectionHandlePressed(const QPointF &position, MTextSelectionOverlay::HandleType handleType);
     void onSelectionHandleReleased(const QPointF &position);
+    void onSelectionHandlesAppeared();
     void onSelectionOverlayVisibleChanged();
     void hideSelectionOverlayTemporarily();
     void restoreSelectionOverlay();
