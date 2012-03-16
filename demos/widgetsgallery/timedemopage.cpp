@@ -31,6 +31,7 @@ TimedemoPage::TimedemoPage(QGraphicsItem *parent)
 
 void TimedemoPage::createBenchmarks(Timedemo *timedemo)
 {
+    m_benchmarks.clear();
     // add a default set of benchmarks
     // inheriting pages may remove or add benchmarks
     QSharedPointer<TimedemoBenchmark> benchmark(new StaticPageBenchmark(this, timedemo, M::Angle0));

@@ -173,6 +173,9 @@ void Timedemo::beginBenchmark()
 
 void Timedemo::benchmarkFinished()
 {
+    QSharedPointer<TimedemoBenchmark> benchmark = demoPages[m_currentPageIndex]->benchmarks()[m_currentBenchmarkIndex];
+    disconnect(benchmark.data(), SIGNAL(finished()), this, SLOT(benchmarkFinished()));
+
     if (!timingStopped) {
         qFatal("Benchmark did not stop timing.");
     }

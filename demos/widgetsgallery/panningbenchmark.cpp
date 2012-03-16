@@ -118,6 +118,9 @@ void PanningBenchmark::pan()
     else {
         pannableViewport->physics()->pointerRelease();
         pannableViewport->physics()->stop();
+
+        timingStarted = false;
+
         terminateBenchmark();
     }
 }
