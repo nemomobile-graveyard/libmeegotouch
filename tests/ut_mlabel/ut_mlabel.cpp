@@ -1969,6 +1969,7 @@ void Ut_MLabel::testPaintOffsetNoAffectOnGeometry()
 {
     MLabelView *view = const_cast<MLabelView*>(qobject_cast<const MLabelView*>(label->view()));
     MLabelStyle *style = const_cast<MLabelStyle*>(view->style().operator ->());
+    const QPointF oldOffset = style->paintOffset();
     style->setPaintOffset(QPointF());
     view->applyStyle();
 
@@ -1984,6 +1985,8 @@ void Ut_MLabel::testPaintOffsetNoAffectOnGeometry()
 
     QCOMPARE(style->paintOffset(), QPointF(1000,1000));
     QCOMPARE(noOffsetGeometry, label->geometry());
+
+    style->setPaintOffset(oldOffset);
 }
 
 void Ut_MLabel::testRichTextPreferredLineCount_data()
@@ -2102,6 +2105,117 @@ void Ut_MLabel::testRenderedTextProperty()
     label->setText(text);
     QCOMPARE(label->renderedText(), renderedText);
     QCOMPARE(label->property("renderedText").toString(), renderedText);
+}
+
+void Ut_MLabel::testEllipsisColor()
+{
+    label->setTextElide(true);
+    label->setText("<b>12345677535345234523532545342553245234523</b>");
+    label->setMaximumWidth(label->preferredSize().width() / 2);
+    label->resize(label->preferredSize());
+
+    QVERIFY(!label->color().isValid());
+
+    QPixmap pixmap(label->size().toSize());
+    pixmap.fill(Qt::white);
+    QPainter painter(&pixmap);
+    label->paint(&painter, 0, 0);
+    painter.end();
+    const QImage image = pixmap.toImage();
+
+    for (int y = 0; y < image.height(); ++y) {
+        for (int x = 0; x < image.width(); ++x) {
+            const QColor color(image.pixel(x, y));
+            // Antialiasing might not result in a 100 % black color
+            // that is used as fallback for an invalid color. Also
+            // accept a very dark grey as black:
+            const bool notBlack = color.red() > 30 || color.green() > 30 || color.blue() > 30;
+            QVERIFY(notBlack);
+        }
+    }
+}
+
+void Ut_MLabel::testLongLineWithDisabledEliding()
+{
+    const QString longText = "This is a very long text that does not fit into the line      ";
+    label->setText(longText);
+    label->setTextElide(false);
+
+    QFontMetricsF fm(label->font());
+    label->setMaximumWidth(fm.width(longText) / 2);
+    label->resize(label->maximumWidth(), fm.height());
+
+    QCOMPARE(label->renderedText(), longText);
+}
+
+void Ut_MLabel::testMultipleLinesWithEnabledEliding()
+{
+    const QChar separatorChar(0x9c, 0);
+    const QString text1 = "This is a very long text that does not fit into the available size of the label";
+    const QString text2 = "Another text that also does not fit into the available size";
+    const QString text3 = "This text also does not fit into the available size";
+    const QString text4 = "Fits!";
+
+    label->setTextElide(true);
+    label->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+    label->setText(text1 + separatorChar + text2 + separatorChar + text3 + separatorChar + text4);
+
+    QFontMetricsF fm(label->font());
+    const qreal text4Width = fm.width(text4);
+
+    label->resize(text4Width, fm.height());
+
+    QCOMPARE(label->renderedText(), text4);
+}
+
+void Ut_MLabel::testPreferredLineCountBehavior()
+{
+    const QString text = "This is a very long text that does not fit into one line "
+                         "and gets wrapped for several lines.";
+    label->setText(text);
+    label->setTextElide(true);
+    label->setWordWrap(true);
+
+    QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    sizePolicy.setHeightForWidth(true);
+    label->setSizePolicy(sizePolicy);
+
+    QFontMetricsF fm(label->font());
+    const int charCount = text.length() / 10;
+    const qreal smallWidth = fm.width(text.left(charCount));
+    const QSizeF constraint(smallWidth, -1);
+
+    label->setPreferredLineCount(100, MLabel::LineCountLimitsPreferredHeight);
+    const QSizeF limitedByLineCountSize = label->sizeHint(Qt::PreferredSize, constraint);
+
+    label->setPreferredLineCount(100, MLabel::LineCountSetsPreferredHeight);
+    const QSizeF setByLineCountSize = label->sizeHint(Qt::PreferredSize, constraint);
+
+    QCOMPARE(limitedByLineCountSize.width(), setByLineCountSize.width());
+    QVERIFY(limitedByLineCountSize.height() < setByLineCountSize.height());
+}
+
+void Ut_MLabel::testWindowsLineBreakReplacement()
+{
+    const QString windowsLineBreak("\r\n");
+    label->setText("A" + windowsLineBreak + "B" + windowsLineBreak + "C");
+    label->setWrapMode(QTextOption::NoWrap);
+    QCOMPARE(label->renderedText(), QString("A B C"));
+}
+
+void Ut_MLabel::testTextAndWrapModeOrder()
+{
+    const QString textWithLineBreaks = "A\nB\nC";
+    const QString unwrappedText = "A B C";
+
+    label->resize(300, 300);
+    label->setWrapMode(QTextOption::NoWrap);
+    label->setText(textWithLineBreaks);
+    QCOMPARE(label->renderedText(), unwrappedText);
+
+    label->setWordWrap(true);
+    label->setWrapMode(QTextOption::WordWrap);
+    QCOMPARE(label->renderedText(), textWithLineBreaks);
 }
 
 QTEST_APPLESS_MAIN(Ut_MLabel);

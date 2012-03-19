@@ -171,6 +171,29 @@ private slots:
     void testRenderedTextProperty_data();
     void testRenderedTextProperty();
 
+    // Regression test for bug 285464 ("Dots in mlabel when elided is set to true have
+    // different color than rest of the text.")
+    void testEllipsisColor();
+
+    // Regression test for commit 12b7055d3710a9a8fc9cfb131734ebec11860be6 ("Fix when we
+    // have a long line that needs eliding but we don't have eliding on")
+    void testLongLineWithDisabledEliding();
+
+    // Regression test for bug 281046 ("Notification; Clipped notification with multiple new mail")
+    void testMultipleLinesWithEnabledEliding();
+
+    // Regression test for commit 18d7fb7760ea29849e0922ce64c45df57a18070c ("Add
+    // support for preferredLineCount").
+    void testPreferredLineCountBehavior();
+
+    // Regression test for bug 267939 ("Line break in status message is incorrectly
+    // displayed in Contacts")
+    void testWindowsLineBreakReplacement();
+
+    // Regression test for commit eaf5bcb877fef445d444092055c1d421dafa2590 ("When label text is
+    // set before changing wrap mode, newline chars are not working.")
+    void testTextAndWrapModeOrder();
+
 private:
     /**
      * Helper method for testSizeHint().
