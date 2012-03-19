@@ -1,3 +1,10 @@
+libmeegotouch (0.25.10-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#299150 - (PR1.3-LMT-QT-debug) (clone 1.3)
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 19 Mar 2012 14:55:54 +0200
+
 libmeegotouch (0.25.9-1) unstable; urgency=low
 
   * New version
