@@ -2218,4 +2218,78 @@ void Ut_MLabel::testTextAndWrapModeOrder()
     QCOMPARE(label->renderedText(), textWithLineBreaks);
 }
 
+void Ut_MLabel::testRichToPlainSwitch()
+{
+    label->setTextFormat(Qt::RichText);
+    const QString text = "Hello World";
+    label->setText(text);
+    QCOMPARE(label->renderedText(), text);
+
+    label->setTextFormat(Qt::PlainText);
+    QCOMPARE(label->renderedText(), text);
+}
+
+void Ut_MLabel::testMinimumSizeOfStringVariants()
+{
+    const QChar separatorChar(0x9c, 0);
+    const QString longText = "This is a long text";
+    const QString shortText = "Short text";
+
+    label->setWordWrap(false);
+    label->setTextElide(false);
+    label->setText(longText + separatorChar + shortText);
+
+    QFontMetricsF fm(label->font());
+    const qreal longWidth = fm.width(longText);
+    const qreal shortWidth = fm.width(shortText);
+
+    const QSizeF minSizeHint = label->sizeHint(Qt::MinimumSize);
+    QVERIFY(minSizeHint.width() >= shortWidth);
+    QVERIFY(minSizeHint.width() < longWidth);
+}
+
+void Ut_MLabel::testStringVariantsWithWordWrap()
+{
+    const QChar separatorChar(0x9c, 0);
+    const QString longText = "Xxx Xxx Xxx Xxx Xxx Xxx Xxx Xxx Xxx Xxx";
+    const QString shortText = "Xxxxxxxxxx";
+
+    label->setWordWrap(true);
+    label->setWrapMode(QTextOption::WordWrap);
+    label->setTextElide(false);
+    label->setText(longText + separatorChar + shortText);
+
+    QFontMetricsF fm(label->font());
+    label->resize(fm.width(shortText), fm.height());
+
+    QCOMPARE(label->renderedText(), shortText);
+}
+
+void Ut_MLabel::testRichTextMinimumHeight()
+{
+    label->setWordWrap(true);
+    label->setText("<b>Rich<br>text</b>");
+
+    QFontMetricsF fm(label->font());
+    const QSizeF minSizeHint = label->sizeHint(Qt::MinimumSize);
+    QCOMPARE(minSizeHint.height(), fm.height() + qMax(qreal(0), fm.leading()));
+}
+
+void Ut_MLabel::testDisableElidingChangesAppearance()
+{
+    const QString text = "This is a <b>longer rich text</b> that should get elided";
+    label->setTextElide(true);
+    label->setWordWrap(false);
+    label->setText(text);
+
+    QFontMetrics fm(label->font());
+    const qreal textWidth = fm.width(text);
+    label->resize(textWidth / 2, fm.height());
+
+    QVERIFY(label->renderedText().endsWith("..."));
+
+    label->setTextElide(false);
+    QVERIFY(!label->renderedText().endsWith("..."));
+}
+
 QTEST_APPLESS_MAIN(Ut_MLabel);

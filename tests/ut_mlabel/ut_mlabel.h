@@ -194,6 +194,24 @@ private slots:
     // set before changing wrap mode, newline chars are not working.")
     void testTextAndWrapModeOrder();
 
+    // Regression test for bug 257767 ("When switching from richtext to plaintext label is
+    // rendered empty")
+    void testRichToPlainSwitch();
+
+    // Regression test for commit ba968c08477ac6ea8b84987e6117f6c774e3fc6b ("MLabelViewSimple -
+    // fix the minimum size of a string with variants and without wordwrap or eliding")
+    void testMinimumSizeOfStringVariants();
+
+    // Regression test for bug 250354 ("Allow multilength variant strings with wordwrap")
+    void testStringVariantsWithWordWrap();
+
+    // Regression test for commit 409a7cbe247d405975db9d041f08084d2bef24b1 ("MLabelView Rich -
+    // make the minimum height of the rich text to be the height of one line")
+    void testRichTextMinimumHeight();
+
+    // Regression test for bug 248110 ("Disabling elide mode for MLabel does not change appearance")
+    void testDisableElidingChangesAppearance();
+
 private:
     /**
      * Helper method for testSizeHint().
