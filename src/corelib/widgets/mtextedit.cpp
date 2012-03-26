@@ -1783,6 +1783,7 @@ void MTextEdit::setSelection(int anchorPosition, int length, bool useBoundaries,
     QTextCursor *currentCursor = d->cursor();
     if (anchorPosition == currentCursor->anchor() && newCursorPosition == currentCursor->position()
         && model()->enabledSelectionControls() == selectionControls) {
+        emit selectionChanged(); // for updating selection handles
         return;
     }
 
