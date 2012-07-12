@@ -387,7 +387,7 @@ M::OrientationAngle MOrientationTrackerPrivate::updateOrientationAngle(M::Orient
             targetAngle = M::Angle270;
         }
     } else {
-        if (isDeviceFlat) {
+        if (isDeviceFlat && !isKeyboardOpen) {
             // device orientation angle information is meaningless in this situation.
             if (currentAngle) {
                 // therefore stay where we are.
