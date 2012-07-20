@@ -43,7 +43,8 @@ SOURCES += main.cpp \
            ../src/corelib/theme/mthemedaemonprotocol.cpp \
            ../src/corelib/core/mcpumonitor.cpp \
            ../src/corelib/core/mgraphicssystemhelper.cpp \
-           ../src/corelib/core/msystemdirectories.cpp
+           ../src/corelib/core/msystemdirectories.cpp \
+           logger.cpp
 
 linux-g++-maemo {
     SOURCES += ../src/corelib/theme/inotifywrapper/inotify.cpp \
@@ -72,7 +73,8 @@ HEADERS += \
            ../src/corelib/core/mcpumonitor.h \
            ../src/corelib/core/mgraphicssystemhelper.h \
            ../src/corelib/core/msystemdirectories.h \
-           keypresswaiter.h
+           keypresswaiter.h \
+           logger.h
 
 linux-g++-maemo {
     HEADERS += ../src/corelib/theme/inotifywrapper/inotify.h \
