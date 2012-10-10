@@ -48,12 +48,10 @@ SOURCES += main.cpp \
            ../src/corelib/core/msystemdirectories.cpp \
            logger.cpp
 
-linux-g++-maemo {
     SOURCES += ../src/corelib/theme/inotifywrapper/inotify.cpp \
                ../src/corelib/theme/inotifywrapper/inotify.watch.cpp \
                ../src/corelib/theme/inotifywrapper/fstreenode.cpp \
                ../src/corelib/theme/inotifywrapper/utils.cpp
-}
 
 contains(DEFINES, HAVE_GCONF) {
     PKGCONFIG += gconf-2.0
@@ -78,12 +76,10 @@ HEADERS += \
            keypresswaiter.h \
            logger.h
 
-linux-g++-maemo {
     HEADERS += ../src/corelib/theme/inotifywrapper/inotify.h \
                ../src/corelib/theme/inotifywrapper/inotify.watch.h \
                ../src/corelib/theme/inotifywrapper/fstreenode.h \
                ../src/corelib/theme/inotifywrapper/utils.h
-}
 
 QMAKE_EXTRA_TARGETS += check
 check.depends = $$TARGET

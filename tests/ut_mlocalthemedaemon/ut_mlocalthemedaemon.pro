@@ -24,13 +24,11 @@ SOURCES += \
     $$MSRCDIR/corelib/theme/mthemedaemonprotocol.cpp \
     $$MSRCDIR/corelib/core/msystemdirectories.cpp \
 
-linux-g++-maemo {
     SOURCES += \
         $$MSRCDIR/corelib/theme/inotifywrapper/fstreenode.cpp \
         $$MSRCDIR/corelib/theme/inotifywrapper/utils.cpp \
         $$MSRCDIR/corelib/theme/inotifywrapper/inotify.cpp \
         $$MSRCDIR/corelib/theme/inotifywrapper/inotify.watch.cpp
-}
 
 HEADERS += \
     ut_mlocalthemedaemon.h \
@@ -46,12 +44,10 @@ HEADERS += \
     $$MSRCDIR/corelib/theme/mthemedaemonclient.h \
     $$MSRCDIR/corelib/core/msystemdirectories.h \
 
-linux-g++-maemo {
     HEADERS += \
         $$MSRCDIR/corelib/theme/inotifywrapper/fstreenode.h \
         $$MSRCDIR/corelib/theme/inotifywrapper/utils.h \
         $$MSRCDIR/corelib/theme/inotifywrapper/inotify.h \
         $$MSRCDIR/corelib/theme/inotifywrapper/inotify.watch.h
-}
 
 include(../common_bot.pri)

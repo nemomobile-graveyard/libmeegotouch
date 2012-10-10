@@ -24,13 +24,11 @@ PRIVATE_HEADERS += \
     $$THEME_SRC_DIR/mtheme_p.h \
     $$THEME_SRC_DIR/mpixmaphandle.h
 
-linux-g++-maemo {
     PRIVATE_HEADERS += \
         $$THEME_SRC_DIR/inotifywrapper/fstreenode.h \
         $$THEME_SRC_DIR/inotifywrapper/utils.h \
         $$THEME_SRC_DIR/inotifywrapper/inotify.h \
         $$THEME_SRC_DIR/inotifywrapper/inotify.watch.h
-}
 
 
 SOURCES += $$THEME_SRC_DIR/mtheme.cpp \
@@ -46,11 +44,9 @@ SOURCES += $$THEME_SRC_DIR/mtheme.cpp \
     $$THEME_SRC_DIR/mthemedaemonprotocol.cpp \
     $$THEME_SRC_DIR/mpixmaphandle.cpp
 
-linux-g++-maemo {
     SOURCES += \
         $$THEME_SRC_DIR/inotifywrapper/fstreenode.cpp \
         $$THEME_SRC_DIR/inotifywrapper/utils.cpp \
         $$THEME_SRC_DIR/inotifywrapper/inotify.cpp \
         $$THEME_SRC_DIR/inotifywrapper/inotify.watch.cpp
-}
 
