@@ -627,7 +627,7 @@ void MInputWidgetRelocator::handlePreviousInputWidgetLostFocus(QGraphicsWidget *
 bool FocusLostEventFilter::eventFilter(QObject *object, QEvent *event)
 {
     if (event->type() == QEvent::FocusOut) {
-        emit widgetLostFocus(static_cast<const QGraphicsWidget *>(object));
+        emit widgetLostFocus(static_cast<QGraphicsWidget *>(object));
     }
     return false; // false = never stop event propagation
 }
