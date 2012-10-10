@@ -1032,7 +1032,7 @@ INotify::Watch *MThemeImagesDirectory::crawlImageDirectory(MThemeImagesDirectory
                 bool ignoreMe = e->d_name[0] == '.' && (e->d_name[1] == 0 || (e->d_name[1] == '.' && e->d_name[2] == 0));
                 if (!ignoreMe)
                     dirs.append(QPair<INotify::Watch *, char *>(nw, ::appendToPath(s, e->d_name)));
-            } else if (e->d_type == DT_REG) { // TODO: handle symlinks
+            } else if (e->d_type == DT_REG) {
                 unsigned l = strlen(e->d_name);
                 if(MAX_PATH_WITHOUT_ALLOC - 2 < l) { // avoid  hazardous buffer overflow by extra alloc/free round - slow path
                     char *tmp = ::appendToPath(s, e->d_name);
@@ -1043,6 +1043,16 @@ INotify::Watch *MThemeImagesDirectory::crawlImageDirectory(MThemeImagesDirectory
                     fnptr[l] = 0;
                     handler(this, fnbuf, fnptr, localized);
                 }
+            } else if (e->d_type == DT_LNK) {
+                // Support symlinks iff they point to a regular file.
+                // (Symlinks to directories would require much more complex
+                // inotify support.)
+                char *tmp = ::appendToPath(s, e->d_name);
+                struct stat st_buf;
+                if (stat(tmp, &st_buf) == 0 && S_ISREG(st_buf.st_mode)) {
+                    handler(this, tmp, tmp + strlen(s) + 1, localized);
+                }
+                delete[] tmp;
             }
         }
 
