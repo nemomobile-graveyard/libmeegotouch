@@ -24,6 +24,7 @@
 
 #include <QtTest/QtTest>
 #include <QLocalSocket>
+#include <QDir>
 
 void Ut_MAppletServer::init()
 {
@@ -48,7 +49,7 @@ void Ut_MAppletServer::setupServer()
 
     // Emulate being the process to connect to
     socket = new QLocalSocket;
-    socket->connectToServer("/var/run/moopwidget_1");
+    socket->connectToServer(QDir::homePath() + "/moopwidget_1");
 
     // Process events max. 100 times to enable Qt signal handling
     for (int retries = 0; retries < 100 && !connected; retries++) {
@@ -76,7 +77,7 @@ void Ut_MAppletServer::testReconnect()
     // Test that new connections can't be made
     delete socket;
     socket = new QLocalSocket;
-    socket->connectToServer("/var/run/moopwidget_1");
+    socket->connectToServer(QDir::homePath() + "/moopwidget_1");
     QCOMPARE(socket->waitForConnected(), false);
     QCOMPARE(socket->error(), QLocalSocket::ServerNotFoundError);
     QCOMPARE(m_subject->isConnected(), false);

@@ -20,6 +20,7 @@
 #include <QLocalServer>
 #include <QDataStream>
 #include <MDebug>
+#include <QDir>
 #include "mappletserver.h"
 
 MAppletServer::MAppletServer() :
@@ -37,7 +38,7 @@ bool MAppletServer::startServer(const QString &serverName)
     closeConnection();
 
     // Prepend the path to the server name
-    QString path = "/var/run/" + serverName;
+    QString path = QDir::homePath() + "/" + serverName;
 
     // Remove the socket file if it exists
     QLocalServer::removeServer(path);

@@ -20,6 +20,7 @@
 #include <QtTest/QtTest>
 #include <QLocalServer>
 #include <QLocalSocket>
+#include <QDir>
 
 #include "mappletserver.h"
 #include "mappletclient.h"
@@ -51,9 +52,9 @@ void RemoteProcessThread::waitHere()
 
 void RemoteProcessThread::run()
 {
-    QLocalServer::removeServer("/var/run/foobar");
+    QLocalServer::removeServer(QDir::homePath() + "/foobar");
     server = new QLocalServer();
-    server->listen("/var/run/foobar");
+    server->listen(QDir::homePath() + "/foobar");
 
     connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
     doWait = true;

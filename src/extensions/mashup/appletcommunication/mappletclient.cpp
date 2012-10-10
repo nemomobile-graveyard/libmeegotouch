@@ -19,6 +19,7 @@
 
 #include "mappletclient.h"
 #include <MDebug>
+#include <QDir>
 
 
 static const int MAX_CONNECTION_ATTEMPTS = 100;
@@ -37,7 +38,7 @@ bool MAppletClient::connectToServer(const QString &serverName)
     closeConnection();
 
     // Prepend the path to the server name
-    QString path = "/var/run/" + serverName;
+    QString path = QDir::homePath() +"/" + serverName;
 
     // Connect to the specified server
     socket = new QLocalSocket;
