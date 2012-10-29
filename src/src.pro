@@ -25,11 +25,6 @@ devices.files = $${IN_PWD}/data/targets/*.conf
 devices.path = $${M_TARGETS_CONF_DIR}
 INSTALLS += devices
 
-themedaemonpriorities.CONFIG += no_check_exist
-themedaemonpriorities.files = $${IN_PWD}/data/themedaemonpriorities.conf
-themedaemonpriorities.path = $$M_INSTALL_SYSCONF/meegotouch
-INSTALLS += themedaemonpriorities
-
 # install MeeGo Touch feature files
 install_prf.path = $$[QT_INSTALL_DATA]/mkspecs/features
 install_prf.files = \

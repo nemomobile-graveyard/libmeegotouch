@@ -43,7 +43,6 @@ for(PROJECT, $$list($$lower($$unique(M_BUILD_PARTS)))) {
                   mappletrunner \
                   mapplicationextensionrunner \
                   mservicemapper \
-                  mthemedaemon \
                   tools \
                   imgcachegen
        }
