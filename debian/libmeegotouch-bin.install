@@ -1,8 +1,0 @@
-usr/bin/mthemedaemon
-usr/bin/mservicemapper
-usr/share/dbus-1/services/com.nokia.mservicefw.service
-usr/share/meegotouch/shaders/*
-usr/share/meegotouch/targets/*.conf
-usr/lib/meegotouch/applets/mappletrunner
-etc/meegotouch/themedaemonpriorities.conf
-usr/lib/meegotouch/applicationextensions/mapplicationextensionrunner

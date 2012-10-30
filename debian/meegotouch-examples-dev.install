@@ -1,6 +1,0 @@
-usr/lib/libchainingexampleinterface.so
-usr/lib/libtextprocessor.so
-usr/include/qt4/textprocessorinterface.h
-usr/include/qt4/textprocessorinterfaceproxy.h
-usr/include/chainingexample/service/chainingexampleinterface.h
-usr/include/chainingexample/service/chainingexampleinterfaceproxy.h
