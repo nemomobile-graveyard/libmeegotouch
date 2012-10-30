@@ -36,8 +36,7 @@ install_prf.files = \
     $${M_SOURCE_TREE}/mkspecs/features/meegotouch.prf \
     $${M_SOURCE_TREE}/mkspecs/features/meegotouch_mgen.prf \
     $${M_SOURCE_TREE}/mkspecs/features/meegotouch_mmoc.prf \
-    $${M_SOURCE_TREE}/mkspecs/features/meegotouch-boostable.prf \
-    $${M_SOURCE_TREE}/mkspecs/features/meegotouch_coverage.prf \
+    $${M_SOURCE_TREE}/mkspecs/features/meegotouch_coverage.prf
 
 
 # causes problems when installing on windows with INSTALL_ROOT
