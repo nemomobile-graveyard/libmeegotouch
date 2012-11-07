@@ -28,15 +28,11 @@
 class MNotificationGroupPrivate : public MNotificationPrivate
 {
 public:
-    /*!
-     * Constructor
-     */
+    //! Construct the private class for MNotificationGroup
     MNotificationGroupPrivate();
 
-    /*!
-     * Destructor
-     */
-    virtual ~MNotificationGroupPrivate();
+    //! Returns hints for the notification group
+    virtual QVariantHash hints() const;
 };
 
 #endif // M_NOTIFICATION_GROUP_P_H

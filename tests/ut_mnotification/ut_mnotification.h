@@ -40,10 +40,13 @@ private slots:
     void init();
     // Called after every testfunction
     void cleanup();
-    // Test quering of notifications
+    // Test cases
+    void testGettersAndSetters();
+    void testPublish();
+    void testIsPublished();
+    void testRemove();
+    void testGettingAllNotificationsDoesNothingIfManagerDoesNotSupport();
     void testGettingAllNotifications();
-    // Test that publishing notification sets timestamp to 0 and
-    // publishedTimestamp stays as it is.
     void testThatTimestampOfNotificationIsUpdatedInPublish();
 };
 

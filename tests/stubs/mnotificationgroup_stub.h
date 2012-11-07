@@ -29,8 +29,6 @@ class MNotificationGroupStub : public StubBase {
   public:
   virtual void MNotificationGroupConstructor(const QString &eventType, const QString &summary, const QString &body);
   virtual void MNotificationGroupDestructor();
-  virtual bool publish();
-  virtual bool remove();
   virtual void MNotificationGroupConstructor(uint id);
   uint notificationCount();
 }; 
@@ -44,15 +42,6 @@ void MNotificationGroupStub::MNotificationGroupConstructor(const QString &eventT
 }
 void MNotificationGroupStub::MNotificationGroupDestructor() {
 
-}
-bool MNotificationGroupStub::publish() {
-  stubMethodEntered("publish");
-  return stubReturnValue<bool>("publish");
-}
-
-bool MNotificationGroupStub::remove() {
-  stubMethodEntered("remove");
-  return stubReturnValue<bool>("remove");
 }
 
 void MNotificationGroupStub::MNotificationGroupConstructor(uint id) {
@@ -77,14 +66,6 @@ MNotificationGroup::MNotificationGroup(const QString &eventType, const QString &
 
 MNotificationGroup::~MNotificationGroup() {
   gMNotificationGroupStub->MNotificationGroupDestructor();
-}
-
-bool MNotificationGroup::publish() {
-  return gMNotificationGroupStub->publish();
-}
-
-bool MNotificationGroup::remove() {
-  return gMNotificationGroupStub->remove();
 }
 
 MNotificationGroup::MNotificationGroup(uint id) : MNotification(id) {
