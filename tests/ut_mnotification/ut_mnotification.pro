@@ -15,7 +15,7 @@ SOURCES += \
 HEADERS += \
     ut_mnotification.h \
     $$MSRCDIR/corelib/notification/mnotification.h \
-    $$MSRCDIR/corelib/notification/mnotificationmanager.h \
+    $$MSRCDIR/corelib/notification/mnotification_p.h \
     $$MSRCDIR/corelib/notification/mnotificationmanagerproxy.h \
     $$MSRCDIR/corelib/core/mremoteaction.h \
     $$MSRCDIR/corelib/core/maction.h

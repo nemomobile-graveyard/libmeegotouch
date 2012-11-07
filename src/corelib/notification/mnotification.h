@@ -21,12 +21,12 @@
 #define MNOTIFICATION_H_
 
 #include <MExport>
-#include <QDBusArgument>
 #include <mremoteaction.h>
 
 class MNotificationPrivate;
 class MNotificationGroup;
 class QString;
+class QDBusArgument;
 
 /*!
     \class MNotification
@@ -168,10 +168,6 @@ public:
     static const QString TransferCompleteEvent;
     //! A file transfer or download error.
     static const QString TransferErrorEvent;
-    //! A generic SMS/MMS-related notification that doesn't fit into any other category.
-    static const QString MessageEvent;
-    //! A new SMS/MMS notification.
-    static const QString MessageArrivedEvent;
 
     /*!
      * Creates a new representation of a notification. The notification will
@@ -392,6 +388,9 @@ protected:
     //! Returns the ID of the notification.
     uint id() const;
 
+    //! Returns the group ID of the notification.
+    uint groupId() const;
+
     /*!
      * Sets the event type of the notification.
      *
@@ -400,8 +399,15 @@ protected:
     void setEventType(const QString &eventType);
     //! \internal_end
 
+    friend class MNotificationGroup;
+
     Q_DECLARE_PRIVATE(MNotification)
+
+#ifdef UNIT_TEST
+    friend class Ut_MNotification;
+#endif
 };
 
 Q_DECLARE_METATYPE(MNotification)
+
 #endif /* MNOTIFICATION_H_ */

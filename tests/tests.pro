@@ -155,7 +155,6 @@ SUBDIRS     =  \
     ut_mserviceinvoker \
     ut_mscenewindow \
     ut_mnotification \
-    ut_mnotificationmanager \
     ut_msettingslanguageparser \
     ut_msettingslanguagebinary \
     ut_msettingslanguagewidget \

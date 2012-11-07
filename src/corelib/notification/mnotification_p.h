@@ -20,11 +20,19 @@
 #ifndef MNOTIFICATION_P_H
 #define MNOTIFICATION_P_H
 
+#include <QPointer>
+#include <QDateTime>
+#include <QVariantHash>
+
+class MNotificationManagerProxy;
+
 /*!
  * A private class for MNotification
  */
-class MNotificationPrivate
+class MNotificationPrivate : public QObject
 {
+    Q_OBJECT
+
 public:
     /*!
      * Constructor
@@ -36,21 +44,8 @@ public:
      */
     virtual ~MNotificationPrivate();
 
-    /*!
-     * Creates a hash containing notification's information (notificationId,
-     * eventType, action etc.) in key-value pairs.
-     *
-     * \return QVariantHash (same as QHash(QString, QVariant)) containing notification's information.
-     */
-    QVariantHash notificationParameters() const;
-
-    /*!
-     * Extracts notification's information from a hash and populates
-     * notification's members.
-     *
-     * \param QVariantHash containing notification's information.
-     */
-    void extractNotificationParameters(const QVariantHash &parameters);
+    //! Returns hints for the notification
+    virtual QVariantHash hints() const;
 
     //! The ID of the notification
     uint id;
@@ -80,10 +75,10 @@ public:
     QString identifier;
 
     //! User set timestamp of notification
-    uint userSetTimestamp;
+    QDateTime userSetTimestamp;
 
     //!  Timestamp that has been previously published
-    uint publishedTimestamp;
+    QDateTime publishedTimestamp;
 };
 
 #endif // MNOTIFICATION_P_H

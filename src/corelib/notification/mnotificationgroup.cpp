@@ -17,15 +17,11 @@
 **
 ****************************************************************************/
 
+#include "mnotificationmanagerproxy.h"
 #include "mnotificationgroup.h"
 #include "mnotificationgroup_p.h"
-#include "mnotificationmanager.h"
 
 MNotificationGroupPrivate::MNotificationGroupPrivate() : MNotificationPrivate()
-{
-}
-
-MNotificationGroupPrivate::~MNotificationGroupPrivate()
 {
 }
 
@@ -55,83 +51,56 @@ MNotificationGroup::~MNotificationGroup()
 
 MNotificationGroup::MNotificationGroup(uint id) : MNotification(id)
 {
-    Q_D(MNotificationGroup);
-    d->groupId = id;
 }
 
-bool MNotificationGroup::publish()
+QVariantHash MNotificationGroupPrivate::hints() const
 {
-    Q_D(MNotificationGroup);
-
-    bool success = false;
-
-    if (d->id == 0) {
-         d->id = d->groupId = MNotificationManager::instance()->addGroup(d->notificationParameters());
-        success = d->id != 0;
-    } else {
-        success = MNotificationManager::instance()->updateGroup(d->id, d->notificationParameters());
+    QVariantHash hints;
+    hints.insert("category", eventType);
+    hints.insert("x-nemo-item-count", count);
+    hints.insert("x-nemo-timestamp", userSetTimestamp);
+    hints.insert("x-nemo-legacy-type", "MNotificationGroup");
+    if (!identifier.isEmpty()) {
+        hints.insert("x-nemo-legacy-identifier", identifier);
     }
-
-    return success;
+    if (!action.isEmpty()) {
+        hints.insert("x-nemo-remote-action-default", action);
+    }
+    return hints;
 }
 
 uint MNotificationGroup::notificationCount()
 {
-    if (!isPublished()) {
-        return 0;
+    int count = 0;
+    if (notificationManager()->GetCapabilities().value().contains("x-nemo-get-notifications")) {
+        QList<MNotification> list = notificationManager()->GetNotifications(QFileInfo(QCoreApplication::arguments()[0]).fileName());
+        foreach(const MNotification &notification, list) {
+            if (notification.property("legacyType").toString() == "MNotification" && notification.groupId() == id()) {
+                count++;
+            }
+        }
     } else {
-        Q_D(MNotificationGroup);
-        return MNotificationManager::instance()->notificationCountInGroup(d->id);
+        qWarning("Notification manager does not support GetNotifications(). The application may misbehave.");
     }
-}
-
-bool MNotificationGroup::remove()
-{
-    if (!isPublished()) {
-        return false;
-    } else {
-        Q_D(MNotificationGroup);
-        uint id = d->id;
-        d->groupId = 0;
-        d->id = 0;
-        return MNotificationManager::instance()->removeGroup(id);
-    }
+    return count;
 }
 
 QList<MNotificationGroup *> MNotificationGroup::notificationGroups()
 {
-    QList<MNotificationGroup> list = MNotificationManager::instance()->notificationGroupList();
-    QList<MNotificationGroup *> notificationGroups;
-    foreach(const MNotificationGroup &group, list) {
-        notificationGroups.append(new MNotificationGroup(group));
+    QList<MNotificationGroup *> notificationGroupList;
+    if (notificationManager()->GetCapabilities().value().contains("x-nemo-get-notifications")) {
+        QList<MNotification> list = notificationManager()->GetNotifications(QFileInfo(QCoreApplication::arguments()[0]).fileName());
+        foreach(const MNotification &notification, list) {
+            if (notification.property("legacyType").toString() == "MNotificationGroup") {
+                notificationGroupList.append(new MNotificationGroup(static_cast<const MNotificationGroup &>(notification)));
+            }
+        }
+    } else {
+        qWarning("Notification manager does not support GetNotifications(). The application may misbehave.");
     }
-    return notificationGroups;
-}
-
-QDBusArgument &operator<<(QDBusArgument &argument, const MNotificationGroup &group)
-{
-    const MNotificationGroupPrivate *d = group.d_func();
-    argument.beginStructure();
-    argument << d->id;
-    argument << d->notificationParameters();
-    argument.endStructure();
-    return argument;
-}
-
-const QDBusArgument &operator>>(const QDBusArgument &argument, MNotificationGroup &group)
-{
-    MNotificationGroupPrivate *d = group.d_func();
-    QVariantHash parameters;
-    argument.beginStructure();
-    argument >> d->id;
-    argument >> parameters;
-    argument.endStructure();
-
-    d->extractNotificationParameters(parameters);
-    return argument;
+    return notificationGroupList;
 }
 
 void MNotificationGroup::setTimestamp(const QDateTime &)
 {
-    qWarning("MNotificationGroup should not set timestamp for itself. Setting timestamp does nothing.");
 }

@@ -16,11 +16,10 @@ PRIVATE_HEADERS += \
     $$NOTIFICATION_SRC_DIR/mnotificationgroup_p.h
 
 # These headers should not get installed
-PRIVATE_HEADERS += $$NOTIFICATION_SRC_DIR/mnotificationmanager.h \
-    $$NOTIFICATION_SRC_DIR/mnotificationmanagerproxy.h \
+PRIVATE_HEADERS += \
+    $$NOTIFICATION_SRC_DIR/mnotificationmanagerproxy.h
 
 SOURCES += \
     $$NOTIFICATION_SRC_DIR/mnotification.cpp \
     $$NOTIFICATION_SRC_DIR/mnotificationgroup.cpp \
-    $$NOTIFICATION_SRC_DIR/mnotificationmanager.cpp \
     $$NOTIFICATION_SRC_DIR/mnotificationmanagerproxy.cpp
