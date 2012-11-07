@@ -253,6 +253,7 @@ void Ut_MInputMethodState::testAttributeExtensionInfo()
     state->registerAttributeExtension("filename");
     QCOMPARE(state->d_ptr->attributeExtensions.count(), 1);
 
+#ifdef HAVE_MALIIT
     AttributeExtensionInfo* info = *state->d_ptr->attributeExtensions.begin();
 
     info->updateExtendedAttribute("invalid/key", QVariant(false));
@@ -262,6 +263,7 @@ void Ut_MInputMethodState::testAttributeExtensionInfo()
     info->updateExtendedAttribute("/toolbar/item/key", QVariant(true));
     QCOMPARE(changeSpy.count(), 1);
     QCOMPARE(info->extendedAttributes["/toolbar"]["item"]["key"], QVariant(true));
+#endif
 }
 
 QTEST_APPLESS_MAIN(Ut_MInputMethodState)
