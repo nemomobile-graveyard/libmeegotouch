@@ -60,6 +60,8 @@ QVariantHash MNotificationGroupPrivate::hints() const
     hints.insert("x-nemo-item-count", count);
     hints.insert("x-nemo-timestamp", userSetTimestamp);
     hints.insert("x-nemo-legacy-type", "MNotificationGroup");
+    hints.insert("x-nemo-legacy-group-summary", summary);
+    hints.insert("x-nemo-legacy-group-body", body);
     if (!identifier.isEmpty()) {
         hints.insert("x-nemo-legacy-identifier", identifier);
     }
@@ -103,4 +105,21 @@ QList<MNotificationGroup *> MNotificationGroup::notificationGroups()
 
 void MNotificationGroup::setTimestamp(const QDateTime &)
 {
+}
+
+bool MNotificationGroup::publish()
+{
+    Q_D(MNotificationGroup);
+
+    QString summary;
+    QString body;
+    if (d->id != 0 && notificationCount() > 0) {
+        // Only already published groups may have notifications in them and thus should have a visual representation
+        summary = d->summary.isEmpty() ? d->hints().value("x-nemo-legacy-group-summary").toString() : d->summary;
+        body = d->body.isEmpty() ? d->hints().value("x-nemo-legacy-group-body").toString() : d->body;
+    }
+
+    d->id = notificationManager()->Notify(QFileInfo(QCoreApplication::arguments()[0]).fileName(), d->id, d->image, summary, body, QStringList(), d->hints(), -1);
+
+    return d->id != 0;
 }

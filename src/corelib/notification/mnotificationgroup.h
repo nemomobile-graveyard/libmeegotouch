@@ -106,6 +106,10 @@ public:
      */
     uint notificationCount();
 
+    //! \reimp
+    virtual bool publish();
+    //! \reimp_end
+
     //! \internal
     /*!
      * Timestamp cannot be set for MotificationGroup.

@@ -93,6 +93,21 @@ QVariantHash MNotificationPrivate::hints() const
     return hints;
 }
 
+void MNotificationPrivate::publishGroup()
+{
+    if (groupId != 0) {
+        // Publish the notification group this notification is in
+        QList<MNotificationGroup *> groups = MNotificationGroup::notificationGroups();
+        foreach (MNotificationGroup *group, groups) {
+            if (group->id() == groupId) {
+                group->publish();
+                break;
+            }
+        }
+        qDeleteAll(groups);
+    }
+}
+
 MNotification::MNotification(MNotificationPrivate &dd) :
     d_ptr(&dd)
 {
@@ -262,6 +277,8 @@ bool MNotification::publish()
 
     d->userSetTimestamp = QDateTime();
 
+    d->publishGroup();
+
     return d->id != 0;
 }
 
@@ -272,6 +289,7 @@ bool MNotification::remove()
     if (isPublished()) {
         Q_D(MNotification);
         notificationManager()->CloseNotification(d->id);
+        d->publishGroup();
         d->id = 0;
         success = true;
     }
@@ -338,6 +356,12 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, MNotification &no
     }
     if (hints.contains("x-nemo-preview-body")) {
         notification.d_ptr->body = hints.value("x-nemo-preview-body").toString();
+    }
+    if (hints.contains("x-nemo-legacy-group-summary")) {
+        notification.d_ptr->summary = hints.value("x-nemo-legacy-group-summary").toString();
+    }
+    if (hints.contains("x-nemo-legacy-group-body")) {
+        notification.d_ptr->body = hints.value("x-nemo-legacy-group-body").toString();
     }
     notification.d_ptr->eventType = hints.value("category").toString();
     notification.d_ptr->count = hints.value("x-nemo-item-count").toUInt();

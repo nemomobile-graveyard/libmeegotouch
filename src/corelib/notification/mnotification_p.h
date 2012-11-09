@@ -47,6 +47,9 @@ public:
     //! Returns hints for the notification
     virtual QVariantHash hints() const;
 
+    //! Publishes the group of the notification (if any)
+    void publishGroup();
+
     //! The ID of the notification
     uint id;
 
