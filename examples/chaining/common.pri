@@ -7,5 +7,3 @@ LIBS += $$mAddLibrary(meegotouchcore)
 DEPENDPATH += .
 INCLUDEPATH += .
 
-CONFIG += meegotouch-boostable
-

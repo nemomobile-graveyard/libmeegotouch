@@ -10,7 +10,6 @@ INCLUDEPATH += . \
 
 QMAKE_LIBDIR += $$MLIB
 
-#needed in case megotouch-boostable is not available
 QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
 QMAKE_LFLAGS += -pie -rdynamic
 
@@ -199,7 +198,7 @@ contains( DEFINES, M_OS_MAEMO5 ) {
 
     desktop_entry.path = $$M_INSTALL_DATA/applications
 }
-desktop_entry.files = widgetsgallery.desktop widgetsgallery-boosted.desktop
+desktop_entry.files = widgetsgallery.desktop
 
 event_type.files = data/widgetsgalleryeventtype.conf
 event_type.path = $$M_INSTALL_DATA/meegotouch/notifications/eventtypes
