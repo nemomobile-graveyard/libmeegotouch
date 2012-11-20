@@ -117,6 +117,12 @@ public:
      * MNotification.
      */
     void setTimestamp(const QDateTime &timestamp);
+
+    /*!
+     * Publishes the group using a preview banner. Should only be used
+     * by MNotification.
+     */
+    bool publish(const QString &previewSummary, const QString &previewBody);
     //! \internal_end
 
 protected:

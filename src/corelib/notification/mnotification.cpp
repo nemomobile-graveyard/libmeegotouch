@@ -78,9 +78,10 @@ QVariantHash MNotificationPrivate::hints() const
     hints.insert("category", eventType);
     hints.insert("x-nemo-item-count", count);
     hints.insert("x-nemo-timestamp", userSetTimestamp);
-    hints.insert("x-nemo-preview-summary", summary);
-    hints.insert("x-nemo-preview-body", body);
+    hints.insert("x-nemo-legacy-summary", summary);
+    hints.insert("x-nemo-legacy-body", body);
     hints.insert("x-nemo-legacy-type", "MNotification");
+    hints.insert("x-nemo-user-clearable", true);
     if (groupId > 0) {
         hints.insert("x-nemo-legacy-group-id", groupId);
     }
@@ -100,7 +101,7 @@ void MNotificationPrivate::publishGroup()
         QList<MNotificationGroup *> groups = MNotificationGroup::notificationGroups();
         foreach (MNotificationGroup *group, groups) {
             if (group->id() == groupId) {
-                group->publish();
+                group->publish(summary, body);
                 break;
             }
         }
@@ -261,15 +262,22 @@ bool MNotification::publish()
         d->userSetTimestamp = QDateTime::currentDateTimeUtc();
     }
 
+    QVariantHash hints = d->hints();
     QString summary;
     QString body;
     if (d->groupId == 0) {
-        // Standalone notifications use the same summary and body for the preview banner and the lock screen; for grouped notifications only the preview banner has them
-        summary = d->summary;
-        body = d->body;
+        // Standalone notifications use the same summary and body for the lock screen - show nothing for grouped notifications
+        summary = hints.value("x-nemo-legacy-summary").toString();
+        body = hints.value("x-nemo-legacy-body").toString();
+
+        if (d->id == 0) {
+            // Only show the preview banner for new notifications
+            hints.insert("x-nemo-preview-summary", hints.value("x-nemo-legacy-summary"));
+            hints.insert("x-nemo-preview-body", hints.value("x-nemo-legacy-body"));
+        }
     }
 
-    d->id = notificationManager()->Notify(QFileInfo(QCoreApplication::arguments()[0]).fileName(), d->id, d->image, summary, body, QStringList(), d->hints(), -1);
+    d->id = notificationManager()->Notify(QFileInfo(QCoreApplication::arguments()[0]).fileName(), d->id, d->image, summary, body, QStringList(), hints, -1);
 
     if (d->id != 0) {
         d->publishedTimestamp = d->userSetTimestamp;
@@ -351,17 +359,11 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, MNotification &no
     argument >> expireTimeout;
     argument.endStructure();
 
-    if (hints.contains("x-nemo-preview-summary")) {
-        notification.d_ptr->summary = hints.value("x-nemo-preview-summary").toString();
+    if (hints.contains("x-nemo-legacy-summary")) {
+        notification.d_ptr->summary = hints.value("x-nemo-legacy-summary").toString();
     }
-    if (hints.contains("x-nemo-preview-body")) {
-        notification.d_ptr->body = hints.value("x-nemo-preview-body").toString();
-    }
-    if (hints.contains("x-nemo-legacy-group-summary")) {
-        notification.d_ptr->summary = hints.value("x-nemo-legacy-group-summary").toString();
-    }
-    if (hints.contains("x-nemo-legacy-group-body")) {
-        notification.d_ptr->body = hints.value("x-nemo-legacy-group-body").toString();
+    if (hints.contains("x-nemo-legacy-body")) {
+        notification.d_ptr->body = hints.value("x-nemo-legacy-body").toString();
     }
     notification.d_ptr->eventType = hints.value("category").toString();
     notification.d_ptr->count = hints.value("x-nemo-item-count").toUInt();

@@ -49,8 +49,11 @@ MNotificationGroup::~MNotificationGroup()
 {
 }
 
-MNotificationGroup::MNotificationGroup(uint id) : MNotification(id)
+MNotificationGroup::MNotificationGroup(uint id) :
+    MNotification(*new MNotificationGroupPrivate)
 {
+    Q_D(MNotificationGroup);
+    d->id = id;
 }
 
 QVariantHash MNotificationGroupPrivate::hints() const
@@ -60,8 +63,9 @@ QVariantHash MNotificationGroupPrivate::hints() const
     hints.insert("x-nemo-item-count", count);
     hints.insert("x-nemo-timestamp", userSetTimestamp);
     hints.insert("x-nemo-legacy-type", "MNotificationGroup");
-    hints.insert("x-nemo-legacy-group-summary", summary);
-    hints.insert("x-nemo-legacy-group-body", body);
+    hints.insert("x-nemo-legacy-summary", summary);
+    hints.insert("x-nemo-legacy-body", body);
+    hints.insert("x-nemo-user-clearable", false);
     if (!identifier.isEmpty()) {
         hints.insert("x-nemo-legacy-identifier", identifier);
     }
@@ -109,17 +113,31 @@ void MNotificationGroup::setTimestamp(const QDateTime &)
 
 bool MNotificationGroup::publish()
 {
+    return publish(QString(), QString());
+}
+
+bool MNotificationGroup::publish(const QString &previewSummary, const QString &previewBody)
+{
     Q_D(MNotificationGroup);
 
+    QVariantHash hints = d->hints();
     QString summary;
     QString body;
     if (d->id != 0 && notificationCount() > 0) {
         // Only already published groups may have notifications in them and thus should have a visual representation
-        summary = d->summary.isEmpty() ? d->hints().value("x-nemo-legacy-group-summary").toString() : d->summary;
-        body = d->body.isEmpty() ? d->hints().value("x-nemo-legacy-group-body").toString() : d->body;
+        summary = hints.value("x-nemo-legacy-summary").toString();
+        body = hints.value("x-nemo-legacy-body").toString();
+
+        // Allow a notification belonging to this group to show a preview banner
+        if (!previewSummary.isEmpty()) {
+            hints.insert("x-nemo-preview-summary", previewSummary);
+        }
+        if (!previewBody.isEmpty()) {
+            hints.insert("x-nemo-preview-body", previewBody);
+        }
     }
 
-    d->id = notificationManager()->Notify(QFileInfo(QCoreApplication::arguments()[0]).fileName(), d->id, d->image, summary, body, QStringList(), d->hints(), -1);
+    d->id = notificationManager()->Notify(QFileInfo(QCoreApplication::arguments()[0]).fileName(), d->id, d->image, summary, body, QStringList(), hints, -1);
 
     return d->id != 0;
 }
