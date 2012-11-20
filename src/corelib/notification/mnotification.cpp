@@ -81,7 +81,7 @@ QVariantHash MNotificationPrivate::hints() const
     hints.insert("x-nemo-legacy-summary", summary);
     hints.insert("x-nemo-legacy-body", body);
     hints.insert("x-nemo-legacy-type", "MNotification");
-    hints.insert("x-nemo-user-clearable", true);
+    hints.insert("x-nemo-user-closeable", true);
     if (groupId > 0) {
         hints.insert("x-nemo-legacy-group-id", groupId);
     }
