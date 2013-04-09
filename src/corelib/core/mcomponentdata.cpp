@@ -50,13 +50,7 @@
 #include "mwindow.h"
 #include "mapplicationwindow.h"
 #include "mtapandholdrecognizer.h"
-
-#ifdef __arm__
-    #include <mpanrecognizertouch.h>
-#else
-    #include <mpanrecognizer.h>
-#endif
-
+#include "mpanrecognizer.h"
 #include "mswiperecognizer.h"
 #include "msyslogclient.h"
 #include <MDebug>
@@ -1424,11 +1418,11 @@ bool MComponentData::registerDefaultRecognizer(Qt::GestureType type)
         // (which uses QMouseEvents).
         // A better way to do it would be using QSystemDeviceInfo::inputMethodType(),
         // but it's not worth bringing up this dependency just for this if{}else{} here.
-#ifdef __arm__
-        QGestureRecognizer::registerRecognizer(new MPanRecognizerTouch);
-#else
+//#ifdef __arm__
+//        QGestureRecognizer::registerRecognizer(new MPanRecognizerTouch);
+//#else
         QGestureRecognizer::registerRecognizer(new MPanRecognizer());
-#endif
+//#endif
         break;
     case Qt::TapAndHoldGesture:
         QGestureRecognizer::registerRecognizer(new MTapAndHoldRecognizer());
