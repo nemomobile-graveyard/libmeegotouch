@@ -1,0 +1,141 @@
+Name: libmeegotouch
+Summary: MeeGo Touch Framework
+Version: 0.30.6
+Release: 1
+Group: System/Libraries
+License: LGPLv2.1
+URL: http://meego.gitorious.org/meegotouch/libmeegotouch
+Sources:
+    - "%{name}-%{version}.tar.bz2"
+Description: |
+    Qt based MeeGo Touch Framework for developing touch based user interfaces.
+Requires:
+    - meegotouch-theme >= 0.20.79
+    - libmeegotouch-l10n-en
+    - mthemedaemon
+PkgBR:
+    - doxygen
+    - icu
+    - libmlocale-devel
+PkgConfigBR:
+    - QtOpenGL
+# Do not build require Qt Mobility module to avoid OBS extra build cycles
+#    - QtServiceFramework
+# need a symbol that is not defined in the older maliit 0.8 versions
+    - maliit-1.0 >= 0.81.3.0.1
+    - contextsubscriber-1.0 >= 0.5.25
+    - gconf-2.0
+    - gstreamer-0.10
+    - gstreamer-base-0.10
+    - gstreamer-plugins-base-0.10
+    - icu-uc
+    - x11
+    - xcomposite
+    - xdamage
+    - libngf0
+    - dbus-glib-1
+Provides:
+    - libdui >= 0.20.0
+Obsoletes:
+    - libdui < 0.20.0
+    - libmeegotouch <  0.20.89
+Configure: none
+Builder: none
+ExtraSources:
+    - libmeegotouch.sh;%{_sysconfdir}/profile.d
+RunFdupes:
+    - "%{_datadir}"
+UseAsNeeded: no
+SubPackages:
+   - Name: devel
+     Summary: MeeGo Touch Framework development files
+     Group: Development/Libraries
+     Description: |
+          This package contains the files necessary to develop applications using
+          the Meego Touch Framework.
+
+   - Name: l10n-ar
+     Group: Development/Languages
+     Summary: Arabic (ar) MeeGo Touch Framework translation
+     Description: |
+         This package contains the Arabic translation for the MeeGo Touch Framework.
+
+   - Name: l10n-de
+     Group: Development/Languages
+     Summary: German (de) MeeGo Touch Framework translation
+     Description: |
+         This package contains the German translation for the MeeGo Touch Framework.
+
+   - Name: l10n-en
+     Group: Development/Languages
+     Summary: English (en) MeeGo Touch Framework translation
+     Description: |
+         This package contains the English translation for the MeeGo Touch Framework.
+
+   - Name: l10n-fi
+     Group: Development/Languages
+     Summary: Finnish (fi) MeeGo Touch Framework translation
+     Description: |
+         This package contains the Finnish translation for the MeeGo Touch Framework.
+
+   - Name: l10n-hu
+     Group: Development/Languages
+     Summary: Hungarian (hu) MeeGo Touch Framework translation
+     Description: |
+         This package contains the Hungarian translation for the MeeGo Touch Framework.
+
+   - Name: l10n-ur
+     Group: Development/Languages
+     Summary: Urdu (ur) MeeGo Touch Framework translation
+     Description: |
+         This package contains the Urdu translation for the MeeGo Touch Framework.
+
+   - Name: l10n-zhcn
+     Group: Development/Languages
+     Summary: Chinese Simplified (zh_CN) MeeGo Touch Framework translation
+     Description: |
+         This package contains the Chinese Simplified translation for the MeeGo Touch Framework.
+
+   - Name: benchmarks
+     Summary: Benchmark tests
+     Group: Development/Libraries
+     Description: |
+          This package contains benchmark tests for the MeeGo Touch Framework.
+     Requires:
+          -  meegotouch-demos
+
+   - Name: tests
+     Summary: Unit and functional tests
+     Group: Development/Libraries
+     Description: |
+          This package contains unit and functional tests for the MeeGo Touch Framework.
+     Requires:
+          -  gst-plugins-base
+          -  gst-plugins-good
+          -  libmeegotouch-l10n-fi
+
+   - Name: meegotouch-demos
+     AsWholeName: yes
+     Summary: MeeGo Touch Framework demos
+     Group: System/Libraries
+     Description: |
+          This package contains demos for the MeeGo Touch Framework.
+     Requires:
+          - meegotouch-demos-l10n
+
+   - Name: meegotouch-demos-l10n
+     AsWholeName: yes
+     Summary: MeeGo Touch Framework demos translations
+     Group: Development/Languages
+     Description: |
+          This package contains the demos translations for the MeeGo Touch Framework.
+
+   - Name: meegotouch-demos-tests
+     AsWholeName: yes
+     Summary: MeeGo Touch Framework demos tests
+     Group: Development/Libraries
+     Description: |
+          This package contains demos tests for the MeeGo Touch Framework.
+     Requires:
+           - meegotouch-demos
+
